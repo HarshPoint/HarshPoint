@@ -22,7 +22,7 @@ namespace HarshPoint.Server.Provisioning
 
             foreach (var provisioner in Provisioners)
             {
-                SetupProvisioner(provisioner, properties.Feature.Parent);
+                Setup(provisioner, properties);
                 provisioner.Provision();
             }
         }
@@ -31,15 +31,17 @@ namespace HarshPoint.Server.Provisioning
         {
             foreach (var provisioner in Provisioners.Reverse())
             {
-                SetupProvisioner(provisioner, properties.Feature.Parent);
+                Setup(provisioner, properties);
                 provisioner.Unprovision();
             }
 
             base.FeatureDeactivating(properties);
         }
 
-        private void SetupProvisioner(HarshProvisioner provisioner, Object parent)
+        private static void Setup(HarshProvisioner provisioner, SPFeatureReceiverProperties properties)
         {
+            var parent = properties.Feature.Parent;
+
             provisioner.Web = (parent as SPWeb);
             provisioner.Site = (parent as SPSite);
             provisioner.WebApplication = (parent as SPWebApplication);
