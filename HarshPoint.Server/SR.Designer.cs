@@ -68,5 +68,14 @@ namespace HarshPoint.Server {
                 return ResourceManager.GetString("HarshProvisioner_Recursive", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The web &apos;{0}&apos; is not a publishing web..
+        /// </summary>
+        internal static string HarshProvisionerPublishing_NotAPublishingWeb {
+            get {
+                return ResourceManager.GetString("HarshProvisionerPublishing_NotAPublishingWeb", resourceCulture);
+            }
+        }
     }
 }
