@@ -77,5 +77,14 @@ namespace HarshPoint.Server {
                 return ResourceManager.GetString("HarshProvisionerPublishing_NotAPublishingWeb", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HarshServerProvisioner has to specify an SPWeb or an SPSite in order to forward to a client-side provisioner implementation..
+        /// </summary>
+        internal static string HarshServerProvisionerExtensions_OnlyWebAndSiteSupported {
+            get {
+                return ResourceManager.GetString("HarshServerProvisionerExtensions_OnlyWebAndSiteSupported", resourceCulture);
+            }
+        }
     }
 }
