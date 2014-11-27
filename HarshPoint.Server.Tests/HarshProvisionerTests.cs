@@ -29,7 +29,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Provision_calls_Initialize()
         {
-            var mock = new Mock<HarshProvisioner>();
+            var mock = new Mock<HarshServerProvisioner>();
 
             mock.Protected().Setup("Initialize");
             mock.Object.Provision();
@@ -39,7 +39,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Provision_calls_OnProvisioning()
         {
-            var mock = new Mock<HarshProvisioner>();
+            var mock = new Mock<HarshServerProvisioner>();
 
             mock.Protected().Setup("OnProvisioning");
             mock.Object.Provision();
@@ -49,7 +49,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Provision_always_calls_Complete()
         {
-            var mock = new Mock<HarshProvisioner>();
+            var mock = new Mock<HarshServerProvisioner>();
             
             mock.Protected().Setup("OnProvisioning").Throws<Exception>();
             mock.Protected().Setup("Complete");
@@ -65,7 +65,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Unprovision_calls_Initialize()
         {
-            var mock = new Mock<HarshProvisioner>();
+            var mock = new Mock<HarshServerProvisioner>();
 
             mock.Protected().Setup("Initialize");
             mock.Object.Unprovision();
@@ -75,7 +75,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Unprovision_calls_OnUnprovisioning()
         {
-            var mock = new Mock<HarshProvisioner>();
+            var mock = new Mock<HarshServerProvisioner>();
 
             mock.Protected().Setup("OnUnprovisioning");
             mock.Object.Unprovision();
@@ -85,7 +85,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Unprovision_always_calls_Complete()
         {
-            var mock = new Mock<HarshProvisioner>();
+            var mock = new Mock<HarshServerProvisioner>();
             
             mock.Protected().Setup("OnUnprovisioning").Throws<Exception>();
             mock.Protected().Setup("Complete");
@@ -101,7 +101,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Set_Web_sets_Site()
         {
-            var p = Mock.Of<HarshProvisioner>();
+            var p = Mock.Of<HarshServerProvisioner>();
             p.Web = SPFixture.Web;
             Assert.Equal(SPFixture.Site, p.Site);
         }
@@ -109,7 +109,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Set_Web_sets_WebApplication()
         {
-            var p = Mock.Of<HarshProvisioner>();
+            var p = Mock.Of<HarshServerProvisioner>();
             p.Web = SPFixture.Web;
             Assert.Equal(SPFixture.WebApplication, p.WebApplication);
         }
@@ -117,7 +117,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Set_Web_sets_Farm()
         {
-            var p = Mock.Of<HarshProvisioner>();
+            var p = Mock.Of<HarshServerProvisioner>();
             p.Web = SPFixture.Web;
             Assert.Equal(SPFixture.Farm, p.Farm);
         }
@@ -125,7 +125,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Set_Site_clears_Web()
         {
-            var p = Mock.Of<HarshProvisioner>();
+            var p = Mock.Of<HarshServerProvisioner>();
             p.Site = SPFixture.Site;
             Assert.Equal(null, p.Web);
         }
@@ -133,7 +133,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Set_Site_sets_WebApplication()
         {
-            var p = Mock.Of<HarshProvisioner>();
+            var p = Mock.Of<HarshServerProvisioner>();
             p.Site = SPFixture.Site;
             Assert.Equal(SPFixture.WebApplication, p.WebApplication);
         }
@@ -141,7 +141,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Set_Site_sets_Farm()
         {
-            var p = Mock.Of<HarshProvisioner>();
+            var p = Mock.Of<HarshServerProvisioner>();
             p.Site = SPFixture.Site;
             Assert.Equal(SPFixture.Farm, p.Farm);
         }
@@ -149,7 +149,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Set_WebApplication_clears_Web()
         {
-            var p = Mock.Of<HarshProvisioner>();
+            var p = Mock.Of<HarshServerProvisioner>();
             p.WebApplication = SPFixture.WebApplication;
             Assert.Equal(null, p.Web);
         }
@@ -157,7 +157,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Set_WebApplication_clears_Site()
         {
-            var p = Mock.Of<HarshProvisioner>();
+            var p = Mock.Of<HarshServerProvisioner>();
             p.WebApplication = SPFixture.WebApplication;
             Assert.Equal(null, p.Site);
         }
@@ -165,7 +165,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         [Fact]
         public void Set_WebApplication_sets_Farm()
         {
-            var p = Mock.Of<HarshProvisioner>();
+            var p = Mock.Of<HarshServerProvisioner>();
             p.WebApplication = SPFixture.WebApplication;
             Assert.Equal(SPFixture.Farm, p.Farm);
         }

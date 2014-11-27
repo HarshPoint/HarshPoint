@@ -4,7 +4,7 @@ namespace HarshPoint.Server.Provisioning
 {
     public static class HarshProvisionerPublishing
     {
-        public static PublishingWeb ValidateIsPublishingWeb(this HarshProvisioner provisioner)
+        public static PublishingWeb ValidateIsPublishingWeb(this HarshServerProvisioner provisioner)
         {
             if (provisioner == null)
             {

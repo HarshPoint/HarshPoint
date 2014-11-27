@@ -1,9 +1,10 @@
-﻿using Microsoft.SharePoint;
+﻿using HarshPoint.Provisioning;
+using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 
 namespace HarshPoint.Server.Provisioning
 {
-    public abstract class HarshProvisioner
+    public abstract class HarshServerProvisioner : HarshProvisionerBase
     {
         private SPWeb _web;
         private SPSite _site;
@@ -45,8 +46,8 @@ namespace HarshPoint.Server.Provisioning
             get { return _site; }
             set
             {
-                _web = null;
                 _site = value;
+                _web = (_site != null) ? _site.RootWeb : null;
                 _webApp = (_site != null) ? _site.WebApplication : null;
                 _farm = (_webApp != null) ? _webApp.Farm : null;
             }
@@ -94,46 +95,5 @@ namespace HarshPoint.Server.Provisioning
             }
         }
 
-        public void Provision()
-        {
-            try
-            {
-                Initialize();
-                OnProvisioning();
-            }
-            finally
-            {
-                Complete();
-            }
-        }
-
-        public void Unprovision()
-        {
-            try
-            {
-                Initialize();
-                OnUnprovisioning();
-            }
-            finally
-            {
-                Complete();
-            }
-        }
-
-        protected virtual void Initialize()
-        {
-        }
-
-        protected virtual void Complete()
-        {
-        }
-
-        protected virtual void OnProvisioning()
-        {
-        }
-
-        protected virtual void OnUnprovisioning()
-        {
-        }
     }
 }

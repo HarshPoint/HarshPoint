@@ -8,10 +8,10 @@ namespace HarshPoint.Server.Provisioning
 {
     public abstract class HarshProvisionerFeatureReceiver : SPFeatureReceiver
     {
-        private readonly Collection<HarshProvisioner> _provisioners =
-            new Collection<HarshProvisioner>();
+        private readonly Collection<HarshServerProvisioner> _provisioners =
+            new Collection<HarshServerProvisioner>();
 
-        public Collection<HarshProvisioner> Provisioners
+        public Collection<HarshServerProvisioner> Provisioners
         {
             get { return _provisioners; }
         }
@@ -38,7 +38,7 @@ namespace HarshPoint.Server.Provisioning
             base.FeatureDeactivating(properties);
         }
 
-        private static void Setup(HarshProvisioner provisioner, SPFeatureReceiverProperties properties)
+        private static void Setup(HarshServerProvisioner provisioner, SPFeatureReceiverProperties properties)
         {
             var parent = properties.Feature.Parent;
 
