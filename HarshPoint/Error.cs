@@ -12,7 +12,7 @@ namespace HarshPoint
 
         public static Exception InvalidOperation(String message)
         {
-            return new Exception(message);
+            return new InvalidOperationException(message);
         }
 
         public static Exception InvalidOperation(String format, params Object[] args)
