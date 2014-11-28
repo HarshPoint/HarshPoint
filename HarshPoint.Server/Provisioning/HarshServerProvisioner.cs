@@ -1,6 +1,7 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using System;
 
 namespace HarshPoint.Server.Provisioning
 {
@@ -39,7 +40,8 @@ namespace HarshPoint.Server.Provisioning
         /// <remarks>
         /// <para>Please note that setting this property will automatically assign
         /// the parent objects to <see cref="WebApplication"/> and <see cref="Farm"/>
-        /// properties, and will set the <see cref="Web"/> property to <c>null</c>.</para>
+        /// properties, and will set the <see cref="Web"/> property to the root web 
+        /// of the site collection.</para>
         /// </remarks>
         public SPSite Site
         {
@@ -59,7 +61,7 @@ namespace HarshPoint.Server.Provisioning
         /// </summary>
         /// <remarks>
         /// <para>Please note that setting this property will automatically assign
-        /// the parent objects to the <see cref="Farm"/> property, and will set 
+        /// the parent object to the <see cref="Farm"/> property, and will set 
         /// the <see cref="Web"/> and <see cref="Site"/> properties to <c>null</c>.</para>
         /// </remarks>
         public SPWebApplication WebApplication
@@ -95,5 +97,16 @@ namespace HarshPoint.Server.Provisioning
             }
         }
 
+        internal void SetContext(Object context)
+        {
+            // The order of the following assignments is critical,
+            // since each following property setter overwrites all
+            // the preceding properties.
+
+            Farm = (context as SPFarm);
+            WebApplication = (context as SPWebApplication);
+            Site = (context as SPSite);
+            Web = (context as SPWeb);
+        }
     }
 }

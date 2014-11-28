@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint;
+﻿using HarshPoint.Provisioning;
+using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System;
 using System.Collections.ObjectModel;
@@ -8,10 +9,10 @@ namespace HarshPoint.Server.Provisioning
 {
     public abstract class HarshProvisionerFeatureReceiver : SPFeatureReceiver
     {
-        private readonly Collection<HarshServerProvisioner> _provisioners =
-            new Collection<HarshServerProvisioner>();
+        private readonly Collection<HarshProvisionerBase> _provisioners =
+            new Collection<HarshProvisionerBase>();
 
-        public Collection<HarshServerProvisioner> Provisioners
+        public Collection<HarshProvisionerBase> Provisioners
         {
             get { return _provisioners; }
         }
@@ -20,32 +21,42 @@ namespace HarshPoint.Server.Provisioning
         {
             base.FeatureActivated(properties);
 
-            foreach (var provisioner in Provisioners)
+            foreach (var provisioner in Provisioners.Select(Setup(properties)))
             {
-                Setup(provisioner, properties);
                 provisioner.Provision();
             }
         }
 
         public override void FeatureDeactivating(SPFeatureReceiverProperties properties)
         {
-            foreach (var provisioner in Provisioners.Reverse())
+            foreach (var provisioner in Provisioners.Reverse().Select(Setup(properties)))
             {
-                Setup(provisioner, properties);
                 provisioner.Unprovision();
             }
 
             base.FeatureDeactivating(properties);
         }
 
-        private static void Setup(HarshServerProvisioner provisioner, SPFeatureReceiverProperties properties)
+        private static Func<HarshProvisionerBase, HarshProvisionerBase> Setup(SPFeatureReceiverProperties properties)
         {
-            var parent = properties.Feature.Parent;
+            return provisioner =>
+            {
+                var clientProvisioner = (provisioner as HarshProvisioner);
+                var serverProvisioner = (provisioner as HarshServerProvisioner);
 
-            provisioner.Web = (parent as SPWeb);
-            provisioner.Site = (parent as SPSite);
-            provisioner.WebApplication = (parent as SPWebApplication);
-            provisioner.Farm = (parent as SPFarm);
+                if (clientProvisioner != null)
+                {
+                    serverProvisioner = clientProvisioner.ToServerProvisioner();
+                }
+
+                if (serverProvisioner != null)
+                {
+                    serverProvisioner.SetContext(properties.Feature.Parent);
+                    return serverProvisioner;
+                }
+
+                return provisioner;
+            };
         }
     }
 }

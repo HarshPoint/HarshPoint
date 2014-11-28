@@ -4,9 +4,9 @@ using System;
 
 namespace HarshPoint.Server.Tests
 {
-    public class SharePointFixture : IDisposable
+    public class SharePointServerFixture : IDisposable
     {
-        public SharePointFixture()
+        public SharePointServerFixture()
         {
             Site = new SPSite("http://" + Environment.MachineName);
             Web = Site.RootWeb;

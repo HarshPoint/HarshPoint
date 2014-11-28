@@ -7,15 +7,15 @@ using Xunit;
 
 namespace HarshPoint.Server.Tests.UnitTests
 {
-    public class HarshProvisionerTests : IDisposable, IUseFixture<SharePointFixture>
+    public class HarshServerProvisionerTests : IDisposable, IUseFixture<SharePointServerFixture>
     {
-        public SharePointFixture SPFixture
+        public SharePointServerFixture SPFixture
         {
             get;
             set;
         }
 
-        public void SetFixture(SharePointFixture data)
+        public void SetFixture(SharePointServerFixture data)
         {
             SPFixture = data;
         }
