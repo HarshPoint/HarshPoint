@@ -1,10 +1,12 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
+using System;
 
 namespace HarshPoint.Server.Provisioning
 {
     public static class HarshProvisionerExtensions
     {
+        [CLSCompliant(false)]
         public static HarshServerProvisioner ToServerProvisioner(this HarshProvisioner provisioner)
         {
             if (provisioner == null)

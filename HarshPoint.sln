@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint", "HarshPoint\Ha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Tests", "HarshPoint.Tests\HarshPoint.Tests.csproj", "{1A4B3615-7C9D-4B3A-B44F-3561151802B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Server.Tests", "HarshPoint.Server.Tests\HarshPoint.Server.Tests.csproj", "{6D90BC98-6E72-4157-90AD-D4E0EF69E6A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Tests.Server", "HarshPoint.Server.Tests\HarshPoint.Tests.Server.csproj", "{6D90BC98-6E72-4157-90AD-D4E0EF69E6A7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329A8-9B0A-428D-B5C7-C9F1BCF82E50}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,9 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code", "Code", "{5E97AE52-0329-4AE0-A047-8E871B26464C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{5E97AE52-0329-4AE0-A047-8E871B26464C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code-Tests", "Code-Tests", "{0D529F32-CD30-4F0E-A3C3-089FF5167A51}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0D529F32-CD30-4F0E-A3C3-089FF5167A51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

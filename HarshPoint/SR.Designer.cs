@@ -105,5 +105,14 @@ namespace HarshPoint {
                 return ResourceManager.GetString("HarshEntityMetadata_TypeNotAnEntity", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The field cannot be added because FieldSchemaXml is null..
+        /// </summary>
+        internal static string HarshFieldProvisioner_SchemaXmlNotSet {
+            get {
+                return ResourceManager.GetString("HarshFieldProvisioner_SchemaXmlNotSet", resourceCulture);
+            }
+        }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Xml.Linq;
 
 namespace HarshPoint.Provisioning
 {
+    [CLSCompliant(false)]
     public class HarshFieldProvisioner : HarshFieldProvisionerBase
     {
-        [CLSCompliant(false)]
         public AddFieldOptions AddFieldOptions
         {
             get;
@@ -18,10 +19,37 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        public String FieldSchemaXml
+        public XElement FieldSchemaXml
         {
             get;
             set;
+        }
+
+        public Boolean FieldAdded
+        {
+            get;
+            private set;
+        }
+
+        public Boolean FieldRemoved
+        {
+            get;
+            private set;
+        }
+
+        public Boolean FieldUpdated
+        {
+            get;
+            private set;
+        }
+
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            FieldAdded = false;
+            FieldRemoved = false;
+            FieldUpdated = false;
         }
 
         protected override void OnProvisioning()
@@ -30,11 +58,21 @@ namespace HarshPoint.Provisioning
 
             if (Field.IsNull())
             {
-                Field = TargetFieldCollection.AddFieldAsXml(FieldSchemaXml, AddToDefaultView, AddFieldOptions);
+                if (FieldSchemaXml == null)
+                {
+                    throw Error.InvalidOperation(SR.HarshFieldProvisioner_SchemaXmlNotSet);
+                }
+
+                Field = TargetFieldCollection.AddFieldAsXml(FieldSchemaXml.ToString(), AddToDefaultView, AddFieldOptions);
+                FieldAdded = true;
             }
             else
             {
-                Field.SchemaXml = FieldSchemaXml;
+                if (FieldSchemaXml != null)
+                {
+                    Field.SchemaXml = FieldSchemaXml.ToString();
+                    FieldUpdated = true;
+                }
             }
 
             Context.ExecuteQuery();
@@ -45,6 +83,8 @@ namespace HarshPoint.Provisioning
             if (!Field.IsNull())
             {
                 Field.DeleteObject();
+                FieldRemoved = true;
+
                 Context.ExecuteQuery();
             }
 
