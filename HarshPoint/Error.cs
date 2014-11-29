@@ -10,6 +10,18 @@ namespace HarshPoint
             return new ArgumentNullException(paramName);
         }
 
+        public static Exception ArgumentOutOfRange(String paramName, String message)
+        {
+            return new ArgumentOutOfRangeException(paramName, message);
+        }
+
+        public static Exception ArgumentOutOfRange(String paramName, String format, params Object[] args)
+        {
+            return new ArgumentOutOfRangeException(paramName,
+                Format(format, args)
+            );
+        }
+
         public static Exception InvalidOperation(String message)
         {
             return new InvalidOperationException(message);
