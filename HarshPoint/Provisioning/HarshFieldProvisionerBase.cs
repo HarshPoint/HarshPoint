@@ -3,7 +3,6 @@ using System;
 
 namespace HarshPoint.Provisioning
 {
-    [CLSCompliant(false)]
     public abstract class HarshFieldProvisionerBase : HarshPotentiallyDestructiveProvisioner
     {
         public Guid FieldId

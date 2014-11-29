@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-    [CLSCompliant(false)]
     public abstract class HarshProvisioner : HarshProvisionerBase
     {
         private ClientContext _ctx;

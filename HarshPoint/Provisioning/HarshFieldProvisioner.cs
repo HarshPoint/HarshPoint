@@ -4,7 +4,6 @@ using System.Xml.Linq;
 
 namespace HarshPoint.Provisioning
 {
-    [CLSCompliant(false)]
     public class HarshFieldProvisioner : HarshFieldProvisionerBase
     {
         public AddFieldOptions AddFieldOptions
@@ -64,6 +63,8 @@ namespace HarshPoint.Provisioning
                 }
 
                 Field = TargetFieldCollection.AddFieldAsXml(FieldSchemaXml.ToString(), AddToDefaultView, AddFieldOptions);
+                Context.ExecuteQuery();
+
                 FieldAdded = true;
             }
             else
@@ -71,11 +72,11 @@ namespace HarshPoint.Provisioning
                 if (FieldSchemaXml != null)
                 {
                     Field.SchemaXml = FieldSchemaXml.ToString();
+                    Context.ExecuteQuery();
+
                     FieldUpdated = true;
                 }
             }
-
-            Context.ExecuteQuery();
         }
 
         protected override void OnUnprovisioningMayDeleteUserData()
@@ -83,9 +84,9 @@ namespace HarshPoint.Provisioning
             if (!Field.IsNull())
             {
                 Field.DeleteObject();
-                FieldRemoved = true;
-
                 Context.ExecuteQuery();
+
+                FieldRemoved = true;
             }
 
             base.OnUnprovisioningMayDeleteUserData();
