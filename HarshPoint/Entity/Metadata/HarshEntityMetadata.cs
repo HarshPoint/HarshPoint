@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace HarshPoint.Entity.Metadata
 {
@@ -16,12 +16,46 @@ namespace HarshPoint.Entity.Metadata
             }
 
             EntityType = entityType;
+            EntityTypeInfo = entityType.GetTypeInfo();
+
+            if (!EntityTypeInfo.IsSubclassOf(typeof(HarshEntity)))
+            {
+                throw Error.ArgumentOutOfRangeFormat(
+                    "entityType",
+                    entityType,
+                    SR.HarshEntityMetadata_TypeNotAnEntity,
+                    entityType.FullName
+                );
+            }
+
+            Fields = CreateFieldMetadata();
         }
 
         public Type EntityType
         {
             get;
             private set;
+        }
+
+        public IReadOnlyCollection<HarshFieldMetadata> Fields
+        {
+            get;
+            private set;
+        }
+
+        internal TypeInfo EntityTypeInfo
+        {
+            get;
+            private set;
+        }
+
+        private ImmutableList<HarshFieldMetadata> CreateFieldMetadata()
+        {
+            return (from property in EntityTypeInfo.DeclaredProperties
+                    let fieldAttr = property.GetCustomAttribute<FieldAttribute>()
+                    where fieldAttr != null
+                    select new HarshFieldMetadata(property, fieldAttr))
+                   .ToImmutableList();
         }
     }
 }

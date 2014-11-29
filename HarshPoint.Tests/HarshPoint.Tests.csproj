@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Entity\ContentTypeAttributeTests.cs" />
     <Compile Include="Entity\FieldAttributeTests.cs" />
+    <Compile Include="Entity\HarshFieldMetadataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

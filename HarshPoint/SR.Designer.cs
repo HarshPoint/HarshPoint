@@ -96,5 +96,14 @@ namespace HarshPoint {
                 return ResourceManager.GetString("FieldAttribute_InvalidGuid", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not a subclass of HarshEntity..
+        /// </summary>
+        internal static string HarshEntityMetadata_TypeNotAnEntity {
+            get {
+                return ResourceManager.GetString("HarshEntityMetadata_TypeNotAnEntity", resourceCulture);
+            }
+        }
     }
 }
