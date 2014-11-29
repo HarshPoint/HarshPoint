@@ -78,5 +78,23 @@ namespace HarshPoint {
                 return ResourceManager.GetString("ContentTypeAttribute_RelCTId_OutOfRange", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field ID cannot be an empty Guid..
+        /// </summary>
+        internal static string FieldAttribute_EmptyGuid {
+            get {
+                return ResourceManager.GetString("FieldAttribute_EmptyGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified string is not a valid Guid..
+        /// </summary>
+        internal static string FieldAttribute_InvalidGuid {
+            get {
+                return ResourceManager.GetString("FieldAttribute_InvalidGuid", resourceCulture);
+            }
+        }
     }
 }

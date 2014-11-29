@@ -123,4 +123,10 @@
   <data name="ContentTypeAttribute_RelCTId_OutOfRange" xml:space="preserve">
     <value>The specified relative content type ID is invalid. A relative content type ID is either a 2- or or 32-character long hexadecimal string.</value>
   </data>
+  <data name="FieldAttribute_EmptyGuid" xml:space="preserve">
+    <value>Field ID cannot be an empty Guid.</value>
+  </data>
+  <data name="FieldAttribute_InvalidGuid" xml:space="preserve">
+    <value>The specified string is not a valid Guid.</value>
+  </data>
 </root>
