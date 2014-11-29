@@ -5,6 +5,7 @@ using System;
 
 namespace HarshPoint.Server.Provisioning
 {
+    [CLSCompliant(false)]
     public abstract class HarshServerProvisioner : HarshProvisionerBase
     {
         private SPWeb _web;

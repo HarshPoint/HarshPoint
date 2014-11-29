@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace HarshPoint.Server.Provisioning
 {
+    [CLSCompliant(false)]
     public abstract class HarshProvisionerFeatureReceiver : SPFeatureReceiver
     {
         private readonly Collection<HarshProvisionerBase> _provisioners =

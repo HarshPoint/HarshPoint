@@ -9,7 +9,7 @@ namespace HarshPoint.Entity
 {
     public abstract class HarshEntity
     {
-        public HarshEntity()
+        protected HarshEntity()
         {
         }
     }

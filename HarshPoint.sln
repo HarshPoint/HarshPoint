@@ -11,6 +11,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Tests", "HarshPo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Server.Tests", "HarshPoint.Server.Tests\HarshPoint.Server.Tests.csproj", "{6D90BC98-6E72-4157-90AD-D4E0EF69E6A7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329A8-9B0A-428D-B5C7-C9F1BCF82E50}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		AssemblyInfo.Shared.cs = AssemblyInfo.Shared.cs
+		CodeAnalysisDictionary.xml = CodeAnalysisDictionary.xml
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code", "Code", "{5E97AE52-0329-4AE0-A047-8E871B26464C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code-Tests", "Code-Tests", "{0D529F32-CD30-4F0E-A3C3-089FF5167A51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +50,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DB0928B3-B2C2-4887-9AFD-B7E693EA41E9} = {5E97AE52-0329-4AE0-A047-8E871B26464C}
+		{5D981A8F-A98E-43F2-A112-2CFD50455447} = {5E97AE52-0329-4AE0-A047-8E871B26464C}
+		{1A4B3615-7C9D-4B3A-B44F-3561151802B9} = {0D529F32-CD30-4F0E-A3C3-089FF5167A51}
+		{6D90BC98-6E72-4157-90AD-D4E0EF69E6A7} = {0D529F32-CD30-4F0E-A3C3-089FF5167A51}
 	EndGlobalSection
 EndGlobal

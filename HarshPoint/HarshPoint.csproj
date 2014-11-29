@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfo.Shared.cs">
+      <Link>Properties\AssemblyInfo.Shared.cs</Link>
+    </Compile>
     <Compile Include="Entity\ContentTypeAttribute.cs" />
     <Compile Include="Entity\HarshEntity.cs" />
     <Compile Include="Entity\FieldAttribute.cs" />
@@ -43,7 +46,10 @@
     <Compile Include="Entity\Metadata\HarshEntityMetadataContentType.cs" />
     <Compile Include="Entity\Metadata\HarshFieldMetadata.cs" />
     <Compile Include="Error.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Entity\Provisioning\HarshFieldProvisioner.cs" />
+    <Compile Include="Provisioning\HarshPotentiallyDestructiveProvisioner.cs" />
     <Compile Include="Provisioning\HarshProvisioner.cs" />
     <Compile Include="Provisioning\HarshProvisionerBase.cs" />
     <Compile Include="SR.Designer.cs">
@@ -71,6 +77,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml">
+      <Link>CodeAnalysisDictionary.xml</Link>
+    </CodeAnalysisDictionary>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

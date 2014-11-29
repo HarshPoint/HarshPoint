@@ -1,7 +1,9 @@
 ﻿using Microsoft.SharePoint.Publishing;
+using System;
 
 namespace HarshPoint.Server.Provisioning
 {
+    [CLSCompliant(false)]
     public static class HarshProvisionerPublishing
     {
         public static PublishingWeb ValidateIsPublishingWeb(this HarshServerProvisioner provisioner)
