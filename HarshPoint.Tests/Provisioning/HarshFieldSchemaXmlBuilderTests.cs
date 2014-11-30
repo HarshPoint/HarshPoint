@@ -26,9 +26,29 @@ namespace HarshPoint.Tests.Provisioning
             };
 
             var titleField = GetTitleField();
-            builder.Update(titleField, null);
+            builder.Update(titleField, schemaXml: null);
 
             addOnlyTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Never());
+            addOrUpdateTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Once());
+        }
+
+        [Fact]
+        public void Update_a_new_field_calls_add_and_update_transforms()
+        {
+            var addOnlyTransformer = GetNopTransformer();
+            var addOrUpdateTransformer = GetNopTransformer();
+
+            addOnlyTransformer.Object.OnFieldAddOnly = true;
+            addOrUpdateTransformer.Object.OnFieldAddOnly = false;
+
+            var builder = new HarshFieldSchemaXmlBuilder()
+            {
+                Transformers = { addOnlyTransformer.Object, addOrUpdateTransformer.Object }
+            };
+
+            builder.Update(field: null, schemaXml: null);
+
+            addOnlyTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Once());
             addOrUpdateTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Once());
         }
 
