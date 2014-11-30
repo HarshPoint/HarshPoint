@@ -21,7 +21,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Existing_field_is_not_provisioned()
         {
-            var prov = new HarshFieldProvisioner()
+            var prov = new HarshFieldSchemaXmlProvisioner()
             {
                 Web = ClientOM.Web,
                 FieldId = new Guid("fa564e0f-0c70-4ab9-b863-0177e6ddd247"), // SPBuiltInFieldId.Title
@@ -38,7 +38,7 @@ namespace HarshPoint.Tests.Provisioning
         public void Field_id_is_generated_into_schema()
         {
             var fieldId = Guid.NewGuid();
-            var prov = new HarshFieldProvisioner()
+            var prov = new HarshFieldSchemaXmlProvisioner()
             {
                 Web = ClientOM.Web,
                 FieldId = fieldId,
