@@ -26,7 +26,7 @@ namespace HarshPoint
             var visitor = new MemberNameVisitor();
             visitor.Visit(expression);
 
-            if (visitor.MemberNames == null)
+            if (visitor.MemberNames.IsEmpty)
             {
                 throw Error.ArgumentOutOfRangeFormat(
                     "expression",
