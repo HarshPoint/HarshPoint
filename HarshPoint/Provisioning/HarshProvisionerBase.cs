@@ -8,7 +8,7 @@ namespace HarshPoint.Provisioning
 {
     /// <summary>
     /// Provides common initialization and completion logic for 
-    /// classes provisioning SharePoint artefacts.
+    /// classes provisioning SharePoint artifacts.
     /// </summary>
     public abstract class HarshProvisionerBase
     {
