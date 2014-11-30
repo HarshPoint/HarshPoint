@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
+    /// <summary>
+    /// Provides context for classes provisioning SharePoint
+    /// artefacts using the client-side object model.
+    /// </summary>
     public abstract class HarshProvisioner : HarshProvisionerBase
     {
         private ClientContext _ctx;

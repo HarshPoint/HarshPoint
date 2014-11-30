@@ -8,11 +8,17 @@ using System.Xml.Linq;
 
 namespace HarshPoint.Provisioning
 {
+    /// <summary>
+    /// Creates or updates a SharePoint field by generating its schema XML.
+    /// </summary>
     public sealed class HarshFieldProvisioner : HarshFieldProvisionerBase
     {
         private readonly HarshFieldSchemaXmlBuilder SchemaXmlBuilder;
         private readonly XNodeEqualityComparer SchemaXmlComparer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HarshFieldProvisioner"/> class.
+        /// </summary>
         public HarshFieldProvisioner()
         {
             SchemaXmlBuilder = new HarshFieldSchemaXmlBuilder()
@@ -27,59 +33,99 @@ namespace HarshPoint.Provisioning
             SchemaXmlComparer = new XNodeEqualityComparer();
         }
 
+        /// <summary>
+        /// Gets or sets the <see cref="AddFieldOptions"/> value used when
+        /// creating a new field.
+        /// </summary>
         public AddFieldOptions AddFieldOptions
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to add the newly created field to the default view.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if add the newly created field to the default view; otherwise, <c>false</c>.
+        /// </value>
         public Boolean AddToDefaultView
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the name of the field type.
+        /// </summary>
         public String FieldTypeName
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the InternalName of the field.
+        /// Only used when creating a new field.
+        /// </summary>
         public String InternalName
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the StaticName of the field.
+        /// Only used when creating a new field.
+        /// </summary>
         public String StaticName
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the field schema XML. If <c>null</c>,
+        /// the existing schema XML will be modified. If <c>null</c> and
+        /// the field doesn't exist yet, a schema XML will be generated
+        /// from the other properties.
+        /// </summary>
         public XElement SchemaXml
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets the collection of schema XML transformers run when
+        /// creating and/or updating a field.
+        /// </summary>
         public Collection<HarshFieldSchemaXmlTransformer> SchemaXmlTransformers
         {
             get { return SchemaXmlBuilder.Transformers; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether a field was created during the last operation.
+        /// </summary>
         public Boolean FieldAdded
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether a field was removed during the last operation.
+        /// </summary>
         public Boolean FieldRemoved
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether a field was updated during the last operation.
+        /// </summary>
         public Boolean FieldUpdated
         {
             get;

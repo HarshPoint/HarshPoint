@@ -132,5 +132,14 @@ namespace HarshPoint {
                 return ResourceManager.GetString("HarshFieldProvisioner_TransformNull", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The FieldId cannot be an empty Guid..
+        /// </summary>
+        internal static string HarshFieldProvisionerBase_FieldIdEmpty {
+            get {
+                return ResourceManager.GetString("HarshFieldProvisionerBase_FieldIdEmpty", resourceCulture);
+            }
+        }
     }
 }

@@ -135,6 +135,9 @@
   <data name="HarshEntityMetadata_TypeNotAnEntity" xml:space="preserve">
     <value>The specified type '{0}' is not a subclass of HarshEntity.</value>
   </data>
+  <data name="HarshFieldProvisionerBase_FieldIdEmpty" xml:space="preserve">
+    <value>The FieldId cannot be an empty Guid.</value>
+  </data>
   <data name="HarshFieldProvisioner_SchemaXmlNotSet" xml:space="preserve">
     <value>The field cannot be added because FieldSchemaXml is null.</value>
   </data>

@@ -6,6 +6,9 @@ using System.Xml.Linq;
 
 namespace HarshPoint.Provisioning
 {
+    /// <summary>
+    /// Controls the field schema XML generation.
+    /// </summary>
     internal sealed class HarshFieldSchemaXmlBuilder
     {
         public HarshFieldSchemaXmlBuilder()
@@ -13,12 +16,22 @@ namespace HarshPoint.Provisioning
             Transformers = new Collection<HarshFieldSchemaXmlTransformer>();
         }
 
+        /// <summary>
+        /// Gets the collection of transformers to be run on
+        /// the field schema XML.
+        /// </summary>
         public Collection<HarshFieldSchemaXmlTransformer> Transformers
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the existing field schema XML, if any, or an empty
+        /// Field element.
+        /// </summary>
+        /// <param name="field">The field, may be <c>null</c>.</param>
+        /// <returns></returns>
         public XElement GetExistingSchemaXml(Field field)
         {
             if (field.IsNull())
@@ -35,6 +48,12 @@ namespace HarshPoint.Provisioning
             return XElement.Parse(field.SchemaXmlWithResourceTokens);
         }
 
+        /// <summary>
+        /// Updates the specified field schema using the specified <see cref="Transformers"/>.
+        /// </summary>
+        /// <param name="field">The field, may be <c>null</c> if creating a new field.</param>
+        /// <param name="schemaXml">The schema XML, if <c>null</c>, existing field schema XML will be modifed.</param>
+        /// <returns></returns>
         public XElement Update(Field field, XElement schemaXml)
         {
             if (schemaXml == null)

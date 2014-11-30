@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
+    /// <summary>
+    /// Provides common initialization and completion logic for 
+    /// classes provisioning SharePoint artefacts.
+    /// </summary>
     public abstract class HarshProvisionerBase
     {
         public void Provision()
