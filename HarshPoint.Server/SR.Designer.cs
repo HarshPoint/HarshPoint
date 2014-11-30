@@ -79,6 +79,15 @@ namespace HarshPoint.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t know how to adapt the type &apos;{0}&apos; to a HarshServerProvisioner..
+        /// </summary>
+        internal static string HarshServerProvisionerExtensions_CannotConvertTo {
+            get {
+                return ResourceManager.GetString("HarshServerProvisionerExtensions_CannotConvertTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HarshServerProvisioner has to specify an SPWeb or an SPSite in order to forward to a client-side provisioner implementation..
         /// </summary>
         internal static string HarshServerProvisionerExtensions_OnlyWebAndSiteSupported {

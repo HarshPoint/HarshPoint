@@ -6,14 +6,32 @@ namespace HarshPoint.Server.Provisioning
 {
     public static class HarshProvisionerExtensions
     {
-        public static HarshServerProvisioner ToServerProvisioner(this HarshProvisioner provisioner)
+        public static HarshServerProvisioner ToServerProvisioner(this HarshProvisionerBase provisioner)
         {
             if (provisioner == null)
             {
                 throw Error.ArgumentNull("provisioner");
             }
 
-            return new ClientProvisionerWrapper(provisioner);
+            var clientProvisioner = (provisioner as HarshProvisioner);
+            var serverProvisioner = (provisioner as HarshServerProvisioner);
+
+            if (clientProvisioner != null)
+            {
+                serverProvisioner = new ClientProvisionerWrapper(clientProvisioner);
+            }
+
+            if (serverProvisioner == null)
+            {
+                throw Error.ArgumentOutOfRangeFormat(
+                    "provisioner",
+                    provisioner,
+                    SR.HarshServerProvisionerExtensions_CannotConvertTo,
+                    provisioner.GetType().FullName
+                );
+            }
+
+            return serverProvisioner;
         }
 
         private sealed class ClientProvisionerWrapper : HarshServerProvisioner

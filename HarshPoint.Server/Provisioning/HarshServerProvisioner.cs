@@ -97,16 +97,17 @@ namespace HarshPoint.Server.Provisioning
             }
         }
 
-        internal void SetContext(Object context)
+        internal void CopyContextFrom(HarshServerProvisioner other)
         {
-            // The order of the following assignments is critical,
-            // since each following property setter overwrites all
-            // the preceding properties.
+            if (other == null)
+            {
+                throw Error.ArgumentNull("other");
+            }
 
-            Farm = (context as SPFarm);
-            WebApplication = (context as SPWebApplication);
-            Site = (context as SPSite);
-            Web = (context as SPWeb);
+            _farm = other.Farm;
+            _webApp = other.WebApplication;
+            _site = other.Site;
+            _web = other.Web;
         }
     }
 }

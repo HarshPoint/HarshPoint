@@ -123,6 +123,9 @@
   <data name="HarshProvisioner_Recursive" xml:space="preserve">
     <value />
   </data>
+  <data name="HarshServerProvisionerExtensions_CannotConvertTo" xml:space="preserve">
+    <value>Don't know how to adapt the type '{0}' to a HarshServerProvisioner.</value>
+  </data>
   <data name="HarshServerProvisionerExtensions_OnlyWebAndSiteSupported" xml:space="preserve">
     <value>HarshServerProvisioner has to specify an SPWeb or an SPSite in order to forward to a client-side provisioner implementation.</value>
   </data>

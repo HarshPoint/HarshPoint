@@ -7,7 +7,7 @@ using Xunit;
 
 namespace HarshPoint.Server.Tests.UnitTests
 {
-    public class HarshServerProvisionerTests : IDisposable, IUseFixture<SharePointServerFixture>
+    public class HarshServerProvisionerTests : IUseFixture<SharePointServerFixture>
     {
         public SharePointServerFixture SPFixture
         {
@@ -18,12 +18,6 @@ namespace HarshPoint.Server.Tests.UnitTests
         public void SetFixture(SharePointServerFixture data)
         {
             SPFixture = data;
-        }
-
-        public void Dispose()
-        {
-            SPFixture.Dispose();
-            SPFixture = null;
         }
 
         [Fact]
@@ -123,11 +117,11 @@ namespace HarshPoint.Server.Tests.UnitTests
         }
 
         [Fact]
-        public void Set_Site_clears_Web()
+        public void Set_Site_sets_Web_to_RootWeb()
         {
             var p = Mock.Of<HarshServerProvisioner>();
             p.Site = SPFixture.Site;
-            Assert.Equal(null, p.Web);
+            Assert.Equal(SPFixture.Site.RootWeb, p.Web);
         }
 
         [Fact]

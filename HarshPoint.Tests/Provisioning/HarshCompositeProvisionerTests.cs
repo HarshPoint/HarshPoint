@@ -6,7 +6,7 @@ using Xunit;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class HarshCompositeProvisionerTests
+    public class HarshCompositeProvisionerTests : IUseFixture<SharePointClientFixture>
     {
         [Fact]
         public void Calls_children_provision_in_correct_order()
@@ -48,6 +48,33 @@ namespace HarshPoint.Tests.Provisioning
             composite.Unprovision();
 
             Assert.Equal("21", seq);
+        }
+
+        [Fact]
+        public void Assigns_context_to_children()
+        {
+            var p = new Mock<HarshProvisioner>();
+
+            var composite = new HarshCompositeProvisioner()
+            {
+                Web = ClientOM.Web,
+                Provisioners = { p.Object }
+            };
+
+            composite.Provision();
+
+            Assert.Equal(ClientOM.Web, p.Object.Web);
+        }
+
+        public SharePointClientFixture ClientOM
+        {
+            get;
+            set;
+        }
+
+        public void SetFixture(SharePointClientFixture data)
+        {
+            ClientOM = data;
         }
     }
 }

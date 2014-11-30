@@ -7,32 +7,22 @@ namespace HarshPoint.Provisioning
     {
         public HarshCompositeProvisioner()
         {
-            Provisioners = new Collection<HarshProvisioner>();
+            Provisioners = new HarshProvisionerCollection<HarshProvisioner>(
+                p => { p.Context = Context; return p; }
+            );
         }
 
         protected override void OnProvisioning()
         {
-            base.OnProvisioning();
-
-            foreach (var provisioner in Provisioners)
-            {
-                provisioner.Context = Context;
-                provisioner.Provision();
-            }
+            Provisioners.Provision();
         }
 
         protected override void OnUnprovisioning()
         {
-            foreach (var provisioner in Provisioners.Reverse())
-            {
-                provisioner.Context = Context;
-                provisioner.Unprovision();
-            }
-
-            base.OnUnprovisioning();
+            Provisioners.Unprovision();
         }
 
-        public Collection<HarshProvisioner> Provisioners
+        public HarshProvisionerCollection<HarshProvisioner> Provisioners
         {
             get;
             private set;
