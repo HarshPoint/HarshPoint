@@ -132,6 +132,9 @@
   <data name="FieldAttribute_InvalidGuid" xml:space="preserve">
     <value>The specified string is not a valid Guid.</value>
   </data>
+  <data name="HarshCompositeProvisioner_SequenceEmpty" xml:space="preserve">
+    <value>The specified sequence cannot be empty.</value>
+  </data>
   <data name="HarshEntityMetadata_TypeNotAnEntity" xml:space="preserve">
     <value>The specified type '{0}' is not a subclass of HarshEntity.</value>
   </data>

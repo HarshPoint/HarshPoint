@@ -107,6 +107,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified sequence cannot be empty..
+        /// </summary>
+        internal static string HarshCompositeProvisioner_SequenceEmpty {
+            get {
+                return ResourceManager.GetString("HarshCompositeProvisioner_SequenceEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not a subclass of HarshEntity..
         /// </summary>
         internal static string HarshEntityMetadata_TypeNotAnEntity {

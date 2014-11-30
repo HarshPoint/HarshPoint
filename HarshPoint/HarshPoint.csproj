@@ -52,8 +52,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provisioning\HarshCompositeProvisioner.cs" />
     <Compile Include="Provisioning\HarshProvisionerCollection`1.cs" />
+    <Compile Include="Provisioning\HarshFieldSchemaXmlProvisioner.cs" />
     <Compile Include="Provisioning\HarshFieldProvisioner.cs" />
-    <Compile Include="Provisioning\HarshFieldProvisionerBase.cs" />
     <Compile Include="Provisioning\HarshFieldSchemaXmlBuilder.cs" />
     <Compile Include="Provisioning\HarshFieldSchemaXmlTransformer.cs" />
     <Compile Include="Provisioning\HarshPotentiallyDestructiveProvisioner.cs" />

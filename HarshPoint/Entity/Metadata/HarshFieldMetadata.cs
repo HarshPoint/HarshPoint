@@ -1,13 +1,11 @@
-﻿using System;
+﻿using HarshPoint.Provisioning;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Entity.Metadata
 {
-    public sealed class HarshFieldMetadata
+    public sealed class HarshFieldMetadata 
     {
         internal HarshFieldMetadata(PropertyInfo definitionProperty, FieldAttribute fieldAttribute)
         {
@@ -40,6 +38,16 @@ namespace HarshPoint.Entity.Metadata
         {
             get;
             private set;
+        }
+
+        public IEnumerable<HarshProvisioner> CreateProvisioners()
+        {
+            yield return new HarshFieldSchemaXmlProvisioner()
+            {
+                FieldId = FieldId,
+                InternalName = InternalName,
+                StaticName = StaticName
+            };
         }
 
         private void InitializeFromDefinition(PropertyInfo definitionProperty, FieldAttribute fieldAttribute)
