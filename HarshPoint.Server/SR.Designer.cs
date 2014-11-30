@@ -61,11 +61,11 @@ namespace HarshPoint.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to The Feature property of the SPFeatureReceiverProperties argument cannot be null..
         /// </summary>
-        internal static string HarshProvisioner_Recursive {
+        internal static string HarshProvisionerFeatureReceiver_PropertiesFeatureNull {
             get {
-                return ResourceManager.GetString("HarshProvisioner_Recursive", resourceCulture);
+                return ResourceManager.GetString("HarshProvisionerFeatureReceiver_PropertiesFeatureNull", resourceCulture);
             }
         }
         
@@ -79,20 +79,20 @@ namespace HarshPoint.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t know how to adapt the type &apos;{0}&apos; to a HarshServerProvisioner..
+        ///   Looks up a localized string similar to Don&apos;t know how to convert an instance of type &apos;{0}&apos; to a HarshServerProvisioner..
         /// </summary>
-        internal static string HarshServerProvisionerExtensions_CannotConvertTo {
+        internal static string HarshServerProvisionerConverter_CannotConvert {
             get {
-                return ResourceManager.GetString("HarshServerProvisionerExtensions_CannotConvertTo", resourceCulture);
+                return ResourceManager.GetString("HarshServerProvisionerConverter_CannotConvert", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to HarshServerProvisioner has to specify an SPWeb or an SPSite in order to forward to a client-side provisioner implementation..
         /// </summary>
-        internal static string HarshServerProvisionerExtensions_OnlyWebAndSiteSupported {
+        internal static string HarshServerProvisionerConverter_OnlyWebAndSiteSupported {
             get {
-                return ResourceManager.GetString("HarshServerProvisionerExtensions_OnlyWebAndSiteSupported", resourceCulture);
+                return ResourceManager.GetString("HarshServerProvisionerConverter_OnlyWebAndSiteSupported", resourceCulture);
             }
         }
     }

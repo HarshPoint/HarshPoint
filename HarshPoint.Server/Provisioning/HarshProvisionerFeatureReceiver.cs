@@ -18,16 +18,31 @@ namespace HarshPoint.Server.Provisioning
         {
             base.FeatureActivated(properties);
 
-            Composite.SetContext(properties.Feature.Parent);
+            SetContext(properties);
             Composite.Provision();
         }
 
         public override void FeatureDeactivating(SPFeatureReceiverProperties properties)
         {
-            Composite.SetContext(properties.Feature.Parent);
+            SetContext(properties);
             Composite.Unprovision();
 
             base.FeatureDeactivating(properties);
+        }
+
+        private void SetContext(SPFeatureReceiverProperties properties)
+        {
+            if (properties == null)
+            {
+                throw Error.ArgumentNull("properties");
+            }
+
+            if (properties.Feature == null)
+            {
+                throw Error.ArgumentOutOfRange("properties", SR.HarshProvisionerFeatureReceiver_PropertiesFeatureNull);
+            }
+
+            Composite.SetContext(properties.Feature.Parent);
         }
     }
 }

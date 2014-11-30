@@ -64,7 +64,7 @@
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Provisioning\HarshProvisionerExtensions.cs">
+    <Compile Include="Provisioning\HarshProvisionerConverter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Provisioning\HarshServerCompositeProvisioner.cs" />

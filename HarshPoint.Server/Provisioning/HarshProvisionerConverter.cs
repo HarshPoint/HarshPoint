@@ -4,7 +4,7 @@ using System;
 
 namespace HarshPoint.Server.Provisioning
 {
-    public static class HarshProvisionerExtensions
+    public static class HarshProvisionerConverter
     {
         public static HarshServerProvisioner ToServerProvisioner(this HarshProvisionerBase provisioner)
         {
@@ -26,7 +26,7 @@ namespace HarshPoint.Server.Provisioning
                 throw Error.ArgumentOutOfRangeFormat(
                     "provisioner",
                     provisioner,
-                    SR.HarshServerProvisionerExtensions_CannotConvertTo,
+                    SR.HarshServerProvisionerConverter_CannotConvert,
                     provisioner.GetType().FullName
                 );
             }
@@ -59,7 +59,7 @@ namespace HarshPoint.Server.Provisioning
             {
                 if (Web == null)
                 {
-                    throw Error.InvalidOperation(SR.HarshServerProvisionerExtensions_OnlyWebAndSiteSupported);
+                    throw Error.InvalidOperation(SR.HarshServerProvisionerConverter_OnlyWebAndSiteSupported);
                 }
 
                 _provisioner.Context = new ClientContext(Web.Url);
