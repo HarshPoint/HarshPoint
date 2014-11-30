@@ -6,12 +6,9 @@ namespace HarshPoint.Server.Provisioning
     {
         public HarshServerCompositeProvisioner()
         {
-            Provisioners = new HarshProvisionerCollection<HarshProvisionerBase>(p =>
-            {
-                var serverProvisioner = p.ToServerProvisioner();
-                serverProvisioner.CopyContextFrom(this);
-                return serverProvisioner;
-            });
+            Provisioners = new HarshProvisionerCollection<HarshProvisionerBase>(
+                p => p.ToServerProvisioner(copyContextFrom: this)
+            );
         }
 
         protected override void OnProvisioning()
@@ -29,6 +26,5 @@ namespace HarshPoint.Server.Provisioning
             get;
             private set;
         }
-
     }
 }

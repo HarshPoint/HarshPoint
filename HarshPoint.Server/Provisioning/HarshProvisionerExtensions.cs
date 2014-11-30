@@ -34,6 +34,18 @@ namespace HarshPoint.Server.Provisioning
             return serverProvisioner;
         }
 
+        internal static HarshServerProvisioner ToServerProvisioner(this HarshProvisionerBase provisioner, HarshServerProvisioner copyContextFrom)
+        {
+            var serverProvisioner = ToServerProvisioner(provisioner);
+
+            if (copyContextFrom != null)
+            {
+                serverProvisioner.CopyContextFrom(copyContextFrom);
+            }
+
+            return serverProvisioner;
+        }
+
         private sealed class ClientProvisionerWrapper : HarshServerProvisioner
         {
             private readonly HarshProvisioner _provisioner;
