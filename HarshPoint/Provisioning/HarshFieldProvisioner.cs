@@ -11,6 +11,7 @@ namespace HarshPoint.Provisioning
     public sealed class HarshFieldProvisioner : HarshFieldProvisionerBase
     {
         private readonly HarshFieldSchemaXmlBuilder SchemaXmlBuilder;
+        private readonly XNodeEqualityComparer SchemaXmlComparer;
 
         public HarshFieldProvisioner()
         {
@@ -23,6 +24,7 @@ namespace HarshPoint.Provisioning
                     new NonNullAttributeSetter(() => StaticName, onFieldAddOnly: true),
                 }
             };
+            SchemaXmlComparer = new XNodeEqualityComparer();
         }
 
         public AddFieldOptions AddFieldOptions
@@ -108,10 +110,15 @@ namespace HarshPoint.Provisioning
             }
             else
             {
-                Field.SchemaXml = SchemaXml.ToString();
-                Context.ExecuteQuery();
+                var existingSchemaXml = SchemaXmlBuilder.GetExistingSchemaXml(Field);
 
-                FieldUpdated = true;
+                if (!SchemaXmlComparer.Equals(existingSchemaXml, SchemaXml))
+                {
+                    Field.SchemaXml = SchemaXml.ToString();
+                    Context.ExecuteQuery();
+
+                    FieldUpdated = true;
+                }
             }
         }
 
