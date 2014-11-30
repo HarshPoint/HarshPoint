@@ -198,7 +198,7 @@ namespace HarshPoint.Provisioning
                 }
 
                 _valueAccessor = valueAccessorExpr.Compile();
-                OnFieldAddOnly = OnFieldAddOnly;
+                OnFieldAddOnly = onFieldAddOnly;
             }
 
             public override XElement Transform(XElement element)
