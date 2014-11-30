@@ -183,8 +183,8 @@ namespace HarshPoint.Provisioning
 
         private sealed class NonNullAttributeSetter : HarshFieldSchemaXmlTransformer
         {
-            private readonly XName _name;
-            private readonly Func<Object> _valueAccessor;
+            private readonly XName Name;
+            private readonly Func<Object> ValueAccessor;
 
             public NonNullAttributeSetter(Expression<Func<Object>> valueAccessorExpr, XName name = null, Boolean onFieldAddOnly = false)
             {
@@ -195,14 +195,14 @@ namespace HarshPoint.Provisioning
 
                 if (name == null)
                 {
-                    _name = valueAccessorExpr.GetMemberName();
+                    Name = valueAccessorExpr.GetMemberName();
                 }
                 else
                 {
-                    _name = name;
+                    Name = name;
                 }
 
-                _valueAccessor = valueAccessorExpr.Compile();
+                ValueAccessor = valueAccessorExpr.Compile();
                 OnFieldAddOnly = onFieldAddOnly;
             }
 
@@ -213,11 +213,11 @@ namespace HarshPoint.Provisioning
                     throw Error.ArgumentNull("element");
                 }
 
-                var value = _valueAccessor();
+                var value = ValueAccessor();
 
                 if (value != null)
                 {
-                    element.SetAttributeValue(_name, value);
+                    element.SetAttributeValue(Name, value);
                 }
 
                 return element;
