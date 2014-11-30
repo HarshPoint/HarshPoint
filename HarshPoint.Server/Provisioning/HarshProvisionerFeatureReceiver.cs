@@ -17,12 +17,16 @@ namespace HarshPoint.Server.Provisioning
         public override void FeatureActivated(SPFeatureReceiverProperties properties)
         {
             base.FeatureActivated(properties);
+
+            Composite.SetContext(properties.Feature.Parent);
             Composite.Provision();
         }
 
         public override void FeatureDeactivating(SPFeatureReceiverProperties properties)
         {
+            Composite.SetContext(properties.Feature.Parent);
             Composite.Unprovision();
+
             base.FeatureDeactivating(properties);
         }
     }
