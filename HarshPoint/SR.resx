@@ -123,6 +123,9 @@
   <data name="ContentTypeAttribute_RelCTId_OutOfRange" xml:space="preserve">
     <value>The specified relative content type ID is invalid. A relative content type ID is either a 2- or or 32-character long hexadecimal string.</value>
   </data>
+  <data name="ExpressionExtensions_MemberExpressionNotFound" xml:space="preserve">
+    <value>A MemberExpression could not be found in the specified Expression.</value>
+  </data>
   <data name="FieldAttribute_EmptyGuid" xml:space="preserve">
     <value>Field ID cannot be an empty Guid.</value>
   </data>
@@ -134,5 +137,8 @@
   </data>
   <data name="HarshFieldProvisioner_SchemaXmlNotSet" xml:space="preserve">
     <value>The field cannot be added because FieldSchemaXml is null.</value>
+  </data>
+  <data name="HarshFieldProvisioner_TransformNull" xml:space="preserve">
+    <value>HarshFieldSchemaXmlTransformer.Transform cannot be null.</value>
   </data>
 </root>

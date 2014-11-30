@@ -80,6 +80,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A MemberExpression could not be found in the specified Expression..
+        /// </summary>
+        internal static string ExpressionExtensions_MemberExpressionNotFound {
+            get {
+                return ResourceManager.GetString("ExpressionExtensions_MemberExpressionNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field ID cannot be an empty Guid..
         /// </summary>
         internal static string FieldAttribute_EmptyGuid {
@@ -112,6 +121,15 @@ namespace HarshPoint {
         internal static string HarshFieldProvisioner_SchemaXmlNotSet {
             get {
                 return ResourceManager.GetString("HarshFieldProvisioner_SchemaXmlNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HarshFieldSchemaXmlTransformer.Transform cannot be null..
+        /// </summary>
+        internal static string HarshFieldProvisioner_TransformNull {
+            get {
+                return ResourceManager.GetString("HarshFieldProvisioner_TransformNull", resourceCulture);
             }
         }
     }

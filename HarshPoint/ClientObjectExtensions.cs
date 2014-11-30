@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Linq.Expressions;
 
 namespace HarshPoint
 {
@@ -18,6 +19,17 @@ namespace HarshPoint
             }
 
             return false;
+        }
+
+        public static Boolean IsPropertyAvailable<T>(this T clientObject, Expression<Func<T, Object>> expression)
+            where T : ClientObject
+        {
+            if (clientObject == null)
+            {
+                throw Error.ArgumentNull("clientObject");
+            }
+
+            return clientObject.IsPropertyAvailable(expression.GetMemberName());
         }
     }
 }

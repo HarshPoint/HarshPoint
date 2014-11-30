@@ -1,11 +1,30 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 
 namespace HarshPoint.Provisioning
 {
-    public class HarshFieldProvisioner : HarshFieldProvisionerBase
+    public sealed class HarshFieldProvisioner : HarshFieldProvisionerBase
     {
+        private readonly HarshFieldSchemaXmlBuilder SchemaXmlBuilder;
+
+        public HarshFieldProvisioner()
+        {
+            SchemaXmlBuilder = new HarshFieldSchemaXmlBuilder()
+            {
+                Transformers =
+                {
+                    new NonNullAttributeSetter(() => FieldTypeName, "Type"),
+                    new NonNullAttributeSetter(() => InternalName, onFieldAddOnly: true),
+                    new NonNullAttributeSetter(() => StaticName, onFieldAddOnly: true),
+                }
+            };
+        }
+
         public AddFieldOptions AddFieldOptions
         {
             get;
@@ -18,10 +37,33 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        public XElement FieldSchemaXml
+        public String FieldTypeName
         {
             get;
             set;
+        }
+
+        public String InternalName
+        {
+            get;
+            set;
+        }
+
+        public String StaticName
+        {
+            get;
+            set;
+        }
+
+        public XElement SchemaXml
+        {
+            get;
+            set;
+        }
+
+        public Collection<HarshFieldSchemaXmlTransformer> SchemaXmlTransformers
+        {
+            get { return SchemaXmlBuilder.Transformers; }
         }
 
         public Boolean FieldAdded
@@ -44,38 +86,32 @@ namespace HarshPoint.Provisioning
 
         protected override void Initialize()
         {
-            base.Initialize();
-
             FieldAdded = false;
             FieldRemoved = false;
             FieldUpdated = false;
+
+            base.Initialize();
         }
 
         protected override void OnProvisioning()
         {
             base.OnProvisioning();
 
+            SchemaXml = SchemaXmlBuilder.Update(Field, SchemaXml);
+
             if (Field.IsNull())
             {
-                if (FieldSchemaXml == null)
-                {
-                    throw Error.InvalidOperation(SR.HarshFieldProvisioner_SchemaXmlNotSet);
-                }
-
-                Field = TargetFieldCollection.AddFieldAsXml(FieldSchemaXml.ToString(), AddToDefaultView, AddFieldOptions);
+                Field = TargetFieldCollection.AddFieldAsXml(SchemaXml.ToString(), AddToDefaultView, AddFieldOptions);
                 Context.ExecuteQuery();
 
                 FieldAdded = true;
             }
             else
             {
-                if (FieldSchemaXml != null)
-                {
-                    Field.SchemaXml = FieldSchemaXml.ToString();
-                    Context.ExecuteQuery();
+                Field.SchemaXml = SchemaXml.ToString();
+                Context.ExecuteQuery();
 
-                    FieldUpdated = true;
-                }
+                FieldUpdated = true;
             }
         }
 
@@ -90,6 +126,39 @@ namespace HarshPoint.Provisioning
             }
 
             base.OnUnprovisioningMayDeleteUserData();
+        }
+
+        private sealed class NonNullAttributeSetter : HarshFieldSchemaXmlTransformer
+        {
+            private readonly XName _name;
+            private readonly Func<Object> _valueAccessor;
+
+            public NonNullAttributeSetter(Expression<Func<Object>> valueAccessorExpr, XName name = null, Boolean onFieldAddOnly = false)
+            {
+                if (name == null)
+                {
+                    _name = valueAccessorExpr.GetMemberName();
+                }
+                else
+                {
+                    _name = name;
+                }
+
+                _valueAccessor = valueAccessorExpr.Compile();
+                OnFieldAddOnly = OnFieldAddOnly;
+            }
+
+            public override XElement Transform(XElement element)
+            {
+                var value = _valueAccessor();
+
+                if (value != null)
+                {
+                    element.SetAttributeValue(_name, value);
+                }
+
+                return element;
+            }
         }
     }
 }

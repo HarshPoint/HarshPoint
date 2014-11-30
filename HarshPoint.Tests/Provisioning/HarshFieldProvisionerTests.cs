@@ -1,9 +1,6 @@
 ﻿using HarshPoint.Provisioning;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Linq;
 using Xunit;
 
 namespace HarshPoint.Tests.Provisioning
@@ -35,6 +32,18 @@ namespace HarshPoint.Tests.Provisioning
             Assert.False(prov.FieldAdded);
             Assert.False(prov.FieldRemoved);
             Assert.False(prov.FieldUpdated);
+        }
+
+        [Fact]
+        public void Field_id_is_generated_into_schema()
+        {
+            var fieldId = Guid.NewGuid();
+            var prov = new HarshFieldProvisioner()
+            {
+                Web = ClientOM.Web,
+                FieldId = fieldId,
+            };
+
         }
     }
 }
