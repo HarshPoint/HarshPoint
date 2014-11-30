@@ -1,6 +1,7 @@
 ﻿using Microsoft.SharePoint.Client;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -32,6 +33,7 @@ namespace HarshPoint.Provisioning
         /// </summary>
         /// <param name="field">The field, may be <c>null</c>.</param>
         /// <returns></returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public XElement GetExistingSchemaXml(Field field)
         {
             if (field.IsNull())
@@ -72,7 +74,7 @@ namespace HarshPoint.Provisioning
             );
         }
 
-        private XElement RunSchemaXmlTransformers(XElement schemaXml, IEnumerable<HarshFieldSchemaXmlTransformer> transformers)
+        private static XElement RunSchemaXmlTransformers(XElement schemaXml, IEnumerable<HarshFieldSchemaXmlTransformer> transformers)
         {
             foreach (var trans in transformers)
             {

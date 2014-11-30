@@ -188,6 +188,11 @@ namespace HarshPoint.Provisioning
 
             public NonNullAttributeSetter(Expression<Func<Object>> valueAccessorExpr, XName name = null, Boolean onFieldAddOnly = false)
             {
+                if (valueAccessorExpr == null)
+                {
+                    throw Error.ArgumentNull("valueAccessorExpr");
+                }
+
                 if (name == null)
                 {
                     _name = valueAccessorExpr.GetMemberName();
@@ -203,6 +208,11 @@ namespace HarshPoint.Provisioning
 
             public override XElement Transform(XElement element)
             {
+                if (element == null)
+                {
+                    throw Error.ArgumentNull("element");
+                }
+
                 var value = _valueAccessor();
 
                 if (value != null)

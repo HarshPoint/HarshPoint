@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace HarshPoint
 {
     public static class ExpressionExtensions
     {
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static String GetMemberName<T, TResult>(this Expression<Func<T, TResult>> expression)
         {
             return GetMemberNameCore(expression);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static String GetMemberName<T>(this Expression<Func<T>> expression)
         {
             return GetMemberNameCore(expression);
@@ -53,6 +58,11 @@ namespace HarshPoint
 
             protected override Expression VisitMember(MemberExpression node)
             {
+                if (node == null)
+                {
+                    throw Error.ArgumentNull("node");
+                }
+
                 if (node.Member != null)
                 {
                     MemberNames = MemberNames.Push(node.Member.Name);
