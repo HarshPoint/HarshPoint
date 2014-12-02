@@ -40,7 +40,7 @@ namespace HarshPoint.Server.Provisioning
 
             if (copyContextFrom != null)
             {
-                serverProvisioner.CopyContextFrom(copyContextFrom);
+                serverProvisioner.Context = copyContextFrom.Context;
             }
 
             return serverProvisioner;

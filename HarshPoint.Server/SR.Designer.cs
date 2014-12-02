@@ -61,20 +61,20 @@ namespace HarshPoint.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Feature property of the SPFeatureReceiverProperties argument cannot be null..
-        /// </summary>
-        internal static string HarshProvisionerFeatureReceiver_PropertiesFeatureNull {
-            get {
-                return ResourceManager.GetString("HarshProvisionerFeatureReceiver_PropertiesFeatureNull", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The web &apos;{0}&apos; is not a publishing web..
         /// </summary>
         internal static string HarshProvisionerPublishing_NotAPublishingWeb {
             get {
                 return ResourceManager.GetString("HarshProvisionerPublishing_NotAPublishingWeb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Feature property of the SPFeatureReceiverProperties argument cannot be null..
+        /// </summary>
+        internal static string HarshServerProvisionerContext_PropertiesFeatureNull {
+            get {
+                return ResourceManager.GetString("HarshServerProvisionerContext_PropertiesFeatureNull", resourceCulture);
             }
         }
         

@@ -30,7 +30,7 @@ namespace HarshPoint.Server.Tests
 
             var serverProv = prov.Object.ToServerProvisioner();
 
-            serverProv.Site = ServerOM.Site;
+            serverProv.Context = ServerOM.WebContext;
             serverProv.Provision();
 
             prov.Verify();
@@ -45,7 +45,7 @@ namespace HarshPoint.Server.Tests
             clientProv.Protected().Setup("Complete");
 
             var serverProv = clientProv.Object.ToServerProvisioner();
-            serverProv.Site = ServerOM.Site;
+            serverProv.Context = ServerOM.WebContext;
             serverProv.Unprovision();
 
             clientProv.Verify();
@@ -57,7 +57,7 @@ namespace HarshPoint.Server.Tests
             var clientProv = Mock.Of<HarshProvisioner>();
             var serverProv = clientProv.ToServerProvisioner();
 
-            serverProv.Web = ServerOM.Web;
+            serverProv.Context = ServerOM.WebContext;
             serverProv.Provision();
 
             clientProv.Context.Load(clientProv.Web, w => w.Url);
@@ -72,7 +72,7 @@ namespace HarshPoint.Server.Tests
             var clientProv = Mock.Of<HarshProvisioner>();
             var serverProv = clientProv.ToServerProvisioner();
 
-            serverProv.Site = ServerOM.Site;
+            serverProv.Context = ServerOM.WebContext;
             serverProv.Provision();
 
             clientProv.Context.Load(clientProv.Site, s => s.Url);
@@ -82,12 +82,22 @@ namespace HarshPoint.Server.Tests
         }
 
         [Fact]
+        public void ToServerProvisioner_fails_with_WebApp()
+        {
+            var clientProv = Mock.Of<HarshProvisioner>();
+            var serverProv = clientProv.ToServerProvisioner();
+
+            serverProv.Context = new HarshServerProvisionerContext(ServerOM.WebApplication);
+            Assert.Throws<InvalidOperationException>(() => serverProv.Provision());
+        }
+
+        [Fact]
         public void ToServerProvisioner_fails_with_Farm()
         {
             var clientProv = Mock.Of<HarshProvisioner>();
             var serverProv = clientProv.ToServerProvisioner();
 
-            serverProv.Farm = ServerOM.Farm;
+            serverProv.Context = new HarshServerProvisionerContext(ServerOM.Farm);
             Assert.Throws<InvalidOperationException>(() => serverProv.Provision());
         }
     }

@@ -96,7 +96,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         public void Set_Web_sets_Site()
         {
             var p = Mock.Of<HarshServerProvisioner>();
-            p.Web = SPFixture.Web;
+            p.Context = SPFixture.WebContext;
             Assert.Equal(SPFixture.Site, p.Site);
         }
 
@@ -104,55 +104,55 @@ namespace HarshPoint.Server.Tests.UnitTests
         public void Set_Web_sets_WebApplication()
         {
             var p = Mock.Of<HarshServerProvisioner>();
-            p.Web = SPFixture.Web;
+            p.Context = SPFixture.WebContext;
             Assert.Equal(SPFixture.WebApplication, p.WebApplication);
         }
 
         [Fact]
-        public void Set_Web_sets_Farm()
+        public void Set_WebContext_sets_Farm()
         {
             var p = Mock.Of<HarshServerProvisioner>();
-            p.Web = SPFixture.Web;
+            p.Context = SPFixture.WebContext;
             Assert.Equal(SPFixture.Farm, p.Farm);
         }
 
         [Fact]
-        public void Set_Site_sets_Web_to_RootWeb()
+        public void Set_SiteContext_sets_Web_to_RootWeb()
         {
             var p = Mock.Of<HarshServerProvisioner>();
-            p.Site = SPFixture.Site;
+            p.Context = new HarshServerProvisionerContext(SPFixture.Site);
             Assert.Equal(SPFixture.Site.RootWeb, p.Web);
         }
 
         [Fact]
-        public void Set_Site_sets_WebApplication()
+        public void Set_SiteContext_sets_WebApplication()
         {
             var p = Mock.Of<HarshServerProvisioner>();
-            p.Site = SPFixture.Site;
+            p.Context = new HarshServerProvisionerContext(SPFixture.Site);
             Assert.Equal(SPFixture.WebApplication, p.WebApplication);
         }
 
         [Fact]
-        public void Set_Site_sets_Farm()
+        public void Set_SiteContext_sets_Farm()
         {
             var p = Mock.Of<HarshServerProvisioner>();
-            p.Site = SPFixture.Site;
+            p.Context = new HarshServerProvisionerContext(SPFixture.Site);
             Assert.Equal(SPFixture.Farm, p.Farm);
         }
 
         [Fact]
-        public void Set_WebApplication_clears_Web()
+        public void Set_WebApplicationContext_clears_Web()
         {
             var p = Mock.Of<HarshServerProvisioner>();
-            p.WebApplication = SPFixture.WebApplication;
+            p.Context = new HarshServerProvisionerContext(SPFixture.WebApplication);
             Assert.Equal(null, p.Web);
         }
 
         [Fact]
-        public void Set_WebApplication_clears_Site()
+        public void Set_WebApplicationContext_clears_Site()
         {
             var p = Mock.Of<HarshServerProvisioner>();
-            p.WebApplication = SPFixture.WebApplication;
+            p.Context = new HarshServerProvisionerContext(SPFixture.WebApplication);
             Assert.Equal(null, p.Site);
         }
 
@@ -160,7 +160,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         public void Set_WebApplication_sets_Farm()
         {
             var p = Mock.Of<HarshServerProvisioner>();
-            p.WebApplication = SPFixture.WebApplication;
+            p.Context = new HarshServerProvisionerContext(SPFixture.Farm);
             Assert.Equal(SPFixture.Farm, p.Farm);
         }
     }

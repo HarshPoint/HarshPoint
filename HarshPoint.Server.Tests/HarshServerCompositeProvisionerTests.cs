@@ -58,7 +58,7 @@ namespace HarshPoint.Server.Tests
 
             var composite = new HarshServerCompositeProvisioner()
             {
-                Web = ServerOM.Web,
+                Context = ServerOM.WebContext,
                 Provisioners = { p.Object }
             };
 
