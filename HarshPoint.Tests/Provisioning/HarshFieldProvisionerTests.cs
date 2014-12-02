@@ -23,7 +23,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                Web = ClientOM.Web,
+                Context = ClientOM.Context,
                 FieldId = new Guid("fa564e0f-0c70-4ab9-b863-0177e6ddd247"), // SPBuiltInFieldId.Title
             };
 
@@ -40,7 +40,7 @@ namespace HarshPoint.Tests.Provisioning
             var fieldId = Guid.NewGuid();
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                Web = ClientOM.Web,
+                Context = ClientOM.Context,
                 FieldId = fieldId,
             };
 

@@ -57,7 +57,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var composite = new HarshCompositeProvisioner()
             {
-                Web = ClientOM.Web,
+                Context = ClientOM.Context,
                 Provisioners = { p.Object }
             };
 
