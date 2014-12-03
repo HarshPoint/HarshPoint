@@ -59,11 +59,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity\ContentTypeAttributeTests.cs" />
+    <Compile Include="Entity\ContentTypeIdBuilderTests.cs" />
     <Compile Include="Entity\FieldAttributeTests.cs" />
+    <Compile Include="Entity\HarshEntityMetadataContentTypeTests.cs" />
     <Compile Include="Entity\HarshFieldMetadataTests.cs" />
     <Compile Include="Entity\TestEntity.cs" />
     <Compile Include="ExpressionExtensionsTests.cs" />
+    <Compile Include="HarshContentTypeIdTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provisioning\HarshCompositeProvisionerTests.cs" />
     <Compile Include="Provisioning\HarshFieldSchemaXmlBuilderTests.cs" />

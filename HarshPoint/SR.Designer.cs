@@ -62,20 +62,29 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified string &quot;00&quot; is used to separate content type ID parts and therefore cannot be used as a valid relative content type ID..
+        ///   Looks up a localized string similar to The content type ID could not be determined because no parent of the specified type &apos;{0}&apos; defines an absolute content type ID..
         /// </summary>
-        internal static string ContentTypeAttribute_RelCTId_00_OutOfRange {
+        internal static string ContentTypeIdBuilder_NoAbsoluteIDInHierarchy {
             get {
-                return ResourceManager.GetString("ContentTypeAttribute_RelCTId_00_OutOfRange", resourceCulture);
+                return ResourceManager.GetString("ContentTypeIdBuilder_NoAbsoluteIDInHierarchy", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified relative content type ID is invalid. A relative content type ID is either a 2- or or 32-character long hexadecimal string..
+        ///   Looks up a localized string similar to The content type ID could not be determined because the type &apos;{0}&apos; has no ContentTypeAttribute..
         /// </summary>
-        internal static string ContentTypeAttribute_RelCTId_OutOfRange {
+        internal static string ContentTypeIdBuilder_NoContentTypeAttribute {
             get {
-                return ResourceManager.GetString("ContentTypeAttribute_RelCTId_OutOfRange", resourceCulture);
+                return ResourceManager.GetString("ContentTypeIdBuilder_NoContentTypeAttribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The content type ID cannot be determined because the type &apos;{0}&apos;, from which the specified type &apos;{1}&apos; inherits, has no ContentTypeAttribute..
+        /// </summary>
+        internal static string ContentTypeIdBuilder_NoContentTypeAttributeBaseClass {
+            get {
+                return ResourceManager.GetString("ContentTypeIdBuilder_NoContentTypeAttributeBaseClass", resourceCulture);
             }
         }
         
@@ -116,11 +125,74 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified content type ID &apos;{0}&apos; cannot be appended to &apos;{1}&apos;, because it is already an absolute content type ID...
+        /// </summary>
+        internal static string HarshContentTypeId_CannotAppendAbsoluteCTId {
+            get {
+                return ResourceManager.GetString("HarshContentTypeId_CannotAppendAbsoluteCTId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified string &apos;{0}&apos; is not a valid content type ID. Expected a 32-character ID after the &quot;00&quot; separator..
+        /// </summary>
+        internal static string HarshContentTypeId_Expected_32chars_ID_after_00 {
+            get {
+                return ResourceManager.GetString("HarshContentTypeId_Expected_32chars_ID_after_00", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified string &apos;{0}&apos; contains characters illegal in a content type ID..
+        /// </summary>
+        internal static string HarshContentTypeId_IllegalCharacters {
+            get {
+                return ResourceManager.GetString("HarshContentTypeId_IllegalCharacters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified string &apos;{0}&apos; is not a vaild content type ID, its length isn&apos;t an even number..
+        /// </summary>
+        internal static string HarshContentTypeId_NotEven {
+            get {
+                return ResourceManager.GetString("HarshContentTypeId_NotEven", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified string &quot;00&quot; is used to separate content type ID parts and therefore cannot be used as a valid relative content type ID..
+        /// </summary>
+        internal static string HarshContentTypeId_RelCTId_00_OutOfRange {
+            get {
+                return ResourceManager.GetString("HarshContentTypeId_RelCTId_00_OutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified relative content type ID &apos;{0}&apos; is invalid. A relative content type ID is either a 2 or 32 character long hexadecimal string..
+        /// </summary>
+        internal static string HarshContentTypeId_RelCTId_OutOfRange {
+            get {
+                return ResourceManager.GetString("HarshContentTypeId_RelCTId_OutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not a subclass of HarshEntity..
         /// </summary>
         internal static string HarshEntityMetadata_TypeNotAnEntity {
             get {
                 return ResourceManager.GetString("HarshEntityMetadata_TypeNotAnEntity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified type &apos;{0}&apos; has no ContentTypeAttribute..
+        /// </summary>
+        internal static string HarshEntityMetadataContentType_NoContentTypeAttribute {
+            get {
+                return ResourceManager.GetString("HarshEntityMetadataContentType_NoContentTypeAttribute", resourceCulture);
             }
         }
         

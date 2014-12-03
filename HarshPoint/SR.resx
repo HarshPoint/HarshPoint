@@ -117,11 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ContentTypeAttribute_RelCTId_00_OutOfRange" xml:space="preserve">
-    <value>The specified string "00" is used to separate content type ID parts and therefore cannot be used as a valid relative content type ID.</value>
+  <data name="ContentTypeIdBuilder_NoAbsoluteIDInHierarchy" xml:space="preserve">
+    <value>The content type ID could not be determined because no parent of the specified type '{0}' defines an absolute content type ID.</value>
   </data>
-  <data name="ContentTypeAttribute_RelCTId_OutOfRange" xml:space="preserve">
-    <value>The specified relative content type ID is invalid. A relative content type ID is either a 2- or or 32-character long hexadecimal string.</value>
+  <data name="ContentTypeIdBuilder_NoContentTypeAttribute" xml:space="preserve">
+    <value>The content type ID could not be determined because the type '{0}' has no ContentTypeAttribute.</value>
+  </data>
+  <data name="ContentTypeIdBuilder_NoContentTypeAttributeBaseClass" xml:space="preserve">
+    <value>The content type ID cannot be determined because the type '{0}', from which the specified type '{1}' inherits, has no ContentTypeAttribute.</value>
   </data>
   <data name="ExpressionExtensions_MemberExpressionNotFound" xml:space="preserve">
     <value>A MemberExpression could not be found in the specified Expression.</value>
@@ -134,6 +137,27 @@
   </data>
   <data name="HarshCompositeProvisioner_SequenceEmpty" xml:space="preserve">
     <value>The specified sequence cannot be empty.</value>
+  </data>
+  <data name="HarshContentTypeId_CannotAppendAbsoluteCTId" xml:space="preserve">
+    <value>The specified content type ID '{0}' cannot be appended to '{1}', because it is already an absolute content type ID..</value>
+  </data>
+  <data name="HarshContentTypeId_Expected_32chars_ID_after_00" xml:space="preserve">
+    <value>The specified string '{0}' is not a valid content type ID. Expected a 32-character ID after the "00" separator.</value>
+  </data>
+  <data name="HarshContentTypeId_IllegalCharacters" xml:space="preserve">
+    <value>The specified string '{0}' contains characters illegal in a content type ID.</value>
+  </data>
+  <data name="HarshContentTypeId_NotEven" xml:space="preserve">
+    <value>The specified string '{0}' is not a vaild content type ID, its length isn't an even number.</value>
+  </data>
+  <data name="HarshContentTypeId_RelCTId_00_OutOfRange" xml:space="preserve">
+    <value>The specified string "00" is used to separate content type ID parts and therefore cannot be used as a valid relative content type ID.</value>
+  </data>
+  <data name="HarshContentTypeId_RelCTId_OutOfRange" xml:space="preserve">
+    <value>The specified relative content type ID '{0}' is invalid. A relative content type ID is either a 2 or 32 character long hexadecimal string.</value>
+  </data>
+  <data name="HarshEntityMetadataContentType_NoContentTypeAttribute" xml:space="preserve">
+    <value>The specified type '{0}' has no ContentTypeAttribute.</value>
   </data>
   <data name="HarshEntityMetadata_TypeNotAnEntity" xml:space="preserve">
     <value>The specified type '{0}' is not a subclass of HarshEntity.</value>

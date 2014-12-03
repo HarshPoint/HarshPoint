@@ -22,7 +22,6 @@ namespace HarshPoint.Entity.Metadata
             {
                 throw Error.ArgumentOutOfRangeFormat(
                     "entityType",
-                    entityType,
                     SR.HarshEntityMetadata_TypeNotAnEntity,
                     entityType.FullName
                 );
@@ -57,5 +56,7 @@ namespace HarshPoint.Entity.Metadata
                     select new HarshFieldMetadata(property, fieldAttr))
                    .ToImmutableList();
         }
+
+        internal static readonly TypeInfo HarshEntityTypeInfo = typeof(HarshEntity).GetTypeInfo();
     }
 }

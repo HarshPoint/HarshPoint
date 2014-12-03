@@ -25,7 +25,6 @@ namespace HarshPoint.Server.Provisioning
             {
                 throw Error.ArgumentOutOfRangeFormat(
                     "provisioner",
-                    provisioner,
                     SR.HarshServerProvisionerConverter_CannotConvert,
                     provisioner.GetType().FullName
                 );

@@ -18,12 +18,12 @@ namespace HarshPoint.Entity
 
             if (!Guid.TryParse(fieldId, out guid))
             {
-                throw Error.ArgumentOutOfRange("fieldId", fieldId, SR.FieldAttribute_InvalidGuid);
+                throw Error.ArgumentOutOfRange("fieldId", SR.FieldAttribute_InvalidGuid);
             }
 
             if (guid == Guid.Empty)
             {
-                throw Error.ArgumentOutOfRange("fieldId", fieldId, SR.FieldAttribute_EmptyGuid);
+                throw Error.ArgumentOutOfRange("fieldId", SR.FieldAttribute_EmptyGuid);
             }
 
             FieldId = guid;

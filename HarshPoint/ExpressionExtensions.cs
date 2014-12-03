@@ -35,7 +35,6 @@ namespace HarshPoint
             {
                 throw Error.ArgumentOutOfRangeFormat(
                     "expression",
-                    expression,
                     SR.ExpressionExtensions_MemberExpressionNotFound
                 );
             }
