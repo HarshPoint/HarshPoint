@@ -69,10 +69,31 @@ namespace HarshPoint.Tests.Entity
                 set { }
             }
 
+            [Field("68b4c510-ec16-4cd0-bb65-f57c54ddfc53")]
+            public String WritePrivate
+            {
+                get;
+                private set;
+            }
+
             [Field("6bab39f8-8979-4f47-a5d5-56785eb45d4f")]
             public String ReadOnly
             {
                 get { return null; }
+            }
+
+            [Field("6bab39f9-8979-4f47-a5d5-56785eb45d4f")]
+            public String ReadPrivate
+            {
+                private get;
+                set;
+            }
+
+            [Field("6bab3a00-8979-4f47-a5d5-56785eb45d4f")]
+            internal String Internal
+            {
+                get;
+                set;
             }
 
             public String NotAField

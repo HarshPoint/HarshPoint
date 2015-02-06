@@ -26,7 +26,7 @@ namespace HarshPoint.Entity.Metadata
                 );
             }
 
-            DeclaredFields = CreateFieldMetadata().ToImmutableList();
+            CreateFieldMetadata();
         }
 
         public Type EntityType
@@ -47,11 +47,13 @@ namespace HarshPoint.Entity.Metadata
             private set;
         }
 
-        private IEnumerable<HarshFieldMetadata> CreateFieldMetadata()
+        private void CreateFieldMetadata()
         {
+            var declared = ImmutableList.CreateBuilder<HarshFieldMetadata>();
+
             foreach (var property in EntityTypeInfo.DeclaredProperties)
             {
-                if (!property.CanWrite)
+                if (!property.CanWrite || !property.SetMethod.IsPublic)
                 {
                     Trace.WriteLine(
                         "CreateFieldMetadata: skipping non-writable property {0}.{1}.",
@@ -61,7 +63,7 @@ namespace HarshPoint.Entity.Metadata
                     continue;
                 }
 
-                if (!property.CanRead)
+                if (!property.CanRead || !property.GetMethod.IsPublic)
                 {
                     Trace.WriteLine(
                         "CreateFieldMetadata: skipping non-readable property {0}.{1}.",
@@ -71,7 +73,7 @@ namespace HarshPoint.Entity.Metadata
                     continue;
                 }
 
-                var fieldAttr = property.GetCustomAttribute<FieldAttribute>();
+                var fieldAttr = property.GetCustomAttribute<FieldAttribute>(inherit: false);
 
                 if (fieldAttr == null)
                 {
@@ -83,8 +85,10 @@ namespace HarshPoint.Entity.Metadata
                     continue;
                 }
 
-                yield return new HarshFieldMetadata(property, fieldAttr);
+                declared.Add(new HarshFieldMetadata(property, fieldAttr));
             }
+
+            DeclaredFields = declared.ToImmutable();
         }
 
         internal static readonly TypeInfo HarshEntityTypeInfo = 
