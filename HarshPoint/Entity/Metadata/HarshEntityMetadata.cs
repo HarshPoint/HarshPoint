@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Reflection;
 
 namespace HarshPoint.Entity.Metadata
@@ -27,7 +26,7 @@ namespace HarshPoint.Entity.Metadata
                 );
             }
 
-            Fields = CreateFieldMetadata();
+            DeclaredFields = CreateFieldMetadata().ToImmutableList();
         }
 
         public Type EntityType
@@ -36,7 +35,7 @@ namespace HarshPoint.Entity.Metadata
             private set;
         }
 
-        public IReadOnlyCollection<HarshFieldMetadata> Fields
+        public IReadOnlyCollection<HarshFieldMetadata> DeclaredFields
         {
             get;
             private set;
@@ -48,15 +47,50 @@ namespace HarshPoint.Entity.Metadata
             private set;
         }
 
-        private ImmutableList<HarshFieldMetadata> CreateFieldMetadata()
+        private IEnumerable<HarshFieldMetadata> CreateFieldMetadata()
         {
-            return (from property in EntityTypeInfo.DeclaredProperties
-                    let fieldAttr = property.GetCustomAttribute<FieldAttribute>()
-                    where fieldAttr != null
-                    select new HarshFieldMetadata(property, fieldAttr))
-                   .ToImmutableList();
+            foreach (var property in EntityTypeInfo.DeclaredProperties)
+            {
+                if (!property.CanWrite)
+                {
+                    Trace.WriteLine(
+                        "CreateFieldMetadata: skipping non-writable property {0}.{1}.",
+                        EntityTypeInfo.FullName,
+                        property.Name
+                    );
+                    continue;
+                }
+
+                if (!property.CanRead)
+                {
+                    Trace.WriteLine(
+                        "CreateFieldMetadata: skipping non-readable property {0}.{1}.",
+                        EntityTypeInfo.FullName,
+                        property.Name
+                    );
+                    continue;
+                }
+
+                var fieldAttr = property.GetCustomAttribute<FieldAttribute>();
+
+                if (fieldAttr == null)
+                {
+                    Trace.WriteLine(
+                        "CreateFieldMetadata: skipping property {0}.{1}, has no FieldAttribute.",
+                        EntityTypeInfo.FullName,
+                        property.Name
+                    );
+                    continue;
+                }
+
+                yield return new HarshFieldMetadata(property, fieldAttr);
+            }
         }
 
-        internal static readonly TypeInfo HarshEntityTypeInfo = typeof(HarshEntity).GetTypeInfo();
+        internal static readonly TypeInfo HarshEntityTypeInfo = 
+            typeof(HarshEntity).GetTypeInfo();
+
+        private static readonly HarshTraceSource Trace = 
+            new HarshTraceSource(typeof(HarshEntityMetadata));
     }
 }
