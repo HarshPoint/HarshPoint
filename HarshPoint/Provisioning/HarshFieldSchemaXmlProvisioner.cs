@@ -1,8 +1,7 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 
@@ -23,10 +22,29 @@ namespace HarshPoint.Provisioning
             {
                 Transformers =
                 {
-                    new NonNullAttributeSetter(() => FieldId, "ID", onFieldAddOnly: true),
-                    new NonNullAttributeSetter(() => FieldTypeName, "Type"),
-                    new NonNullAttributeSetter(() => InternalName, onFieldAddOnly: true),
-                    new NonNullAttributeSetter(() => StaticName, onFieldAddOnly: true),
+                    new AttributeSetter(() => FieldId) 
+                    { 
+                        Name = "ID",
+                        ValueValidator = ValidateNotEmptyGuid,
+                        SkipWhenModifying = true,
+                    },
+
+                    new AttributeSetter(() => FieldTypeName)
+                    { 
+                        Name = "Type",
+                        ValueValidator = ValidateNotNullOrWhitespace,
+                    },
+                    
+                    new AttributeSetter(() => InternalName)
+                    {
+                        ValueValidator = ValidateNotNullOrWhitespace,
+                        SkipWhenModifying = true,
+                    },
+
+                    new AttributeSetter(() => StaticName) 
+                    {
+                        SkipWhenModifying = true
+                    },
                 }
             };
         }
@@ -143,33 +161,13 @@ namespace HarshPoint.Provisioning
         {
             base.OnProvisioning();
 
-            if (StaticName == null)
-            {
-                StaticName = InternalName;
-            }
-
-            if (String.IsNullOrWhiteSpace(FieldTypeName))
-            {
-                throw Error.InvalidOperation(SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace, "FieldTypeName");
-            }
-
-            if (String.IsNullOrWhiteSpace(InternalName))
-            {
-                throw Error.InvalidOperation(SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace, "InternalName");
-            }
-
-            if (String.IsNullOrWhiteSpace(StaticName))
-            {
-                throw Error.InvalidOperation(SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace, "StaticName");
-            }
-
             SchemaXml = SchemaXmlBuilder.Update(Field, SchemaXml);
 
             if (Field.IsNull())
             {
                 Field = TargetFieldCollection.AddFieldAsXml(
-                    SchemaXml.ToString(), 
-                    AddToDefaultView, 
+                    SchemaXml.ToString(),
+                    AddToDefaultView,
                     AddFieldOptions
                 );
 
@@ -211,29 +209,38 @@ namespace HarshPoint.Provisioning
 
         private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
 
-        private sealed class NonNullAttributeSetter : HarshFieldSchemaXmlTransformer
+        private class AttributeSetter : HarshFieldSchemaXmlTransformer
         {
-            private readonly XName Name;
             private readonly Func<Object> ValueAccessor;
 
-            public NonNullAttributeSetter(Expression<Func<Object>> valueAccessorExpr, XName name = null, Boolean onFieldAddOnly = false)
+            public AttributeSetter(Expression<Func<Object>> valueAccessorExpr)
             {
                 if (valueAccessorExpr == null)
                 {
                     throw Error.ArgumentNull("valueAccessorExpr");
                 }
 
-                if (name == null)
-                {
-                    Name = valueAccessorExpr.GetMemberName();
-                }
-                else
-                {
-                    Name = name;
-                }
-
+                PropertyName = valueAccessorExpr.GetMemberName();
                 ValueAccessor = valueAccessorExpr.Compile();
-                OnFieldAddOnly = onFieldAddOnly;
+                Name = PropertyName;
+            }
+
+            public XName Name
+            {
+                get;
+                set;
+            }
+
+            public String PropertyName
+            {
+                get;
+                private set;
+            }
+
+            public Action<AttributeSetter, Object> ValueValidator
+            {
+                get;
+                set;
             }
 
             public override XElement Transform(XElement element)
@@ -245,12 +252,41 @@ namespace HarshPoint.Provisioning
 
                 var value = ValueAccessor();
 
+                if (ValueValidator != null)
+                {
+                    ValueValidator(this, value);
+                }
+
                 if (value != null)
                 {
                     element.SetAttributeValue(Name, value);
                 }
 
                 return element;
+            }
+        }
+
+        private static void ValidateNotEmptyGuid(AttributeSetter setter, Object value)
+        {
+            if (Guid.Empty.Equals(value))
+            {
+                throw Error.InvalidOperation(
+                    SR.HarshFieldSchemaXmlProvisioner_PropertyEmptyGuid, 
+                    setter.PropertyName
+                );
+            }
+        }
+
+        private static void ValidateNotNullOrWhitespace(AttributeSetter setter, Object value)
+        {
+            var asString = Convert.ToString(value, CultureInfo.InvariantCulture);
+
+            if (value == null || String.IsNullOrWhiteSpace(asString))
+            {
+                throw Error.InvalidOperation(
+                    SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace, 
+                    setter.PropertyName
+                );
             }
         }
     }

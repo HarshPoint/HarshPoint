@@ -70,7 +70,7 @@ namespace HarshPoint.Provisioning
 
             return RunSchemaXmlTransformers(
                 schemaXml,
-                Transformers.Where(t => !t.OnFieldAddOnly)
+                Transformers.Where(t => !t.SkipWhenModifying)
             );
         }
 

@@ -171,7 +171,10 @@
   <data name="HarshFieldProvisioner_TransformNull" xml:space="preserve">
     <value>HarshFieldSchemaXmlTransformer.Transform cannot be null.</value>
   </data>
+  <data name="HarshFieldSchemaXmlProvisioner_PropertyEmptyGuid" xml:space="preserve">
+    <value>The {0} cannot be an empty Guid.</value>
+  </data>
   <data name="HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace" xml:space="preserve">
-    <value>The field {0} cannot be null or a white space string.</value>
+    <value>The {0} cannot be null or a white space string.</value>
   </data>
 </root>

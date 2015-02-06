@@ -224,7 +224,16 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The field {0} cannot be null or a white space string..
+        ///   Looks up a localized string similar to The {0} cannot be an empty Guid..
+        /// </summary>
+        internal static string HarshFieldSchemaXmlProvisioner_PropertyEmptyGuid {
+            get {
+                return ResourceManager.GetString("HarshFieldSchemaXmlProvisioner_PropertyEmptyGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} cannot be null or a white space string..
         /// </summary>
         internal static string HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace {
             get {

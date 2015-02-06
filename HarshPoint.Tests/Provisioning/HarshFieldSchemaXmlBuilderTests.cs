@@ -17,8 +17,8 @@ namespace HarshPoint.Tests.Provisioning
             var addOnlyTransformer = GetNopTransformer();
             var addOrUpdateTransformer = GetNopTransformer();
 
-            addOnlyTransformer.Object.OnFieldAddOnly = true;
-            addOrUpdateTransformer.Object.OnFieldAddOnly = false;
+            addOnlyTransformer.Object.SkipWhenModifying = true;
+            addOrUpdateTransformer.Object.SkipWhenModifying = false;
 
             var builder = new HarshFieldSchemaXmlBuilder()
             {
@@ -38,8 +38,8 @@ namespace HarshPoint.Tests.Provisioning
             var addOnlyTransformer = GetNopTransformer();
             var addOrUpdateTransformer = GetNopTransformer();
 
-            addOnlyTransformer.Object.OnFieldAddOnly = true;
-            addOrUpdateTransformer.Object.OnFieldAddOnly = false;
+            addOnlyTransformer.Object.SkipWhenModifying = true;
+            addOrUpdateTransformer.Object.SkipWhenModifying = false;
 
             var builder = new HarshFieldSchemaXmlBuilder()
             {

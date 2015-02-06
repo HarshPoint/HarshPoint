@@ -16,7 +16,7 @@ namespace HarshPoint.Provisioning
         /// <value>
         /// <c>true</c> if this transformation runs only when creating new fields; otherwise, <c>false</c>.
         /// </value>
-        public Boolean OnFieldAddOnly
+        public Boolean SkipWhenModifying
         {
             get;
             set;
