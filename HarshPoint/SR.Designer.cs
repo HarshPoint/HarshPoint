@@ -222,5 +222,14 @@ namespace HarshPoint {
                 return ResourceManager.GetString("HarshFieldProvisionerBase_FieldIdEmpty", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The field {0} cannot be null or a white space string..
+        /// </summary>
+        internal static string HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace {
+            get {
+                return ResourceManager.GetString("HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace", resourceCulture);
+            }
+        }
     }
 }

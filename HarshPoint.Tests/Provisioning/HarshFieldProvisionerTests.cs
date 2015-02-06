@@ -40,10 +40,14 @@ namespace HarshPoint.Tests.Provisioning
             var fieldId = Guid.NewGuid();
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                Context = ClientOM.Context,
                 FieldId = fieldId,
             };
 
+            var schema = prov.SchemaXmlBuilder.Update(null, null);
+
+            Assert.NotNull(schema);
+            Assert.Equal("Field", schema.Name);
+            Assert.Equal(fieldId, new Guid(schema.Attribute("ID").Value));
         }
     }
 }

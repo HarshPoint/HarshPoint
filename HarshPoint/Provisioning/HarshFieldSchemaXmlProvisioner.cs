@@ -13,24 +13,22 @@ namespace HarshPoint.Provisioning
     /// </summary>
     public sealed class HarshFieldSchemaXmlProvisioner : HarshFieldProvisioner
     {
-        private readonly HarshFieldSchemaXmlBuilder SchemaXmlBuilder;
-        private readonly XNodeEqualityComparer SchemaXmlComparer;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="HarshFieldSchemaXmlProvisioner"/> class.
         /// </summary>
         public HarshFieldSchemaXmlProvisioner()
         {
+            FieldTypeName = "Text";
             SchemaXmlBuilder = new HarshFieldSchemaXmlBuilder()
             {
                 Transformers =
                 {
+                    new NonNullAttributeSetter(() => FieldId, "ID", onFieldAddOnly: true),
                     new NonNullAttributeSetter(() => FieldTypeName, "Type"),
                     new NonNullAttributeSetter(() => InternalName, onFieldAddOnly: true),
                     new NonNullAttributeSetter(() => StaticName, onFieldAddOnly: true),
                 }
             };
-            SchemaXmlComparer = new XNodeEqualityComparer();
         }
 
         /// <summary>
@@ -145,13 +143,37 @@ namespace HarshPoint.Provisioning
         {
             base.OnProvisioning();
 
+            if (StaticName == null)
+            {
+                StaticName = InternalName;
+            }
+
+            if (String.IsNullOrWhiteSpace(FieldTypeName))
+            {
+                throw Error.InvalidOperation(SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace, "FieldTypeName");
+            }
+
+            if (String.IsNullOrWhiteSpace(InternalName))
+            {
+                throw Error.InvalidOperation(SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace, "InternalName");
+            }
+
+            if (String.IsNullOrWhiteSpace(StaticName))
+            {
+                throw Error.InvalidOperation(SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace, "StaticName");
+            }
+
             SchemaXml = SchemaXmlBuilder.Update(Field, SchemaXml);
 
             if (Field.IsNull())
             {
-                Field = TargetFieldCollection.AddFieldAsXml(SchemaXml.ToString(), AddToDefaultView, AddFieldOptions);
-                Context.ExecuteQuery();
+                Field = TargetFieldCollection.AddFieldAsXml(
+                    SchemaXml.ToString(), 
+                    AddToDefaultView, 
+                    AddFieldOptions
+                );
 
+                Context.ExecuteQuery();
                 FieldAdded = true;
             }
             else
@@ -161,8 +183,8 @@ namespace HarshPoint.Provisioning
                 if (!SchemaXmlComparer.Equals(existingSchemaXml, SchemaXml))
                 {
                     Field.SchemaXml = SchemaXml.ToString();
-                    Context.ExecuteQuery();
 
+                    Context.ExecuteQuery();
                     FieldUpdated = true;
                 }
             }
@@ -180,6 +202,14 @@ namespace HarshPoint.Provisioning
 
             base.OnUnprovisioningMayDeleteUserData();
         }
+
+        internal HarshFieldSchemaXmlBuilder SchemaXmlBuilder
+        {
+            get;
+            private set;
+        }
+
+        private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
 
         private sealed class NonNullAttributeSetter : HarshFieldSchemaXmlTransformer
         {
