@@ -6,7 +6,12 @@ namespace HarshPoint.Entity.Metadata
     internal sealed class HarshEntityMetadataContentType : HarshEntityMetadata
     {
         internal HarshEntityMetadataContentType(Type entityType)
-            : base(entityType)
+            : this(entityType.GetTypeInfo())
+        {
+        }
+
+        internal HarshEntityMetadataContentType(TypeInfo entityTypeInfo)
+            : base(entityTypeInfo)
         {
             ContentTypeAttribute = EntityTypeInfo.GetCustomAttribute<ContentTypeAttribute>();
 
@@ -15,7 +20,7 @@ namespace HarshPoint.Entity.Metadata
                 throw Error.ArgumentOutOfRangeFormat(
                     "entityType",
                     SR.HarshEntityMetadataContentType_NoContentTypeAttribute,
-                    entityType.FullName
+                    entityTypeInfo.FullName
                 );
             }
 

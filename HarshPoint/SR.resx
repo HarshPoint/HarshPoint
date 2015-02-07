@@ -159,6 +159,9 @@
   <data name="HarshEntityMetadataContentType_NoContentTypeAttribute" xml:space="preserve">
     <value>The specified type '{0}' has no ContentTypeAttribute.</value>
   </data>
+  <data name="HarshEntityMetadata_DoesntBelongToARepo" xml:space="preserve">
+    <value>This HarshEntityMetadata instance doesn't belong to a HarshEntityMetadataRepository.</value>
+  </data>
   <data name="HarshEntityMetadata_TypeNotAnEntity" xml:space="preserve">
     <value>The specified type '{0}' is not a subclass of HarshEntity.</value>
   </data>

@@ -179,6 +179,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This HarshEntityMetadata instance doesn&apos;t belong to a HarshEntityMetadataRepository..
+        /// </summary>
+        internal static string HarshEntityMetadata_DoesntBelongToARepo {
+            get {
+                return ResourceManager.GetString("HarshEntityMetadata_DoesntBelongToARepo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not a subclass of HarshEntity..
         /// </summary>
         internal static string HarshEntityMetadata_TypeNotAnEntity {
