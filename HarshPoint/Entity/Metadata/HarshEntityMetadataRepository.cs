@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Entity.Metadata
 {
@@ -49,10 +44,10 @@ namespace HarshPoint.Entity.Metadata
 
         public static HarshEntityMetadataRepository Current
         {
-            get { return Lazy.Value; }
+            get { return _singleton; }
         }
 
-        private static readonly Lazy<HarshEntityMetadataRepository> Lazy =
-            new Lazy<HarshEntityMetadataRepository>(LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly HarshEntityMetadataRepository _singleton =
+            new HarshEntityMetadataRepository();
     }
 }
