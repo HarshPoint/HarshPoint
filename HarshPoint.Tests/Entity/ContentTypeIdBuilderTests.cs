@@ -26,6 +26,9 @@ namespace HarshPoint.Tests.Entity
             [ContentType("01")]
             public class AnotherRelativeCtid : HarshEntity { }
 
+            [ContentType("00")]
+            public class ZeroRelativeCtid : HarshEntity { }
+
             public class NotACt : HarshEntity { }
 
             public class ChildOfNotACt : NotACt { }
@@ -35,6 +38,7 @@ namespace HarshPoint.Tests.Entity
             [InlineData(typeof(EmptyStringCtid), typeof(ArgumentOutOfRangeException))]
             [InlineData(typeof(ZzzzCtid), typeof(ArgumentOutOfRangeException))]
             [InlineData(typeof(AnotherRelativeCtid), typeof(InvalidOperationException))]
+            [InlineData(typeof(ZeroRelativeCtid), typeof(InvalidOperationException))]
             [InlineData(typeof(NotACt), typeof(InvalidOperationException))]
             [InlineData(typeof(ChildOfNotACt), typeof(InvalidOperationException))]
             public void Throws_for_an_invalid_ContentType(Type ct, Type exceptionType)
