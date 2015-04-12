@@ -46,6 +46,27 @@ namespace HarshPoint.Tests.Entity
             Assert.Equal(new Guid("de5e71bc-8ba9-4693-84b4-615b97d4003e"), field.FieldId);
         }
 
+        [Fact]
+        public void Has_correct_id_with_a_base_type()
+        {
+            var md = new HarshEntityMetadataContentType(typeof(ContentTypeWithBaseType));
+            Assert.Equal(DummyId + "01", md.ContentTypeId, StringComparer.OrdinalIgnoreCase);
+        }
+
+        [Fact]
+        public void Has_declared_fields_with_a_base_type()
+        {
+            var md = new HarshEntityMetadataContentType(typeof(ContentTypeWithBaseType));
+            Assert.Single(md.DeclaredFields);
+
+            var field = md.DeclaredFields.First();
+            Assert.NotNull(field);
+            Assert.Equal("AnotherField", field.InternalName);
+            Assert.Equal("AnotherField", field.StaticName);
+            Assert.Equal(new Guid("de5e71bc-8ba9-4693-84b4-615b97d4003f"), field.FieldId);
+        }
+
+
         private sealed class NotAContentType
         {
         }
@@ -61,7 +82,7 @@ namespace HarshPoint.Tests.Entity
         }
 
         [ContentType(DummyId)]
-        private sealed class ContentTypeWithFields : HarshEntity
+        private class ContentTypeWithFields : HarshEntity
         {
             [Field("68b4c509-ec16-4cd0-bb65-f57c54ddfc53")]
             public String WriteOnly
@@ -104,6 +125,17 @@ namespace HarshPoint.Tests.Entity
 
             [Field("de5e71bc-8ba9-4693-84b4-615b97d4003e")]
             public String FinallyAField
+            {
+                get;
+                set;
+            }
+        }
+
+        [ContentType("01")]
+        private class ContentTypeWithBaseType : ContentTypeWithFields
+        {
+            [Field("de5e71bc-8ba9-4693-84b4-615b97d4003f")]
+            public String AnotherField
             {
                 get;
                 set;
