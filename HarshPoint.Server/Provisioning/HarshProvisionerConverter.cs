@@ -1,6 +1,7 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
-using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace HarshPoint.Server.Provisioning
 {
@@ -33,45 +34,70 @@ namespace HarshPoint.Server.Provisioning
             return serverProvisioner;
         }
 
-        internal static HarshServerProvisioner ToServerProvisioner(this HarshProvisionerBase provisioner, HarshServerProvisioner copyContextFrom)
-        {
-            var serverProvisioner = ToServerProvisioner(provisioner);
-
-            if (copyContextFrom != null)
-            {
-                serverProvisioner.Context = copyContextFrom.Context;
-            }
-
-            return serverProvisioner;
-        }
-
         private sealed class ClientProvisionerWrapper : HarshServerProvisioner
         {
-            private readonly HarshProvisioner _provisioner;
-
             public ClientProvisionerWrapper(HarshProvisioner provisioner)
             {
-                _provisioner = provisioner;
+                Provisioner = provisioner;
+            }
+
+            private ClientContext ClientContext
+            {
+                get;
+                set;
+            }
+
+            private HarshProvisionerContext ProvisionerContext
+            {
+                get;
+                set;
+            }
+
+            private HarshProvisioner Provisioner
+            {
+                get;
+                set;
             }
 
             protected override void Initialize()
             {
+                base.Initialize();
+
                 if (Web == null)
                 {
                     throw Error.InvalidOperation(SR.HarshServerProvisionerConverter_OnlyWebAndSiteSupported);
                 }
 
-                _provisioner.Context = new ClientContext(Web.Url);
+                ClientContext = new ClientContext(Web.Url);
+                ProvisionerContext = new HarshProvisionerContext(ClientContext);
+            }
+
+            protected override void Complete()
+            {
+                ProvisionerContext = null;
+
+                if (ClientContext != null)
+                {
+                    ClientContext.Dispose();
+                    ClientContext = null;
+                }
+
+                base.Complete();
+            }
+
+            internal override ICollection<HarshProvisionerBase> CreateChildrenCollection()
+            {
+                return NoChildren;
             }
 
             protected override void OnProvisioning()
             {
-                _provisioner.Provision();
+                Provisioner.Provision(ProvisionerContext);
             }
 
             protected override void OnUnprovisioning()
             {
-                _provisioner.Unprovision();
+                Provisioner.Unprovision(ProvisionerContext);
             }
         }
     }

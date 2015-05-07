@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning;
+using Microsoft.SharePoint.Client;
 using System;
 
 namespace HarshPoint.Tests
@@ -7,10 +8,17 @@ namespace HarshPoint.Tests
     {
         public SharePointClientFixture()
         {
-            Context = new ClientContext("http://" + Environment.MachineName);
+            ClientContext = new ClientContext("http://" + Environment.MachineName);
+            Context = new HarshProvisionerContext(ClientContext);
         }
 
-        public ClientContext Context
+        public HarshProvisionerContext Context
+        {
+            get;
+            private set;
+        }
+
+        public ClientContext ClientContext
         {
             get;
             set;
@@ -18,12 +26,12 @@ namespace HarshPoint.Tests
 
         public Site Site
         {
-            get { return (Context != null) ? Context.Site : null; }
+            get { return ClientContext?.Site; }
         }
 
         public Web Web
         {
-            get { return (Context != null) ? Context.Web : null; }
+            get { return ClientContext?.Web; }
         }
     }
 }

@@ -1,47 +1,49 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
-using System;
 
 namespace HarshPoint.Server.Provisioning
 {
-    public abstract class HarshServerProvisioner : HarshProvisionerBase
+    public class HarshServerProvisioner : HarshProvisionerBase<HarshServerProvisionerContext>, IHarshServerProvisionerContext
     {
-        public HarshServerProvisionerContext Context
-        {
-            get;
-            set;
-        }
-
         public SPWeb Web
         {
-            get { return ContextPropertyOrNull(c => c.Web); }
+            get { return Context?.Web; }
         }
 
         public SPSite Site
         {
-            get { return ContextPropertyOrNull(c => c.Site); }
+            get { return Context?.Site; }
         }
 
         public SPWebApplication WebApplication
         {
-            get { return ContextPropertyOrNull(c => c.WebApplication); }
+            get { return Context?.WebApplication; }
         }
 
         public SPFarm Farm
         {
-            get { return ContextPropertyOrNull(c => c.Farm); }
+            get { return Context?.Farm; }
         }
 
-        private T ContextPropertyOrNull<T>(Func<HarshServerProvisionerContext, T> func)
-            where T : class
+        internal override void ProvisionChild(HarshProvisionerBase p)
         {
-            if (Context != null)
+            if (p == null)
             {
-                return func(Context);
+                throw Error.ArgumentNull(nameof(p));
             }
 
-            return null;
+            p.ToServerProvisioner().Provision(Context);
+        }
+
+        internal override void UnprovisionChild(HarshProvisionerBase p)
+        {
+            if (p == null)
+            {
+                throw Error.ArgumentNull(nameof(p));
+            }
+
+            p.ToServerProvisioner().Unprovision(Context);
         }
     }
 }

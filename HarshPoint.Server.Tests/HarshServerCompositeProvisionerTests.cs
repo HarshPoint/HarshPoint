@@ -20,12 +20,11 @@ namespace HarshPoint.Server.Tests
             p1.Protected().Setup("OnProvisioning").Callback(() => seq += "1");
             p2.Protected().Setup("OnProvisioning").Callback(() => seq += "2");
 
-            var composite = new HarshServerCompositeProvisioner()
-             {
-                 Provisioners = { p1.Object, p2.Object }
-             };
-
-            composite.Provision();
+            var composite = new HarshServerProvisioner()
+            {
+                Children = { p1.Object, p2.Object }
+            };
+            composite.Provision(ServerOM.WebContext);
 
             Assert.Equal("12", seq);
         }
@@ -41,12 +40,11 @@ namespace HarshPoint.Server.Tests
             p1.Protected().Setup("OnUnprovisioning").Callback(() => seq += "1");
             p2.Protected().Setup("OnUnprovisioning").Callback(() => seq += "2");
 
-            var composite = new HarshServerCompositeProvisioner()
-             {
-                 Provisioners = { p1.Object, p2.Object }
-             };
-
-            composite.Unprovision();
+            var composite = new HarshServerProvisioner()
+            {
+                Children = { p1.Object, p2.Object }
+            };
+            composite.Unprovision(ServerOM.WebContext);
 
             Assert.Equal("21", seq);
         }
@@ -56,21 +54,23 @@ namespace HarshPoint.Server.Tests
         {
             var p = new Mock<HarshProvisioner>();
 
-            var composite = new HarshServerCompositeProvisioner()
+            p.Protected().Setup("OnProvisioning").Callback(() =>
             {
-                Context = ServerOM.WebContext,
-                Provisioners = { p.Object }
+                Assert.NotNull(p.Object.ClientContext);
+                Assert.NotNull(p.Object.Web);
+
+                p.Object.ClientContext.Load(p.Object.Web, w => w.Url);
+                p.Object.ClientContext.ExecuteQuery();
+
+                Assert.Equal(ServerOM.Web.Url, p.Object.Web.Url);
+            });
+
+            var composite = new HarshServerProvisioner()
+            {
+                Children = { p.Object }
             };
 
-            composite.Provision();
-
-            Assert.NotNull(p.Object.Context);
-            Assert.NotNull(p.Object.Web);
-
-            p.Object.Context.Load(p.Object.Web, w => w.Url);
-            p.Object.Context.ExecuteQuery();
-
-            Assert.Equal(ServerOM.Web.Url, p.Object.Web.Url);
+            composite.Provision(ServerOM.WebContext);
         }
 
         public SharePointServerFixture ServerOM

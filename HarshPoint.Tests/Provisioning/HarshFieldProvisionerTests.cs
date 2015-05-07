@@ -23,11 +23,10 @@ namespace HarshPoint.Tests.Provisioning
         {
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                Context = ClientOM.Context,
                 FieldId = new Guid("fa564e0f-0c70-4ab9-b863-0177e6ddd247"), // SPBuiltInFieldId.Title
             };
 
-            prov.Provision();
+            prov.Provision(ClientOM.Context);
 
             Assert.False(prov.FieldAdded);
             Assert.False(prov.FieldRemoved);

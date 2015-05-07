@@ -9,22 +9,41 @@ namespace HarshPoint.Provisioning
     /// Provides context for classes provisioning SharePoint
     /// artifacts using the client-side object model.
     /// </summary>
-    public abstract class HarshProvisioner : HarshProvisionerBase
+    public class HarshProvisioner : HarshProvisionerBase<HarshProvisionerContext>, IHarshProvisionerContext
     {
-        public ClientContext Context
+        public ClientContext ClientContext
         {
-            get;
-            set;
+            get { return Context?.ClientContext; }
         }
 
         public Site Site
         {
-            get { return (Context != null) ? Context.Site : null; }
+            get { return Context?.Site; }
         }
 
         public Web Web
         {
-            get { return (Context != null) ? Context.Web : null; }
+            get { return Context?.Web; }
+        }
+
+        internal override void ProvisionChild(HarshProvisionerBase p)
+        {
+            if (p == null)
+            {
+                throw Error.ArgumentNull(nameof(p));
+            }
+
+            ((HarshProvisioner)(p)).Provision(Context);
+        }
+
+        internal override void UnprovisionChild(HarshProvisionerBase p)
+        {
+            if (p == null)
+            {
+                throw Error.ArgumentNull(nameof(p));
+            }
+
+            ((HarshProvisioner)(p)).Unprovision(Context);
         }
     }
 }

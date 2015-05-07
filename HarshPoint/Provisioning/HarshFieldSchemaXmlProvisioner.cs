@@ -171,7 +171,7 @@ namespace HarshPoint.Provisioning
                     AddFieldOptions
                 );
 
-                Context.ExecuteQuery();
+                ClientContext.ExecuteQuery();
                 FieldAdded = true;
             }
             else
@@ -182,7 +182,7 @@ namespace HarshPoint.Provisioning
                 {
                     Field.SchemaXml = SchemaXml.ToString();
 
-                    Context.ExecuteQuery();
+                    ClientContext.ExecuteQuery();
                     FieldUpdated = true;
                 }
             }
@@ -193,7 +193,7 @@ namespace HarshPoint.Provisioning
             if (!Field.IsNull())
             {
                 Field.DeleteObject();
-                Context.ExecuteQuery();
+                ClientContext.ExecuteQuery();
 
                 FieldRemoved = true;
             }

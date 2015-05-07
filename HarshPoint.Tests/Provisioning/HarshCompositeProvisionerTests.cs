@@ -19,12 +19,11 @@ namespace HarshPoint.Tests.Provisioning
             p1.Protected().Setup("OnProvisioning").Callback(() => seq += "1");
             p2.Protected().Setup("OnProvisioning").Callback(() => seq += "2");
 
-            var composite = new HarshCompositeProvisioner()
-             {
-                 Provisioners = { p1.Object, p2.Object }
-             };
-
-            composite.Provision();
+            var composite = new HarshProvisioner()
+            {
+                Children = { p1.Object, p2.Object }
+            };
+            composite.Provision(ClientOM.Context);
 
             Assert.Equal("12", seq);
         }
@@ -40,12 +39,11 @@ namespace HarshPoint.Tests.Provisioning
             p1.Protected().Setup("OnUnprovisioning").Callback(() => seq += "1");
             p2.Protected().Setup("OnUnprovisioning").Callback(() => seq += "2");
 
-            var composite = new HarshCompositeProvisioner()
-             {
-                 Provisioners = { p1.Object, p2.Object }
-             };
-
-            composite.Unprovision();
+            var composite = new HarshProvisioner()
+            {
+                Children = { p1.Object, p2.Object }
+            };
+            composite.Unprovision(ClientOM.Context);
 
             Assert.Equal("21", seq);
         }
@@ -54,16 +52,16 @@ namespace HarshPoint.Tests.Provisioning
         public void Assigns_context_to_children()
         {
             var p = new Mock<HarshProvisioner>();
-
-            var composite = new HarshCompositeProvisioner()
+            p.Protected().Setup("OnProvisioning").Callback(() =>
             {
-                Context = ClientOM.Context,
-                Provisioners = { p.Object }
+                Assert.Equal(ClientOM.Web, p.Object.Web);
+            });
+
+            var composite = new HarshProvisioner()
+            {
+                Children = { p.Object }
             };
-
-            composite.Provision();
-
-            Assert.Equal(ClientOM.Web, p.Object.Web);
+            composite.Provision(ClientOM.Context);
         }
 
         public SharePointClientFixture ClientOM

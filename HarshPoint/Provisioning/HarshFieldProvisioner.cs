@@ -48,8 +48,8 @@ namespace HarshPoint.Provisioning
             }
 
             Field = TargetFieldCollection.GetById(FieldId);
-            Context.Load(Field);
-            Context.ExecuteQuery();
+            ClientContext.Load(Field);
+            ClientContext.ExecuteQuery();
 
             base.Initialize();
         }

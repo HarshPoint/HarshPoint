@@ -30,8 +30,7 @@ namespace HarshPoint.Server.Tests
 
             var serverProv = prov.Object.ToServerProvisioner();
 
-            serverProv.Context = ServerOM.WebContext;
-            serverProv.Provision();
+            serverProv.Provision(ServerOM.WebContext);
 
             prov.Verify();
         }
@@ -45,8 +44,7 @@ namespace HarshPoint.Server.Tests
             clientProv.Protected().Setup("Complete");
 
             var serverProv = clientProv.Object.ToServerProvisioner();
-            serverProv.Context = ServerOM.WebContext;
-            serverProv.Unprovision();
+            serverProv.Unprovision(ServerOM.WebContext);
 
             clientProv.Verify();
         }
@@ -54,31 +52,33 @@ namespace HarshPoint.Server.Tests
         [Fact]
         public void ToServerProvisioner_sets_correct_Web()
         {
-            var clientProv = Mock.Of<HarshProvisioner>();
-            var serverProv = clientProv.ToServerProvisioner();
+            var clientProv = new Mock<HarshProvisioner>();
+            clientProv.Protected().Setup("OnProvisioning").Callback(() =>
+            {
+                clientProv.Object.ClientContext.Load(clientProv.Object.Web, w => w.Url);
+                clientProv.Object.ClientContext.ExecuteQuery();
 
-            serverProv.Context = ServerOM.WebContext;
-            serverProv.Provision();
+                Assert.Equal(ServerOM.Web.Url, clientProv.Object.Web.Url, StringComparer.OrdinalIgnoreCase);
 
-            clientProv.Context.Load(clientProv.Web, w => w.Url);
-            clientProv.Context.ExecuteQuery();
-
-            Assert.Equal(ServerOM.Web.Url, clientProv.Web.Url, StringComparer.OrdinalIgnoreCase);
+            });
+            var serverProv = clientProv.Object.ToServerProvisioner();
+            serverProv.Provision(ServerOM.WebContext);
         }
 
         [Fact]
         public void ToServerProvisioner_sets_correct_Site()
         {
-            var clientProv = Mock.Of<HarshProvisioner>();
-            var serverProv = clientProv.ToServerProvisioner();
+            var clientProv = new Mock<HarshProvisioner>();
+            clientProv.Protected().Setup("OnProvisioning").Callback(() =>
+            {
+                clientProv.Object.ClientContext.Load(clientProv.Object.Site, s => s.Url);
+                clientProv.Object.ClientContext.ExecuteQuery();
 
-            serverProv.Context = ServerOM.WebContext;
-            serverProv.Provision();
+                Assert.Equal(ServerOM.Site.Url, clientProv.Object.Site.Url, StringComparer.OrdinalIgnoreCase);
+            });
 
-            clientProv.Context.Load(clientProv.Site, s => s.Url);
-            clientProv.Context.ExecuteQuery();
-
-            Assert.Equal(ServerOM.Site.Url, clientProv.Site.Url, StringComparer.OrdinalIgnoreCase);
+            var serverProv = clientProv.Object.ToServerProvisioner();
+            serverProv.Provision(ServerOM.WebContext);
         }
 
         [Fact]
@@ -87,8 +87,8 @@ namespace HarshPoint.Server.Tests
             var clientProv = Mock.Of<HarshProvisioner>();
             var serverProv = clientProv.ToServerProvisioner();
 
-            serverProv.Context = new HarshServerProvisionerContext(ServerOM.WebApplication);
-            Assert.Throws<InvalidOperationException>(() => serverProv.Provision());
+            var serverContext = new HarshServerProvisionerContext(ServerOM.WebApplication);
+            Assert.Throws<InvalidOperationException>(() => serverProv.Provision(serverContext));
         }
 
         [Fact]
@@ -97,8 +97,19 @@ namespace HarshPoint.Server.Tests
             var clientProv = Mock.Of<HarshProvisioner>();
             var serverProv = clientProv.ToServerProvisioner();
 
-            serverProv.Context = new HarshServerProvisionerContext(ServerOM.Farm);
-            Assert.Throws<InvalidOperationException>(() => serverProv.Provision());
+            var serverContext = new HarshServerProvisionerContext(ServerOM.Farm);
+            Assert.Throws<InvalidOperationException>(() => serverProv.Provision(serverContext));
+        }
+
+        [Fact]
+        public void ToServerProvisioner_cannot_have_children()
+        {
+            var clientProv = new HarshProvisioner();
+            var serverProv = clientProv.ToServerProvisioner();
+
+            Assert.Throws<NotSupportedException>(() =>
+                serverProv.Children.Add(new HarshServerProvisioner())
+            );
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
-using System;
 
 namespace HarshPoint.Server.Provisioning
 {
-    public sealed class HarshServerProvisionerContext
+    public sealed class HarshServerProvisionerContext : IHarshServerProvisionerContext
     {
         public HarshServerProvisionerContext(SPWeb web)
         {

@@ -78,8 +78,8 @@ namespace HarshPoint.Tests.Provisioning
         private Field GetTitleField()
         {
             var field = ClientOM.Web.AvailableFields.GetByInternalNameOrTitle("Title");
-            ClientOM.Context.Load(field, f => f.SchemaXmlWithResourceTokens);
-            ClientOM.Context.ExecuteQuery();
+            ClientOM.ClientContext.Load(field, f => f.SchemaXmlWithResourceTokens);
+            ClientOM.ClientContext.ExecuteQuery();
             return field;
         }
 
