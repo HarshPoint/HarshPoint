@@ -60,7 +60,6 @@
     <Compile Include="Provisioning\HarshFieldProvisioner.cs" />
     <Compile Include="Provisioning\HarshFieldSchemaXmlBuilder.cs" />
     <Compile Include="Provisioning\HarshFieldSchemaXmlTransformer.cs" />
-    <Compile Include="Provisioning\HarshPotentiallyDestructiveProvisioner.cs" />
     <Compile Include="Provisioning\HarshProvisioner.cs" />
     <Compile Include="Provisioning\HarshProvisionerBase`1.cs" />
     <Compile Include="Provisioning\HarshProvisionerContext.cs" />

@@ -7,7 +7,7 @@ namespace HarshPoint.Provisioning
     /// Base class for provisioners that modify SharePoint fields using the 
     /// client-side object model.
     /// </summary>
-    public abstract class HarshFieldProvisioner : HarshPotentiallyDestructiveProvisioner
+    public abstract class HarshFieldProvisioner : HarshProvisioner
     {
         /// <summary>
         /// Gets or sets the field identifier.
