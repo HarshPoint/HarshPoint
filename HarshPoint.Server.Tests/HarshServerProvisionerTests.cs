@@ -1,5 +1,4 @@
 ﻿using HarshPoint.Server.Provisioning;
-using Microsoft.SharePoint;
 using Moq;
 using Moq.Protected;
 using System;

@@ -1,6 +1,5 @@
 ﻿using HarshPoint.Provisioning;
 using System;
-using System.Xml.Linq;
 using Xunit;
 
 namespace HarshPoint.Tests.Provisioning
