@@ -126,6 +126,9 @@
   <data name="ContentTypeIdBuilder_NoContentTypeAttributeBaseClass" xml:space="preserve">
     <value>The content type ID cannot be determined because the type '{0}', from which the specified type '{1}' inherits, has no ContentTypeAttribute.</value>
   </data>
+  <data name="Error_TypeNotAssignableFrom" xml:space="preserve">
+    <value>The specified type '{0}' is not assignable from '{1}'.</value>
+  </data>
   <data name="ExpressionExtensions_MemberExpressionNotFound" xml:space="preserve">
     <value>A MemberExpression could not be found in the specified Expression.</value>
   </data>

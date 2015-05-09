@@ -13,7 +13,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -49,9 +49,13 @@
     <Compile Include="Entity\Metadata\HarshEntityMetadataRepository.cs" />
     <Compile Include="Entity\Metadata\HarshFieldMetadata.cs" />
     <Compile Include="Error.cs" />
-    <Compile Include="ExpressionExtensions.cs" />
+    <Compile Include="Extensions\ExpressionExtensions.cs" />
+    <Compile Include="Reflection\MethodInfoExtensions.cs" />
+    <Compile Include="Reflection\MethodBaseExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HarshContentTypeId.cs" />
+    <Compile Include="HarshInMemoryObjectCache.cs" />
+    <Compile Include="HarshObjectMetadata.cs" />
     <Compile Include="HarshTrace.cs" />
     <Compile Include="HarshTraceSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,7 +67,10 @@
     <Compile Include="Provisioning\HarshProvisioner.cs" />
     <Compile Include="Provisioning\HarshProvisionerBase`1.cs" />
     <Compile Include="Provisioning\HarshProvisionerContext.cs" />
+    <Compile Include="Provisioning\HarshProvisionerContextBase.cs" />
+    <Compile Include="Provisioning\HarshProvisionerMetadata.cs" />
     <Compile Include="Provisioning\IHarshProvisionerContext.cs" />
+    <Compile Include="Provisioning\NeverDeletesUserDataAttribute.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

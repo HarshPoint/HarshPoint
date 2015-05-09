@@ -19,11 +19,14 @@ namespace HarshPoint.Tests.Provisioning
             p1.Protected().Setup("OnProvisioning").Callback(() => seq += "1");
             p2.Protected().Setup("OnProvisioning").Callback(() => seq += "2");
 
+            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
+            ctx.MayDeleteUserData = true;
+
             var composite = new HarshProvisioner()
             {
                 Children = { p1.Object, p2.Object }
             };
-            composite.Provision(ClientOM.Context);
+            composite.Provision(ctx);
 
             Assert.Equal("12", seq);
         }
@@ -39,11 +42,14 @@ namespace HarshPoint.Tests.Provisioning
             p1.Protected().Setup("OnUnprovisioning").Callback(() => seq += "1");
             p2.Protected().Setup("OnUnprovisioning").Callback(() => seq += "2");
 
+            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
+            ctx.MayDeleteUserData = true;
+
             var composite = new HarshProvisioner()
             {
                 Children = { p1.Object, p2.Object }
             };
-            composite.Unprovision(ClientOM.Context);
+            composite.Unprovision(ctx);
 
             Assert.Equal("21", seq);
         }

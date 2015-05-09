@@ -10,34 +10,75 @@ namespace HarshPoint.Tests.Provisioning
     {
         public SharePointClientFixture ClientOM { get; private set; }
 
-        public void Unprovision_not_called_when_DeleteUserData_false()
+        [Fact]
+        public void Destructive_Unprovision_not_called_by_default()
         {
-            var mock = new Mock<HarshProvisioner>(MockBehavior.Strict);
-            mock.Protected().Setup("Initialize");
-            mock.Protected().Setup("Complete");
-
-            var obj = mock.Object;
-            obj.DeleteUserDataWhenUnprovisioning = false;
-            obj.Unprovision(ClientOM.Context);
-
-            mock.Verify();
+            var destructive = new DestructiveUnprovision();
+            Assert.DoesNotThrow(() => destructive.Unprovision(ClientOM.Context));
         }
 
-        public void Unprovision_called_when_DeleteUserData_true()
+        [Fact]
+        public void Destructive_Unprovision_not_called_when_MayDeleteUserData()
         {
-            var mock = new Mock<HarshProvisioner>();
-            mock.Protected().Setup("OnUnprovisioningMayDeleteUserData").Verifiable();
+            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
+            ctx.MayDeleteUserData = true;
 
-            var obj = mock.Object;
-            obj.DeleteUserDataWhenUnprovisioning = true;
-            obj.Unprovision(ClientOM.Context);
+            var destructive = new DestructiveUnprovision();
+            Assert.Throws<InvalidOperationException>(() => destructive.Unprovision(ctx));
+        }
 
-            mock.Verify();
+        [Fact]
+        public void Safe_Unprovision_called_by_default()
+        {
+            var safe = new NeverDeletesUnprovision();
+            Assert.Throws<InvalidOperationException>(() => safe.Unprovision(ClientOM.Context));
+        }
+
+        [Fact]
+        public void Safe_Unprovision_called_when_MayDeleteUserData()
+        {
+            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
+            ctx.MayDeleteUserData = true;
+
+            var safe = new NeverDeletesUnprovision();
+            Assert.Throws<InvalidOperationException>(() => safe.Unprovision(ctx));
+        }
+
+        [Fact]
+        public void Destructive_Unprovision_with_safe_base_type_considered_destructive()
+        {
+            var metadata = new HarshProvisionerMetadata(typeof(DestructiveUnprovisionSafeBase));
+            Assert.True(metadata.UnprovisionDeletesUserData);
         }
 
         public void SetFixture(SharePointClientFixture data)
         {
             ClientOM = data;
+        }
+
+        private class DestructiveUnprovision : HarshProvisioner
+        {
+            protected override void OnUnprovisioning()
+            {
+                throw new InvalidOperationException("should not have been called");
+            }
+        }
+
+        private class NeverDeletesUnprovision : HarshProvisioner
+        {
+            [NeverDeletesUserData]
+            protected override void OnUnprovisioning()
+            {
+                throw new InvalidOperationException("should not have been called");
+            }
+        }
+
+        private class DestructiveUnprovisionSafeBase : NeverDeletesUnprovision
+        {
+            protected override void OnUnprovisioning()
+            {
+                base.OnUnprovisioning();
+            }
         }
     }
 }

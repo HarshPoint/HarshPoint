@@ -1,8 +1,9 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using System;
+using Microsoft.SharePoint.Client;
 
 namespace HarshPoint.Provisioning
 {
-    public sealed class HarshProvisionerContext : IHarshProvisionerContext
+    public sealed class HarshProvisionerContext : HarshProvisionerContextBase, IHarshProvisionerContext
     {
         public HarshProvisionerContext(ClientContext clientContext)
         {

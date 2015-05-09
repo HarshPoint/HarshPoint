@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace HarshPoint
 {
@@ -11,45 +14,54 @@ namespace HarshPoint
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static String GetMemberName<T, TResult>(this Expression<Func<T, TResult>> expression)
         {
-            return GetMemberNameCore(expression);
+            return GetMemberName((Expression)expression);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static String GetMemberName<T>(this Expression<Func<T>> expression)
         {
-            return GetMemberNameCore(expression);
+            return GetMemberName((Expression)expression);
         }
 
-        private static String GetMemberNameCore(Expression expression)
+        public static String GetMemberName(this Expression expression)
+        {
+            var memberNames = 
+                ExtractMemberAccess(expression)
+                .Select(m => m.Name);
+
+            return String.Join(".", memberNames);
+        }
+
+        public static IEnumerable<MemberInfo> ExtractMemberAccess(this Expression expression)
         {
             if (expression == null)
             {
-                throw Error.ArgumentNull("expression");
+                throw Error.ArgumentNull(nameof(expression));
             }
 
             var visitor = new MemberNameVisitor();
             visitor.Visit(expression);
 
-            if (visitor.MemberNames.IsEmpty)
+            if (visitor.Members.IsEmpty)
             {
                 throw Error.ArgumentOutOfRangeFormat(
-                    "expression",
+                    nameof(expression),
                     SR.ExpressionExtensions_MemberExpressionNotFound
                 );
             }
 
-            return String.Join(".", visitor.MemberNames);
+            return visitor.Members;
         }
 
         private sealed class MemberNameVisitor : ExpressionVisitor
         {
             public MemberNameVisitor()
             {
-                MemberNames = ImmutableStack.Create<String>();
+                Members = ImmutableStack.Create<MemberInfo>();
             }
 
-            public ImmutableStack<String> MemberNames
+            public ImmutableStack<MemberInfo> Members
             {
                 get;
                 private set;
@@ -64,7 +76,7 @@ namespace HarshPoint
 
                 if (node.Member != null)
                 {
-                    MemberNames = MemberNames.Push(node.Member.Name);
+                    Members = Members.Push(node.Member);
                 }
 
                 return base.VisitMember(node);

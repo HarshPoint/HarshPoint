@@ -1,7 +1,7 @@
 ﻿using System;
 using Xunit;
 
-namespace HarshPoint.Tests
+namespace HarshPoint.Tests.Extensions
 {
     public class ExpressionExtensionsTests
     {

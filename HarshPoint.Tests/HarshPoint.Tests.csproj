@@ -64,7 +64,8 @@
     <Compile Include="Entity\HarshEntityMetadataContentTypeTests.cs" />
     <Compile Include="Entity\HarshFieldMetadataTests.cs" />
     <Compile Include="Entity\TestEntity.cs" />
-    <Compile Include="ExpressionExtensionsTests.cs" />
+    <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
+    <Compile Include="Reflection\MethodInfoExtensionsTests.cs" />
     <Compile Include="HarshContentTypeIdTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provisioning\HarshCompositeProvisionerTests.cs" />

@@ -70,7 +70,7 @@ namespace HarshPoint.Server.Tests.UnitTests
         {
             var mock = new Mock<HarshServerProvisioner>();
 
-            mock.Protected().Setup("OnUnprovisioning");
+            mock.Protected().Setup("OnUnprovisioning").Verifiable();
             mock.Object.Unprovision(SPFixture.WebContext);
             mock.Verify();
         }
@@ -83,9 +83,12 @@ namespace HarshPoint.Server.Tests.UnitTests
             mock.Protected().Setup("OnUnprovisioning").Throws<Exception>();
             mock.Protected().Setup("Complete");
 
+            var ctx = (HarshServerProvisionerContext)SPFixture.WebContext.Clone();
+            ctx.MayDeleteUserData = true;
+
             Assert.Throws<Exception>(delegate
             {
-                mock.Object.Unprovision(SPFixture.WebContext);
+                mock.Object.Unprovision(ctx);
             });
 
             mock.Verify();

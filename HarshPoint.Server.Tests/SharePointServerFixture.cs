@@ -5,7 +5,7 @@ using System;
 
 namespace HarshPoint.Server.Tests
 {
-    public class SharePointServerFixture : IDisposable
+    public sealed class SharePointServerFixture : IDisposable
     {
         public SharePointServerFixture()
         {

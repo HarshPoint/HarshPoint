@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 
 namespace HarshPoint.Provisioning
 {
@@ -10,10 +11,11 @@ namespace HarshPoint.Provisioning
     /// classes provisioning SharePoint artifacts.
     /// </summary>
     public abstract class HarshProvisionerBase<TContext> : HarshProvisionerBase
-        where TContext : class
+        where TContext : HarshProvisionerContextBase
     {
         private ICollection<HarshProvisionerBase> _children;
-        
+        private HarshProvisionerMetadata _metadata;
+
         public TContext Context
         {
             get;
@@ -33,6 +35,19 @@ namespace HarshPoint.Provisioning
             }
         }
 
+        internal HarshProvisionerMetadata Metadata
+        {
+            get
+            {
+                if (_metadata == null)
+                {
+                    _metadata = new HarshProvisionerMetadata(GetType());
+                }
+
+                return _metadata;
+            }
+        }
+
         public void Provision(TContext context)
         {
             RunWithContext(OnProvisioning, context);
@@ -40,32 +55,22 @@ namespace HarshPoint.Provisioning
 
         public void Unprovision(TContext context)
         {
-            RunWithContext(OnUnprovisioning, context);
+            if (context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
+            {
+                RunWithContext(OnUnprovisioning, context);
+            }
         }
 
         protected override void OnProvisioning()
         {
             base.OnProvisioning();
-
-            if (_children != null)
-            {
-                foreach (var child in _children)
-                {
-                    ProvisionChild(child);
-                }
-            }
+            RunChildren(ProvisionChild);
         }
 
+        [NeverDeletesUserData]
         protected override void OnUnprovisioning()
         {
-            if (_children != null)
-            {
-                foreach (var child in _children.Reverse())
-                {
-                    UnprovisionChild(child);
-                }
-            }
-
+            RunChildren(UnprovisionChild, reverse: true);
             base.OnUnprovisioning();
         }
 
@@ -76,6 +81,21 @@ namespace HarshPoint.Provisioning
         internal virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
         {
             return new Collection<HarshProvisionerBase>();
+        }
+
+        private void RunChildren(Action<HarshProvisionerBase> action, Boolean reverse = false)
+        {
+            if (_children == null || _children == NoChildren)
+            {
+                return;
+            }
+
+            var children = reverse ? _children.Reverse() : _children;
+
+            foreach (var child in children)
+            {
+                action(child);
+            }
         }
 
         private void RunWithContext(Action action, TContext context)

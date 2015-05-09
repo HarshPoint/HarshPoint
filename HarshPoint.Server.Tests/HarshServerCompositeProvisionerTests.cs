@@ -40,11 +40,14 @@ namespace HarshPoint.Server.Tests
             p1.Protected().Setup("OnUnprovisioning").Callback(() => seq += "1");
             p2.Protected().Setup("OnUnprovisioning").Callback(() => seq += "2");
 
+            var ctx = (HarshServerProvisionerContext)ServerOM.WebContext.Clone();
+            ctx.MayDeleteUserData = true;
+
             var composite = new HarshServerProvisioner()
             {
                 Children = { p1.Object, p2.Object }
             };
-            composite.Unprovision(ServerOM.WebContext);
+            composite.Unprovision(ctx);
 
             Assert.Equal("21", seq);
         }

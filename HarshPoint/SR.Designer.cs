@@ -89,6 +89,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not assignable from &apos;{1}&apos;..
+        /// </summary>
+        internal static string Error_TypeNotAssignableFrom {
+            get {
+                return ResourceManager.GetString("Error_TypeNotAssignableFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A MemberExpression could not be found in the specified Expression..
         /// </summary>
         internal static string ExpressionExtensions_MemberExpressionNotFound {

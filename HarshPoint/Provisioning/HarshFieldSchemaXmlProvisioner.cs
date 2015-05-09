@@ -188,7 +188,7 @@ namespace HarshPoint.Provisioning
             }
         }
 
-        protected override void OnUnprovisioningMayDeleteUserData()
+        protected override void OnUnprovisioning()
         {
             if (!Field.IsNull())
             {
@@ -198,7 +198,7 @@ namespace HarshPoint.Provisioning
                 FieldRemoved = true;
             }
 
-            base.OnUnprovisioningMayDeleteUserData();
+            base.OnUnprovisioning();
         }
 
         internal HarshFieldSchemaXmlBuilder SchemaXmlBuilder

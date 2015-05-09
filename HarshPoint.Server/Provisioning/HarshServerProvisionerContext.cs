@@ -1,9 +1,11 @@
-﻿using Microsoft.SharePoint;
+﻿using System;
+using HarshPoint.Provisioning;
+using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 
 namespace HarshPoint.Server.Provisioning
 {
-    public sealed class HarshServerProvisionerContext : IHarshServerProvisionerContext
+    public sealed class HarshServerProvisionerContext : HarshProvisionerContextBase, IHarshServerProvisionerContext
     {
         public HarshServerProvisionerContext(SPWeb web)
         {
@@ -45,7 +47,7 @@ namespace HarshPoint.Server.Provisioning
 
             Farm = farm;
         }
-
+        
         public SPWeb Web
         {
             get;

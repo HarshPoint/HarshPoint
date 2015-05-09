@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Reflection;
 
 namespace HarshPoint
 {
@@ -19,6 +20,16 @@ namespace HarshPoint
         {
             return new ArgumentOutOfRangeException(paramName,
                 Format(format, args)
+            );
+        }
+
+        public static Exception ArgumentOutOfRange_TypeNotAssignableFrom(String paramName, TypeInfo baseType, TypeInfo shouldHaveBeenAssignable)
+        {
+            return ArgumentOutOfRangeFormat(
+                paramName,
+                SR.Error_TypeNotAssignableFrom,
+                baseType.FullName,
+                shouldHaveBeenAssignable.FullName
             );
         }
 
