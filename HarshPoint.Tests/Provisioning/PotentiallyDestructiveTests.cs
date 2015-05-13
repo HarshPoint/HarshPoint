@@ -1,12 +1,10 @@
-﻿using System;
-using HarshPoint.Provisioning;
-using Moq;
-using Moq.Protected;
+﻿using HarshPoint.Provisioning;
+using System;
 using Xunit;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class HarshPotentiallyDestructiveProvisionerTests : IUseFixture<SharePointClientFixture>
+    public class PotentiallyDestructiveTests : IUseFixture<SharePointClientFixture>
     {
         public SharePointClientFixture ClientOM { get; private set; }
 

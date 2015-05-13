@@ -4,7 +4,7 @@ using Xunit;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class HarshFieldProvisionerTests : IUseFixture<SharePointClientFixture>
+    public class FieldProvisionerTests : IUseFixture<SharePointClientFixture>
     {
         public SharePointClientFixture ClientOM
         {

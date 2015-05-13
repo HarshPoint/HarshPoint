@@ -65,13 +65,13 @@
     <Compile Include="Entity\HarshFieldMetadataTests.cs" />
     <Compile Include="Entity\TestEntity.cs" />
     <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
+    <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
+    <Compile Include="Provisioning\FieldProvisionerTests.cs" />
+    <Compile Include="Provisioning\FieldSchemaXmlBuilderTests.cs" />
+    <Compile Include="Provisioning\PotentiallyDestructiveTests.cs" />
     <Compile Include="Reflection\MethodInfoExtensionsTests.cs" />
     <Compile Include="HarshContentTypeIdTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Provisioning\HarshCompositeProvisionerTests.cs" />
-    <Compile Include="Provisioning\HarshFieldSchemaXmlBuilderTests.cs" />
-    <Compile Include="Provisioning\HarshFieldProvisionerTests.cs" />
-    <Compile Include="Provisioning\HarshPotentiallyDestructiveProvisionerTests.cs" />
     <Compile Include="SharePointClientFixture.cs" />
   </ItemGroup>
   <ItemGroup>
