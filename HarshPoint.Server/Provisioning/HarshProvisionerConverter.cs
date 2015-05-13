@@ -1,6 +1,8 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HarshPoint.Server.Provisioning
 {
@@ -10,7 +12,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (provisioner == null)
             {
-                throw Error.ArgumentNull("provisioner");
+                throw Error.ArgumentNull(nameof(provisioner));
             }
 
             var clientProvisioner = (provisioner as HarshProvisioner);
@@ -24,7 +26,7 @@ namespace HarshPoint.Server.Provisioning
             if (serverProvisioner == null)
             {
                 throw Error.ArgumentOutOfRangeFormat(
-                    "provisioner",
+                    nameof(provisioner),
                     SR.HarshServerProvisionerConverter_CannotConvert,
                     provisioner.GetType().FullName
                 );
@@ -58,9 +60,9 @@ namespace HarshPoint.Server.Provisioning
                 set;
             }
 
-            protected override void Initialize()
+            protected override async Task InitializeAsync()
             {
-                base.Initialize();
+                await base.InitializeAsync();
 
                 if (Web == null)
                 {
@@ -89,14 +91,14 @@ namespace HarshPoint.Server.Provisioning
                 return NoChildren;
             }
 
-            protected override void OnProvisioning()
+            protected override Task OnProvisioningAsync()
             {
-                Provisioner.Provision(ProvisionerContext);
+                return Provisioner.ProvisionAsync(ProvisionerContext);
             }
 
-            protected override void OnUnprovisioning()
+            protected override Task OnUnprovisioningAsync()
             {
-                Provisioner.Unprovision(ProvisionerContext);
+                return Provisioner.UnprovisionAsync(ProvisionerContext);
             }
         }
     }

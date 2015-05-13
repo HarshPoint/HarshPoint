@@ -1,17 +1,23 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
 using Moq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class HarshFieldSchemaXmlBuilderTests : IUseFixture<SharePointClientFixture>
+    public class HarshFieldSchemaXmlBuilderTests : IClassFixture<SharePointClientFixture>
     {
+        public HarshFieldSchemaXmlBuilderTests(SharePointClientFixture data)
+        {
+            ClientOM = data;
+        }
+
         public SharePointClientFixture ClientOM { get; set; }
 
         [Fact]
-        public void Update_with_an_existing_field_calls_only_update_transforms()
+        public async Task Update_with_an_existing_field_calls_only_update_transforms()
         {
             var addOnlyTransformer = GetNopTransformer();
             var addOrUpdateTransformer = GetNopTransformer();
@@ -24,15 +30,15 @@ namespace HarshPoint.Tests.Provisioning
                 Transformers = { addOnlyTransformer.Object, addOrUpdateTransformer.Object }
             };
 
-            var titleField = GetTitleField();
-            builder.Update(titleField, schemaXml: null);
+            var titleField = await GetTitleField();
+            await builder.Update(titleField, schemaXml: null);
 
             addOnlyTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Never());
             addOrUpdateTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Once());
         }
 
         [Fact]
-        public void Update_a_new_field_calls_add_and_update_transforms()
+        public async Task Update_a_new_field_calls_add_and_update_transforms()
         {
             var addOnlyTransformer = GetNopTransformer();
             var addOrUpdateTransformer = GetNopTransformer();
@@ -44,41 +50,35 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Transformers = { addOnlyTransformer.Object, addOrUpdateTransformer.Object }
             };
-
-            builder.Update(field: null, schemaXml: null);
+            await builder.Update(field: null, schemaXml: null);
 
             addOnlyTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Once());
             addOrUpdateTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Once());
         }
 
         [Fact]
-        public void GetExistingSchemaXml_returns_empty_element_for_a_null_Field()
+        public async Task GetExistingSchemaXml_returns_empty_element_for_a_null_Field()
         {
             var expected = new XElement("Field");
-            var actual = new HarshFieldSchemaXmlBuilder().GetExistingSchemaXml(null);
+            var actual = await new HarshFieldSchemaXmlBuilder().GetExistingSchemaXml(null);
             Assert.Equal(expected, actual, new XNodeEqualityComparer());
         }
 
         [Fact]
-        public void GetExistingSchemaXml_returns_schema_for_Title_Field()
+        public async Task GetExistingSchemaXml_returns_schema_for_Title_Field()
         {
-            var field = GetTitleField();
+            var field = await GetTitleField();
             var expected = XElement.Parse(field.SchemaXmlWithResourceTokens);
-            var actual = new HarshFieldSchemaXmlBuilder().GetExistingSchemaXml(field);
+            var actual = await new HarshFieldSchemaXmlBuilder().GetExistingSchemaXml(field);
 
             Assert.Equal(expected, actual, new XNodeEqualityComparer());
         }
 
-        public void SetFixture(SharePointClientFixture data)
-        {
-            ClientOM = data;
-        }
-
-        private Field GetTitleField()
+        private async Task<Field> GetTitleField()
         {
             var field = ClientOM.Web.AvailableFields.GetByInternalNameOrTitle("Title");
             ClientOM.ClientContext.Load(field, f => f.SchemaXmlWithResourceTokens);
-            ClientOM.ClientContext.ExecuteQuery();
+            await ClientOM.ClientContext.ExecuteQueryAsync();
             return field;
         }
 

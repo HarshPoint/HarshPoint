@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
@@ -33,7 +34,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override void Initialize()
+        protected override async Task InitializeAsync()
         {
             if (FieldId == Guid.Empty)
             {
@@ -49,9 +50,8 @@ namespace HarshPoint.Provisioning
 
             Field = TargetFieldCollection.GetById(FieldId);
             ClientContext.Load(Field);
-            ClientContext.ExecuteQuery();
 
-            base.Initialize();
+            await ClientContext.ExecuteQueryAsync();
         }
 
         protected Field Field

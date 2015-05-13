@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
+using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
@@ -48,44 +49,60 @@ namespace HarshPoint.Provisioning
             }
         }
 
-        public void Provision(TContext context)
+        internal Boolean HasChildren
         {
-            RunWithContext(OnProvisioning, context);
-        }
-
-        public void Unprovision(TContext context)
-        {
-            if (context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
+            get
             {
-                RunWithContext(OnUnprovisioning, context);
+                if (_children == null || _children == NoChildren)
+                {
+                    return false;
+                }
+
+                return _children.Any();
             }
         }
 
-        protected override void OnProvisioning()
+        public Task ProvisionAsync(TContext context)
         {
-            base.OnProvisioning();
-            RunChildren(ProvisionChild);
+            return RunWithContext(OnProvisioningAsync, context);
+        }
+
+        public async Task UnprovisionAsync(TContext context)
+        {
+            if (context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
+            {
+                await RunWithContext(OnUnprovisioningAsync, context);
+            }
+        }
+
+        protected override Task InitializeAsync()
+        {
+            return Task.FromResult(false);
+        }
+
+        protected override Task OnProvisioningAsync()
+        {
+            return RunChildren(ProvisionChild);
         }
 
         [NeverDeletesUserData]
-        protected override void OnUnprovisioning()
+        protected override Task OnUnprovisioningAsync()
         {
-            RunChildren(UnprovisionChild, reverse: true);
-            base.OnUnprovisioning();
+            return RunChildren(UnprovisionChild, reverse: true);
         }
-
-        internal abstract void ProvisionChild(HarshProvisionerBase p);
-
-        internal abstract void UnprovisionChild(HarshProvisionerBase p);
 
         internal virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
         {
             return new Collection<HarshProvisionerBase>();
         }
 
-        private void RunChildren(Action<HarshProvisionerBase> action, Boolean reverse = false)
+        internal abstract Task ProvisionChild(HarshProvisionerBase provisioner);
+
+        internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner);
+
+        private async Task RunChildren(Func<HarshProvisionerBase, Task> action, Boolean reverse = false)
         {
-            if (_children == null || _children == NoChildren)
+            if (!HasChildren)
             {
                 return;
             }
@@ -94,20 +111,20 @@ namespace HarshPoint.Provisioning
 
             foreach (var child in children)
             {
-                action(child);
+                await action(child);
             }
         }
 
-        private void RunWithContext(Action action, TContext context)
+        private async Task RunWithContext(Func<Task> action, TContext context)
         {
             if (action == null)
             {
-                throw Error.ArgumentNull("action");
+                throw Error.ArgumentNull(nameof(action));
             }
 
             if (context == null)
             {
-                throw Error.ArgumentNull("context");
+                throw Error.ArgumentNull(nameof(context));
             }
 
             Context = context;
@@ -116,8 +133,8 @@ namespace HarshPoint.Provisioning
             {
                 try
                 {
-                    Initialize();
-                    action();
+                    await InitializeAsync();
+                    await action();
                 }
                 finally
                 {
@@ -131,6 +148,6 @@ namespace HarshPoint.Provisioning
         }
 
         internal static readonly ICollection<HarshProvisionerBase> NoChildren =
-            new ReadOnlyCollection<HarshProvisionerBase>(new HarshProvisionerBase[0]);
+            ImmutableList<HarshProvisionerBase>.Empty;
     }
 }

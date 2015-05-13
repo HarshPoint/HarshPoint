@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace HarshPoint.Provisioning
@@ -148,20 +149,20 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        protected override void Initialize()
+        protected override Task InitializeAsync()
         {
             FieldAdded = false;
             FieldRemoved = false;
             FieldUpdated = false;
 
-            base.Initialize();
+            return base.InitializeAsync();
         }
 
-        protected override void OnProvisioning()
+        protected override async Task OnProvisioningAsync()
         {
-            base.OnProvisioning();
+            await base.OnProvisioningAsync();
 
-            SchemaXml = SchemaXmlBuilder.Update(Field, SchemaXml);
+            SchemaXml = await SchemaXmlBuilder.Update(Field, SchemaXml);
 
             if (Field.IsNull())
             {
@@ -171,34 +172,34 @@ namespace HarshPoint.Provisioning
                     AddFieldOptions
                 );
 
-                ClientContext.ExecuteQuery();
+                await ClientContext.ExecuteQueryAsync();
                 FieldAdded = true;
             }
             else
             {
-                var existingSchemaXml = SchemaXmlBuilder.GetExistingSchemaXml(Field);
+                var existingSchemaXml = await SchemaXmlBuilder.GetExistingSchemaXml(Field);
 
                 if (!SchemaXmlComparer.Equals(existingSchemaXml, SchemaXml))
                 {
                     Field.SchemaXml = SchemaXml.ToString();
 
-                    ClientContext.ExecuteQuery();
+                    await ClientContext.ExecuteQueryAsync();
                     FieldUpdated = true;
                 }
             }
         }
 
-        protected override void OnUnprovisioning()
+        protected override async Task OnUnprovisioningAsync()
         {
             if (!Field.IsNull())
             {
                 Field.DeleteObject();
-                ClientContext.ExecuteQuery();
+                await ClientContext.ExecuteQueryAsync();
 
                 FieldRemoved = true;
             }
 
-            base.OnUnprovisioning();
+            await base.OnUnprovisioningAsync();
         }
 
         internal HarshFieldSchemaXmlBuilder SchemaXmlBuilder

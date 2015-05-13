@@ -2,40 +2,49 @@
 using Moq;
 using Moq.Protected;
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace HarshPoint.Server.Tests.UnitTests
+namespace HarshPoint.Server.Tests
 {
-    public class HarshServerProvisionerTests : IUseFixture<SharePointServerFixture>
+    public class HarshServerProvisionerTests : IClassFixture<SharePointServerFixture>
     {
+        public HarshServerProvisionerTests(SharePointServerFixture fixture)
+        {
+            SPFixture = fixture;
+
+        }
         public SharePointServerFixture SPFixture
         {
             get;
             set;
         }
 
-        public void SetFixture(SharePointServerFixture data)
-        {
-            SPFixture = data;
-        }
-
         [Fact]
-        public void Provision_calls_Initialize()
+        public async Task Provision_calls_Initialize()
         {
             var mock = new Mock<HarshServerProvisioner>();
 
-            mock.Protected().Setup("Initialize");
-            mock.Object.Provision(SPFixture.WebContext);
+            mock.Protected()
+                .Setup<Task>("InitializeAsync")
+                .Returns(HarshTask.Completed)
+                .Verifiable();
+
+            await mock.Object.ProvisionAsync(SPFixture.WebContext);
             mock.Verify();
         }
-    
+
         [Fact]
-        public void Provision_calls_OnProvisioning()
+        public async Task Provision_calls_OnProvisioning()
         {
             var mock = new Mock<HarshServerProvisioner>();
 
-            mock.Protected().Setup("OnProvisioning");
-            mock.Object.Provision(SPFixture.WebContext);
+            mock.Protected()
+                .Setup<Task>("OnProvisioningAsync")
+                .Returns(HarshTask.Completed)
+                .Verifiable();
+
+            await mock.Object.ProvisionAsync(SPFixture.WebContext);
             mock.Verify();
         }
 
@@ -43,35 +52,47 @@ namespace HarshPoint.Server.Tests.UnitTests
         public void Provision_always_calls_Complete()
         {
             var mock = new Mock<HarshServerProvisioner>();
-            
-            mock.Protected().Setup("OnProvisioning").Throws<Exception>();
-            mock.Protected().Setup("Complete");
 
-            Assert.Throws<Exception>(delegate
-            {
-                mock.Object.Provision(SPFixture.WebContext);
-            });
+            mock.Protected()
+                .Setup<Task>("OnProvisioningAsync")
+                .Throws<Exception>();
+
+            mock.Protected()
+                .Setup("Complete")
+                .Verifiable();
+
+            Assert.ThrowsAsync<Exception>(
+                () => mock.Object.ProvisionAsync(SPFixture.WebContext)
+            );
 
             mock.Verify();
         }
 
         [Fact]
-        public void Unprovision_calls_Initialize()
+        public async Task Unprovision_calls_Initialize()
         {
             var mock = new Mock<HarshServerProvisioner>();
 
-            mock.Protected().Setup("Initialize");
-            mock.Object.Unprovision(SPFixture.WebContext);
+            mock.Protected()
+                .Setup<Task>("InitializeAsync")
+                .Returns(HarshTask.Completed)
+                .Verifiable();
+
+            await mock.Object.UnprovisionAsync(SPFixture.WebContext);
             mock.Verify();
         }
 
         [Fact]
-        public void Unprovision_calls_OnUnprovisioning()
+        public async Task Unprovision_calls_OnUnprovisioning()
         {
             var mock = new Mock<HarshServerProvisioner>();
 
-            mock.Protected().Setup("OnUnprovisioning").Verifiable();
-            mock.Object.Unprovision(SPFixture.WebContext);
+            mock.Protected()
+                .Setup<Task>("OnUnprovisioningAsync")
+                .Returns(HarshTask.Completed)
+                .Verifiable();
+
+            await mock.Object.UnprovisionAsync(SPFixture.WebContext);
             mock.Verify();
         }
 
@@ -79,17 +100,16 @@ namespace HarshPoint.Server.Tests.UnitTests
         public void Unprovision_always_calls_Complete()
         {
             var mock = new Mock<HarshServerProvisioner>();
-            
-            mock.Protected().Setup("OnUnprovisioning").Throws<Exception>();
-            mock.Protected().Setup("Complete");
+
+            mock.Protected().Setup("OnUnprovisioningAsync").Throws<Exception>();
+            mock.Protected().Setup("Complete").Verifiable();
 
             var ctx = (HarshServerProvisionerContext)SPFixture.WebContext.Clone();
             ctx.MayDeleteUserData = true;
 
-            Assert.Throws<Exception>(delegate
-            {
-                mock.Object.Unprovision(ctx);
-            });
+            Assert.ThrowsAsync<Exception>(
+                () => mock.Object.UnprovisionAsync(ctx)
+            );
 
             mock.Verify();
         }

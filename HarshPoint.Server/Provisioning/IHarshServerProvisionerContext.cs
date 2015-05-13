@@ -1,11 +1,13 @@
 ﻿using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using System;
+using System.Collections.Generic;
 
 namespace HarshPoint.Server.Provisioning
 {
     internal interface IHarshServerProvisionerContext
     {
-        SPWeb Web
+        SPFarm Farm
         {
             get;
         }
@@ -15,12 +17,22 @@ namespace HarshPoint.Server.Provisioning
             get;
         }
 
-        SPWebApplication WebApplication
+        String UpgradeAction
         {
             get;
         }
 
-        SPFarm Farm
+        IReadOnlyDictionary<String, String> UpgradeArguments
+        {
+            get;
+        }
+
+        SPWeb Web
+        {
+            get;
+        }
+
+        SPWebApplication WebApplication
         {
             get;
         }

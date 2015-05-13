@@ -1,4 +1,5 @@
 ﻿using Microsoft.SharePoint.Client;
+using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
@@ -23,24 +24,24 @@ namespace HarshPoint.Provisioning
             get { return Context?.Web; }
         }
 
-        internal override void ProvisionChild(HarshProvisionerBase p)
+        internal override Task ProvisionChild(HarshProvisionerBase p)
         {
             if (p == null)
             {
                 throw Error.ArgumentNull(nameof(p));
             }
 
-            ((HarshProvisioner)(p)).Provision(Context);
+            return ((HarshProvisioner)(p)).ProvisionAsync(Context);
         }
 
-        internal override void UnprovisionChild(HarshProvisionerBase p)
+        internal override Task UnprovisionChild(HarshProvisionerBase p)
         {
             if (p == null)
             {
                 throw Error.ArgumentNull(nameof(p));
             }
 
-            ((HarshProvisioner)(p)).Unprovision(Context);
+            return ((HarshProvisioner)(p)).UnprovisionAsync(Context);
         }
     }
 }

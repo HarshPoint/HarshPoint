@@ -1,25 +1,19 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
     public abstract class HarshProvisionerBase
     {
-        protected virtual void Initialize()
-        {
-        }
+        protected abstract Task InitializeAsync();
 
         protected virtual void Complete()
         {
         }
 
-        protected virtual void OnProvisioning()
-        {
-        }
+        protected abstract Task OnProvisioningAsync();
 
         [NeverDeletesUserData]
-        protected virtual void OnUnprovisioning()
-        {
-        }
-
+        protected abstract Task OnUnprovisioningAsync();
     }
 }

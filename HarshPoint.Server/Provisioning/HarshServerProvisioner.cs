@@ -1,24 +1,31 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HarshPoint.Server.Provisioning
 {
     public class HarshServerProvisioner : HarshProvisionerBase<HarshServerProvisionerContext>, IHarshServerProvisionerContext
     {
-        public SPWeb Web
-        {
-            get { return Context?.Web; }
-        }
+        private HashSet<String> _runOnUpgradeActions;
 
-        public SPSite Site
+        public HarshServerProvisioner RunOnUpgradeAction(String action)
         {
-            get { return Context?.Site; }
-        }
+            if (String.IsNullOrWhiteSpace(action))
+            {
+                throw Error.ArgumentNullOrWhitespace(nameof(action));
+            }
 
-        public SPWebApplication WebApplication
-        {
-            get { return Context?.WebApplication; }
+            if (_runOnUpgradeActions == null)
+            {
+                _runOnUpgradeActions = new HashSet<String>(StringComparer.Ordinal);
+            }
+
+            _runOnUpgradeActions.Add(action);
+            return this;
         }
 
         public SPFarm Farm
@@ -26,24 +33,86 @@ namespace HarshPoint.Server.Provisioning
             get { return Context?.Farm; }
         }
 
-        internal override void ProvisionChild(HarshProvisionerBase p)
+        public SPSite Site
         {
-            if (p == null)
-            {
-                throw Error.ArgumentNull(nameof(p));
-            }
-
-            p.ToServerProvisioner().Provision(Context);
+            get { return Context?.Site; }
         }
 
-        internal override void UnprovisionChild(HarshProvisionerBase p)
+        public String UpgradeAction
         {
-            if (p == null)
+            get { return Context?.UpgradeAction; }
+        }
+
+        public IReadOnlyDictionary<String, String> UpgradeArguments
+        {
+            get { return Context?.UpgradeArguments; }
+        }
+
+        public SPWeb Web
+        {
+            get { return Context?.Web; }
+        }
+
+        public SPWebApplication WebApplication
+        {
+            get { return Context?.WebApplication; }
+        }
+
+        protected virtual Boolean ShouldProvisionChild(HarshServerProvisioner provisioner) => true;
+
+        protected virtual Boolean ShouldUnprovisionChild(HarshServerProvisioner provisioner) => true;
+
+        internal void AddRunOnUpgradeActionsTo(ICollection<String> runOnUpgradeActions)
+        {
+            if (runOnUpgradeActions == null)
             {
-                throw Error.ArgumentNull(nameof(p));
+                throw Error.ArgumentNull(nameof(runOnUpgradeActions));
             }
 
-            p.ToServerProvisioner().Unprovision(Context);
+            if (_runOnUpgradeActions != null)
+            {
+                runOnUpgradeActions.AddRange(_runOnUpgradeActions);
+            }
+
+            if (!HasChildren)
+            {
+                return;
+            }
+
+            foreach (var child in Children.Select(HarshProvisionerConverter.ToServerProvisioner))
+            {
+                child.AddRunOnUpgradeActionsTo(runOnUpgradeActions);
+            }
+        }
+
+        internal override async Task ProvisionChild(HarshProvisionerBase provisioner)
+        {
+            if (provisioner == null)
+            {
+                throw Error.ArgumentNull(nameof(provisioner));
+            }
+
+            var serverProvisioner = provisioner.ToServerProvisioner();
+
+            if (ShouldProvisionChild(serverProvisioner))
+            {
+                await serverProvisioner.ProvisionAsync(Context);
+            }
+        }
+
+        internal override async Task UnprovisionChild(HarshProvisionerBase provisioner)
+        {
+            if (provisioner == null)
+            {
+                throw Error.ArgumentNull(nameof(provisioner));
+            }
+
+            var serverProvisioner = provisioner.ToServerProvisioner();
+
+            if (ShouldUnprovisionChild(serverProvisioner))
+            {
+                await serverProvisioner.UnprovisionAsync(Context);
+            }
         }
     }
 }

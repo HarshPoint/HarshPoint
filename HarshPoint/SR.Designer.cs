@@ -89,6 +89,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null or whitespace-only string..
+        /// </summary>
+        internal static string Error_ArgumentNullOrWhitespace {
+            get {
+                return ResourceManager.GetString("Error_ArgumentNullOrWhitespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not assignable from &apos;{1}&apos;..
         /// </summary>
         internal static string Error_TypeNotAssignableFrom {
@@ -251,7 +260,7 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} cannot be null or a white space string..
+        ///   Looks up a localized string similar to The {0} cannot be null or a whitespace-only string..
         /// </summary>
         internal static string HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace {
             get {

@@ -1,18 +1,24 @@
 ﻿using HarshPoint.Provisioning;
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class PotentiallyDestructiveTests : IUseFixture<SharePointClientFixture>
+    public class PotentiallyDestructiveTests : IClassFixture<SharePointClientFixture>
     {
+        public PotentiallyDestructiveTests(SharePointClientFixture data)
+        {
+            ClientOM = data;
+        }
+
         public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
-        public void Destructive_Unprovision_not_called_by_default()
+        public async Task Destructive_Unprovision_not_called_by_default()
         {
             var destructive = new DestructiveUnprovision();
-            Assert.DoesNotThrow(() => destructive.Unprovision(ClientOM.Context));
+            await destructive.UnprovisionAsync(ClientOM.Context);
         }
 
         [Fact]
@@ -22,14 +28,14 @@ namespace HarshPoint.Tests.Provisioning
             ctx.MayDeleteUserData = true;
 
             var destructive = new DestructiveUnprovision();
-            Assert.Throws<InvalidOperationException>(() => destructive.Unprovision(ctx));
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await destructive.UnprovisionAsync(ctx));
         }
 
         [Fact]
         public void Safe_Unprovision_called_by_default()
         {
             var safe = new NeverDeletesUnprovision();
-            Assert.Throws<InvalidOperationException>(() => safe.Unprovision(ClientOM.Context));
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await safe.UnprovisionAsync(ClientOM.Context));
         }
 
         [Fact]
@@ -39,7 +45,7 @@ namespace HarshPoint.Tests.Provisioning
             ctx.MayDeleteUserData = true;
 
             var safe = new NeverDeletesUnprovision();
-            Assert.Throws<InvalidOperationException>(() => safe.Unprovision(ctx));
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await safe.UnprovisionAsync(ctx));
         }
 
         [Fact]
@@ -49,14 +55,9 @@ namespace HarshPoint.Tests.Provisioning
             Assert.True(metadata.UnprovisionDeletesUserData);
         }
 
-        public void SetFixture(SharePointClientFixture data)
-        {
-            ClientOM = data;
-        }
-
         private class DestructiveUnprovision : HarshProvisioner
         {
-            protected override void OnUnprovisioning()
+            protected override Task OnUnprovisioningAsync()
             {
                 throw new InvalidOperationException("should not have been called");
             }
@@ -65,7 +66,7 @@ namespace HarshPoint.Tests.Provisioning
         private class NeverDeletesUnprovision : HarshProvisioner
         {
             [NeverDeletesUserData]
-            protected override void OnUnprovisioning()
+            protected override Task OnUnprovisioningAsync()
             {
                 throw new InvalidOperationException("should not have been called");
             }
@@ -73,9 +74,9 @@ namespace HarshPoint.Tests.Provisioning
 
         private class DestructiveUnprovisionSafeBase : NeverDeletesUnprovision
         {
-            protected override void OnUnprovisioning()
+            protected override Task OnUnprovisioningAsync()
             {
-                base.OnUnprovisioning();
+                return base.OnUnprovisioningAsync();
             }
         }
     }

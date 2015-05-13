@@ -11,6 +11,14 @@ namespace HarshPoint
             return new ArgumentNullException(paramName);
         }
 
+        public static Exception ArgumentNullOrWhitespace(String paramName)
+        {
+            return ArgumentOutOfRange(
+                paramName,
+                SR.Error_ArgumentNullOrWhitespace
+            );
+        }
+
         public static Exception ArgumentOutOfRange(String paramName, String message)
         {
             return new ArgumentOutOfRangeException(paramName, message);

@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning
                 );
             }
 
-            UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioning");
+            UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
         }
 
         public Boolean UnprovisionDeletesUserData

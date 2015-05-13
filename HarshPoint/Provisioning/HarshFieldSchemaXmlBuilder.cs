@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace HarshPoint.Provisioning
@@ -34,7 +35,7 @@ namespace HarshPoint.Provisioning
         /// <param name="field">The field, may be <c>null</c>.</param>
         /// <returns></returns>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public XElement GetExistingSchemaXml(Field field)
+        public async Task<XElement> GetExistingSchemaXml(Field field)
         {
             if (field.IsNull())
             {
@@ -44,7 +45,7 @@ namespace HarshPoint.Provisioning
             if (!field.IsPropertyAvailable(f => f.SchemaXmlWithResourceTokens))
             {
                 field.Context.Load(field, f => f.SchemaXmlWithResourceTokens);
-                field.Context.ExecuteQuery();
+                await field.Context.ExecuteQueryAsync();
             }
 
             return XElement.Parse(field.SchemaXmlWithResourceTokens);
@@ -56,11 +57,11 @@ namespace HarshPoint.Provisioning
         /// <param name="field">The field, may be <c>null</c> if creating a new field.</param>
         /// <param name="schemaXml">The schema XML, if <c>null</c>, existing field schema XML will be modifed.</param>
         /// <returns></returns>
-        public XElement Update(Field field, XElement schemaXml)
+        public async Task<XElement> Update(Field field, XElement schemaXml)
         {
             if (schemaXml == null)
             {
-                schemaXml = GetExistingSchemaXml(field);
+                schemaXml = await GetExistingSchemaXml(field);
             }
 
             if (field.IsNull())

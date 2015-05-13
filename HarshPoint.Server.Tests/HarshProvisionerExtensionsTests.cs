@@ -3,48 +3,76 @@ using HarshPoint.Server.Provisioning;
 using Moq;
 using Moq.Protected;
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace HarshPoint.Server.Tests
 {
-    public class HarshProvisionerExtensionsTests : IUseFixture<SharePointServerFixture>
+    public class HarshProvisionerExtensionsTests : IClassFixture<SharePointServerFixture>
     {
+        public HarshProvisionerExtensionsTests(SharePointServerFixture data)
+        {
+            ServerOM = data;
+        }
+
         public SharePointServerFixture ServerOM
         {
             get;
             set;
         }
-
-        public void SetFixture(SharePointServerFixture data)
-        {
-            ServerOM = data;
-        }
+        
 
         [Fact]
-        public void ToServerProvisioner_calls_Provision()
+        public async Task ToServerProvisioner_calls_Provision()
         {
             var prov = new Mock<HarshProvisioner>();
-            prov.Protected().Setup("Initialize");
-            prov.Protected().Setup("OnProvisioning");
-            prov.Protected().Setup("Complete");
+
+            prov.Protected()
+                .Setup<Task>("InitializeAsync")
+                .Returns(HarshTask.Completed)
+                .Verifiable();
+
+            prov.Protected()
+                .Setup<Task>("OnProvisioningAsync")
+                .Returns(HarshTask.Completed)
+                .Verifiable();
+
+            prov.Protected()
+                .Setup("Complete")
+                .Verifiable();
 
             var serverProv = prov.Object.ToServerProvisioner();
 
-            serverProv.Provision(ServerOM.WebContext);
+            await serverProv.ProvisionAsync(ServerOM.WebContext);
 
             prov.Verify();
         }
 
         [Fact]
-        public void ToServerProvisioner_calls_Unprovision()
+        public async Task ToServerProvisioner_calls_Unprovision()
         {
             var clientProv = new Mock<HarshProvisioner>();
-            clientProv.Protected().Setup("Initialize");
-            clientProv.Protected().Setup("OnUnprovisioning");
-            clientProv.Protected().Setup("Complete");
+
+            clientProv.Protected()
+                .Setup<Task>("InitializeAsync")
+                .Returns(HarshTask.Completed)
+                .Verifiable();
+
+            clientProv.Protected()
+                .Setup<Task>("OnUnprovisioningAsync")
+                .Returns(HarshTask.Completed)
+                .Verifiable();
+
+            clientProv.Protected()
+                .Setup("Complete")
+                .Verifiable();
 
             var serverProv = clientProv.Object.ToServerProvisioner();
-            serverProv.Unprovision(ServerOM.WebContext);
+
+            var ctx = (HarshServerProvisionerContext)ServerOM.WebContext.Clone();
+            ctx.MayDeleteUserData = true;
+
+            await serverProv.UnprovisionAsync(ctx);
 
             clientProv.Verify();
         }
@@ -53,32 +81,36 @@ namespace HarshPoint.Server.Tests
         public void ToServerProvisioner_sets_correct_Web()
         {
             var clientProv = new Mock<HarshProvisioner>();
-            clientProv.Protected().Setup("OnProvisioning").Callback(() =>
-            {
-                clientProv.Object.ClientContext.Load(clientProv.Object.Web, w => w.Url);
-                clientProv.Object.ClientContext.ExecuteQuery();
+            clientProv.Protected()
+                .Setup<Task>("OnProvisioningAsync")
+                .Returns(async () =>
+                {
+                    clientProv.Object.ClientContext.Load(clientProv.Object.Web, w => w.Url);
+                    await clientProv.Object.ClientContext.ExecuteQueryAsync();
 
-                Assert.Equal(ServerOM.Web.Url, clientProv.Object.Web.Url, StringComparer.OrdinalIgnoreCase);
+                    Assert.Equal(ServerOM.Web.Url, clientProv.Object.Web.Url, StringComparer.OrdinalIgnoreCase);
+                });
 
-            });
             var serverProv = clientProv.Object.ToServerProvisioner();
-            serverProv.Provision(ServerOM.WebContext);
+            serverProv.ProvisionAsync(ServerOM.WebContext).Wait();
         }
 
         [Fact]
         public void ToServerProvisioner_sets_correct_Site()
         {
             var clientProv = new Mock<HarshProvisioner>();
-            clientProv.Protected().Setup("OnProvisioning").Callback(() =>
-            {
-                clientProv.Object.ClientContext.Load(clientProv.Object.Site, s => s.Url);
-                clientProv.Object.ClientContext.ExecuteQuery();
+            clientProv.Protected()
+                .Setup<Task>("OnProvisioningAsync")
+                .Returns(async () =>
+                {
+                    clientProv.Object.ClientContext.Load(clientProv.Object.Site, s => s.Url);
+                    await clientProv.Object.ClientContext.ExecuteQueryAsync();
 
-                Assert.Equal(ServerOM.Site.Url, clientProv.Object.Site.Url, StringComparer.OrdinalIgnoreCase);
-            });
+                    Assert.Equal(ServerOM.Site.Url, clientProv.Object.Site.Url, StringComparer.OrdinalIgnoreCase);
+                });
 
             var serverProv = clientProv.Object.ToServerProvisioner();
-            serverProv.Provision(ServerOM.WebContext);
+            serverProv.ProvisionAsync(ServerOM.WebContext).Wait();
         }
 
         [Fact]
@@ -88,7 +120,7 @@ namespace HarshPoint.Server.Tests
             var serverProv = clientProv.ToServerProvisioner();
 
             var serverContext = new HarshServerProvisionerContext(ServerOM.WebApplication);
-            Assert.Throws<InvalidOperationException>(() => serverProv.Provision(serverContext));
+            Assert.ThrowsAsync<InvalidOperationException>(() => serverProv.ProvisionAsync(serverContext));
         }
 
         [Fact]
@@ -98,7 +130,7 @@ namespace HarshPoint.Server.Tests
             var serverProv = clientProv.ToServerProvisioner();
 
             var serverContext = new HarshServerProvisionerContext(ServerOM.Farm);
-            Assert.Throws<InvalidOperationException>(() => serverProv.Provision(serverContext));
+            Assert.ThrowsAsync<InvalidOperationException>(() => serverProv.ProvisionAsync(serverContext));
         }
 
         [Fact]

@@ -1,12 +1,16 @@
-﻿using System;
-using HarshPoint.Provisioning;
+﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace HarshPoint.Server.Provisioning
 {
     public sealed class HarshServerProvisionerContext : HarshProvisionerContextBase, IHarshServerProvisionerContext
     {
+        private IReadOnlyDictionary<String, String> _upgradeArgs = EmptyUpgradeArguments;
+
         public HarshServerProvisionerContext(SPWeb web)
         {
             if (web == null)
@@ -47,14 +51,20 @@ namespace HarshPoint.Server.Provisioning
 
             Farm = farm;
         }
+
+        public SPFarm Farm
+        {
+            get;
+            private set;
+        }
         
-        public SPWeb Web
+        public SPSite Site
         {
             get;
             private set;
         }
 
-        public SPSite Site
+        public SPWeb Web
         {
             get;
             private set;
@@ -66,10 +76,15 @@ namespace HarshPoint.Server.Provisioning
             private set;
         }
 
-        public SPFarm Farm
+        public String UpgradeAction
         {
             get;
             private set;
+        }
+
+        public IReadOnlyDictionary<String, String> UpgradeArguments
+        {
+            get { return _upgradeArgs; }
         }
 
         private void SetWeb(SPWeb web)
@@ -80,16 +95,32 @@ namespace HarshPoint.Server.Provisioning
             Farm = WebApplication.Farm;
         }
 
+        internal static HarshServerProvisionerContext FromProperties(
+            SPFeatureReceiverProperties properties, 
+            String upgradeAction, 
+            IDictionary<String, String> upgradeArguments)
+        {
+            var result = FromProperties(properties);
+
+            if (upgradeArguments!= null)
+            {
+                result._upgradeArgs = upgradeArguments.ToImmutableDictionary(StringComparer.Ordinal);
+            }
+
+            result.UpgradeAction = upgradeAction;
+            return result;
+        }
+
         internal static HarshServerProvisionerContext FromProperties(SPFeatureReceiverProperties properties)
         {
             if (properties == null)
             {
-                throw Error.ArgumentNull("properties");
+                throw Error.ArgumentNull(nameof(properties));
             }
 
             if (properties.Feature == null)
             {
-                throw Error.ArgumentOutOfRange("properties", SR.HarshServerProvisionerContext_PropertiesFeatureNull);
+                throw Error.ArgumentOutOfRange(nameof(properties), SR.HarshServerProvisionerContext_PropertiesFeatureNull);
             }
 
             var parent = properties.Feature.Parent;
@@ -120,5 +151,8 @@ namespace HarshPoint.Server.Provisioning
 
             return null;
         }
+
+        private static readonly IReadOnlyDictionary<String, String> EmptyUpgradeArguments =
+            ImmutableDictionary<String, String>.Empty;
     }
 }
