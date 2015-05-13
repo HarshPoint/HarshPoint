@@ -6,7 +6,11 @@ namespace HarshPoint.Entity.Metadata
 {
     internal sealed class HarshEntityMetadataRepository
     {
-        private ImmutableDictionary<TypeInfo, HarshEntityMetadata> _repo;
+        private static readonly HarshEntityMetadataRepository _singleton =
+            new HarshEntityMetadataRepository();
+
+        private readonly HarshInMemoryObjectCache<TypeInfo, HarshEntityMetadata> _cache =
+            new HarshInMemoryObjectCache<TypeInfo, HarshEntityMetadata>();
 
         private HarshEntityMetadataRepository()
         {
@@ -16,7 +20,7 @@ namespace HarshPoint.Entity.Metadata
         {
             if (type == null)
             {
-                throw Error.ArgumentNull("type");
+                throw Error.ArgumentNull(nameof(type));
             }
 
             return GetMetadata(type.GetTypeInfo());
@@ -26,28 +30,15 @@ namespace HarshPoint.Entity.Metadata
         {
             if (typeInfo == null)
             {
-                throw Error.ArgumentNull("typeInfo");
+                throw Error.ArgumentNull(nameof(typeInfo));
             }
 
-            HarshEntityMetadata result;
-
-            if (!_repo.TryGetValue(typeInfo, out result))
-            {
-                result = HarshEntityMetadata.Create(typeInfo);
-                result.Repository = this;
-
-                _repo = _repo.Add(typeInfo, result);
-            }
-
-            return result;
+            return _cache.GetOrAdd(typeInfo, ti => HarshEntityMetadata.Create(this, ti));
         }
 
         public static HarshEntityMetadataRepository Current
         {
             get { return _singleton; }
         }
-
-        private static readonly HarshEntityMetadataRepository _singleton =
-            new HarshEntityMetadataRepository();
     }
 }

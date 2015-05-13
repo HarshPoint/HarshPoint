@@ -2,6 +2,7 @@
 using HarshPoint.Entity.Metadata;
 using System;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace HarshPoint.Tests.Entity
@@ -14,7 +15,7 @@ namespace HarshPoint.Tests.Entity
         public void Fails_without_a_ContentTypeAttribute()
         {
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => new HarshEntityMetadataContentType(typeof(NotAContentType))
+                () => CreateMetadata(typeof(NotAContentType))
             );
         }
 
@@ -22,21 +23,21 @@ namespace HarshPoint.Tests.Entity
         public void Fails_when_not_inherited_form_HarshEntity()
         {
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => new HarshEntityMetadataContentType(typeof(NotAnEntity))
+                () => CreateMetadata(typeof(NotAnEntity))
             );
         }
 
         [Fact]
         public void Succeeds_with_a_ContentTypeAttribute()
         {
-            var md = new HarshEntityMetadataContentType(typeof(EmptyContentType));
+            var md = CreateMetadata(typeof(EmptyContentType));
             Assert.Equal(DummyId, md.ContentTypeId, StringComparer.OrdinalIgnoreCase);
         }
 
         [Fact]
         public void Finds_readable_writable_properties_with_FieldAttribute()
         {
-            var md = new HarshEntityMetadataContentType(typeof(ContentTypeWithFields));
+            var md = CreateMetadata(typeof(ContentTypeWithFields));
             Assert.Single(md.DeclaredFields);
 
             var field = md.DeclaredFields.First();
@@ -49,14 +50,14 @@ namespace HarshPoint.Tests.Entity
         [Fact]
         public void Has_correct_id_with_a_base_type()
         {
-            var md = new HarshEntityMetadataContentType(typeof(ContentTypeWithBaseType));
+            var md = CreateMetadata(typeof(ContentTypeWithBaseType));
             Assert.Equal(DummyId + "01", md.ContentTypeId, StringComparer.OrdinalIgnoreCase);
         }
 
         [Fact]
         public void Has_declared_fields_with_a_base_type()
         {
-            var md = new HarshEntityMetadataContentType(typeof(ContentTypeWithBaseType));
+            var md = CreateMetadata(typeof(ContentTypeWithBaseType));
             Assert.Single(md.DeclaredFields);
 
             var field = md.DeclaredFields.First();
@@ -66,6 +67,13 @@ namespace HarshPoint.Tests.Entity
             Assert.Equal(new Guid("de5e71bc-8ba9-4693-84b4-615b97d4003f"), field.FieldId);
         }
 
+        private static HarshEntityMetadataContentType CreateMetadata(Type type)
+        {
+            return new HarshEntityMetadataContentType(
+                HarshEntityMetadataRepository.Current,
+                type.GetTypeInfo()
+            );
+        }
 
         private sealed class NotAContentType
         {

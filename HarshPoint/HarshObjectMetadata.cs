@@ -16,6 +16,18 @@ namespace HarshPoint
             ObjectTypeInfo = type.GetTypeInfo();
         }
 
+        public HarshObjectMetadata(TypeInfo typeInfo)
+        {
+            if (typeInfo == null)
+            {
+                throw Error.ArgumentNull(nameof(typeInfo));
+            }
+
+            ObjectType = typeInfo.AsType();
+            ObjectTypeInfo = typeInfo;
+        }
+
+
         public Type ObjectType
         {
             get;

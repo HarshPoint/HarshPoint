@@ -5,29 +5,35 @@ using System.Reflection;
 
 namespace HarshPoint.Entity.Metadata
 {
-    public abstract class HarshEntityMetadata
+    public abstract class HarshEntityMetadata : HarshObjectMetadata
     {
-        private HarshEntityMetadata _baseEntity;
-
-        internal HarshEntityMetadata(TypeInfo entityTypeInfo)
+        internal HarshEntityMetadata(HarshEntityMetadataRepository repository, TypeInfo entityTypeInfo)
+            : base(entityTypeInfo)
         {
-            if (entityTypeInfo == null)
+            if (repository == null)
             {
-                throw Error.ArgumentNull("entityType");
+                throw Error.ArgumentNull(nameof(repository));
             }
 
-            EntityTypeInfo = entityTypeInfo;
-
-            if (!EntityTypeInfo.IsSubclassOf(typeof(HarshEntity)))
+            if (!HarshEntityTypeInfo.IsAssignableFrom(ObjectTypeInfo))
             {
-                throw Error.ArgumentOutOfRangeFormat(
-                    "entityType",
-                    SR.HarshEntityMetadata_TypeNotAnEntity,
-                    entityTypeInfo.FullName
+                throw Error.ArgumentOutOfRange_TypeNotAssignableFrom(
+                    nameof(entityTypeInfo),
+                    HarshEntityTypeInfo,
+                    ObjectTypeInfo
                 );
             }
 
-            CreateFieldMetadata();
+            Repository = repository;
+
+            GetBaseEntity();
+            CreateDeclaredFields();
+        }
+
+        public HarshEntityMetadata BaseEntity
+        {
+            get;
+            private set;
         }
 
         public IReadOnlyCollection<HarshFieldMetadata> DeclaredFields
@@ -36,48 +42,33 @@ namespace HarshPoint.Entity.Metadata
             private set;
         }
 
-        public TypeInfo EntityTypeInfo
+        internal HarshEntityMetadataRepository Repository
         {
             get;
             private set;
         }
 
-        public HarshEntityMetadata BaseEntity
+        private void GetBaseEntity()
         {
-            get
+            if (ObjectTypeInfo.BaseType == typeof(HarshEntity))
             {
-                if (EntityTypeInfo.BaseType == typeof(HarshEntity))
-                {
-                    return null;
-                }
-
-                if (_baseEntity == null)
-                {
-                    ValidateRepository();
-                    _baseEntity = Repository.GetMetadata(EntityTypeInfo.BaseType);
-                }
-
-                return _baseEntity;
+                return;
             }
+
+            BaseEntity = Repository.GetMetadata(ObjectTypeInfo.BaseType);
         }
 
-        internal HarshEntityMetadataRepository Repository
-        {
-            get;
-            set;
-        }
-
-        private void CreateFieldMetadata()
+        private void CreateDeclaredFields()
         {
             var declared = ImmutableList.CreateBuilder<HarshFieldMetadata>();
 
-            foreach (var property in EntityTypeInfo.DeclaredProperties)
+            foreach (var property in ObjectTypeInfo.DeclaredProperties)
             {
                 if (!property.CanWrite || !property.SetMethod.IsPublic)
                 {
                     Trace.WriteLine(
                         "CreateFieldMetadata: skipping non-writable property {0}.{1}.",
-                        EntityTypeInfo.FullName,
+                        ObjectTypeInfo.FullName,
                         property.Name
                     );
                     continue;
@@ -87,7 +78,7 @@ namespace HarshPoint.Entity.Metadata
                 {
                     Trace.WriteLine(
                         "CreateFieldMetadata: skipping non-readable property {0}.{1}.",
-                        EntityTypeInfo.FullName,
+                        ObjectTypeInfo.FullName,
                         property.Name
                     );
                     continue;
@@ -99,7 +90,7 @@ namespace HarshPoint.Entity.Metadata
                 {
                     Trace.WriteLine(
                         "CreateFieldMetadata: skipping property {0}.{1}, has no FieldAttribute.",
-                        EntityTypeInfo.FullName,
+                        ObjectTypeInfo.FullName,
                         property.Name
                     );
                     continue;
@@ -111,24 +102,21 @@ namespace HarshPoint.Entity.Metadata
             DeclaredFields = declared.ToImmutable();
         }
 
-        private void ValidateRepository()
+        internal static HarshEntityMetadata Create(HarshEntityMetadataRepository repository, TypeInfo typeInfo)
         {
-            if (Repository == null)
+            if (repository== null)
             {
-                throw new InvalidOperationException(SR.HarshEntityMetadata_DoesntBelongToARepo);
+                throw Error.ArgumentNull(nameof(repository));
             }
-        }
 
-        internal static HarshEntityMetadata Create(TypeInfo typeInfo)
-        {
             if (typeInfo == null)
             {
-                throw Error.ArgumentNull("typeInfo");
+                throw Error.ArgumentNull(nameof(typeInfo));
             }
 
             if (typeInfo.IsDefined(typeof(ContentTypeAttribute), inherit: false))
             {
-                return new HarshEntityMetadataContentType(typeInfo);
+                return new HarshEntityMetadataContentType(repository, typeInfo);
             }
 
             throw new NotImplementedException("TODO: more entity types to come :)");
@@ -136,5 +124,7 @@ namespace HarshPoint.Entity.Metadata
 
         private static readonly HarshTraceSource Trace =
             new HarshTraceSource(typeof(HarshEntityMetadata));
+
+        private static readonly TypeInfo HarshEntityTypeInfo = typeof(HarshEntity).GetTypeInfo();
     }
 }

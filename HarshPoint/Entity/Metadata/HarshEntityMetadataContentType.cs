@@ -5,26 +5,21 @@ namespace HarshPoint.Entity.Metadata
 {
     internal sealed class HarshEntityMetadataContentType : HarshEntityMetadata
     {
-        internal HarshEntityMetadataContentType(Type entityType)
-            : this(entityType.GetTypeInfo())
+        internal HarshEntityMetadataContentType(HarshEntityMetadataRepository repository, TypeInfo entityTypeInfo)
+            : base(repository, entityTypeInfo)
         {
-        }
-
-        internal HarshEntityMetadataContentType(TypeInfo entityTypeInfo)
-            : base(entityTypeInfo)
-        {
-            ContentTypeAttribute = EntityTypeInfo.GetCustomAttribute<ContentTypeAttribute>();
+            ContentTypeAttribute = ObjectTypeInfo.GetCustomAttribute<ContentTypeAttribute>();
 
             if (ContentTypeAttribute == null)
             {
                 throw Error.ArgumentOutOfRangeFormat(
-                    "entityType",
+                    nameof(entityTypeInfo),
                     SR.HarshEntityMetadataContentType_NoContentTypeAttribute,
                     entityTypeInfo.FullName
                 );
             }
 
-            ContentTypeId = new ContentTypeIdBuilder(EntityTypeInfo).ToString();
+            ContentTypeId = new ContentTypeIdBuilder(ObjectTypeInfo).ToString();
         }
 
         public ContentTypeAttribute ContentTypeAttribute
