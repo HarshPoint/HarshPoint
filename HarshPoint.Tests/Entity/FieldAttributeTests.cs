@@ -1,7 +1,6 @@
 ﻿using HarshPoint.Entity;
 using System;
 using Xunit;
-using Xunit.Extensions;
 
 namespace HarshPoint.Tests.Entity
 {

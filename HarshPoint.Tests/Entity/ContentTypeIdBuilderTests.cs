@@ -3,7 +3,6 @@ using HarshPoint.Entity.Metadata;
 using System;
 using System.Reflection;
 using Xunit;
-using Xunit.Extensions;
 
 namespace HarshPoint.Tests.Entity
 {
