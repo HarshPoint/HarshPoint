@@ -98,6 +98,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified object &apos;{0}&apos; is not a subtype of &apos;{1}&apos;..
+        /// </summary>
+        internal static string Error_ObjectNotAssignableTo {
+            get {
+                return ResourceManager.GetString("Error_ObjectNotAssignableTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not assignable from &apos;{1}&apos;..
         /// </summary>
         internal static string Error_TypeNotAssignableFrom {
@@ -265,6 +274,24 @@ namespace HarshPoint {
         internal static string HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace {
             get {
                 return ResourceManager.GetString("HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} resolved in more than one result..
+        /// </summary>
+        internal static string ResolvableChain_ManyResults {
+            get {
+                return ResourceManager.GetString("ResolvableChain_ManyResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} resolved in no results..
+        /// </summary>
+        internal static string ResolvableChain_NoResult {
+            get {
+                return ResourceManager.GetString("ResolvableChain_NoResult", resourceCulture);
             }
         }
     }

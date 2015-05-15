@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Server.Provisioning
 {
-    public class HarshServerProvisioner : HarshProvisionerBase<HarshServerProvisionerContext>, IHarshServerProvisionerContext
+    public class HarshServerProvisioner : HarshProvisionerBase<HarshServerProvisionerContext>
     {
         private HashSet<String> _runOnUpgradeActions;
 

@@ -38,7 +38,7 @@ namespace HarshPoint
             return clientObject.IsPropertyAvailable(expression.GetMemberName());
         }
 
-        public static Task EnsurePropertyAvailable<T>(this T clientObject, Expression<Func<T, Object>> expression)
+        public static async Task<TResult> EnsurePropertyAvailable<T, TResult>(this T clientObject, Expression<Func<T, TResult>> expression)
             where T : ClientObject
         {
             if (clientObject == null)
@@ -51,13 +51,16 @@ namespace HarshPoint
                 throw Error.ArgumentNull(nameof(expression));
             }
 
-            if (IsPropertyAvailable(clientObject, expression))
+            var objectExpression = expression.ConvertToObject();
+            var compiledExpression = expression.Compile();
+
+            if (!IsPropertyAvailable(clientObject, objectExpression))
             {
-                return HarshTask.Completed;
+                clientObject.Context.Load(clientObject, objectExpression);
+                await clientObject.Context.ExecuteQueryAsync();
             }
 
-            clientObject.Context.Load(clientObject, expression);
-            return clientObject.Context.ExecuteQueryAsync();
+            return compiledExpression(clientObject);
         }
     }
 }

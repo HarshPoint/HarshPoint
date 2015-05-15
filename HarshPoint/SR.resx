@@ -129,6 +129,9 @@
   <data name="Error_ArgumentNullOrWhitespace" xml:space="preserve">
     <value>Value cannot be null or whitespace-only string.</value>
   </data>
+  <data name="Error_ObjectNotAssignableTo" xml:space="preserve">
+    <value>The specified object '{0}' is not a subtype of '{1}'.</value>
+  </data>
   <data name="Error_TypeNotAssignableFrom" xml:space="preserve">
     <value>The specified type '{0}' is not assignable from '{1}'.</value>
   </data>
@@ -185,5 +188,11 @@
   </data>
   <data name="HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace" xml:space="preserve">
     <value>The {0} cannot be null or a whitespace-only string.</value>
+  </data>
+  <data name="ResolvableChain_ManyResults" xml:space="preserve">
+    <value>The {0} resolved in more than one result.</value>
+  </data>
+  <data name="ResolvableChain_NoResult" xml:space="preserve">
+    <value>The {0} resolved in no results.</value>
   </data>
 </root>

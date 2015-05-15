@@ -12,6 +12,24 @@ namespace HarshPoint
     {
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public static Expression<Func<T, Object>> ConvertToObject<T, TResult>(this Expression<Func<T, TResult>> expression)
+        {
+            if (expression == null)
+            {
+                throw Error.ArgumentNull(nameof(expression));
+            }
+
+            return Expression.Lambda<Func<T, Object>>(
+                Expression.Convert(
+                    expression.Body, 
+                    typeof(Object)
+                ),
+                expression.Parameters
+            );
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static String GetMemberName<T, TResult>(this Expression<Func<T, TResult>> expression)
         {
             return GetMemberName((Expression)expression);

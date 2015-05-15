@@ -9,7 +9,7 @@ namespace HarshPoint.Provisioning
     /// Provides context for classes provisioning SharePoint
     /// artifacts using the client-side object model.
     /// </summary>
-    public class HarshProvisioner : HarshProvisionerBase<HarshProvisionerContext>, IHarshProvisionerContext
+    public class HarshProvisioner : HarshProvisionerBase<HarshProvisionerContext>
     {
         public ClientContext ClientContext
         {

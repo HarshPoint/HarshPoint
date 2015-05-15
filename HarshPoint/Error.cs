@@ -31,6 +31,16 @@ namespace HarshPoint
             );
         }
 
+        public static Exception ArgumentOutOfRange_ObjectNotAssignableTo(String paramName, TypeInfo baseType, Object shouldHaveBeenAssignable)
+        {
+            return ArgumentOutOfRangeFormat(
+                paramName,
+                SR.Error_ObjectNotAssignableTo,
+                shouldHaveBeenAssignable,
+                baseType
+            );
+        }
+
         public static Exception ArgumentOutOfRange_TypeNotAssignableFrom(String paramName, TypeInfo baseType, TypeInfo shouldHaveBeenAssignable)
         {
             return ArgumentOutOfRangeFormat(

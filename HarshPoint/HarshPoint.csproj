@@ -58,6 +58,19 @@
     <Compile Include="Provisioning\HarshCreateFile.cs" />
     <Compile Include="Provisioning\HarshDeployUserSolution.cs" />
     <Compile Include="Provisioning\HarshDesignPackage.cs" />
+    <Compile Include="Provisioning\Implementation\IResolvableChainElement.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResolvable`4.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResolvable`5.cs" />
+    <Compile Include="Provisioning\Implementation\ResolvableChain.cs" />
+    <Compile Include="Provisioning\Implementation\Resolvable`3.cs" />
+    <Compile Include="Provisioning\Implementation\Resolvable`4.cs" />
+    <Compile Include="Provisioning\Implementation\ResolvedGrouping.cs" />
+    <Compile Include="Provisioning\IResolveSingle`1.cs" />
+    <Compile Include="Provisioning\IResolve`1.cs" />
+    <Compile Include="Provisioning\Resolve.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveCatalog.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveListRootFolder.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveList`2.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />
     <Compile Include="Reflection\MethodBaseExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -77,7 +90,6 @@
     <Compile Include="Provisioning\HarshProvisionerContext.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerContextBase.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerMetadata.cs" />
-    <Compile Include="Provisioning\Implementation\IHarshProvisionerContext.cs" />
     <Compile Include="Provisioning\NeverDeletesUserDataAttribute.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -121,9 +133,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Provisioners\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetDir)*.dll" "D:\src\Iadw\packages-to-be-nuggetized"
