@@ -39,7 +39,7 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
-    <Compile Include="ClientObjectExtensions.cs" />
+    <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="Entity\ContentTypeAttribute.cs" />
     <Compile Include="Entity\HarshEntity.cs" />
     <Compile Include="Entity\FieldAttribute.cs" />
@@ -51,7 +51,13 @@
     <Compile Include="Error.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
+    <Compile Include="Extensions\WebExtensions.cs" />
     <Compile Include="HarshTask.cs" />
+    <Compile Include="HarshUrl.cs" />
+    <Compile Include="Provisioners\HarshApplyTheme.cs" />
+    <Compile Include="Provisioners\HarshCreateFile.cs" />
+    <Compile Include="Provisioners\HarshDeployUserSolution.cs" />
+    <Compile Include="Provisioners\HarshDesignPackage.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />
     <Compile Include="Reflection\MethodBaseExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -82,12 +88,19 @@
   <ItemGroup>
     <Reference Include="Microsoft.SharePoint.Client.Portable">
       <HintPath>C:\Program Files\Common Files\microsoft shared\Web Server Extensions\16\ISAPI\Microsoft.SharePoint.Client.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Publishing.Portable">
+      <HintPath>C:\Program Files\Common Files\microsoft shared\Web Server Extensions\16\ISAPI\Microsoft.SharePoint.Client.Publishing.Portable.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Runtime.Portable">
       <HintPath>C:\Program Files\Common Files\microsoft shared\Web Server Extensions\16\ISAPI\Microsoft.SharePoint.Client.Runtime.Portable.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Runtime.Windows">
       <HintPath>C:\Program Files\Common Files\microsoft shared\Web Server Extensions\16\ISAPI\Microsoft.SharePoint.Client.Runtime.Windows.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
@@ -109,6 +122,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetDir)*.dll" "D:\src\Iadw\packages-to-be-nuggetized"
+copy "$(TargetDir)*.pdb" "D:\src\Iadw\packages-to-be-nuggetized"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
