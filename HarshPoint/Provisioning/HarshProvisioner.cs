@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
+    using Implementation;
+
     /// <summary>
     /// Provides context for classes provisioning SharePoint
     /// artifacts using the client-side object model.

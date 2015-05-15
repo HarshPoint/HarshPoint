@@ -1,9 +1,8 @@
-﻿using HarshPoint.Provisioning;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace HarshPoint.Provisioners
+namespace HarshPoint.Provisioning
 {
     public sealed class HarshApplyTheme : HarshProvisioner
     {

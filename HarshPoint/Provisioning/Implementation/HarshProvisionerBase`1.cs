@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HarshPoint.Provisioning
+namespace HarshPoint.Provisioning.Implementation
 {
     /// <summary>
     /// Provides common initialization and completion logic for 

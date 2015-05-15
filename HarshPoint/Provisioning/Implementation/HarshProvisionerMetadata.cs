@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace HarshPoint.Provisioning
+namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class HarshProvisionerMetadata : HarshObjectMetadata
     {

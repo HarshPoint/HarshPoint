@@ -1,10 +1,9 @@
-﻿using HarshPoint.Provisioning;
-using Microsoft.SharePoint.Client;
+﻿using Microsoft.SharePoint.Client;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace HarshPoint.Provisioners
+namespace HarshPoint.Provisioning
 {
     public sealed class HarshCreateFile : HarshProvisioner
     {

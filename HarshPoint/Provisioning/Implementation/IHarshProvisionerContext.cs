@@ -1,6 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 
-namespace HarshPoint.Provisioning
+namespace HarshPoint.Provisioning.Implementation
 {
     internal interface IHarshProvisionerContext
     {

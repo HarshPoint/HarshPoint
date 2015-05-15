@@ -1,4 +1,4 @@
-﻿using HarshPoint.Provisioning;
+﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint;
 using System;
 using System.Collections.Generic;

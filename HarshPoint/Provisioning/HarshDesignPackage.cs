@@ -1,9 +1,8 @@
-﻿using HarshPoint.Provisioning;
-using Microsoft.SharePoint.Client.Publishing;
+﻿using Microsoft.SharePoint.Client.Publishing;
 using System;
 using System.Threading.Tasks;
 
-namespace HarshPoint.Provisioners
+namespace HarshPoint.Provisioning
 {
     public sealed class HarshDesignPackage : HarshProvisioner
     {

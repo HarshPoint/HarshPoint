@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HarshPoint.Provisioning
+namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class HarshProvisionerContextBase
     {
