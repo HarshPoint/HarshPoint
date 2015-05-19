@@ -54,6 +54,7 @@
     <Compile Include="Extensions\WebExtensions.cs" />
     <Compile Include="HarshTask.cs" />
     <Compile Include="HarshUrl.cs" />
+    <Compile Include="Provisioning\HarshEnableWebFeature.cs" />
     <Compile Include="Provisioning\HarshApplyTheme.cs" />
     <Compile Include="Provisioning\HarshCreateFile.cs" />
     <Compile Include="Provisioning\HarshDeployUserSolution.cs" />

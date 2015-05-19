@@ -15,7 +15,18 @@ namespace HarshPoint
 
             return String.Join("/", parts);
         }
-        
+
+        public static async Task<String> EnsureServerRelative(Folder folder, String url)
+        {
+            if (folder == null)
+            {
+                throw Error.ArgumentNull(nameof(folder));
+            }
+
+            await folder.EnsurePropertyAvailable(s => s.ServerRelativeUrl);
+            return EnsureUrlServerRelative(folder.ServerRelativeUrl, url);
+        }
+
         public static async Task<String> EnsureServerRelative(Site site, String url)
         {
             if (site == null)

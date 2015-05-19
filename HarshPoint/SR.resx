@@ -144,6 +144,9 @@
   <data name="FieldAttribute_InvalidGuid" xml:space="preserve">
     <value>The specified string is not a valid Guid.</value>
   </data>
+  <data name="HarshActivateFeature_FeatureNotFound" xml:space="preserve">
+    <value>Feature ID '{0}' not found.</value>
+  </data>
   <data name="HarshCompositeProvisioner_SequenceEmpty" xml:space="preserve">
     <value>The specified sequence cannot be empty.</value>
   </data>

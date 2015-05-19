@@ -143,6 +143,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Feature ID &apos;{0}&apos; not found..
+        /// </summary>
+        internal static string HarshActivateFeature_FeatureNotFound {
+            get {
+                return ResourceManager.GetString("HarshActivateFeature_FeatureNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified sequence cannot be empty..
         /// </summary>
         internal static string HarshCompositeProvisioner_SequenceEmpty {

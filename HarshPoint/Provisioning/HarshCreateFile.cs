@@ -13,7 +13,7 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        public ListTemplateType Catalog
+        public IResolveSingle<Folder> Folder
         {
             get;
             set;
@@ -31,19 +31,23 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        public Boolean OverwriteExisting
+        {
+            get;
+            set;
+        }
+
         protected override async Task OnProvisioningAsync()
         {
             await base.OnProvisioningAsync();
 
-            var catalog = Web.GetCatalog((Int32)(Catalog));
-            var folder = catalog.RootFolder;
-
-            await folder.EnsurePropertyAvailable(f => f.ServerRelativeUrl);
+            var folder = await ResolveAsync(Folder);
 
             var fci = new FileCreationInformation()
             {
                 ContentStream = ContentStream,
-                Url = HarshUrl.Combine(folder.ServerRelativeUrl, FileName),
+                Overwrite = OverwriteExisting,
+                Url = await HarshUrl.EnsureServerRelative(folder, FileName),
             };
 
             AddedFile = folder.Files.Add(fci);

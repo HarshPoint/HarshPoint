@@ -15,27 +15,35 @@ namespace HarshPoint.Provisioning
             Children.Add(_designPackage = new HarshDesignPackage());
         }
 
+        public Guid SolutionId
+        {
+            get;
+            set;
+        }
+
         public String SolutionName
         {
-            get { return _createFile.FileName; }
-            set { _createFile.FileName = value; }
+            get;
+            set;
         }
 
         public Stream ContentStream
         {
-            get { return _createFile.ContentStream; }
-            set { _createFile.ContentStream = value; }
+            get;
+            set;
         }
 
         protected override Task InitializeAsync()
         {
+            _createFile.ContentStream = ContentStream;
+            _createFile.FileName = SolutionName;
+            _createFile.Folder = HarshDesignPackage.SolutionCatalogFolder;
+            _createFile.OverwriteExisting = true;
+
+            _designPackage.DesignPackageId = SolutionId;
+            _designPackage.DesignPackageName = SolutionName;
+
             return base.InitializeAsync();
-        }
-
-        protected override async Task OnProvisioningAsync()
-        {
-            await base.OnProvisioningAsync();
-
         }
     }
 }

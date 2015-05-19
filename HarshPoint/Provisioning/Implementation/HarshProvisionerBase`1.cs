@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -89,6 +90,27 @@ namespace HarshPoint.Provisioning.Implementation
         protected override Task OnUnprovisioningAsync()
         {
             return RunChildren(UnprovisionChild, reverse: true);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        protected Task<IEnumerable<T>> ResolveAsync<T>(IResolve<T> resolver)
+        {
+            if (resolver == null)
+            {
+                throw Error.ArgumentNull(nameof(resolver));
+            }
+
+            return Context.ResolveAsync(resolver);
+        }
+
+        protected Task<T> ResolveAsync<T>(IResolveSingle<T> resolver)
+        {
+            if (resolver == null)
+            {
+                throw Error.ArgumentNull(nameof(resolver));
+            }
+
+            return Context.ResolveSingleAsync(resolver);
         }
 
         internal virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
