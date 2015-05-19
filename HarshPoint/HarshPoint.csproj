@@ -51,6 +51,7 @@
     <Compile Include="Error.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
     <Compile Include="HarshTask.cs" />
     <Compile Include="HarshUrl.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Provisioning\HarshCreateFile.cs" />
     <Compile Include="Provisioning\HarshDeployUserSolution.cs" />
     <Compile Include="Provisioning\HarshDesignPackage.cs" />
+    <Compile Include="Provisioning\HarshSiteGroup.cs" />
     <Compile Include="Provisioning\Implementation\IResolvableChainElement.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolvable`4.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolvable`5.cs" />
