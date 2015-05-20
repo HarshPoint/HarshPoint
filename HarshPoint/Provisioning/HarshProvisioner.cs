@@ -1,30 +1,21 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
+using System;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-    using Implementation;
-
     /// <summary>
     /// Provides context for classes provisioning SharePoint
     /// artifacts using the client-side object model.
     /// </summary>
     public class HarshProvisioner : HarshProvisionerBase<HarshProvisionerContext>
     {
-        public ClientContext ClientContext
-        {
-            get { return Context?.ClientContext; }
-        }
+        public ClientContext ClientContext => Context?.ClientContext;
 
-        public Site Site
-        {
-            get { return Context?.Site; }
-        }
+        public Site Site => Context?.Site;
 
-        public Web Web
-        {
-            get { return Context?.Web; }
-        }
+        public Web Web => Context?.Web;
 
         internal override Task ProvisionChild(HarshProvisionerBase p)
         {
