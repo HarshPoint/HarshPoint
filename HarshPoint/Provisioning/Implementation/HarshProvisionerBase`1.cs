@@ -16,6 +16,7 @@ namespace HarshPoint.Provisioning.Implementation
         where TContext : HarshProvisionerContextBase
     {
         private ICollection<HarshProvisionerBase> _children;
+        private Boolean _mayDeleteUserData;
         private HarshProvisionerMetadata _metadata;
 
         public TContext Context
@@ -37,6 +38,12 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
+        public Boolean MayDeleteUserData
+        {
+            get { return _mayDeleteUserData || (Context?.MayDeleteUserData ?? false); }
+            set { _mayDeleteUserData = value; }
+        }
+
         internal HarshProvisionerMetadata Metadata
         {
             get
@@ -54,7 +61,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             get
             {
-                if (_children == null || _children == NoChildren)
+                if (_children == null || _children.IsReadOnly)
                 {
                     return false;
                 }
@@ -63,14 +70,14 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        public Task ProvisionAsync(TContext context)
+        public async Task ProvisionAsync(TContext context)
         {
-            return RunWithContext(OnProvisioningAsync, context);
+            await RunWithContext(OnProvisioningAsync, context);
         }
 
         public async Task UnprovisionAsync(TContext context)
         {
-            if (context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
+            if (MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
             {
                 await RunWithContext(OnUnprovisioningAsync, context);
             }

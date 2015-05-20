@@ -56,11 +56,35 @@ namespace HarshPoint.Tests.Provisioning
             Assert.True(metadata.UnprovisionDeletesUserData);
         }
 
+        [Fact]
+        public void Unprovisioner_with_MayDeleteUserData_runs_with_context_MayDeleteUserData_false()
+        {
+            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
+            ctx.MayDeleteUserData = false;
+
+            var prov = new DestructiveUnprovision();
+            prov.MayDeleteUserData = true;
+
+            Assert.ThrowsAsync<InvalidOperationException>(() => prov.UnprovisionAsync(ctx));
+        }
+
+        [Fact]
+        public void Unprovisioner_without_MayDeleteUserData_runs_with_context_MayDeleteUserData_true()
+        {
+            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
+            ctx.MayDeleteUserData = true;
+
+            var prov = new DestructiveUnprovision();
+            prov.MayDeleteUserData = false;
+
+            Assert.ThrowsAsync<InvalidOperationException>(() => prov.UnprovisionAsync(ctx));
+        }
+
         private class DestructiveUnprovision : HarshProvisioner
         {
             protected override Task OnUnprovisioningAsync()
             {
-                throw new InvalidOperationException("should not have been called");
+                throw new InvalidOperationException("In an unsafe OnUnprovisioningAsync.");
             }
         }
 
@@ -69,7 +93,7 @@ namespace HarshPoint.Tests.Provisioning
             [NeverDeletesUserData]
             protected override Task OnUnprovisioningAsync()
             {
-                throw new InvalidOperationException("should not have been called");
+                throw new InvalidOperationException("In a safe OnUnprovisioningAsync.");
             }
         }
 
