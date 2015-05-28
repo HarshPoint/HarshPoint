@@ -79,6 +79,8 @@
     <Compile Include="Entity\TestEntity.cs" />
     <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
     <Compile Include="Extensions\TypeInfoExtensionsTests.cs" />
+    <Compile Include="HarshTraceSourceTests.cs" />
+    <Compile Include="HarshTraceTestListener.cs" />
     <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
     <Compile Include="Provisioning\FieldProvisionerTests.cs" />
     <Compile Include="Provisioning\FieldSchemaXmlBuilderTests.cs" />

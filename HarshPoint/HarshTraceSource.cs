@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Reflection;
 
 namespace HarshPoint
 {
@@ -9,30 +10,102 @@ namespace HarshPoint
         {
             if (owner == null)
             {
-                throw Error.ArgumentNull("owner");
+                throw Error.ArgumentNull(nameof(owner));
             }
 
-            Owner = owner;
+            Name = owner.GetTypeInfo().GetCSharpSimpleName();
         }
 
-        public Type Owner
+        public HarshTraceSource(String name)
+            : this(name, null)
+        {
+        }
+
+        public HarshTraceSource(String name, HarshTraceSource parent)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw Error.ArgumentNullOrWhitespace(nameof(name));
+            }
+
+            Name = name;
+            Parent = parent;
+        }
+
+        public String Name
         {
             get;
             private set;
         }
 
-        public void WriteLine(String message)
+        public HarshTraceSource Parent
         {
-            HarshTrace.WriteLine("{0}: {1}", Owner.Name, message);
+            get;
+            private set;
         }
 
-        public void WriteLine(String format, params Object[] args)
+        public override String ToString()
         {
-            HarshTrace.WriteLine(
-                "{0}: {1}", 
-                Owner.Name, 
-                String.Format(CultureInfo.InvariantCulture, format, args)
+            if (Parent != null)
+            {
+                return Parent.ToString() + ": " + Name;
+            }
+
+            return Name;
+        }
+
+        public void WriteError(Exception exception)
+        {
+            if (exception == null)
+            {
+                throw Error.ArgumentNull(nameof(exception));
+            }
+
+            HarshTrace.WriteError(
+                PrefixThis(exception.ToString()),
+                exception
             );
+        }
+
+        public void WriteInfo(String message)
+        {
+            if (message == null)
+            {
+                throw Error.ArgumentNull(nameof(message));
+            }
+
+            HarshTrace.WriteInfo(
+                PrefixThis(message)
+            );
+        }
+
+        public void WriteInfo(String format, params Object[] args)
+        {
+            if (format == null)
+            {
+                throw Error.ArgumentNull(nameof(format));
+            }
+
+            if (args == null)
+            {
+                throw Error.ArgumentNull(nameof(args));
+            }
+
+            HarshTrace.WriteInfo(
+                PrefixThis(
+                    FormatString(format, args)
+                )
+            );
+        }
+
+        private String PrefixThis(String message)
+        {
+            return FormatString("{0}: {1}", this, message);
+        }
+
+        private static String FormatString(String format, params Object[] args)
+        {
+            return String.Format(CultureInfo.InvariantCulture, format, args);
         }
     }
 }

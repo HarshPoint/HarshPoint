@@ -54,7 +54,11 @@
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
+    <Compile Include="HarshDebugTraceListener.cs" />
     <Compile Include="HarshTask.cs" />
+    <Compile Include="HarshTextWriterTraceListener.cs" />
+    <Compile Include="HarshTraceEvent.cs" />
+    <Compile Include="HarshTraceListener.cs" />
     <Compile Include="HarshUrl.cs" />
     <Compile Include="Provisioning\HarshEnableWebFeature.cs" />
     <Compile Include="Provisioning\HarshApplyTheme.cs" />

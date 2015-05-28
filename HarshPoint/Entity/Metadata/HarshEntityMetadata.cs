@@ -66,7 +66,7 @@ namespace HarshPoint.Entity.Metadata
             {
                 if (!property.CanWrite || !property.SetMethod.IsPublic)
                 {
-                    Trace.WriteLine(
+                    Trace.WriteInfo(
                         "CreateFieldMetadata: skipping non-writable property {0}.{1}.",
                         ObjectTypeInfo.FullName,
                         property.Name
@@ -76,7 +76,7 @@ namespace HarshPoint.Entity.Metadata
 
                 if (!property.CanRead || !property.GetMethod.IsPublic)
                 {
-                    Trace.WriteLine(
+                    Trace.WriteInfo(
                         "CreateFieldMetadata: skipping non-readable property {0}.{1}.",
                         ObjectTypeInfo.FullName,
                         property.Name
@@ -88,7 +88,7 @@ namespace HarshPoint.Entity.Metadata
 
                 if (fieldAttr == null)
                 {
-                    Trace.WriteLine(
+                    Trace.WriteInfo(
                         "CreateFieldMetadata: skipping property {0}.{1}, has no FieldAttribute.",
                         ObjectTypeInfo.FullName,
                         property.Name
