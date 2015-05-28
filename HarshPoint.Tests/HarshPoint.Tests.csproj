@@ -88,6 +88,7 @@
     <Compile Include="Provisioning\ResolvableChainTests.cs" />
     <Compile Include="Provisioning\ResolvableTests.cs" />
     <Compile Include="Provisioning\Resolvers\CatalogResolving.cs" />
+    <Compile Include="Provisioning\Resolvers\ListResolving.cs" />
     <Compile Include="Reflection\MethodInfoExtensionsTests.cs" />
     <Compile Include="HarshContentTypeIdTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
