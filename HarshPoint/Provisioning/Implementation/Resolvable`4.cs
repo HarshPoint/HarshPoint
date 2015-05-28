@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -16,20 +17,13 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(identifiers));
             }
 
-            Identifiers = new List<TIdentifier>(identifiers);
+            Identifiers = ImmutableHashSet.CreateRange(identifiers);
         }
 
-        public ICollection<TIdentifier> Identifiers
+        public IImmutableSet<TIdentifier> Identifiers
         {
             get;
             private set;
-        }
-
-        public override ResolvableChain Clone()
-        {
-            var result = (Resolvable<T, TIdentifier, TContext, TSelf>)base.Clone();
-            result.Identifiers = new List<TIdentifier>(Identifiers);
-            return result;
         }
 
         protected override Object ToLogObject()
