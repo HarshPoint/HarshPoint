@@ -43,13 +43,11 @@ namespace HarshPoint.Provisioning.Implementation
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected async Task<IEnumerable<T>> ResolveChain<T>(HarshProvisionerContextBase context)
         {
-            var tasks = Chain
+            var resultSets = await Chain
                 .Cast<IResolvableChainElement<T>>()
-                .Select(e => e.ResolveChainElement(context));
-
-            var results = await Task.WhenAll(tasks);
-
-            return results.SelectMany(r => r);
+                .SelectSequentially(e => e.ResolveChainElement(context));
+                
+            return resultSets.SelectMany(r => r);
         }
 
         protected async Task<T> ResolveChainSingle<T>(HarshProvisionerContextBase context)

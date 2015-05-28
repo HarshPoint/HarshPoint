@@ -87,11 +87,11 @@ namespace HarshPoint.Provisioning.Implementation
         private async Task<IEnumerable<IGrouping<T1, T2>>> ResolveChainElement(HarshProvisionerContextBase context)
         {
             var typedContext = ValidateContext<TContext>(context);
+            var parents = await Parents.ResolveAsync(context);
 
-            var tasks = from parent in await Parents.ResolveAsync(context)
-                        select ResolveChildren(typedContext, parent);
-
-            return await Task.WhenAll(tasks);
+            return await parents.SelectSequentially(
+                p => ResolveChildren(typedContext, p)
+            );
         }
 
         private async Task<IGrouping<T1, T2>> ResolveChildren(TContext context, T1 parent)
