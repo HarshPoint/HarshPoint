@@ -85,7 +85,7 @@ namespace HarshPoint
         {
             foreach (var listener in Listeners)
             {
-                listener.Write(e);
+                listener.Write(e).Wait();
             }
         }
     }
