@@ -13,6 +13,12 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        public FeatureDefinitionScope FeatureDefinitionScope
+        {
+            get;
+            set;
+        }
+
         public Boolean Force
         {
             get;
@@ -21,9 +27,9 @@ namespace HarshPoint.Provisioning
 
         protected override async Task OnProvisioningAsync()
         {
-            Web.Features.Add(FeatureId, Force, FeatureDefinitionScope.None);
-            await ClientContext.ExecuteQueryAsync();
+            Web.Features.Add(FeatureId, Force, FeatureDefinitionScope);
 
+            await ClientContext.ExecuteQueryAsync();
             await base.OnProvisioningAsync();
         }
     }
