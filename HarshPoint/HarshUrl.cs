@@ -45,8 +45,10 @@ namespace HarshPoint
                 throw Error.ArgumentNull(nameof(web));
             }
 
-            await web.EnsurePropertyAvailable(w => w.ServerRelativeUrl);
-            return EnsureUrlServerRelative(web.ServerRelativeUrl, url);
+            var webServerRelativeUrl =
+                await web.EnsurePropertyAvailable(w => w.ServerRelativeUrl);
+
+            return EnsureUrlServerRelative(webServerRelativeUrl, url);
         }
 
         public static String GetLeaf(String url)
