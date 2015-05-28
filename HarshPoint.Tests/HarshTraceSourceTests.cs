@@ -1,20 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace HarshPoint.Tests
 {
     public class HarshTraceSourceTests
     {
+        [Fact]
         public void Writes_source_name_and_value()
         {
             AssertTraceResults(
                 () => new HarshTraceSource("source").WriteInfo("test"),
                 "source: test"
+            );
+        }
+
+        [Fact]
+        public void Writes_parent_source_name_and_value()
+        {
+            AssertTraceResults(
+                () => new HarshTraceSource("source", new HarshTraceSource("parent")).WriteInfo("test"),
+                "parent: source: test"
             );
         }
 
