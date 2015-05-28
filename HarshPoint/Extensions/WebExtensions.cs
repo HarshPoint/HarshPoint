@@ -19,9 +19,7 @@ namespace HarshPoint
             }
 
             var serverRelativeUrl = await HarshUrl.EnsureServerRelative(web, url);
-            
             return web.GetList(serverRelativeUrl);
         }
-
     }
 }
