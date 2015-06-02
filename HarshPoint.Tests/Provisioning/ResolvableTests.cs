@@ -23,13 +23,13 @@ namespace HarshPoint.Tests.Provisioning
             var foo = new TestResolvable<String>("foo");
             var bar = new TestResolvable<String>("bar");
 
-            var combined = foo.And(bar);
+            var combined = (IResolve<String>)foo.And(bar);
 
             Assert.NotNull(combined);
             Assert.NotSame(combined, foo);
             Assert.NotSame(combined, bar);
 
-            var results = await ClientOM.Context.ResolveAsync(combined);
+            var results = await combined.ResolveAsync(ClientOM.Context);
 
             Assert.Equal(2, results.Count());
             Assert.Contains("foo", results);
@@ -40,9 +40,9 @@ namespace HarshPoint.Tests.Provisioning
         public async Task NestedResolvable_returns_grouping()
         {
             var root = new TestResolvable<String>("42");
-            var nested = new NestedTestResolvable<String, Int32>(root, 1);
-            
-            var results = await ClientOM.Context.ResolveAsync<IGrouping<String, Int32>>(nested);
+            IResolve<IGrouping<String, Int32>> nested = new NestedTestResolvable<String, Int32>(root, 1);
+
+            var results = await nested.ResolveAsync(ClientOM.Context);
             Assert.NotNull(results);
 
             var group = Assert.Single(results);
@@ -56,9 +56,9 @@ namespace HarshPoint.Tests.Provisioning
         public async Task NestedResolvable_returns_child()
         {
             var root = new TestResolvable<String>("42");
-            var nested = new NestedTestResolvable<String, Int32>(root, 1);
+            IResolve<Int32> nested = new NestedTestResolvable<String, Int32>(root, 1);
 
-            var results = await ClientOM.Context.ResolveAsync<Int32>(nested);
+            var results = await nested.ResolveAsync(ClientOM.Context);
             Assert.NotNull(results);
 
             var child = Assert.Single(results);
@@ -72,7 +72,7 @@ namespace HarshPoint.Tests.Provisioning
             var root = new TestResolvable<String>("42", "4242");
             var nested = new NestedTestResolvable<String, Int32>(root, 2);
 
-            var results = await ClientOM.Context.ResolveAsync<IGrouping<String, Int32>>(nested);
+            var results = await ((IResolve<IGrouping<String, Int32>>)(nested)).ResolveAsync(ClientOM.Context);
             Assert.NotNull(results);
 
             Assert.Equal(2, results.Count());
@@ -92,9 +92,9 @@ namespace HarshPoint.Tests.Provisioning
         public async Task NestedResolvable_returns_more_children()
         {
             var root = new TestResolvable<String>("42", "4242");
-            var nested = new NestedTestResolvable<String, Int32>(root, 2);
+            IResolve<Int32> nested = new NestedTestResolvable<String, Int32>(root, 2);
 
-            var results = await ClientOM.Context.ResolveAsync<Int32>(nested);
+            var results = await nested.ResolveAsync(ClientOM.Context);
             Assert.NotNull(results);
 
             Assert.Equal(4, results.Count());
@@ -113,7 +113,7 @@ namespace HarshPoint.Tests.Provisioning
             };
 
             var combined = normal.And(nested);
-            var results = await ClientOM.Context.ResolveAsync<Int32>(combined);
+            var results = await ((IResolve<Int32>)(combined)).ResolveAsync(ClientOM.Context);
 
             Assert.Equal(3, results.Count());
             Assert.Equal(2, results.Count(x => x == 84));
@@ -130,7 +130,7 @@ namespace HarshPoint.Tests.Provisioning
             };
 
             var combined = nested.And(normal);
-            var results = await ClientOM.Context.ResolveAsync<Int32>(combined);
+            var results = await ((IResolve<Int32>)(combined)).ResolveAsync(ClientOM.Context);
 
             Assert.Equal(3, results.Count());
             Assert.Equal(2, results.Count(x => x == 84));
@@ -146,7 +146,7 @@ namespace HarshPoint.Tests.Provisioning
             var combined = nested.And(normal);
 
             await Assert.ThrowsAsync<InvalidCastException>(
-                () => ClientOM.Context.ResolveAsync<IGrouping<Int32, Int32>>(combined)
+                () => ((IResolve<IGrouping<Int32, Int32>>)(combined)).ResolveAsync(ClientOM.Context)
             );
         }
 
@@ -165,7 +165,7 @@ namespace HarshPoint.Tests.Provisioning
             }
         }
 
-        public class NestedTestResolvable<T1, T2> : NestedResolvable<T1, T2, HarshProvisionerContext, NestedTestResolvable<T1,T2>>
+        public class NestedTestResolvable<T1, T2> : NestedResolvable<T1, T2, HarshProvisionerContext, NestedTestResolvable<T1, T2>>
         {
             public NestedTestResolvable(IResolve<T1> parent, Int32 count)
                 : base(parent)

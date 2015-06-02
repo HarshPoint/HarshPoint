@@ -52,7 +52,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             IResolve<String> chain = new DummyChain();
 
-            var actual = await ClientOM.Context.ResolveAsync(chain);
+            var actual = await chain.ResolveAsync(ClientOM.Context);
             Assert.Empty(actual);
         }
 
@@ -62,7 +62,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = "one";
             IResolve<String> chain = new DummyChain(expected);
 
-            var actual = await ClientOM.Context.ResolveAsync(chain);
+            var actual = await chain.ResolveAsync(ClientOM.Context);
             Assert.Equal(expected, Assert.Single(actual));
         }
 
@@ -72,7 +72,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = new[] { "one", "two" };
             IResolve<String> chain = new DummyChain(expected);
 
-            var actual = await ClientOM.Context.ResolveAsync(chain);
+            var actual = await chain.ResolveAsync(ClientOM.Context);
             Assert.Equal(expected, actual);
         }
 
@@ -92,11 +92,11 @@ namespace HarshPoint.Tests.Provisioning
         {
             var dummy = new DummyChain();
             var other = new DummyChain();
-            var combined = dummy.And(other);
+            var combined = (IResolve<String>)dummy.And(other);
 
             other.Results = new[] { "aaa" };
 
-            var actual = await ClientOM.Context.ResolveAsync(combined);
+            var actual = await combined.ResolveAsync(ClientOM.Context);
             Assert.Empty(actual);
         }
 
@@ -105,9 +105,9 @@ namespace HarshPoint.Tests.Provisioning
         {
             var dummy = new DummyChain("aaa");
             var other = new DummyChain("bbb");
-            var combined = dummy.And(other);
+            var combined = (IResolve<String>)dummy.And(other);
 
-            var result = await ClientOM.Context.ResolveAsync(combined);
+            var result = await combined.ResolveAsync(ClientOM.Context);
 
             Assert.Equal(2, result.Count());
             Assert.Contains("aaa", result);

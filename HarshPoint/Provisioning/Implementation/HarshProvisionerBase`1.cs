@@ -128,7 +128,7 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            return Context.ResolveAsync(resolver);
+            return resolver.ResolveAsync(Context);
         }
 
         protected Task<T> ResolveAsync<T>(IResolveSingle<T> resolver)
@@ -138,7 +138,7 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            return Context.ResolveSingleAsync(resolver);
+            return resolver.ResolveSingleAsync(Context);
         }
 
         internal virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
