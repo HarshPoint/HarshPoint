@@ -28,7 +28,7 @@ namespace HarshPoint.Provisioning
         /// <value>
         /// The list. When null, a site column is created or updated.
         /// </value>
-        public List List
+        public IResolveSingle<List> List
         {
             get;
             set;
@@ -45,7 +45,8 @@ namespace HarshPoint.Provisioning
 
             if (List != null)
             {
-                TargetFieldCollection = List.Fields;
+                var resolved = await ResolveAsync(List);
+                TargetFieldCollection = resolved.Fields;
             }
 
             Field = TargetFieldCollection.GetById(FieldId);
