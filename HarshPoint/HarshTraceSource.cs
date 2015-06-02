@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace HarshPoint
 {
+    [Obsolete]
     internal sealed class HarshTraceSource
     {
         public HarshTraceSource(Type owner)

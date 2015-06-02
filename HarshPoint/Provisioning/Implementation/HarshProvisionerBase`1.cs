@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
@@ -17,6 +18,11 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private ICollection<HarshProvisionerBase> _children;
         private HarshProvisionerMetadata _metadata;
+        
+        protected HarshProvisionerBase()
+        {
+            Logger = Log.ForContext(GetType());
+        }
 
         public TContext Context
         {
@@ -35,6 +41,12 @@ namespace HarshPoint.Provisioning.Implementation
 
                 return _children;
             }
+        }
+
+        public ILogger Logger
+        {
+            get;
+            private set;
         }
 
         public Boolean MayDeleteUserData
