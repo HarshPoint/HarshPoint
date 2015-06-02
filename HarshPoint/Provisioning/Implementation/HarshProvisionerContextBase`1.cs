@@ -12,7 +12,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         public override Boolean MayDeleteUserData => _mayDeleteUserData;
 
-        public IImmutableStack<Object> StateStack => _stateStack;
+        public override IImmutableStack<Object> StateStack => _stateStack;
 
         public TSelf AllowDeleteUserData()
         {

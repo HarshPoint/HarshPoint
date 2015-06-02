@@ -52,6 +52,7 @@
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
     <Compile Include="HarshDebugTraceListener.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Provisioning\HarshDeployUserSolution.cs" />
     <Compile Include="Provisioning\HarshDesignPackage.cs" />
     <Compile Include="Provisioning\HarshSiteGroup.cs" />
+    <Compile Include="Provisioning\Implementation\ContextStateResolver.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerContextBase`1.cs" />
     <Compile Include="Provisioning\Implementation\IResolvableChainElement.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolvable`4.cs" />

@@ -31,22 +31,64 @@ namespace HarshPoint.Tests.Provisioning
         {
             var metadata = new HarshProvisionerMetadata(typeof(SingleResolverProvisioner));
 
-            Assert.Single(
-                metadata.DefaultFromContextProperties, 
-                typeof(SingleResolverProvisioner).GetProperty("SingleResolver")
+            var prop = Assert.Single(
+                metadata.DefaultFromContextProperties
+            );
+
+            Assert.Equal(
+                typeof(SingleResolverProvisioner).GetProperty("SingleResolver"),
+                prop.Property
+            );
+
+            Assert.Equal(
+                typeof(String),
+                prop.ResolvedType
             );
         }
-
 
         [Fact]
         public void Metadata_finds_DefaultFromContext_resolver()
         {
             var metadata = new HarshProvisionerMetadata(typeof(ResolverProvisioner));
 
-            Assert.Single(
-                metadata.DefaultFromContextProperties,
-                typeof(ResolverProvisioner).GetProperty("Resolver")
+            var prop = Assert.Single(
+                metadata.DefaultFromContextProperties
             );
+
+            Assert.Equal(
+                typeof(ResolverProvisioner).GetProperty("Resolver"),
+                prop.Property
+            );
+
+            Assert.Equal(
+                typeof(String),
+                prop.ResolvedType
+            );
+        }
+
+        [Fact]
+        public async Task DefaultFromContext_property_gets_assigned()
+        {
+            var prov = new ResolverProvisioner();
+
+            Assert.Null(prov.Resolver);
+
+            await prov.ProvisionAsync(ClientOM.Context);
+
+            Assert.NotNull(prov.Resolver);
+            Assert.IsType<ContextStateResolver<String>>(prov.Resolver);
+        }
+
+        [Fact]
+        public async Task DefaultFromContext_assigned_property_doesnt_get_overwritten()
+        {
+            var prov = new ResolverProvisioner();
+            var resolver = new DummyResolver();
+            prov.Resolver = resolver;
+
+            await prov.ProvisionAsync(ClientOM.Context);
+
+            Assert.Same(resolver, prov.Resolver);
         }
 
         private class InvalidProvisioner : HarshProvisioner
@@ -76,6 +118,14 @@ namespace HarshPoint.Tests.Provisioning
             {
                 get;
                 set;
+            }
+        }
+
+        private class DummyResolver : IResolve<String>
+        {
+            public Task<IEnumerable<string>> ResolveAsync(HarshProvisionerContextBase context)
+            {
+                throw new NotImplementedException();
             }
         }
     }

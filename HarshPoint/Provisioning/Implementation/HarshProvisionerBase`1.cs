@@ -160,6 +160,22 @@ namespace HarshPoint.Provisioning.Implementation
 
         internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner);
 
+        private void InitializeDefaultFromContextProperties()
+        {
+            var properties = from p in Metadata.DefaultFromContextProperties
+                             where p.GetValue(this) == null
+                             select p;
+
+            foreach (var p in properties)
+            {
+                var resolver = Activator.CreateInstance(
+                    typeof(ContextStateResolver<>).MakeGenericType(p.ResolvedType)
+                );
+
+                p.SetValue(this, resolver);
+            }
+        }
+
         private async Task RunChildren(Func<HarshProvisionerBase, Task> action, Boolean reverse = false)
         {
             if (!HasChildren)
@@ -193,6 +209,8 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 try
                 {
+                    InitializeDefaultFromContextProperties();
+
                     await InitializeAsync();
                     await action();
                 }

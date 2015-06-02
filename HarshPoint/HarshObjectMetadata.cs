@@ -42,12 +42,11 @@ namespace HarshPoint
             private set;
         }
 
-        protected IEnumerable<PropertyInfo> GetPropertiesWith<TAttribute>(Boolean inherit)
-            where TAttribute : Attribute
+        protected IEnumerable<PropertyInfo> GetPropertiesWith(Type attributeType, Boolean inherit)
         {
             return ObjectType
                 .GetRuntimeProperties()
-                .Where(p => p.IsDefined(typeof(TAttribute), inherit));
+                .Where(p => p.IsDefined(attributeType, inherit));
         }
     }
 }

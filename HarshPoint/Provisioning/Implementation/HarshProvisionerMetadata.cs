@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -21,14 +22,14 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             DefaultFromContextProperties = 
-                GetPropertiesWith<DefaultFromContextAttribute>(inherit: true)
-                .Where(ValidateDefaultFromContextProperty)
+                GetPropertiesWith(typeof(DefaultFromContextAttribute), inherit: true)
+                .Select(CreateDefaultFromContextProperty)
                 .ToImmutableHashSet();
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
         }
 
-        public IImmutableSet<PropertyInfo> DefaultFromContextProperties
+        public IImmutableSet<DefaultFromContextPropertyInfo> DefaultFromContextProperties
         {
             get;
             private set;
@@ -61,7 +62,7 @@ namespace HarshPoint.Provisioning.Implementation
                 );
         }
 
-        private static Boolean ValidateDefaultFromContextProperty(PropertyInfo p)
+        private static DefaultFromContextPropertyInfo CreateDefaultFromContextProperty(PropertyInfo p)
         {
             if (p.PropertyType.IsConstructedGenericType)
             {
@@ -70,7 +71,9 @@ namespace HarshPoint.Provisioning.Implementation
                 if ((genericTypeDef == typeof(IResolve<>)) ||
                     (genericTypeDef == typeof(IResolveSingle<>)))
                 {
-                    return true;
+                    var resolvedType = p.PropertyType.GenericTypeArguments[0];
+
+                    return new DefaultFromContextPropertyInfo(p, resolvedType);
                 }
             }
 
@@ -83,5 +86,42 @@ namespace HarshPoint.Provisioning.Implementation
         }
         
         private static readonly TypeInfo HarshProvisionerBaseTypeInfo = typeof(HarshProvisionerBase).GetTypeInfo();
+
+        public sealed class DefaultFromContextPropertyInfo
+        {
+            internal DefaultFromContextPropertyInfo(PropertyInfo p, Type resolved)
+            {
+                Property = p;
+                ResolvedType = resolved;
+
+                GetValue = p.MakeGetter<Object, Object>();
+                SetValue = p.MakeSetter<Object, Object>();
+            }
+
+            public Func<Object, Object> GetValue
+            {
+                get;
+                private set;
+            }
+
+            public PropertyInfo Property
+            {
+                get;
+                private set;
+            }
+
+            public Type ResolvedType
+            {
+                get;
+                private set;
+            }
+
+            public Action<Object, Object> SetValue
+            {
+                get;
+                private set;
+            }
+            
+        }
     }
 }
