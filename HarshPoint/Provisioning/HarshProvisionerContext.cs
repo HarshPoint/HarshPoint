@@ -2,7 +2,8 @@
 
 namespace HarshPoint.Provisioning
 {
-    public sealed class HarshProvisionerContext : Implementation.HarshProvisionerContextBase
+    public sealed class HarshProvisionerContext 
+        : Implementation.HarshProvisionerContextBase<HarshProvisionerContext>
     {
         public HarshProvisionerContext(ClientContext clientContext)
         {

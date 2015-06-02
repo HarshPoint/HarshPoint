@@ -38,8 +38,7 @@ namespace HarshPoint.Tests.Provisioning
                 .Returns(HarshTask.Completed)
                 .Callback(() => seq += "2");
 
-            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
-            ctx.MayDeleteUserData = true;
+            var ctx = ClientOM.Context.AllowDeleteUserData();
 
             var composite = new HarshProvisioner()
             {
@@ -68,8 +67,7 @@ namespace HarshPoint.Tests.Provisioning
                 .Returns(HarshTask.Completed)
                 .Callback(() => seq += "2");
 
-            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
-            ctx.MayDeleteUserData = true;
+            var ctx = ClientOM.Context.AllowDeleteUserData();
 
             var composite = new HarshProvisioner()
             {

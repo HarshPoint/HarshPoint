@@ -67,8 +67,7 @@ namespace HarshPoint.Server.Tests
                 .Returns(HarshTask.Completed)
                 .Callback(() => seq += "2");
 
-            var ctx = (HarshServerProvisionerContext)ServerOM.WebContext.Clone();
-            ctx.MayDeleteUserData = true;
+            var ctx = ServerOM.WebContext.AllowDeleteUserData();
 
             var composite = new HarshServerProvisioner()
             {

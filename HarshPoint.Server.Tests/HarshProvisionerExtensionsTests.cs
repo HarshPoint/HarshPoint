@@ -69,8 +69,7 @@ namespace HarshPoint.Server.Tests
 
             var serverProv = clientProv.Object.ToServerProvisioner();
 
-            var ctx = (HarshServerProvisionerContext)ServerOM.WebContext.Clone();
-            ctx.MayDeleteUserData = true;
+            var ctx = ServerOM.WebContext.AllowDeleteUserData();
 
             await serverProv.UnprovisionAsync(ctx);
 

@@ -104,8 +104,7 @@ namespace HarshPoint.Server.Tests
             mock.Protected().Setup("OnUnprovisioningAsync").Throws<Exception>();
             mock.Protected().Setup("Complete").Verifiable();
 
-            var ctx = (HarshServerProvisionerContext)SPFixture.WebContext.Clone();
-            ctx.MayDeleteUserData = true;
+            var ctx = SPFixture.WebContext.AllowDeleteUserData();
 
             Assert.ThrowsAsync<Exception>(
                 () => mock.Object.UnprovisionAsync(ctx)

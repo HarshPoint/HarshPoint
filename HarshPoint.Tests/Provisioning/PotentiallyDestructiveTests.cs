@@ -25,8 +25,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Destructive_Unprovision_not_called_when_MayDeleteUserData()
         {
-            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
-            ctx.MayDeleteUserData = true;
+            var ctx = ClientOM.Context.AllowDeleteUserData();
 
             var destructive = new DestructiveUnprovision();
             await Assert.ThrowsAsync<InvalidOperationException>(() => destructive.UnprovisionAsync(ctx));
@@ -42,9 +41,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Safe_Unprovision_called_when_MayDeleteUserData()
         {
-            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
-            ctx.MayDeleteUserData = true;
-
+            var ctx = ClientOM.Context.AllowDeleteUserData();
             var safe = new NeverDeletesUnprovision();
             await Assert.ThrowsAsync<InvalidOperationException>(() => safe.UnprovisionAsync(ctx));
         }
@@ -59,8 +56,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Unprovisioner_with_MayDeleteUserData_runs_with_context_MayDeleteUserData_false()
         {
-            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
-            ctx.MayDeleteUserData = false;
+            var ctx = ClientOM.Context.AllowDeleteUserData();
 
             var prov = new DestructiveUnprovision();
             prov.MayDeleteUserData = true;
@@ -71,8 +67,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Unprovisioner_without_MayDeleteUserData_runs_with_context_MayDeleteUserData_true()
         {
-            var ctx = (HarshProvisionerContext)ClientOM.Context.Clone();
-            ctx.MayDeleteUserData = true;
+            var ctx = ClientOM.Context.AllowDeleteUserData();
 
             var prov = new DestructiveUnprovision();
             prov.MayDeleteUserData = false;

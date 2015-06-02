@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 
 namespace HarshPoint.Server.Provisioning
 {
-    public sealed class HarshServerProvisionerContext : HarshProvisionerContextBase
+    public sealed class HarshServerProvisionerContext : HarshProvisionerContextBase<HarshServerProvisionerContext>
     {
         private IReadOnlyDictionary<String, String> _upgradeArgs = EmptyUpgradeArguments;
 
