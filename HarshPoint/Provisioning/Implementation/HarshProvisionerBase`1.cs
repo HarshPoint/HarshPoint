@@ -111,11 +111,21 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected override Task OnProvisioningAsync()
         {
-            return RunChildren(ProvisionChild);
+            return ProvisionChildrenAsync();
         }
 
         [NeverDeletesUserData]
         protected override Task OnUnprovisioningAsync()
+        {
+            return UnprovisionChildrenAsync();
+        }
+
+        protected Task ProvisionChildrenAsync()
+        {
+            return RunChildren(ProvisionChild);
+        }
+
+        protected Task UnprovisionChildrenAsync()
         {
             return RunChildren(UnprovisionChild, reverse: true);
         }
