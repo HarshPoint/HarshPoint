@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace HarshPoint
@@ -38,6 +40,14 @@ namespace HarshPoint
         {
             get;
             private set;
+        }
+
+        protected IEnumerable<PropertyInfo> GetPropertiesWith<TAttribute>(Boolean inherit)
+            where TAttribute : Attribute
+        {
+            return ObjectType
+                .GetRuntimeProperties()
+                .Where(p => p.IsDefined(typeof(TAttribute), inherit));
         }
     }
 }

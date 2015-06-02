@@ -287,6 +287,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DefaultFromContext attribute can only be used on properties of type IResolve&lt;T&gt; or IResolveSingle&lt;T&gt;. The property &apos;{0}.{1}&apos; is of type &apos;{2}&apos;..
+        /// </summary>
+        internal static string HarshProvisionerMetadata_DefaultFromContextNotResolver {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadata_DefaultFromContextNotResolver", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} resolved in more than one result..
         /// </summary>
         internal static string ResolvableChain_ManyResults {

@@ -192,6 +192,9 @@
   <data name="HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace" xml:space="preserve">
     <value>The {0} cannot be null or a whitespace-only string.</value>
   </data>
+  <data name="HarshProvisionerMetadata_DefaultFromContextNotResolver" xml:space="preserve">
+    <value>DefaultFromContext attribute can only be used on properties of type IResolve&lt;T&gt; or IResolveSingle&lt;T&gt;. The property '{0}.{1}' is of type '{2}'.</value>
+  </data>
   <data name="ResolvableChain_ManyResults" xml:space="preserve">
     <value>The {0} resolved in more than one result.</value>
   </data>

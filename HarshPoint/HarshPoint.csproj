@@ -60,6 +60,7 @@
     <Compile Include="HarshTraceEvent.cs" />
     <Compile Include="HarshTraceListener.cs" />
     <Compile Include="HarshUrl.cs" />
+    <Compile Include="Provisioning\DefaultFromContextAttribute.cs" />
     <Compile Include="Provisioning\HarshContentType.cs" />
     <Compile Include="Provisioning\HarshEnableWebFeature.cs" />
     <Compile Include="Provisioning\HarshApplyTheme.cs" />

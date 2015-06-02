@@ -1,5 +1,6 @@
 ﻿using HarshPoint.Reflection;
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 
@@ -19,7 +20,18 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
+            DefaultFromContextProperties = 
+                GetPropertiesWith<DefaultFromContextAttribute>(inherit: true)
+                .Where(ValidateDefaultFromContextProperty)
+                .ToImmutableHashSet();
+
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
+        }
+
+        public IImmutableSet<PropertyInfo> DefaultFromContextProperties
+        {
+            get;
+            private set;
         }
 
         public Boolean UnprovisionDeletesUserData
@@ -47,6 +59,27 @@ namespace HarshPoint.Provisioning.Implementation
                         inherit: false
                     )
                 );
+        }
+
+        private static Boolean ValidateDefaultFromContextProperty(PropertyInfo p)
+        {
+            if (p.PropertyType.IsConstructedGenericType)
+            {
+                var genericTypeDef = p.PropertyType.GetGenericTypeDefinition();
+
+                if ((genericTypeDef == typeof(IResolve<>)) ||
+                    (genericTypeDef == typeof(IResolveSingle<>)))
+                {
+                    return true;
+                }
+            }
+
+            throw Error.InvalidOperation(
+                SR.HarshProvisionerMetadata_DefaultFromContextNotResolver,
+                p.DeclaringType, 
+                p.Name,
+                p.PropertyType
+            );
         }
         
         private static readonly TypeInfo HarshProvisionerBaseTypeInfo = typeof(HarshProvisionerBase).GetTypeInfo();
