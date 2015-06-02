@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -7,8 +8,11 @@ namespace HarshPoint.Provisioning.Implementation
         where TSelf : HarshProvisionerContextBase<TSelf>
     {
         private Boolean _mayDeleteUserData;
+        private IImmutableStack<Object> _stateStack = ImmutableStack<Object>.Empty;
 
         public override Boolean MayDeleteUserData => _mayDeleteUserData;
+
+        public IImmutableStack<Object> StateStack => _stateStack;
 
         public TSelf AllowDeleteUserData()
         {
@@ -17,14 +21,29 @@ namespace HarshPoint.Provisioning.Implementation
                 return (TSelf)(this);
             }
 
-            var result = Clone();
-            result._mayDeleteUserData = true;
-            return result;
+            return With(c => c._mayDeleteUserData = true);
+        }
+
+        public TSelf PushState(Object state)
+        {
+            if (state == null)
+            {
+                throw Error.ArgumentNull(nameof(state));
+            }
+
+            return With(c => c._stateStack = _stateStack.Push(state));
         }
 
         public virtual TSelf Clone()
         {
             return (TSelf)MemberwiseClone();
+        }
+
+        private TSelf With(Action<TSelf> action)
+        {
+            var result = Clone();
+            action(result);
+            return result;
         }
     }
 }
