@@ -1,5 +1,6 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -17,12 +18,14 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task Documents_list_gets_resolved_by_url()
         {
-            var resolver = (IResolveSingle<List>)Resolve.ListByUrl("Documents");
+            await EnsureDocuments();
+
+            var resolver = (IResolveSingle<List>)Resolve.ListByUrl("Shared%20Documents");
             var list = await resolver.ResolveSingleOrDefaultAsync(ClientOM.Context);
 
             Assert.NotNull(list);
             Assert.EndsWith(
-                "/Documents",
+                "/Shared Documents",
                 await list.RootFolder.EnsurePropertyAvailable(f => f.ServerRelativeUrl)
             );
         }
@@ -30,14 +33,38 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task Documents_RootFolder_gets_resolved_by_url()
         {
-            var resolver = (IResolveSingle<Folder>)Resolve.ListByUrl("Documents").RootFolder();
+            await EnsureDocuments();
+
+            var resolver = (IResolveSingle<Folder>)Resolve.ListByUrl("Shared%20Documents").RootFolder();
             var folder = await resolver.ResolveSingleOrDefaultAsync(ClientOM.Context);
 
             Assert.NotNull(folder);
             Assert.EndsWith(
-                "/Documents",
+                "/Shared Documents",
                 await folder.EnsurePropertyAvailable(f => f.ServerRelativeUrl)
             );
+        }
+
+        private async Task EnsureDocuments()
+        {
+            var list = ClientOM.Web.Lists.GetByTitle("Documents");
+            ClientOM.ClientContext.Load(list);
+
+            await ClientOM.ClientContext.ExecuteQueryAsync();
+
+            if (list.IsNull())
+            {
+                list = ClientOM.Web.Lists.Add(new ListCreationInformation()
+                {
+                    Url = "Shared%20Documents",
+                    Title = "Documents",
+                    TemplateType = (Int32)ListTemplateType.DocumentLibrary,
+                    DocumentTemplateType = (Int32)DocumentTemplateType.Word,
+                });
+
+                await ClientOM.ClientContext.ExecuteQueryAsync();
+            }
+
         }
     }
 }

@@ -8,7 +8,21 @@ namespace HarshPoint.Tests
     {
         public SharePointClientFixture()
         {
-            ClientContext = new ClientContext("http://" + Environment.MachineName);
+            var url = Environment.GetEnvironmentVariable("HarshPointTestUrl");
+
+            if (String.IsNullOrWhiteSpace(url))
+            {
+                ClientContext = new ClientContext("http://" + Environment.MachineName);
+            }
+            else
+            {
+                ClientContext = new ClientContext(url);
+                ClientContext.Credentials = new SharePointOnlineCredentials(
+                    Environment.GetEnvironmentVariable("HarshPointTestUser"),
+                    Environment.GetEnvironmentVariable("HarshPointTestPassword")
+                );
+            }
+
             Context = new HarshProvisionerContext(ClientContext);
         }
 

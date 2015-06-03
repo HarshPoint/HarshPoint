@@ -17,7 +17,7 @@ namespace HarshPoint.Provisioning.Resolvers
         protected override async Task<IEnumerable<Field>> ResolveChainElement(HarshProvisionerContext context)
         {
             var fields = context.ClientContext.LoadQuery(
-                context.Web.Fields.Include(f => f.Id)
+                context.Web.Fields.IncludeWithDefaultProperties(f => f.Id)
             );
 
             await context.ClientContext.ExecuteQueryAsync();

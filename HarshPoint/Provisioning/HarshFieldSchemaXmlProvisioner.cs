@@ -18,7 +18,6 @@ namespace HarshPoint.Provisioning
         /// </summary>
         public HarshFieldSchemaXmlProvisioner()
         {
-            FieldRef = new HarshFieldRef();
             TypeName = "Text";
             SchemaXmlBuilder = new HarshFieldSchemaXmlBuilder()
             {
@@ -64,13 +63,6 @@ namespace HarshPoint.Provisioning
         /// creating a new field.
         /// </summary>
         public AddFieldOptions AddFieldOptions
-        {
-            get;
-            set;
-        }
-
-        [DefaultFromContext]
-        public IResolveSingle<ContentType> AddToContentType
         {
             get;
             set;
@@ -225,15 +217,6 @@ namespace HarshPoint.Provisioning
                 }
             }
 
-            if (FieldAdded && (AddToContentType != null))
-            {
-                Children.AddIfNotContains(FieldRef);
-            }
-            else
-            {
-                Children.Remove(FieldRef);
-            }
-
             await base.OnProvisioningAsync();
         }
 
@@ -254,12 +237,6 @@ namespace HarshPoint.Provisioning
         {
             get;
             private set;
-        }
-
-        private HarshFieldRef FieldRef
-        {
-            get;
-            set;
         }
 
         private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();

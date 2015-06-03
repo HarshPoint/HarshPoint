@@ -82,7 +82,7 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task Child_fields_get_added()
+        public async Task Child_fieldref_get_added()
         {
             var fieldId = Guid.NewGuid();
 
@@ -93,7 +93,7 @@ namespace HarshPoint.Tests.Provisioning
                 InternalName = fieldId.ToString("n"),
             };
 
-            var prov = new HarshContentType()
+            var ct = new HarshContentType()
             {
                 Id = _id,
                 Name = _guid,
@@ -101,19 +101,22 @@ namespace HarshPoint.Tests.Provisioning
                 Group = Group,
                 Children =
                 {
-                    field
+                    new HarshFieldRef()
+                    {
+                        Fields = Resolve.FieldById(fieldId),
+                    },
                 }
             };
 
             try
             {
-                await prov.ProvisionAsync(Fixture.Context);
+                await field.ProvisionAsync(Fixture.Context);
+                await ct.ProvisionAsync(Fixture.Context);
 
-                var ct = prov.ContentType;
-                Assert.False(ct.IsNull());
+                Assert.False(ct.ContentType.IsNull());
 
                 var links = Fixture.ClientContext.LoadQuery(
-                    ct.FieldLinks.Where(fl => fl.Id == fieldId).Include(fl => fl.Name)
+                    ct.ContentType.FieldLinks.Where(fl => fl.Id == fieldId).Include(fl => fl.Name)
                 );
 
                 await Fixture.ClientContext.ExecuteQueryAsync();
@@ -131,9 +134,9 @@ namespace HarshPoint.Tests.Provisioning
                     field.Field.DeleteObject();
                 }
 
-                if (!prov.ContentType.IsNull())
+                if (!ct.ContentType.IsNull())
                 {
-                    prov.ContentType.DeleteObject();
+                    ct.ContentType.DeleteObject();
                 }
 
                 await Fixture.ClientContext.ExecuteQueryAsync();
