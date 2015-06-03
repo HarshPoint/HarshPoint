@@ -19,7 +19,7 @@ namespace HarshPoint
                 return clientObject.ServerObjectIsNull.Value;
             }
 
-            return false;
+            throw new InvalidOperationException(SR.ClientObject_IsNullNotLoaded);
         }
 
         public static Boolean IsPropertyAvailable<T>(this T clientObject, Expression<Func<T, Object>> expression)
