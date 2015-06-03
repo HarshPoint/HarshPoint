@@ -77,12 +77,12 @@ namespace HarshPoint.Provisioning.Implementation
             => ResolveChain<IGrouping<T1, T2>>(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<T2> IResolveSingle<T2>.ResolveSingleAsync(HarshProvisionerContextBase context)
-            => ResolveChainSingle<T2>(context);
+        Task<T2> IResolveSingle<T2>.ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
+            => ResolveChainSingleOrDefault<T2>(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<IGrouping<T1, T2>> IResolveSingle<IGrouping<T1, T2>>.ResolveSingleAsync(HarshProvisionerContextBase context)
-            => ResolveChainSingle<IGrouping<T1, T2>>(context);
+        Task<IGrouping<T1, T2>> IResolveSingle<IGrouping<T1, T2>>.ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
+            => ResolveChainSingleOrDefault<IGrouping<T1, T2>>(context);
             
         private async Task<IEnumerable<IGrouping<T1, T2>>> ResolveChainElement(HarshProvisionerContextBase context)
         {

@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ClientObject_IsNullNotLoaded" xml:space="preserve">
+    <value>The specified object hasn't been loaded yet, cannot determine if it is null.</value>
+  </data>
   <data name="ContentTypeIdBuilder_NoAbsoluteIDInHierarchy" xml:space="preserve">
     <value>The content type ID could not be determined because no parent of the specified type '{0}' defines an absolute content type ID.</value>
   </data>

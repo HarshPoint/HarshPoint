@@ -62,6 +62,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified object hasn&apos;t been loaded yet, cannot determine if it is null..
+        /// </summary>
+        internal static string ClientObject_IsNullNotLoaded {
+            get {
+                return ResourceManager.GetString("ClientObject_IsNullNotLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The content type ID could not be determined because no parent of the specified type &apos;{0}&apos; defines an absolute content type ID..
         /// </summary>
         internal static string ContentTypeIdBuilder_NoAbsoluteIDInHierarchy {

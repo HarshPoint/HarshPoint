@@ -21,10 +21,10 @@ namespace HarshPoint.Provisioning.Implementation
             return Task.FromResult(Values);
         }
 
-        public Task<T> ResolveSingleAsync(HarshProvisionerContextBase context)
+        public Task<T> ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
         {
             return Task.FromResult( 
-                Resolvable.EnsureSingle(this, Values)
+                Resolvable.EnsureSingleOrDefault(this, Values)
             );
         }
 

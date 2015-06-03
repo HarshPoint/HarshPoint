@@ -35,7 +35,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
                 .Catalog(ListTemplateType.MasterPageCatalog)
                 .RootFolder();
 
-            var folder = await resolver.ResolveSingleAsync(ClientOM.Context);
+            var folder = await resolver.ResolveSingleOrDefaultAsync(ClientOM.Context);
 
             Assert.Contains(
                 "/_catalogs/masterpage",

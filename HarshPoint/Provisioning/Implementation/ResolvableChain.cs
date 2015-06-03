@@ -50,11 +50,11 @@ namespace HarshPoint.Provisioning.Implementation
             return resultSets.SelectMany(r => r);
         }
 
-        protected async Task<T> ResolveChainSingle<T>(HarshProvisionerContextBase context)
+        protected async Task<T> ResolveChainSingleOrDefault<T>(HarshProvisionerContextBase context)
         {
             var values = (await ResolveChain<T>(context)).ToArray();
 
-            return Resolvable.EnsureSingle(
+            return Resolvable.EnsureSingleOrDefault(
                 this, values
             );
         }

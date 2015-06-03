@@ -18,13 +18,22 @@ namespace HarshPoint.Tests.Provisioning
         public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
-        public async Task ResolveSingle_returns_one_result()
+        public async Task ResolveSingleOrDefault_returns_one_result()
         {
             var expected = "one";
             IResolveSingle<String> chain = new DummyChain(expected);
 
-            var actual = await chain.ResolveSingleAsync(ClientOM.Context);
+            var actual = await chain.ResolveSingleOrDefaultAsync(ClientOM.Context);
             Assert.Equal(expected, actual);
+        }
+
+
+        public async Task ResolveSingleOrDefault_returns_null()
+        {
+            IResolveSingle<String> chain = new DummyChain();
+
+            var result = await chain.ResolveSingleOrDefaultAsync(ClientOM.Context);
+            Assert.Null(result);
         }
 
         [Fact]
@@ -38,12 +47,12 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task ResolveSingle_fails_many_results()
+        public async Task ResolveSingleOrDefault_fails_many_results()
         {
             IResolveSingle<String> chain = new DummyChain("one", "two", "three");
 
             await Assert.ThrowsAsync<InvalidOperationException>(
-                () => chain.ResolveSingleAsync(ClientOM.Context)
+                () => chain.ResolveSingleOrDefaultAsync(ClientOM.Context)
             );
         }
 
@@ -149,9 +158,9 @@ namespace HarshPoint.Tests.Provisioning
                 return ResolveChain<String>(context);
             }
 
-            Task<string> IResolveSingle<string>.ResolveSingleAsync(HarshProvisionerContextBase context)
+            Task<string> IResolveSingle<string>.ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
             {
-                return ResolveChainSingle<String>(context);
+                return ResolveChainSingleOrDefault<String>(context);
             }
         }
     }

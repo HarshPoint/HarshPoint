@@ -26,7 +26,7 @@ namespace HarshPoint.Provisioning
         {
             await base.InitializeAsync();
 
-            CatalogFolder = await ResolveSingleAsync(SolutionCatalogFolder);
+            CatalogFolder = await ResolveSingleOrDefaultAsync(SolutionCatalogFolder);
             PackageUrl = await HarshUrl.EnsureServerRelative(CatalogFolder, DesignPackageName);
             PackageInfo = new DesignPackageInfo()
             {

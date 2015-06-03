@@ -22,18 +22,6 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        /// <summary>
-        /// Gets or sets the list containing the field.
-        /// </summary>
-        /// <value>
-        /// The list. When null, a site column is created or updated.
-        /// </value>
-        public IResolveSingle<List> List
-        {
-            get;
-            set;
-        }
-
         protected override async Task InitializeAsync()
         {
             if (Id == Guid.Empty)
@@ -42,23 +30,13 @@ namespace HarshPoint.Provisioning
             }
 
             TargetFieldCollection = Web.Fields;
-
-            if (List != null)
-            {
-                var resolved = await ResolveSingleAsync(List);
-                TargetFieldCollection = resolved.Fields;
-            }
-
-            Field = TargetFieldCollection.GetById(Id);
-            ClientContext.Load(Field);
-
-            await ClientContext.ExecuteQueryAsync();
+            Field = await ResolveSingleOrDefaultAsync(Resolve.FieldById(Id));
         }
 
-        protected Field Field
+        public Field Field
         {
             get;
-            set;
+            protected set;
         }
 
         protected FieldCollection TargetFieldCollection

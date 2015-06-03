@@ -55,6 +55,7 @@
     <Compile Include="Provisioning\HarshFieldRef.cs" />
     <Compile Include="Provisioning\Implementation\Resolvable.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedResolver.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="Provisioning\IResolveSingle`1.cs" />
     <Compile Include="Provisioning\IResolve`1.cs" />
     <Compile Include="Provisioning\Resolve.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveContentType.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveContentTypeById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveCatalog.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListRootFolder.cs" />

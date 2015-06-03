@@ -15,13 +15,16 @@ namespace HarshPoint.Provisioning.Resolvers
         
         protected override async Task<IEnumerable<ContentType>> ResolveChainElement(HarshProvisionerContext context)
         {
-            context.ClientContext.Load(context.Web, w => w.ContentTypes);
-            await context.ClientContext.ExecuteQueryAsync();
+            var results = Identifiers
+                .Select(id => context.Web.ContentTypes.GetById(id.ToString()))
+                .ToArray();
 
-            var results = Identifiers.Select(
-                id => context.Web.ContentTypes.GetById(id.ToString())
-            );
-            
+            foreach (var ct in results)
+            {
+                context.ClientContext.Load(ct);
+            }
+
+            await context.ClientContext.ExecuteQueryAsync();
             return results;
         }
     }

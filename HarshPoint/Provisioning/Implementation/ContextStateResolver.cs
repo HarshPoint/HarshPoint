@@ -18,7 +18,7 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        public Task<T> ResolveSingleAsync(HarshProvisionerContextBase context)
+        public Task<T> ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
         {
             if (context == null)
             {

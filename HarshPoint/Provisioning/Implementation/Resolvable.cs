@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal static class Resolvable
     {
-        public static T EnsureSingle<T>(Object resolvable, IEnumerable<T> values)
+        public static T EnsureSingleOrDefault<T>(Object resolvable, IEnumerable<T> values)
         {
             if (resolvable == null)
             {
@@ -20,8 +20,8 @@ namespace HarshPoint.Provisioning.Implementation
 
             switch (values.Count())
             {
+                case 0: return default(T);
                 case 1: return values.First();
-                case 0: throw Error.InvalidOperation(SR.Resolvable_NoResult, resolvable);
                 default: throw Error.InvalidOperation(SR.Resolvable_ManyResults, resolvable);
             }
         }

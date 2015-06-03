@@ -34,7 +34,7 @@ namespace HarshPoint.Provisioning.Implementation
             => ResolveChain<T>(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<T> IResolveSingle<T>.ResolveSingleAsync(HarshProvisionerContextBase context)
-            => ResolveChainSingle<T>(context);
+        Task<T> IResolveSingle<T>.ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
+            => ResolveChainSingleOrDefault<T>(context);
     }
 }

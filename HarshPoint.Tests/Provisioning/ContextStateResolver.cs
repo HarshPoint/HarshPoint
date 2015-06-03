@@ -23,7 +23,7 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = ClientOM.Context.PushState("42");
             var resolver = new ContextStateResolver<String>();
 
-            var single = await resolver.ResolveSingleAsync(ctx);
+            var single = await resolver.ResolveSingleOrDefaultAsync(ctx);
             var many = await resolver.ResolveAsync(ctx);
 
             Assert.Equal("42", single);
@@ -36,7 +36,7 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = ClientOM.Context.PushState("4242").PushState("42");
             var resolver = new ContextStateResolver<String>();
 
-            var single = await resolver.ResolveSingleAsync(ctx);
+            var single = await resolver.ResolveSingleOrDefaultAsync(ctx);
             var many = await resolver.ResolveAsync(ctx);
 
             Assert.Equal("42", single);
@@ -52,7 +52,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var resolver = new ContextStateResolver<String>();
 
-            var single = await resolver.ResolveSingleAsync(ctx);
+            var single = await resolver.ResolveSingleOrDefaultAsync(ctx);
             var many = await resolver.ResolveAsync(ctx);
 
             Assert.Equal("42", single);

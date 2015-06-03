@@ -18,7 +18,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         public async Task Documents_list_gets_resolved_by_url()
         {
             var resolver = (IResolveSingle<List>)Resolve.ListByUrl("Documents");
-            var list = await resolver.ResolveSingleAsync(ClientOM.Context);
+            var list = await resolver.ResolveSingleOrDefaultAsync(ClientOM.Context);
 
             Assert.NotNull(list);
             Assert.EndsWith(
@@ -31,7 +31,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         public async Task Documents_RootFolder_gets_resolved_by_url()
         {
             var resolver = (IResolveSingle<Folder>)Resolve.ListByUrl("Documents").RootFolder();
-            var folder = await resolver.ResolveSingleAsync(ClientOM.Context);
+            var folder = await resolver.ResolveSingleOrDefaultAsync(ClientOM.Context);
 
             Assert.NotNull(folder);
             Assert.EndsWith(

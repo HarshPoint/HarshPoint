@@ -59,7 +59,11 @@ namespace HarshPoint.Provisioning
 
             if (Id != null)
             {
-                ContentType = await ResolveSingleAsync(Resolve.ContentTypeById(Id));
+                ContentType = await ResolveSingleOrDefaultAsync(Resolve.ContentTypeById(Id));
+            }
+            else
+            {
+                throw Error.InvalidOperation("TODO: Should lookup by name.");
             }
         }
 
@@ -67,12 +71,19 @@ namespace HarshPoint.Provisioning
         {
             if (ContentType.IsNull())
             {
+                ContentType parentContentType = null;
+
+                if (ParentContentType != null)
+                {
+                    parentContentType = await ResolveSingleOrDefaultAsync(ParentContentType);
+                }
+
                 ContentType = Web.ContentTypes.Add(new ContentTypeCreationInformation()
                 {
                     Description = Description,
                     Group = Group,
                     Id = Id?.ToString(),
-                    ParentContentType = await ParentContentType?.ResolveSingleAsync(Context),
+                    ParentContentType = parentContentType,
                     Name = Name,
                 });
 

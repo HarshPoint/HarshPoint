@@ -39,6 +39,16 @@ namespace HarshPoint.Provisioning
 
             return new ResolveContentTypeById(ids);
         }
+        
+        public static ResolveFieldById FieldById(params Guid[] ids)
+        {
+            if (ids == null)
+            {
+                throw Error.ArgumentNull(nameof(ids));
+            }
+
+            return new ResolveFieldById(ids);
+        }
 
         public static ResolveListByUrl ListByUrl(params String[] urls)
         {
