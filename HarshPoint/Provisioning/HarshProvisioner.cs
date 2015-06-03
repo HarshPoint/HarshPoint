@@ -16,24 +16,24 @@ namespace HarshPoint.Provisioning
 
         public Web Web => Context?.Web;
 
-        internal override Task ProvisionChild(HarshProvisionerBase p)
+        internal sealed override Task ProvisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
         {
-            if (p == null)
+            if (provisioner == null)
             {
-                throw Error.ArgumentNull(nameof(p));
+                throw Error.ArgumentNull(nameof(provisioner));
             }
 
-            return ((HarshProvisioner)(p)).ProvisionAsync(Context);
+            return ((HarshProvisioner)(provisioner)).ProvisionAsync(context);
         }
 
-        internal override Task UnprovisionChild(HarshProvisionerBase p)
+        internal sealed override Task UnprovisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
         {
-            if (p == null)
+            if (provisioner == null)
             {
-                throw Error.ArgumentNull(nameof(p));
+                throw Error.ArgumentNull(nameof(provisioner));
             }
 
-            return ((HarshProvisioner)(p)).UnprovisionAsync(Context);
+            return ((HarshProvisioner)(provisioner)).UnprovisionAsync(context);
         }
     }
 }

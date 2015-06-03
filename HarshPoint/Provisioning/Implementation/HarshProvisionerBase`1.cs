@@ -122,12 +122,22 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected Task ProvisionChildrenAsync()
         {
-            return RunChildren(ProvisionChild);
+            return ProvisionChildrenAsync(null);
+        }
+
+        protected Task ProvisionChildrenAsync(TContext context)
+        {
+            return RunChildren(ProvisionChild, context);
         }
 
         protected Task UnprovisionChildrenAsync()
         {
-            return RunChildren(UnprovisionChild, reverse: true);
+            return UnprovisionChildrenAsync(null);
+        }
+
+        protected Task UnprovisionChildrenAsync(TContext context)
+        {
+            return RunChildren(UnprovisionChild, context, reverse: true);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -156,9 +166,9 @@ namespace HarshPoint.Provisioning.Implementation
             return new Collection<HarshProvisionerBase>();
         }
 
-        internal abstract Task ProvisionChild(HarshProvisionerBase provisioner);
+        internal abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
 
-        internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner);
+        internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
 
         private void InitializeDefaultFromContextProperties()
         {
@@ -176,7 +186,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        private async Task RunChildren(Func<HarshProvisionerBase, Task> action, Boolean reverse = false)
+        private async Task RunChildren(Func<HarshProvisionerBase, TContext, Task> action, TContext context, Boolean reverse = false)
         {
             if (!HasChildren)
             {
@@ -185,9 +195,11 @@ namespace HarshPoint.Provisioning.Implementation
 
             var children = reverse ? _children.Reverse() : _children;
 
+            context = context ?? Context;
+
             foreach (var child in children)
             {
-                await action(child);
+                await action(child, context);
             }
         }
 

@@ -96,5 +96,55 @@ namespace HarshPoint.Tests.Provisioning
             };
             await composite.ProvisionAsync(ClientOM.Context);
         }
+
+        [Fact]
+        public async Task Calls_child_Provision_with_modified_context()
+        {
+            var composite = new ModifiesChildContext()
+            {
+                Children = { new ExpectsModifiedContext() }
+            };
+            await composite.ProvisionAsync(ClientOM.Context);
+        }
+
+        [Fact]
+        public async Task Calls_child_Unprovision_with_modified_context()
+        {
+            var composite = new ModifiesChildContext()
+            {
+                Children = { new ExpectsModifiedContext() }
+            };
+            await composite.UnprovisionAsync(ClientOM.Context);
+        }
+
+        private class ModifiesChildContext  : HarshProvisioner
+        {
+            protected override Task OnProvisioningAsync()
+            {
+                return ProvisionChildrenAsync(Context.PushState("1234"));
+            }
+
+            [NeverDeletesUserData]
+            protected override Task OnUnprovisioningAsync()
+            {
+                return UnprovisionChildrenAsync(Context.PushState("1234"));
+            }
+        }
+
+        private class ExpectsModifiedContext : HarshProvisioner
+        {
+            protected override Task OnProvisioningAsync()
+            {
+                Assert.Single(Context.StateStack, "1234");
+                return base.OnProvisioningAsync();
+            }
+
+            [NeverDeletesUserData]
+            protected override Task OnUnprovisioningAsync()
+            {
+                Assert.Single(Context.StateStack, "1234");
+                return base.OnUnprovisioningAsync();
+            }
+        }
     }
 }

@@ -6,19 +6,31 @@ namespace HarshPoint.Provisioning
 {
     public class HarshContentType : HarshProvisioner
     {
-        public HarshContentTypeId Id
-        {
-            get;
-            set;
-        }
-
-        public String DisplayName
+        public String Description
         {
             get;
             set;
         }
 
         public String Group
+        {
+            get;
+            set;
+        }
+
+        public HarshContentTypeId Id
+        {
+            get;
+            set;
+        }
+
+        public String Name
+        {
+            get;
+            set;
+        }
+
+        public IResolveSingle<ContentType> ParentContentType
         {
             get;
             set;
@@ -33,14 +45,23 @@ namespace HarshPoint.Provisioning
 
         protected override async Task OnProvisioningAsync()
         {
-            await base.OnProvisioningAsync();
-
             if (ContentType.IsNull())
             {
-                return;
+                ContentType = Web.ContentTypes.Add(new ContentTypeCreationInformation()
+                {
+                    Description = Description,
+                    Group = Group,
+                    Id = Id?.ToString(),
+                    ParentContentType = await ParentContentType?.ResolveSingleAsync(Context),
+                    Name = Name,
+                });
+
+                await ClientContext.ExecuteQueryAsync();
             }
 
 
+
+            await base.ProvisionChildrenAsync();
         }
 
         private ContentType ContentType
