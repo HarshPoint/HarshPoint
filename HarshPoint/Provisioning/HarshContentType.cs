@@ -64,7 +64,7 @@ namespace HarshPoint.Provisioning
 
         protected override HarshProvisionerContext CreateChildrenContext()
         {
-            if (ContentType != null)
+            if (!ContentType.IsNull())
             {
                 return Context.PushState(ContentType);
             }
