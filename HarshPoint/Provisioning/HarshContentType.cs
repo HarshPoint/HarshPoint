@@ -40,7 +40,7 @@ namespace HarshPoint.Provisioning
         {
             await base.InitializeAsync();
 
-            ContentType = await ResolveAsync(ContentTypeResolver);
+            ContentType = await ResolveSingleAsync(ContentTypeResolver);
         }
 
         protected override async Task OnProvisioningAsync()

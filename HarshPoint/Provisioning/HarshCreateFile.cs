@@ -41,7 +41,7 @@ namespace HarshPoint.Provisioning
         {
             await base.OnProvisioningAsync();
 
-            var folder = await ResolveAsync(Folder);
+            var folder = await ResolveSingleAsync(Folder);
 
             var fci = new FileCreationInformation()
             {

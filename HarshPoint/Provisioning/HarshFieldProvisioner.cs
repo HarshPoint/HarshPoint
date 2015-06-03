@@ -45,7 +45,7 @@ namespace HarshPoint.Provisioning
 
             if (List != null)
             {
-                var resolved = await ResolveAsync(List);
+                var resolved = await ResolveSingleAsync(List);
                 TargetFieldCollection = resolved.Fields;
             }
 

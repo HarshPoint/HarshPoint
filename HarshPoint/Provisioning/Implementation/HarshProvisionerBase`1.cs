@@ -151,7 +151,7 @@ namespace HarshPoint.Provisioning.Implementation
             return resolver.ResolveAsync(Context);
         }
 
-        protected Task<T> ResolveAsync<T>(IResolveSingle<T> resolver)
+        protected Task<T> ResolveSingleAsync<T>(IResolveSingle<T> resolver)
         {
             if (resolver == null)
             {
