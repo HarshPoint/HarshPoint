@@ -38,9 +38,7 @@ namespace HarshPoint.Provisioning
 
         protected override async Task InitializeAsync()
         {
-            await base.InitializeAsync();
-
-            ContentType = await ResolveSingleAsync(ContentTypeResolver);
+            ContentType = await ResolveSingleAsync(Resolve.ContentTypeById(Id));
         }
 
         protected override async Task OnProvisioningAsync()
@@ -77,8 +75,5 @@ namespace HarshPoint.Provisioning
             get;
             set;
         }
-
-        private IResolveSingle<ContentType> ContentTypeResolver
-            => Resolve.ContentTypeById(Id);
     }
 }

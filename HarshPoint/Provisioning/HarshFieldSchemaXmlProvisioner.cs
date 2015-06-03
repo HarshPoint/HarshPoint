@@ -18,19 +18,19 @@ namespace HarshPoint.Provisioning
         /// </summary>
         public HarshFieldSchemaXmlProvisioner()
         {
-            FieldTypeName = "Text";
+            TypeName = "Text";
             SchemaXmlBuilder = new HarshFieldSchemaXmlBuilder()
             {
                 Transformers =
                 {
-                    new AttributeSetter(() => FieldId) 
+                    new AttributeSetter(() => Id) 
                     { 
                         Name = "ID",
                         ValueValidator = ValidateNotEmptyGuid,
                         SkipWhenModifying = true,
                     },
 
-                    new AttributeSetter(() => FieldTypeName)
+                    new AttributeSetter(() => TypeName)
                     { 
                         Name = "Type",
                         ValueValidator = ValidateNotNullOrWhitespace,
@@ -75,7 +75,7 @@ namespace HarshPoint.Provisioning
         /// <summary>
         /// Gets or sets the name of the field type.
         /// </summary>
-        public String FieldTypeName
+        public String TypeName
         {
             get;
             set;

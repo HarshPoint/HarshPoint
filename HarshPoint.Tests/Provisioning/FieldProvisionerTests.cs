@@ -23,7 +23,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                FieldId = new Guid("fa564e0f-0c70-4ab9-b863-0177e6ddd247"), // SPBuiltInFieldId.Title
+                Id = new Guid("fa564e0f-0c70-4ab9-b863-0177e6ddd247"), // SPBuiltInFieldId.Title
             };
 
             await prov.ProvisionAsync(ClientOM.Context);
@@ -49,7 +49,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                FieldId = Guid.NewGuid()
+                Id = Guid.NewGuid()
             };
 
             Assert.ThrowsAsync<InvalidOperationException>(async () => await prov.SchemaXmlBuilder.Update(null, null));
@@ -61,7 +61,7 @@ namespace HarshPoint.Tests.Provisioning
             var fieldId = Guid.NewGuid();
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                FieldId = fieldId,
+                Id = fieldId,
                 InternalName = "DummyField"
             };
 
@@ -77,7 +77,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                FieldId = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 InternalName = "DummyField"
             };
 
@@ -93,7 +93,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                FieldId = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 InternalName = "DummyField"
             };
 
@@ -110,7 +110,7 @@ namespace HarshPoint.Tests.Provisioning
             var fieldId = Guid.NewGuid();
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                FieldId = fieldId,
+                Id = fieldId,
                 InternalName = "DummyField",
                 StaticName = "WhomDoYouCallDummy"
             };

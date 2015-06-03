@@ -16,7 +16,7 @@ namespace HarshPoint.Provisioning
         /// <value>
         /// The field identifier. Must not be an empty <see cref="Guid"/>.
         /// </value>
-        public Guid FieldId
+        public Guid Id
         {
             get;
             set;
@@ -36,7 +36,7 @@ namespace HarshPoint.Provisioning
 
         protected override async Task InitializeAsync()
         {
-            if (FieldId == Guid.Empty)
+            if (Id == Guid.Empty)
             {
                 throw Error.InvalidOperation(SR.HarshFieldProvisionerBase_FieldIdEmpty);
             }
@@ -49,7 +49,7 @@ namespace HarshPoint.Provisioning
                 TargetFieldCollection = resolved.Fields;
             }
 
-            Field = TargetFieldCollection.GetById(FieldId);
+            Field = TargetFieldCollection.GetById(Id);
             ClientContext.Load(Field);
 
             await ClientContext.ExecuteQueryAsync();

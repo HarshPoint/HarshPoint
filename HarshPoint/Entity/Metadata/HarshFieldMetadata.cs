@@ -44,7 +44,7 @@ namespace HarshPoint.Entity.Metadata
         {
             yield return new HarshFieldSchemaXmlProvisioner()
             {
-                FieldId = FieldId,
+                Id = FieldId,
                 InternalName = InternalName,
                 StaticName = StaticName
             };
