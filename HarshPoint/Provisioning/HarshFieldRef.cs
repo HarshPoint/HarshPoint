@@ -13,7 +13,6 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        [DefaultFromContext]
         public IResolve<Field> Fields
         {
             get;
@@ -38,6 +37,7 @@ namespace HarshPoint.Provisioning
                 ResolvedContentType.FieldLinks.Add(flci);
             }
 
+            ResolvedContentType.Update(updateChildren: true);
             await ClientContext.ExecuteQueryAsync();
         }
 

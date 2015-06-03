@@ -116,7 +116,12 @@ namespace HarshPoint.Tests.Provisioning
                 Assert.False(ct.ContentType.IsNull());
 
                 var links = Fixture.ClientContext.LoadQuery(
-                    ct.ContentType.FieldLinks.Where(fl => fl.Id == fieldId).Include(fl => fl.Name)
+                    ct.ContentType.FieldLinks
+                    .Where(fl => fl.Id == fieldId)
+                    .Include(
+                        fl => fl.Name,
+                        fl => fl.Id
+                    )
                 );
 
                 await Fixture.ClientContext.ExecuteQueryAsync();
@@ -129,17 +134,17 @@ namespace HarshPoint.Tests.Provisioning
             }
             finally
             {
-                if (!field.Field.IsNull())
-                {
-                    field.Field.DeleteObject();
-                }
-
                 if (!ct.ContentType.IsNull())
                 {
                     ct.ContentType.DeleteObject();
+                    await Fixture.ClientContext.ExecuteQueryAsync();
                 }
 
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                if (!field.Field.IsNull())
+                {
+                    field.Field.DeleteObject();
+                    await Fixture.ClientContext.ExecuteQueryAsync();
+                }
             }
         }
     }
