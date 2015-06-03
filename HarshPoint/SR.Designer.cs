@@ -161,6 +161,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Id and ParentContentType properties cannot be both set..
+        /// </summary>
+        internal static string HarshContentType_BothIdAndParentContentTypeCannotBeSet {
+            get {
+                return ResourceManager.GetString("HarshContentType_BothIdAndParentContentTypeCannotBeSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified content type ID &apos;{0}&apos; cannot be appended to &apos;{1}&apos;, because it is already an absolute content type ID...
         /// </summary>
         internal static string HarshContentTypeId_CannotAppendAbsoluteCTId {
@@ -298,18 +307,18 @@ namespace HarshPoint {
         /// <summary>
         ///   Looks up a localized string similar to The {0} resolved in more than one result..
         /// </summary>
-        internal static string ResolvableChain_ManyResults {
+        internal static string Resolvable_ManyResults {
             get {
-                return ResourceManager.GetString("ResolvableChain_ManyResults", resourceCulture);
+                return ResourceManager.GetString("Resolvable_ManyResults", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The {0} resolved in no results..
         /// </summary>
-        internal static string ResolvableChain_NoResult {
+        internal static string Resolvable_NoResult {
             get {
-                return ResourceManager.GetString("ResolvableChain_NoResult", resourceCulture);
+                return ResourceManager.GetString("Resolvable_NoResult", resourceCulture);
             }
         }
     }

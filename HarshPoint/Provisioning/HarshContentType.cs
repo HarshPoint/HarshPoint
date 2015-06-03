@@ -6,6 +6,18 @@ namespace HarshPoint.Provisioning
 {
     public class HarshContentType : HarshProvisioner
     {
+        public ContentType ContentType
+        {
+            get;
+            private set;
+        }
+
+        public Boolean ContentTypeAdded
+        {
+            get;
+            private set;
+        }
+
         public String Description
         {
             get;
@@ -38,7 +50,17 @@ namespace HarshPoint.Provisioning
 
         protected override async Task InitializeAsync()
         {
-            ContentType = await ResolveSingleAsync(Resolve.ContentTypeById(Id));
+            if ((Id != null) && (ParentContentType != null))
+            {
+                throw Error.InvalidOperation(
+                    SR.HarshContentType_BothIdAndParentContentTypeCannotBeSet
+                );
+            }
+
+            if (Id != null)
+            {
+                ContentType = await ResolveSingleAsync(Resolve.ContentTypeById(Id));
+            }
         }
 
         protected override async Task OnProvisioningAsync()
@@ -55,6 +77,12 @@ namespace HarshPoint.Provisioning
                 });
 
                 await ClientContext.ExecuteQueryAsync();
+
+                ContentTypeAdded = true;
+            }
+            else
+            {
+                ContentTypeAdded = false;
             }
 
             await base.OnProvisioningAsync();
@@ -70,10 +98,5 @@ namespace HarshPoint.Provisioning
             return base.CreateChildrenContext();
         }
 
-        private ContentType ContentType
-        {
-            get;
-            set;
-        }
     }
 }

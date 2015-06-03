@@ -1,4 +1,5 @@
-﻿using HarshPoint.Provisioning.Resolvers;
+﻿using HarshPoint.Provisioning.Implementation;
+using HarshPoint.Provisioning.Resolvers;
 using Microsoft.SharePoint.Client;
 using System;
 using System.Linq;
@@ -48,6 +49,11 @@ namespace HarshPoint.Provisioning
 
 
             return new ResolveListByUrl(urls);
+        }
+
+        public static ResolvedResolver<T> Value<T>(params T[] values)
+        {
+            return new ResolvedResolver<T>(values);
         }
     }
 }

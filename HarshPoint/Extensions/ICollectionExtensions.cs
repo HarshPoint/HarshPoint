@@ -4,6 +4,21 @@ namespace HarshPoint
 {
     public static class ICollectionExtensions
     {
+        public static void AddIfNotContains<T>(this ICollection<T> collection, T item)
+        {
+            if (collection == null)
+            {
+                throw Error.ArgumentNull(nameof(collection));
+            }
+
+            if (collection.Contains(item))
+            {
+                return;
+            }
+
+            collection.Add(item);
+        }
+
         public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> items)
         {
             if (collection == null)

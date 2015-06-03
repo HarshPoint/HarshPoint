@@ -52,14 +52,11 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected async Task<T> ResolveChainSingle<T>(HarshProvisionerContextBase context)
         {
-            var results = (await ResolveChain<T>(context)).ToArray();
+            var values = (await ResolveChain<T>(context)).ToArray();
 
-            switch (results.Length)
-            {
-                case 1: return results[0];
-                case 0: throw Error.InvalidOperation(SR.ResolvableChain_NoResult, this);
-                default: throw Error.InvalidOperation(SR.ResolvableChain_ManyResults, this);
-            }
+            return Resolvable.EnsureSingle(
+                this, values
+            );
         }
     
         protected virtual Object ToLogObject()

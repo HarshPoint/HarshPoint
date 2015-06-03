@@ -86,6 +86,7 @@
     <Compile Include="HarshTraceSourceTests.cs" />
     <Compile Include="HarshTraceTestListener.cs" />
     <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
+    <Compile Include="Provisioning\ContentTypeTests.cs" />
     <Compile Include="Provisioning\ContextStateResolver.cs" />
     <Compile Include="Provisioning\ContextStateStack.cs" />
     <Compile Include="Provisioning\DefaultFromContextTests.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Provisioning\ResolvableChainTests.cs" />
     <Compile Include="Provisioning\ResolvableTests.cs" />
     <Compile Include="Provisioning\Resolvers\CatalogResolving.cs" />
+    <Compile Include="Provisioning\Resolvers\ContentTypeResolving.cs" />
     <Compile Include="Provisioning\Resolvers\ListResolving.cs" />
     <Compile Include="Reflection\MethodInfoExtensionsTests.cs" />
     <Compile Include="HarshContentTypeIdTests.cs" />

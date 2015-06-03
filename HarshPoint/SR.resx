@@ -168,6 +168,9 @@
   <data name="HarshContentTypeId_RelCTId_OutOfRange" xml:space="preserve">
     <value>The specified relative content type ID '{0}' is invalid. A relative content type ID is either a 2 or 32 character long hexadecimal string.</value>
   </data>
+  <data name="HarshContentType_BothIdAndParentContentTypeCannotBeSet" xml:space="preserve">
+    <value>Id and ParentContentType properties cannot be both set.</value>
+  </data>
   <data name="HarshEntityMetadataContentType_NoContentTypeAttribute" xml:space="preserve">
     <value>The specified type '{0}' has no ContentTypeAttribute.</value>
   </data>
@@ -195,10 +198,10 @@
   <data name="HarshProvisionerMetadata_DefaultFromContextNotResolver" xml:space="preserve">
     <value>DefaultFromContext attribute can only be used on properties of type IResolve&lt;T&gt; or IResolveSingle&lt;T&gt;. The property '{0}.{1}' is of type '{2}'.</value>
   </data>
-  <data name="ResolvableChain_ManyResults" xml:space="preserve">
+  <data name="Resolvable_ManyResults" xml:space="preserve">
     <value>The {0} resolved in more than one result.</value>
   </data>
-  <data name="ResolvableChain_NoResult" xml:space="preserve">
+  <data name="Resolvable_NoResult" xml:space="preserve">
     <value>The {0} resolved in no results.</value>
   </data>
 </root>

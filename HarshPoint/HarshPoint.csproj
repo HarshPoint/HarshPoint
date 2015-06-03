@@ -52,6 +52,9 @@
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Provisioning\HarshFieldRef.cs" />
+    <Compile Include="Provisioning\Implementation\Resolvable.cs" />
+    <Compile Include="Provisioning\Implementation\ResolvedResolver.cs" />
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />

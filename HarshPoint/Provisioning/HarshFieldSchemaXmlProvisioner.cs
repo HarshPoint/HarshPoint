@@ -18,6 +18,7 @@ namespace HarshPoint.Provisioning
         /// </summary>
         public HarshFieldSchemaXmlProvisioner()
         {
+            FieldRef = new HarshFieldRef();
             TypeName = "Text";
             SchemaXmlBuilder = new HarshFieldSchemaXmlBuilder()
             {
@@ -60,6 +61,13 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        [DefaultFromContext]
+        public IResolveSingle<ContentType> AddToContentType
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether to add the newly created field to the default view.
         /// </summary>
@@ -89,6 +97,12 @@ namespace HarshPoint.Provisioning
         {
             get;
             set;
+        }
+
+        public Boolean PushChangesToLists
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -149,19 +163,27 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
+        protected override HarshProvisionerContext CreateChildrenContext()
+        {
+            if (!Field.IsNull())
+            {
+                return Context.PushState(Field);
+            }
+
+            return base.CreateChildrenContext();
+        }
+
         protected override Task InitializeAsync()
         {
             FieldAdded = false;
             FieldRemoved = false;
             FieldUpdated = false;
-
+            
             return base.InitializeAsync();
         }
 
         protected override async Task OnProvisioningAsync()
         {
-            await base.OnProvisioningAsync();
-
             SchemaXml = await SchemaXmlBuilder.Update(Field, SchemaXml);
 
             if (Field.IsNull())
@@ -182,11 +204,23 @@ namespace HarshPoint.Provisioning
                 if (!SchemaXmlComparer.Equals(existingSchemaXml, SchemaXml))
                 {
                     Field.SchemaXml = SchemaXml.ToString();
+                    Field.UpdateAndPushChanges(PushChangesToLists);
 
                     await ClientContext.ExecuteQueryAsync();
                     FieldUpdated = true;
                 }
             }
+            
+            if (FieldAdded && (AddToContentType != null))
+            {
+                Children.AddIfNotContains(FieldRef);
+            }
+            else
+            {
+                Children.Remove(FieldRef);
+            }
+
+            await base.OnProvisioningAsync();
         }
 
         protected override async Task OnUnprovisioningAsync()
@@ -206,6 +240,12 @@ namespace HarshPoint.Provisioning
         {
             get;
             private set;
+        }
+       
+        private HarshFieldRef FieldRef
+        {
+            get;
+            set;
         }
 
         private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
