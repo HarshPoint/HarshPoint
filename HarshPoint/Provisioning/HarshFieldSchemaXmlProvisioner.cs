@@ -24,27 +24,35 @@ namespace HarshPoint.Provisioning
             {
                 Transformers =
                 {
-                    new AttributeSetter(() => Id) 
-                    { 
+                    new AttributeSetter(() => DisplayName)
+                    {
+                        ValueValidator = ValidateNotNullOrWhitespace,
+                    },
+
+                    new AttributeSetter(() => Id)
+                    {
                         Name = "ID",
                         ValueValidator = ValidateNotEmptyGuid,
                         SkipWhenModifying = true,
                     },
 
                     new AttributeSetter(() => TypeName)
-                    { 
+                    {
                         Name = "Type",
                         ValueValidator = ValidateNotNullOrWhitespace,
                     },
-                    
+
                     new AttributeSetter(() => InternalName)
                     {
+                        Name = "Name",
                         ValueValidator = ValidateNotNullOrWhitespace,
                         SkipWhenModifying = true,
                     },
 
-                    new AttributeSetter(() => StaticName) 
+                    new AttributeSetter(() => StaticName)
                     {
+                        ValueAccessor = () => StaticName ?? InternalName,
+                        ValueValidator = ValidateNotNullOrWhitespace,
                         SkipWhenModifying = true
                     },
                 }
@@ -75,6 +83,12 @@ namespace HarshPoint.Provisioning
         /// <c>true</c> if add the newly created field to the default view; otherwise, <c>false</c>.
         /// </value>
         public Boolean AddToDefaultView
+        {
+            get;
+            set;
+        }
+
+        public String DisplayName
         {
             get;
             set;
@@ -178,7 +192,7 @@ namespace HarshPoint.Provisioning
             FieldAdded = false;
             FieldRemoved = false;
             FieldUpdated = false;
-            
+
             return base.InitializeAsync();
         }
 
@@ -210,7 +224,7 @@ namespace HarshPoint.Provisioning
                     FieldUpdated = true;
                 }
             }
-            
+
             if (FieldAdded && (AddToContentType != null))
             {
                 Children.AddIfNotContains(FieldRef);
@@ -241,7 +255,7 @@ namespace HarshPoint.Provisioning
             get;
             private set;
         }
-       
+
         private HarshFieldRef FieldRef
         {
             get;
@@ -252,13 +266,11 @@ namespace HarshPoint.Provisioning
 
         private class AttributeSetter : HarshFieldSchemaXmlTransformer
         {
-            private readonly Func<Object> ValueAccessor;
-
             public AttributeSetter(Expression<Func<Object>> valueAccessorExpr)
             {
                 if (valueAccessorExpr == null)
                 {
-                    throw Error.ArgumentNull("valueAccessorExpr");
+                    throw Error.ArgumentNull(nameof(valueAccessorExpr));
                 }
 
                 PropertyName = valueAccessorExpr.GetMemberName();
@@ -276,6 +288,12 @@ namespace HarshPoint.Provisioning
             {
                 get;
                 private set;
+            }
+
+            public Func<Object> ValueAccessor
+            {
+                get;
+                set;
             }
 
             public Action<AttributeSetter, Object> ValueValidator
@@ -312,7 +330,7 @@ namespace HarshPoint.Provisioning
             if (Guid.Empty.Equals(value))
             {
                 throw Error.InvalidOperation(
-                    SR.HarshFieldSchemaXmlProvisioner_PropertyEmptyGuid, 
+                    SR.HarshFieldSchemaXmlProvisioner_PropertyEmptyGuid,
                     setter.PropertyName
                 );
             }
@@ -325,7 +343,7 @@ namespace HarshPoint.Provisioning
             if (value == null || String.IsNullOrWhiteSpace(asString))
             {
                 throw Error.InvalidOperation(
-                    SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace, 
+                    SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace,
                     setter.PropertyName
                 );
             }

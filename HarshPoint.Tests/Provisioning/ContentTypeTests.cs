@@ -1,5 +1,7 @@
 ﻿using HarshPoint.Provisioning;
+using Microsoft.SharePoint.Client;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -87,6 +89,7 @@ namespace HarshPoint.Tests.Provisioning
             var field = new HarshFieldSchemaXmlProvisioner()
             {
                 Id = fieldId,
+                DisplayName = fieldId.ToString("n"),
                 InternalName = fieldId.ToString("n"),
             };
 
@@ -105,6 +108,21 @@ namespace HarshPoint.Tests.Provisioning
             try
             {
                 await prov.ProvisionAsync(Fixture.Context);
+
+                var ct = prov.ContentType;
+                Assert.False(ct.IsNull());
+
+                var links = Fixture.ClientContext.LoadQuery(
+                    ct.FieldLinks.Where(fl => fl.Id == fieldId).Include(fl => fl.Name)
+                );
+
+                await Fixture.ClientContext.ExecuteQueryAsync();
+
+                var link = Assert.Single(links);
+
+                Assert.NotNull(link);
+                Assert.Equal(fieldId, link.Id);
+                Assert.Equal(field.InternalName, link.Name);
             }
             finally
             {

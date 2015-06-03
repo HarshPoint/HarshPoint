@@ -24,6 +24,7 @@ namespace HarshPoint.Tests.Provisioning
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
                 Id = new Guid("fa564e0f-0c70-4ab9-b863-0177e6ddd247"), // SPBuiltInFieldId.Title
+                DisplayName = "Title",
             };
 
             await prov.ProvisionAsync(ClientOM.Context);
@@ -49,7 +50,8 @@ namespace HarshPoint.Tests.Provisioning
         {
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                DisplayName = "Dummy",
             };
 
             Assert.ThrowsAsync<InvalidOperationException>(async () => await prov.SchemaXmlBuilder.Update(null, null));
@@ -62,7 +64,8 @@ namespace HarshPoint.Tests.Provisioning
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
                 Id = fieldId,
-                InternalName = "DummyField"
+                InternalName = "DummyField",
+                DisplayName = "Dummy",
             };
 
             var schema = await prov.SchemaXmlBuilder.Update(null, null);
@@ -73,19 +76,37 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task Field_InternalName_is_generated_into_schema()
+        public async Task Field_DisplayName_is_generated_into_schema()
         {
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
                 Id = Guid.NewGuid(),
-                InternalName = "DummyField"
+                InternalName = "DummyField",
+                DisplayName = "Dummy",
             };
 
             var schema = await prov.SchemaXmlBuilder.Update(null, null);
 
             Assert.NotNull(schema);
             Assert.Equal("Field", schema.Name);
-            Assert.Equal("DummyField", schema.Attribute("InternalName").Value);
+            Assert.Equal("Dummy", schema.Attribute("DisplayName").Value);
+        }
+
+        [Fact]
+        public async Task Field_InternalName_is_generated_into_schema()
+        {
+            var prov = new HarshFieldSchemaXmlProvisioner()
+            {
+                Id = Guid.NewGuid(),
+                InternalName = "DummyField",
+                DisplayName = "Dummy",
+            };
+
+            var schema = await prov.SchemaXmlBuilder.Update(null, null);
+
+            Assert.NotNull(schema);
+            Assert.Equal("Field", schema.Name);
+            Assert.Equal("DummyField", schema.Attribute("Name").Value);
         }
 
         [Fact]
@@ -94,14 +115,15 @@ namespace HarshPoint.Tests.Provisioning
             var prov = new HarshFieldSchemaXmlProvisioner()
             {
                 Id = Guid.NewGuid(),
-                InternalName = "DummyField"
+                InternalName = "DummyField",
+                DisplayName = "Dummy",
             };
 
             var schema = await prov.SchemaXmlBuilder.Update(null, null);
 
             Assert.NotNull(schema);
             Assert.Equal("Field", schema.Name);
-            Assert.Null(schema.Attribute("StaticName"));
+            Assert.Equal("DummyField", schema.Attribute("StaticName").Value);
         }
 
         [Fact]
@@ -112,6 +134,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Id = fieldId,
                 InternalName = "DummyField",
+                DisplayName = "Dummy",
                 StaticName = "WhomDoYouCallDummy"
             };
 
@@ -119,7 +142,7 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.NotNull(schema);
             Assert.Equal("Field", schema.Name);
-            Assert.Equal("DummyField", schema.Attribute("InternalName").Value);
+            Assert.Equal("DummyField", schema.Attribute("Name").Value);
             Assert.Equal("WhomDoYouCallDummy", schema.Attribute("StaticName").Value);
         }
     }
