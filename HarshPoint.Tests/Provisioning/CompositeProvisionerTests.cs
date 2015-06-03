@@ -117,17 +117,60 @@ namespace HarshPoint.Tests.Provisioning
             await composite.UnprovisionAsync(ClientOM.Context);
         }
 
+        [Fact]
+        public async Task Calls_child_Provision_with_modified_context_via_CreateChildrenContext()
+        {
+            var composite = new ModifiesChildContextUsingCreateChildrenContext()
+            {
+                Children = { new ExpectsModifiedContext() }
+            };
+            await composite.ProvisionAsync(ClientOM.Context);
+        }
+
+        [Fact]
+        public async Task Calls_child_Unprovision_with_modified_context_via_CreateChildrenContext()
+        {
+            var composite = new ModifiesChildContextUsingCreateChildrenContext()
+            {
+                Children = { new ExpectsModifiedContext() }
+            };
+            await composite.UnprovisionAsync(ClientOM.Context);
+        }
+
         private class ModifiesChildContext  : HarshProvisioner
         {
             protected override Task OnProvisioningAsync()
             {
+                Assert.Empty(Context.StateStack);
                 return ProvisionChildrenAsync(Context.PushState("1234"));
             }
 
             [NeverDeletesUserData]
             protected override Task OnUnprovisioningAsync()
             {
+                Assert.Empty(Context.StateStack);
                 return UnprovisionChildrenAsync(Context.PushState("1234"));
+            }
+        }
+
+        private class ModifiesChildContextUsingCreateChildrenContext : HarshProvisioner
+        {
+            protected override Task OnProvisioningAsync()
+            {
+                Assert.Empty(Context.StateStack);
+                return base.OnProvisioningAsync();
+            }
+
+            [NeverDeletesUserData]
+            protected override Task OnUnprovisioningAsync()
+            {
+                Assert.Empty(Context.StateStack);
+                return base.OnUnprovisioningAsync();
+            }
+
+            protected override HarshProvisionerContext CreateChildrenContext()
+            {
+                return Context.PushState("1234");
             }
         }
 

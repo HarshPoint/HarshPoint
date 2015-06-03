@@ -59,9 +59,17 @@ namespace HarshPoint.Provisioning
                 await ClientContext.ExecuteQueryAsync();
             }
 
+            await base.OnProvisioningAsync();
+        }
 
+        protected override HarshProvisionerContext CreateChildrenContext()
+        {
+            if (ContentType != null)
+            {
+                return Context.PushState(ContentType);
+            }
 
-            await base.ProvisionChildrenAsync();
+            return base.CreateChildrenContext();
         }
 
         private ContentType ContentType

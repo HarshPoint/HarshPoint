@@ -86,7 +86,7 @@ namespace HarshPoint.Server.Provisioning
                 base.Complete();
             }
 
-            internal override ICollection<HarshProvisionerBase> CreateChildrenCollection()
+            protected override ICollection<HarshProvisionerBase> CreateChildrenCollection()
             {
                 return NoChildren;
             }

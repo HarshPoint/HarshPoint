@@ -161,9 +161,14 @@ namespace HarshPoint.Provisioning.Implementation
             return resolver.ResolveSingleAsync(Context);
         }
 
-        internal virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
+        protected virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
         {
             return new Collection<HarshProvisionerBase>();
+        }
+
+        protected virtual TContext CreateChildrenContext()
+        {
+            return null;
         }
 
         internal abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
@@ -195,7 +200,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             var children = reverse ? _children.Reverse() : _children;
 
-            context = context ?? Context;
+            context = context ?? CreateChildrenContext() ?? Context;
 
             foreach (var child in children)
             {
@@ -237,7 +242,8 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        internal static readonly ICollection<HarshProvisionerBase> NoChildren =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        protected static readonly ICollection<HarshProvisionerBase> NoChildren =
             ImmutableList<HarshProvisionerBase>.Empty;
     }
 }
