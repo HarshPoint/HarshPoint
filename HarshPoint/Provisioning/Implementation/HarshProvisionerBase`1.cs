@@ -106,7 +106,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected override Task InitializeAsync()
         {
-            return Task.FromResult(false);
+            return HarshTask.Completed;
         }
 
         protected override Task OnProvisioningAsync()
