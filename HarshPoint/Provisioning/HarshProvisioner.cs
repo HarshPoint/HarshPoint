@@ -17,7 +17,7 @@ namespace HarshPoint.Provisioning
 
         public Web Web => Context?.Web;
 
-        protected void ModifyChildrenContextState(Func<ClientObject> modifier)
+        public void ModifyChildrenContextState(Func<ClientObject> modifier)
         {
             ModifyChildrenContextState(() =>
             {
