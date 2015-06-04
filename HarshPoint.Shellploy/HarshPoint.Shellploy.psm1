@@ -1,4 +1,7 @@
-﻿
+﻿[Type]$T_ClientContext           = 'Microsoft.SharePoint.Client.ClientContext'
+[Type]$T_HarshProvisionerContext = 'HarshPoint.Provisioning.HarshProvisionerContext'
+[Type]$T_SPOCredentials          = 'Microsoft.SharePoint.Client.SharePointOnlineCredentials'
+
 function New-HarshProvisioner {
 
     param (
@@ -90,7 +93,7 @@ function Provision {
     param (
 
         [Parameter(Position = 0)]
-        [String]
+        [Uri]
         $Url,
 
         [Parameter(Position = 1)]
@@ -106,11 +109,19 @@ function Provision {
         $Password
     )
 
-    $Context = [HarshPoint.Provisioning.HarshProvisionerContext]::OpenSharePointOnline(
-        $Url, $UserName, $Password
-    )
+    try {
+        $Credentials = New-Object $T_SPOCredentials $UserName, $Password
+     
+        $ClientContext = New-Object $T_ClientContext $Url
+        $ClientContext.Credentials = $Credentials
+        
+        $Context = New-Object $T_HarshProvisionerContext $ClientContext
 
 
-    $Provisioner = New-HarshProvisioner HarshProvisioner $Children
-    $Provisioner.ProvisionAsync($Context).Wait()
+        $Provisioner = New-HarshProvisioner HarshProvisioner $Children
+        $Provisioner.ProvisionAsync($Context).Wait()
+    }
+    finally {
+        $ClientContext.Dispose()
+    }
 }
