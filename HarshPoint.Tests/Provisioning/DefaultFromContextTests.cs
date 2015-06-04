@@ -19,14 +19,6 @@ namespace HarshPoint.Tests.Provisioning
         public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
-        public void Metadata_throws_on_DefaultFromContext_on_a_non_resolver_property()
-        {
-            Assert.Throws<InvalidOperationException>(
-                () => new HarshProvisionerMetadata(typeof(InvalidProvisioner))
-            );
-        }
-
-        [Fact]
         public void Metadata_finds_DefaultFromContext_single_resolver()
         {
             var metadata = new HarshProvisionerMetadata(typeof(SingleResolverProvisioner));
@@ -67,7 +59,7 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task DefaultFromContext_property_gets_assigned()
+        public async Task Resolve_property_gets_assigned()
         {
             var prov = new ResolverProvisioner();
 
@@ -80,7 +72,47 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task DefaultFromContext_assigned_property_doesnt_get_overwritten()
+        public async Task ResolveSingle_property_gets_assigned()
+        {
+            var prov = new SingleResolverProvisioner();
+
+            Assert.Null(prov.SingleResolver);
+
+            await prov.ProvisionAsync(ClientOM.Context);
+
+            Assert.NotNull(prov.SingleResolver);
+            Assert.IsType<ContextStateResolver<String>>(prov.SingleResolver);
+        }
+
+        [Fact]
+        public async Task String_property_gets_assigned()
+        {
+            var prov = new StringProvisioner();
+
+            Assert.Null(prov.StringProperty);
+
+            await prov.ProvisionAsync(ClientOM.Context.PushState("42"));
+
+            Assert.Equal("42", prov.StringProperty);
+        }
+
+        [Fact]
+        public async Task Tagged_property_gets_assigned()
+        {
+            var prov = new TaggedProvisioner();
+            Assert.Null(prov.TaggedStringProperty);
+
+            var state = ClientOM.Context
+                .PushState("red herring")
+                .PushState(new DummyTag() { Value = "424242" });
+
+            await prov.ProvisionAsync(state);
+
+            Assert.Equal("424242", prov.TaggedStringProperty);
+        }
+
+        [Fact]
+        public async Task Assigned_property_doesnt_get_overwritten()
         {
             var prov = new ResolverProvisioner();
             var resolver = new DummyResolver();
@@ -91,10 +123,20 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Same(resolver, prov.Resolver);
         }
 
-        private class InvalidProvisioner : HarshProvisioner
+        private class StringProvisioner : HarshProvisioner
         {
             [DefaultFromContext]
-            public String InvalidDefaultFromContext
+            public String StringProperty
+            {
+                get;
+                set;
+            }
+        }
+
+        private class TaggedProvisioner : HarshProvisioner
+        {
+            [DefaultFromContext(typeof(DummyTag))]
+            public String TaggedStringProperty
             {
                 get;
                 set;
@@ -119,6 +161,10 @@ namespace HarshPoint.Tests.Provisioning
                 get;
                 set;
             }
+        }
+
+        private class DummyTag : DefaultFromContextTag<String>
+        {
         }
 
         private class DummyResolver : IResolve<String>

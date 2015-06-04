@@ -82,6 +82,31 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
+        public void ModifyChildrenContextState(Func<Object> modifier)
+        {
+            if (modifier == null)
+            {
+                throw Error.ArgumentNull(nameof(modifier));
+            }
+
+            if (_childrenContextStateModifiers == null)
+            {
+                _childrenContextStateModifiers = new Collection<Func<Object>>();
+            }
+
+            _childrenContextStateModifiers.Add(modifier);
+        }
+
+        public void ModifyChildrenContextState(Object state)
+        {
+            if (state == null)
+            {
+                throw Error.ArgumentNull(nameof(state));
+            }
+
+            ModifyChildrenContextState(() => state);
+        }
+
         public async Task ProvisionAsync(TContext context)
         {
             if (context == null)
@@ -124,21 +149,6 @@ namespace HarshPoint.Provisioning.Implementation
         protected Task ProvisionChildrenAsync()
         {
             return ProvisionChildrenAsync(null);
-        }
-
-        protected void ModifyChildrenContextState(Func<Object> modifier)
-        {
-            if (modifier == null)
-            {
-                throw Error.ArgumentNull(nameof(modifier));
-            }
-
-            if (_childrenContextStateModifiers == null)
-            {
-                _childrenContextStateModifiers = new Collection<Func<Object>>();
-            }
-
-            _childrenContextStateModifiers.Add(modifier);
         }
 
         protected Task ProvisionChildrenAsync(TContext context)
@@ -198,17 +208,37 @@ namespace HarshPoint.Provisioning.Implementation
 
         private void InitializeDefaultFromContextProperties()
         {
-            var properties = from p in Metadata.DefaultFromContextProperties
-                             where p.GetValue(this) == null
-                             select p;
+            var properties = Metadata
+                .DefaultFromContextProperties
+                .Where(p => p.Getter(this) == null);
 
             foreach (var p in properties)
             {
-                var resolver = Activator.CreateInstance(
-                    typeof(ContextStateResolver<>).MakeGenericType(p.ResolvedType)
-                );
+                Object value = null;
 
-                p.SetValue(this, resolver);
+                if (p.TagType != null)
+                {
+                    var tag = Context
+                        .GetState(p.TagType)
+                        .FirstOrDefault();
+
+                    value = (tag as IDefaultFromContextTag)?.Value;
+                }
+                else if (p.ResolvedType != null)
+                {
+                    value = Activator.CreateInstance(
+                        typeof(ContextStateResolver<>).MakeGenericType(p.ResolvedType)
+                    );
+                }
+                else
+                {
+                    value = Context.GetState(p.PropertyType).FirstOrDefault();
+                }
+
+                if (value != null)
+                {
+                    p.Setter(this, value);
+                }
             }
         }
 

@@ -21,9 +21,9 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
-            DefaultFromContextProperties = 
-                GetPropertiesWith(typeof(DefaultFromContextAttribute), inherit: true)
-                .Select(CreateDefaultFromContextProperty)
+            DefaultFromContextProperties =
+                GetPropertiesWith<DefaultFromContextAttribute>(inherit: true)
+                .Select(tuple => new DefaultFromContextPropertyInfo(tuple.Item1, tuple.Item2))
                 .ToImmutableHashSet();
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
@@ -40,7 +40,7 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             private set;
         }
-        
+
         private Boolean GetDeletesUserData(String methodName)
         {
             var method = ObjectType
@@ -62,53 +62,55 @@ namespace HarshPoint.Provisioning.Implementation
                 );
         }
 
-        private static DefaultFromContextPropertyInfo CreateDefaultFromContextProperty(PropertyInfo p)
-        {
-            if (p.PropertyType.IsConstructedGenericType)
-            {
-                var genericTypeDef = p.PropertyType.GetGenericTypeDefinition();
-
-                if ((genericTypeDef == typeof(IResolve<>)) ||
-                    (genericTypeDef == typeof(IResolveSingle<>)))
-                {
-                    var resolvedType = p.PropertyType.GenericTypeArguments[0];
-
-                    return new DefaultFromContextPropertyInfo(p, resolvedType);
-                }
-            }
-
-            throw Error.InvalidOperation(
-                SR.HarshProvisionerMetadata_DefaultFromContextNotResolver,
-                p.DeclaringType, 
-                p.Name,
-                p.PropertyType
-            );
-        }
-        
         private static readonly TypeInfo HarshProvisionerBaseTypeInfo = typeof(HarshProvisionerBase).GetTypeInfo();
 
         public sealed class DefaultFromContextPropertyInfo
         {
-            internal DefaultFromContextPropertyInfo(PropertyInfo p, Type resolved)
+            internal DefaultFromContextPropertyInfo(PropertyInfo property, DefaultFromContextAttribute attribute)
             {
-                Property = p;
-                ResolvedType = resolved;
+                Property = property;
 
-                GetValue = p.MakeGetter<Object, Object>();
-                SetValue = p.MakeSetter<Object, Object>();
+                if (PropertyTypeInfo.IsValueType)
+                {
+                    throw Error.InvalidOperation(
+                        SR.HarshProvisionerMetadata_NoValueTypeDefaultFromContext,
+                        property.DeclaringType,
+                        property.Name,
+                        PropertyType
+                    );
+                }
+
+                ResolvedType = Resolvable.GetResolvedType(property.PropertyType);
+                TagType = attribute.TagType;
+
+                if (ResolvedType != null && TagType != null)
+                {
+                    throw Error.InvalidOperation(
+                        SR.HarshProvisionerMetadata_NoTagTypesOnResolvers,
+                        property.DeclaringType,
+                        property.Name
+                    );
+                }
+
+                Getter = property.MakeGetter<Object, Object>();
+                Setter = property.MakeSetter<Object, Object>();
             }
 
-            public Func<Object, Object> GetValue
+            public Func<Object, Object> Getter
             {
                 get;
                 private set;
             }
-
+            
             public PropertyInfo Property
             {
                 get;
                 private set;
             }
+
+            public Type PropertyType => Property.PropertyType;
+
+            public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
 
             public Type ResolvedType
             {
@@ -116,12 +118,17 @@ namespace HarshPoint.Provisioning.Implementation
                 private set;
             }
 
-            public Action<Object, Object> SetValue
+            public Action<Object, Object> Setter
             {
                 get;
                 private set;
             }
-            
+
+            public Type TagType
+            {
+                get;
+                private set;
+            }
         }
     }
 }

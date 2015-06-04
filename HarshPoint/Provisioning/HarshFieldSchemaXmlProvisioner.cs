@@ -30,17 +30,13 @@ namespace HarshPoint.Provisioning
                         ValueValidator = ValidateNotNullOrWhitespace,
                     },
 
+                    new AttributeSetter(() => Group),
+
                     new AttributeSetter(() => Id)
                     {
                         Name = "ID",
                         ValueValidator = ValidateNotEmptyGuid,
                         SkipWhenModifying = true,
-                    },
-
-                    new AttributeSetter(() => TypeName)
-                    {
-                        Name = "Type",
-                        ValueValidator = ValidateNotNullOrWhitespace,
                     },
 
                     new AttributeSetter(() => InternalName)
@@ -55,6 +51,12 @@ namespace HarshPoint.Provisioning
                         ValueAccessor = () => StaticName ?? InternalName,
                         ValueValidator = ValidateNotNullOrWhitespace,
                         SkipWhenModifying = true
+                    },
+
+                    new AttributeSetter(() => TypeName)
+                    {
+                        Name = "Type",
+                        ValueValidator = ValidateNotNullOrWhitespace,
                     },
                 }
             };
@@ -92,6 +94,13 @@ namespace HarshPoint.Provisioning
         /// Gets or sets the name of the field type.
         /// </summary>
         public String TypeName
+        {
+            get;
+            set;
+        }
+
+        [DefaultFromContext(typeof(DefaultFieldGroup))]
+        public String Group
         {
             get;
             set;

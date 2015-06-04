@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return Task.FromResult(
-                Resolve(context)
+                context.GetState<T>()
             );
         }
 
@@ -26,29 +26,8 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return Task.FromResult(
-                Resolve(context).FirstOrDefault()
+                context.GetState<T>().FirstOrDefault()
             );
-        }
-
-        private static IEnumerable<T> Resolve(HarshProvisionerContextBase context)
-        {
-            var results = new List<T>();
-
-            foreach (var state in context.StateStack)
-            {
-                var typedCollection = (state as IEnumerable<T>);
-
-                if (typedCollection != null)
-                {
-                    results.AddRange(typedCollection);
-                }
-                else if (state is T)
-                {
-                    results.Add((T)(state));
-                }
-            }
-
-            return results;
         }
     }
 }

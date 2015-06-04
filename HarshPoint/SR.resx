@@ -163,7 +163,7 @@
     <value>The specified string '{0}' contains characters illegal in a content type ID.</value>
   </data>
   <data name="HarshContentTypeId_NotEven" xml:space="preserve">
-    <value>The specified string '{0}' is not a vaild content type ID, its length isn't an even number.</value>
+    <value>The specified string '{0}' is not a valid content type ID, its length isn't an even number.</value>
   </data>
   <data name="HarshContentTypeId_RelCTId_00_OutOfRange" xml:space="preserve">
     <value>The specified string "00" is used to separate content type ID parts and therefore cannot be used as a valid relative content type ID.</value>
@@ -198,8 +198,11 @@
   <data name="HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace" xml:space="preserve">
     <value>The {0} cannot be null or a whitespace-only string.</value>
   </data>
-  <data name="HarshProvisionerMetadata_DefaultFromContextNotResolver" xml:space="preserve">
-    <value>DefaultFromContext attribute can only be used on properties of type IResolve&lt;T&gt; or IResolveSingle&lt;T&gt;. The property '{0}.{1}' is of type '{2}'.</value>
+  <data name="HarshProvisionerMetadata_NoTagTypesOnResolvers" xml:space="preserve">
+    <value>The specified property '{0}.{1}' is of type IResolve or IResolveSingle and cannot have a TagType set.</value>
+  </data>
+  <data name="HarshProvisionerMetadata_NoValueTypeDefaultFromContext" xml:space="preserve">
+    <value>DefaultFromContext properties must be reference types. The specified property '{0}.{1}' is of type '{2}'. </value>
   </data>
   <data name="Resolvable_ManyResults" xml:space="preserve">
     <value>The {0} resolved in more than one result.</value>

@@ -141,9 +141,26 @@ namespace HarshPoint.Tests.Provisioning
             var schema = await prov.SchemaXmlBuilder.Update(null, null);
 
             Assert.NotNull(schema);
-            Assert.Equal("Field", schema.Name);
-            Assert.Equal("DummyField", schema.Attribute("Name").Value);
             Assert.Equal("WhomDoYouCallDummy", schema.Attribute("StaticName").Value);
         }
+
+        [Fact]
+        public async Task Field_group_is_generated_into_schema()
+        {
+            var fieldId = Guid.NewGuid();
+            var prov = new HarshFieldSchemaXmlProvisioner()
+            {
+                Id = fieldId,
+                InternalName = "DummyField",
+                DisplayName = "Dummy",
+                Group = "GROO GROO GROO"
+            };
+
+            var schema = await prov.SchemaXmlBuilder.Update(null, null);
+
+            Assert.NotNull(schema);
+            Assert.Equal("GROO GROO GROO", schema.Attribute("Group").Value);
+        }
+
     }
 }

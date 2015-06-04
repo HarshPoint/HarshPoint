@@ -52,7 +52,10 @@
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Provisioning\DefaultFieldGroup.cs" />
+    <Compile Include="Provisioning\DefaultFromContextTag`1.cs" />
     <Compile Include="Provisioning\HarshFieldRef.cs" />
+    <Compile Include="Provisioning\IDefaultFromContextTag.cs" />
     <Compile Include="Provisioning\Implementation\Resolvable.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedResolver.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />

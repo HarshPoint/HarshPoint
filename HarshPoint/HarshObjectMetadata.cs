@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -47,6 +48,16 @@ namespace HarshPoint
             return ObjectType
                 .GetRuntimeProperties()
                 .Where(p => p.IsDefined(attributeType, inherit));
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        protected IEnumerable<Tuple<PropertyInfo, TAttribute>> GetPropertiesWith<TAttribute>(Boolean inherit)
+            where TAttribute : Attribute
+        {
+            return ObjectType
+                .GetRuntimeProperties()
+                .Select(p => Tuple.Create(p, p.GetCustomAttribute<TAttribute>(inherit)))
+                .Where(t => t.Item2 != null);
         }
     }
 }

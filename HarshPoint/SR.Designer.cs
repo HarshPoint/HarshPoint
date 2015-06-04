@@ -206,7 +206,7 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified string &apos;{0}&apos; is not a vaild content type ID, its length isn&apos;t an even number..
+        ///   Looks up a localized string similar to The specified string &apos;{0}&apos; is not a valid content type ID, its length isn&apos;t an even number..
         /// </summary>
         internal static string HarshContentTypeId_NotEven {
             get {
@@ -305,11 +305,20 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DefaultFromContext attribute can only be used on properties of type IResolve&lt;T&gt; or IResolveSingle&lt;T&gt;. The property &apos;{0}.{1}&apos; is of type &apos;{2}&apos;..
+        ///   Looks up a localized string similar to The specified property &apos;{0}.{1}&apos; is of type IResolve or IResolveSingle and cannot have a TagType set..
         /// </summary>
-        internal static string HarshProvisionerMetadata_DefaultFromContextNotResolver {
+        internal static string HarshProvisionerMetadata_NoTagTypesOnResolvers {
             get {
-                return ResourceManager.GetString("HarshProvisionerMetadata_DefaultFromContextNotResolver", resourceCulture);
+                return ResourceManager.GetString("HarshProvisionerMetadata_NoTagTypesOnResolvers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DefaultFromContext properties must be reference types. The specified property &apos;{0}.{1}&apos; is of type &apos;{2}&apos;. .
+        /// </summary>
+        internal static string HarshProvisionerMetadata_NoValueTypeDefaultFromContext {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadata_NoValueTypeDefaultFromContext", resourceCulture);
             }
         }
         

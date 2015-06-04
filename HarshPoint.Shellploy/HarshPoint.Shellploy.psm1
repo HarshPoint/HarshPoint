@@ -1,5 +1,8 @@
 ﻿[Type]$T_ClientContext           = 'Microsoft.SharePoint.Client.ClientContext'
+[Type]$T_HarshProvisioner        = 'HarshPoint.Provisioning.HarshProvisioner'
+[Type]$T_HarshProvisionerBase    = 'HarshPoint.Provisioning.Implementation.HarshProvisionerBase'
 [Type]$T_HarshProvisionerContext = 'HarshPoint.Provisioning.HarshProvisionerContext'
+[Type]$T_IDefaultFromContextTag  = 'HarshPoint.Provisioning.IDefaultFromContextTag'
 [Type]$T_SPOCredentials          = 'Microsoft.SharePoint.Client.SharePointOnlineCredentials'
 
 function New-HarshProvisioner {
@@ -18,10 +21,39 @@ function New-HarshProvisioner {
     $Result = New-Object "HarshPoint.Provisioning.$Name" -Property $Property
 
     if ($Children) {
-        & $Children |% { $Result.Children.Add($_) }
+        & $Children |% { 
+            if ($_ -is $T_HarshProvisionerBase) {
+                $Result.Children.Add($_) 
+            }
+            elseif ($_ -is $T_IDefaultFromContextTag) {
+                $Result.ModifyChildrenContextState($_)
+            }
+            else {
+                throw "Cannot add the following object to a provisioner.`n" +
+                      "Only other provisioners or IDefaultFromContextTag objects can be added.`n" +
+                      "$_"
+            }
+        }
     }
 
     $Result
+}
+
+function New-DefaultFromContextTag {
+
+    param (
+        [String]
+        $Name,
+
+        [Object]
+        $Value
+    )
+
+    New-Object "HarshPoint.Provisioning.$Name" -Property @{ Value = $Value }
+}
+
+function DefaultFieldGroup($Value) {
+    New-DefaultFromContextTag DefaultFieldGroup $Value
 }
 
 function ContentType {
@@ -46,6 +78,7 @@ function ContentType {
         Group = $Group
     }
 }
+
 
 function Field {
 

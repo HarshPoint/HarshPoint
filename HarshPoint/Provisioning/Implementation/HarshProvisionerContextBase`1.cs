@@ -10,9 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
         private Boolean _mayDeleteUserData;
         private IImmutableStack<Object> _stateStack = ImmutableStack<Object>.Empty;
 
-        public override Boolean MayDeleteUserData => _mayDeleteUserData;
-
-        public override IImmutableStack<Object> StateStack => _stateStack;
+        public sealed override Boolean MayDeleteUserData => _mayDeleteUserData;
 
         public TSelf AllowDeleteUserData()
         {
@@ -34,7 +32,9 @@ namespace HarshPoint.Provisioning.Implementation
             return (TSelf)MemberwiseClone();
         }
 
-        protected sealed override HarshProvisionerContextBase PushStateCore(Object state)
+        internal sealed override IImmutableStack<Object> StateStack => _stateStack;
+
+        internal sealed override HarshProvisionerContextBase PushStateCore(Object state)
         {
             if (state == null)
             {
