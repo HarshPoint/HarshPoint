@@ -1,4 +1,5 @@
 ﻿using Microsoft.SharePoint.Client;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,7 +27,16 @@ namespace HarshPoint.Provisioning
 
         protected override async Task OnProvisioningAsync()
         {
+            var fieldLinks = ClientContext.LoadQuery(
+                ResolvedContentType.FieldLinks.Include(
+                    fl => fl.Id
+                )
+            );
+
+            await ClientContext.ExecuteQueryAsync();
+
             var flcis = from field in await ResolveAsync(Fields)
+                        where !fieldLinks.Any(fl => fl.Id == field.Id)
                         select new FieldLinkCreationInformation()
                         {
                             Field = field,

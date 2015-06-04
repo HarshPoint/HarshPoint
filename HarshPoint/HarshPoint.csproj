@@ -56,6 +56,7 @@
     <Compile Include="Provisioning\Implementation\Resolvable.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedResolver.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
@@ -156,7 +157,11 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetDir)*.dll" "D:\src\Iadw\packages-to-be-nuggetized"
-copy "$(TargetDir)*.pdb" "D:\src\Iadw\packages-to-be-nuggetized"</PostBuildEvent>
+copy "$(TargetDir)*.pdb" "D:\src\Iadw\packages-to-be-nuggetized"
+
+copy "$(TargetDir)*.dll" "$(SolutionDir)HarshPoint.Shellploy"
+copy "$(TargetDir)*.pdb" "$(SolutionDir)HarshPoint.Shellploy"
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

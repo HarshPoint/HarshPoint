@@ -39,7 +39,7 @@ namespace HarshPoint.Provisioning
 
             return new ResolveContentTypeById(ids);
         }
-        
+
         public static ResolveFieldById FieldById(params Guid[] ids)
         {
             if (ids == null)
@@ -48,6 +48,16 @@ namespace HarshPoint.Provisioning
             }
 
             return new ResolveFieldById(ids);
+        }
+
+        public static ResolveFieldByInternalName FieldByInternalName(params String[] names)
+        {
+            if (names == null)
+            {
+                throw Error.ArgumentNull(nameof(names));
+            }
+
+            return new ResolveFieldByInternalName(names);
         }
 
         public static ResolveListByUrl ListByUrl(params String[] urls)
