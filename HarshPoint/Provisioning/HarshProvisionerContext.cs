@@ -21,14 +21,8 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        public Site Site
-        {
-            get { return ClientContext?.Site; }
-        }
+        public Site Site => ClientContext?.Site;
 
-        public Web Web
-        {
-            get { return ClientContext?.Web; }
-        }
+        public Web Web => ClientContext?.Web; 
     }
 }
