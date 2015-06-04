@@ -14,5 +14,12 @@ namespace HarshPoint.Provisioning.Implementation
         {
             get;
         }
+
+        public HarshProvisionerContextBase PushState(Object state)
+        {
+            return PushStateCore(state);
+        }
+
+        protected abstract HarshProvisionerContextBase PushStateCore(Object state);
     }
 }

@@ -6,6 +6,11 @@ namespace HarshPoint.Provisioning
 {
     public class HarshContentType : HarshProvisioner
     {
+        public HarshContentType()
+        {
+            ModifyChildrenContextState(() => ContentType);
+        }
+
         public ContentType ContentType
         {
             get;
@@ -98,16 +103,5 @@ namespace HarshPoint.Provisioning
 
             await base.OnProvisioningAsync();
         }
-
-        protected override HarshProvisionerContext CreateChildrenContext()
-        {
-            if (!ContentType.IsNull())
-            {
-                return Context.PushState(ContentType);
-            }
-
-            return base.CreateChildrenContext();
-        }
-
     }
 }

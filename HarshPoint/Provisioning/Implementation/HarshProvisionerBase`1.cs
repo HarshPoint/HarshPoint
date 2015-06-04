@@ -17,8 +17,9 @@ namespace HarshPoint.Provisioning.Implementation
         where TContext : HarshProvisionerContextBase
     {
         private ICollection<HarshProvisionerBase> _children;
+        private ICollection<Func<Object>> _childrenContextStateModifiers;
         private HarshProvisionerMetadata _metadata;
-        
+
         protected HarshProvisionerBase()
         {
             Logger = Log.ForContext(GetType());
@@ -125,6 +126,21 @@ namespace HarshPoint.Provisioning.Implementation
             return ProvisionChildrenAsync(null);
         }
 
+        protected void ModifyChildrenContextState(Func<Object> modifier)
+        {
+            if (modifier == null)
+            {
+                throw Error.ArgumentNull(nameof(modifier));
+            }
+
+            if (_childrenContextStateModifiers == null)
+            {
+                _childrenContextStateModifiers = new Collection<Func<Object>>();
+            }
+
+            _childrenContextStateModifiers.Add(modifier);
+        }
+
         protected Task ProvisionChildrenAsync(TContext context)
         {
             return RunChildren(ProvisionChild, context);
@@ -176,11 +192,6 @@ namespace HarshPoint.Provisioning.Implementation
             return new Collection<HarshProvisionerBase>();
         }
 
-        protected virtual TContext CreateChildrenContext()
-        {
-            return null;
-        }
-
         internal abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
 
         internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
@@ -201,6 +212,21 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
+        private TContext ModifyChildrenContextState(TContext context)
+        {
+            if (_childrenContextStateModifiers == null)
+            {
+                return context;
+            }
+
+            return _childrenContextStateModifiers
+                .Select(fn => fn())
+                .Where(state => state != null)
+                .Aggregate(
+                    context, (ctx, state) => (TContext)ctx.PushState(state)
+                );
+        }
+
         private async Task RunChildren(Func<HarshProvisionerBase, TContext, Task> action, TContext context, Boolean reverse = false)
         {
             if (!HasChildren)
@@ -210,7 +236,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             var children = reverse ? _children.Reverse() : _children;
 
-            context = context ?? CreateChildrenContext() ?? Context;
+            context = ModifyChildrenContextState(context ?? Context);
 
             foreach (var child in children)
             {

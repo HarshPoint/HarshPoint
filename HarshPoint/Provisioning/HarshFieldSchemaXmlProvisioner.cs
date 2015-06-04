@@ -18,6 +18,8 @@ namespace HarshPoint.Provisioning
         /// </summary>
         public HarshFieldSchemaXmlProvisioner()
         {
+            ModifyChildrenContextState(() => Field);
+
             TypeName = "Text";
             SchemaXmlBuilder = new HarshFieldSchemaXmlBuilder()
             {
@@ -167,16 +169,6 @@ namespace HarshPoint.Provisioning
         {
             get;
             private set;
-        }
-
-        protected override HarshProvisionerContext CreateChildrenContext()
-        {
-            if (!Field.IsNull())
-            {
-                return Context.PushState(Field);
-            }
-
-            return base.CreateChildrenContext();
         }
 
         protected override Task InitializeAsync()

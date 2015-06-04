@@ -24,7 +24,17 @@ namespace HarshPoint.Provisioning.Implementation
             return With(c => c._mayDeleteUserData = true);
         }
 
-        public TSelf PushState(Object state)
+        public new TSelf PushState(Object state)
+        {
+            return (TSelf)PushStateCore(state);
+        }
+
+        public virtual TSelf Clone()
+        {
+            return (TSelf)MemberwiseClone();
+        }
+
+        protected sealed override HarshProvisionerContextBase PushStateCore(Object state)
         {
             if (state == null)
             {
@@ -32,11 +42,6 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return With(c => c._stateStack = _stateStack.Push(state));
-        }
-
-        public virtual TSelf Clone()
-        {
-            return (TSelf)MemberwiseClone();
         }
 
         private TSelf With(Action<TSelf> action)

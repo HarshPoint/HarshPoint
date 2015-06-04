@@ -118,9 +118,9 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task Calls_child_Provision_with_modified_context_via_CreateChildrenContext()
+        public async Task Calls_child_Provision_with_modified_context_via_Modifier()
         {
-            var composite = new ModifiesChildContextUsingCreateChildrenContext()
+            var composite = new ModifiesChildContextUsingModifier()
             {
                 Children = { new ExpectsModifiedContext() }
             };
@@ -128,9 +128,9 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task Calls_child_Unprovision_with_modified_context_via_CreateChildrenContext()
+        public async Task Calls_child_Unprovision_with_modified_context_via_Modifier()
         {
-            var composite = new ModifiesChildContextUsingCreateChildrenContext()
+            var composite = new ModifiesChildContextUsingModifier()
             {
                 Children = { new ExpectsModifiedContext() }
             };
@@ -153,8 +153,12 @@ namespace HarshPoint.Tests.Provisioning
             }
         }
 
-        private class ModifiesChildContextUsingCreateChildrenContext : HarshProvisioner
+        private class ModifiesChildContextUsingModifier : HarshProvisioner
         {
+            public ModifiesChildContextUsingModifier()
+            {
+                ModifyChildrenContextState(() => "1234");
+            }
             protected override Task OnProvisioningAsync()
             {
                 Assert.Empty(Context.StateStack);
@@ -166,11 +170,6 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Assert.Empty(Context.StateStack);
                 return base.OnUnprovisioningAsync();
-            }
-
-            protected override HarshProvisionerContext CreateChildrenContext()
-            {
-                return Context.PushState("1234");
             }
         }
 

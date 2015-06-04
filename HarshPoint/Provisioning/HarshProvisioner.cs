@@ -1,5 +1,6 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
+using System;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
@@ -15,6 +16,21 @@ namespace HarshPoint.Provisioning
         public Site Site => Context?.Site;
 
         public Web Web => Context?.Web;
+
+        protected void ModifyChildrenContextState(Func<ClientObject> modifier)
+        {
+            ModifyChildrenContextState(() =>
+            {
+                var result = modifier();
+
+                if (result.IsNull())
+                {
+                    return null;
+                }
+
+                return (Object)(result);
+            });
+        }
 
         internal sealed override Task ProvisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
         {
