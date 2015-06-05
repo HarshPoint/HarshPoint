@@ -32,17 +32,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         public ICollection<HarshProvisionerBase> Children
-        {
-            get
-            {
-                if (_children == null)
-                {
-                    _children = CreateChildrenCollection();
-                }
-
-                return _children;
-            }
-        }
+            => HarshLazy.Initialize(ref _children, CreateChildrenCollection);
 
         public ILogger Logger
         {
@@ -57,18 +47,8 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         internal HarshProvisionerMetadata Metadata
-        {
-            get
-            {
-                if (_metadata == null)
-                {
-                    _metadata = new HarshProvisionerMetadata(GetType());
-                }
-
-                return _metadata;
-            }
-        }
-
+            => HarshLazy.Initialize(ref _metadata, () => new HarshProvisionerMetadata(GetType()));
+        
         internal Boolean HasChildren
         {
             get

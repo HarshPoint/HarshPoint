@@ -161,6 +161,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified expression &apos;{0}&apos; is not a property or field access expression..
+        /// </summary>
+        internal static string HarshCloneable_ExpressionNotFieldOrProperty {
+            get {
+                return ResourceManager.GetString("HarshCloneable_ExpressionNotFieldOrProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified sequence cannot be empty..
         /// </summary>
         internal static string HarshCompositeProvisioner_SequenceEmpty {

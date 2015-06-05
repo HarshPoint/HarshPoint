@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public abstract class ResolvableChain
+    public abstract class ResolvableChain : IHarshCloneable
     {
         public virtual ResolvableChain Clone()
         {
@@ -20,6 +20,8 @@ namespace HarshPoint.Provisioning.Implementation
 
             return result;
         }
+
+        Object IHarshCloneable.Clone() => Clone();
 
         //public override String ToString()
         //{
@@ -35,9 +37,7 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(other));
             }
 
-            var result = Clone();
-            result.Chain.Last().Next = other.Clone();
-            return result;
+            return this.With(c => c.Chain.Last().Next = other.Clone());
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]

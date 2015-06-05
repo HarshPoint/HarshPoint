@@ -76,6 +76,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CloneableTests.cs" />
     <Compile Include="Entity\ContentTypeIdBuilderTests.cs" />
     <Compile Include="Entity\FieldAttributeTests.cs" />
     <Compile Include="Entity\HarshEntityMetadataContentTypeTests.cs" />

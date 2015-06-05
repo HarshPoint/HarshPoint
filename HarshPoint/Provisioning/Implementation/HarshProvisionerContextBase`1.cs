@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class HarshProvisionerContextBase<TSelf>
-        : HarshProvisionerContextBase
+        : HarshProvisionerContextBase, IHarshCloneable
         where TSelf : HarshProvisionerContextBase<TSelf>
     {
         private Boolean _mayDeleteUserData;
@@ -12,25 +12,11 @@ namespace HarshPoint.Provisioning.Implementation
 
         public sealed override Boolean MayDeleteUserData => _mayDeleteUserData;
 
-        public TSelf AllowDeleteUserData()
-        {
-            if (MayDeleteUserData)
-            {
-                return (TSelf)(this);
-            }
+        public TSelf AllowDeleteUserData() => (TSelf)this.With(c => c._mayDeleteUserData, true);
 
-            return With(c => c._mayDeleteUserData = true);
-        }
+        public new TSelf PushState(Object state) => (TSelf)PushStateCore(state);
 
-        public new TSelf PushState(Object state)
-        {
-            return (TSelf)PushStateCore(state);
-        }
-
-        public virtual TSelf Clone()
-        {
-            return (TSelf)MemberwiseClone();
-        }
+        public virtual TSelf Clone() => (TSelf)MemberwiseClone();
 
         internal sealed override IImmutableStack<Object> StateStack => _stateStack;
 
@@ -41,14 +27,9 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(state));
             }
 
-            return With(c => c._stateStack = _stateStack.Push(state));
+            return this.With(c => c._stateStack, _stateStack.Push(state));
         }
 
-        private TSelf With(Action<TSelf> action)
-        {
-            var result = Clone();
-            action(result);
-            return result;
-        }
+        Object IHarshCloneable.Clone() => Clone();
     }
 }

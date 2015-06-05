@@ -58,7 +58,7 @@ namespace HarshPoint
                 throw Error.ArgumentNull(nameof(expression));
             }
 
-            var visitor = new MemberNameVisitor();
+            var visitor = new ExtractMemberAccessVisitor();
             visitor.Visit(expression);
 
             if (visitor.Members.IsEmpty)
@@ -72,9 +72,30 @@ namespace HarshPoint
             return visitor.Members;
         }
 
-        private sealed class MemberNameVisitor : ExpressionVisitor
+
+        public static FieldInfo TryExtractSingleFieldAccess(this Expression expression)
         {
-            public MemberNameVisitor()
+            if (expression == null)
+            {
+                throw Error.ArgumentNull(nameof(expression));
+            }
+
+            return ExtractMemberAccess(expression).First() as FieldInfo;
+        }
+
+        public static PropertyInfo TryExtractSinglePropertyAccess(this Expression expression)
+        {
+            if (expression == null)
+            {
+                throw Error.ArgumentNull(nameof(expression));
+            }
+
+            return ExtractMemberAccess(expression).First() as PropertyInfo;
+        }
+
+        private sealed class ExtractMemberAccessVisitor : ExpressionVisitor
+        {
+            public ExtractMemberAccessVisitor()
             {
                 Members = ImmutableStack.Create<MemberInfo>();
             }
