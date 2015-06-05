@@ -77,12 +77,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         private static XElement RunSchemaXmlTransformers(XElement schemaXml, IEnumerable<HarshFieldSchemaXmlTransformer> transformers)
         {
-            foreach (var trans in transformers)
-            {
-                schemaXml = trans.Transform(schemaXml);
-            }
-
-            return schemaXml;
+            return transformers.Aggregate(schemaXml, (xml, trans) => trans.Transform(xml));
         }
     }
 }
