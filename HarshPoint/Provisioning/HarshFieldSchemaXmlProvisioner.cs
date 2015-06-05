@@ -1,8 +1,8 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -25,35 +25,35 @@ namespace HarshPoint.Provisioning
             {
                 Transformers =
                 {
-                    new AttributeSetter(() => DisplayName)
+                    new HarshFieldSchemaXmlAttributeSetter(() => DisplayName)
                     {
                         ValueValidator = ValidateNotNullOrWhitespace,
                     },
 
-                    new AttributeSetter(() => Group),
+                    new HarshFieldSchemaXmlAttributeSetter(() => Group),
 
-                    new AttributeSetter(() => Id)
+                    new HarshFieldSchemaXmlAttributeSetter(() => Id)
                     {
                         Name = "ID",
                         ValueValidator = ValidateNotEmptyGuid,
                         SkipWhenModifying = true,
                     },
 
-                    new AttributeSetter(() => InternalName)
+                    new HarshFieldSchemaXmlAttributeSetter(() => InternalName)
                     {
                         Name = "Name",
                         ValueValidator = ValidateNotNullOrWhitespace,
                         SkipWhenModifying = true,
                     },
 
-                    new AttributeSetter(() => StaticName)
+                    new HarshFieldSchemaXmlAttributeSetter(() => StaticName)
                     {
                         ValueAccessor = () => StaticName ?? InternalName,
                         ValueValidator = ValidateNotNullOrWhitespace,
                         SkipWhenModifying = true
                     },
 
-                    new AttributeSetter(() => TypeName)
+                    new HarshFieldSchemaXmlAttributeSetter(() => TypeName)
                     {
                         Name = "Type",
                         ValueValidator = ValidateNotNullOrWhitespace,
@@ -242,79 +242,18 @@ namespace HarshPoint.Provisioning
 
         private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
 
-        private class AttributeSetter : HarshFieldSchemaXmlTransformer
-        {
-            public AttributeSetter(Expression<Func<Object>> valueAccessorExpr)
-            {
-                if (valueAccessorExpr == null)
-                {
-                    throw Error.ArgumentNull(nameof(valueAccessorExpr));
-                }
-
-                PropertyName = valueAccessorExpr.GetMemberName();
-                ValueAccessor = valueAccessorExpr.Compile();
-                Name = PropertyName;
-            }
-
-            public XName Name
-            {
-                get;
-                set;
-            }
-
-            public String PropertyName
-            {
-                get;
-                private set;
-            }
-
-            public Func<Object> ValueAccessor
-            {
-                get;
-                set;
-            }
-
-            public Action<AttributeSetter, Object> ValueValidator
-            {
-                get;
-                set;
-            }
-
-            public override XElement Transform(XElement element)
-            {
-                if (element == null)
-                {
-                    throw Error.ArgumentNull("element");
-                }
-
-                var value = ValueAccessor();
-
-                if (ValueValidator != null)
-                {
-                    ValueValidator(this, value);
-                }
-
-                if (value != null)
-                {
-                    element.SetAttributeValue(Name, value);
-                }
-
-                return element;
-            }
-        }
-
-        private static void ValidateNotEmptyGuid(AttributeSetter setter, Object value)
+        private static void ValidateNotEmptyGuid(String propertyName, Object value)
         {
             if (Guid.Empty.Equals(value))
             {
                 throw Error.InvalidOperation(
                     SR.HarshFieldSchemaXmlProvisioner_PropertyEmptyGuid,
-                    setter.PropertyName
+                    propertyName
                 );
             }
         }
 
-        private static void ValidateNotNullOrWhitespace(AttributeSetter setter, Object value)
+        private static void ValidateNotNullOrWhitespace(String propertyName, Object value)
         {
             var asString = Convert.ToString(value, CultureInfo.InvariantCulture);
 
@@ -322,7 +261,7 @@ namespace HarshPoint.Provisioning
             {
                 throw Error.InvalidOperation(
                     SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace,
-                    setter.PropertyName
+                    propertyName
                 );
             }
         }

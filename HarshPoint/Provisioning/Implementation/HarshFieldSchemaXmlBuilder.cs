@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace HarshPoint.Provisioning
+namespace HarshPoint.Provisioning.Implementation
 {
     /// <summary>
     /// Controls the field schema XML generation.

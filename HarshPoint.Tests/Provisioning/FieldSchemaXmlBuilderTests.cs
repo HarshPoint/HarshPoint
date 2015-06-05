@@ -1,4 +1,4 @@
-﻿using HarshPoint.Provisioning;
+﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using Moq;
 using System.Threading.Tasks;

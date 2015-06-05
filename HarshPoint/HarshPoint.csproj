@@ -56,6 +56,7 @@
     <Compile Include="Provisioning\DefaultFromContextTag`1.cs" />
     <Compile Include="Provisioning\HarshFieldRef.cs" />
     <Compile Include="Provisioning\IDefaultFromContextTag.cs" />
+    <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
     <Compile Include="Provisioning\Implementation\Resolvable.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedResolver.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
@@ -106,8 +107,8 @@
     <Compile Include="Provisioning\Implementation\HarshProvisionerBase.cs" />
     <Compile Include="Provisioning\HarshFieldSchemaXmlProvisioner.cs" />
     <Compile Include="Provisioning\HarshFieldProvisioner.cs" />
-    <Compile Include="Provisioning\HarshFieldSchemaXmlBuilder.cs" />
-    <Compile Include="Provisioning\HarshFieldSchemaXmlTransformer.cs" />
+    <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlBuilder.cs" />
+    <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlTransformer.cs" />
     <Compile Include="Provisioning\HarshProvisioner.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerBase`1.cs" />
     <Compile Include="Provisioning\HarshProvisionerContext.cs" />
