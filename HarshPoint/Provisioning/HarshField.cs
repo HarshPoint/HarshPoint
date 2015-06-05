@@ -11,12 +11,12 @@ namespace HarshPoint.Provisioning
     /// <summary>
     /// Creates or updates a SharePoint field by generating its schema XML.
     /// </summary>
-    public sealed class HarshFieldSchemaXmlProvisioner : HarshFieldProvisioner
+    public sealed class HarshField : HarshFieldProvisioner
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HarshFieldSchemaXmlProvisioner"/> class.
+        /// Initializes a new instance of the <see cref="HarshField"/> class.
         /// </summary>
-        public HarshFieldSchemaXmlProvisioner()
+        public HarshField()
         {
             ModifyChildrenContextState(() => Field);
 

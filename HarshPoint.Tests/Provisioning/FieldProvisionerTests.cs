@@ -21,7 +21,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Existing_field_is_not_provisioned()
         {
-            var prov = new HarshFieldSchemaXmlProvisioner()
+            var prov = new HarshField()
             {
                 Id = new Guid("fa564e0f-0c70-4ab9-b863-0177e6ddd247"), // SPBuiltInFieldId.Title
                 DisplayName = "Title",
@@ -37,7 +37,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_if_id_missing()
         {
-            var prov = new HarshFieldSchemaXmlProvisioner()
+            var prov = new HarshField()
             {
                 InternalName = "DummyField"
             };
@@ -48,7 +48,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_if_InternalName_missing()
         {
-            var prov = new HarshFieldSchemaXmlProvisioner()
+            var prov = new HarshField()
             {
                 Id = Guid.NewGuid(),
                 DisplayName = "Dummy",
@@ -61,7 +61,7 @@ namespace HarshPoint.Tests.Provisioning
         public async Task Field_id_is_generated_into_schema()
         {
             var fieldId = Guid.NewGuid();
-            var prov = new HarshFieldSchemaXmlProvisioner()
+            var prov = new HarshField()
             {
                 Id = fieldId,
                 InternalName = "DummyField",
@@ -78,7 +78,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Field_DisplayName_is_generated_into_schema()
         {
-            var prov = new HarshFieldSchemaXmlProvisioner()
+            var prov = new HarshField()
             {
                 Id = Guid.NewGuid(),
                 InternalName = "DummyField",
@@ -95,7 +95,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Field_InternalName_is_generated_into_schema()
         {
-            var prov = new HarshFieldSchemaXmlProvisioner()
+            var prov = new HarshField()
             {
                 Id = Guid.NewGuid(),
                 InternalName = "DummyField",
@@ -112,7 +112,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Field_no_StaticName_is_generated_into_schema()
         {
-            var prov = new HarshFieldSchemaXmlProvisioner()
+            var prov = new HarshField()
             {
                 Id = Guid.NewGuid(),
                 InternalName = "DummyField",
@@ -130,7 +130,7 @@ namespace HarshPoint.Tests.Provisioning
         public async Task Field_explicit_StaticName_is_generated_into_schema()
         {
             var fieldId = Guid.NewGuid();
-            var prov = new HarshFieldSchemaXmlProvisioner()
+            var prov = new HarshField()
             {
                 Id = fieldId,
                 InternalName = "DummyField",
@@ -148,7 +148,7 @@ namespace HarshPoint.Tests.Provisioning
         public async Task Field_group_is_generated_into_schema()
         {
             var fieldId = Guid.NewGuid();
-            var prov = new HarshFieldSchemaXmlProvisioner()
+            var prov = new HarshField()
             {
                 Id = fieldId,
                 InternalName = "DummyField",

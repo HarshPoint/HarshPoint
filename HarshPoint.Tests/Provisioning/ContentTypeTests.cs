@@ -86,7 +86,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             var fieldId = Guid.NewGuid();
 
-            var field = new HarshFieldSchemaXmlProvisioner()
+            var field = new HarshField()
             {
                 Id = fieldId,
                 DisplayName = fieldId.ToString("n"),

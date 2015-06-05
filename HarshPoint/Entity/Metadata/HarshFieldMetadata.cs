@@ -42,7 +42,7 @@ namespace HarshPoint.Entity.Metadata
 
         public IEnumerable<HarshProvisioner> CreateProvisioners()
         {
-            yield return new HarshFieldSchemaXmlProvisioner()
+            yield return new HarshField()
             {
                 Id = FieldId,
                 InternalName = InternalName,
