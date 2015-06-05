@@ -11,7 +11,7 @@ namespace HarshPoint.Provisioning
     /// <summary>
     /// Creates or updates a SharePoint field by generating its schema XML.
     /// </summary>
-    public sealed class HarshField : HarshFieldProvisioner
+    public sealed class HarshField : HarshProvisioner
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HarshField"/> class.
@@ -107,6 +107,18 @@ namespace HarshPoint.Provisioning
         }
 
         /// <summary>
+        /// Gets or sets the field identifier.
+        /// </summary>
+        /// <value>
+        /// The field identifier. Must not be an empty <see cref="Guid"/>.
+        /// </value>
+        public Guid Id
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets the InternalName of the field.
         /// Only used when creating a new field.
         /// </summary>
@@ -153,6 +165,12 @@ namespace HarshPoint.Provisioning
             get { return SchemaXmlBuilder.Transformers; }
         }
 
+        public Field Field
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// Gets a value indicating whether a field was created during the last operation.
         /// </summary>
@@ -180,13 +198,21 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        protected override Task InitializeAsync()
+        protected override async Task InitializeAsync()
         {
+            await base.InitializeAsync();
+
             FieldAdded = false;
             FieldRemoved = false;
             FieldUpdated = false;
 
-            return base.InitializeAsync();
+            if (Id == Guid.Empty)
+            {
+                throw Error.InvalidOperation(SR.HarshFieldProvisionerBase_FieldIdEmpty);
+            }
+
+            TargetFieldCollection = Web.Fields;
+            Field = await ResolveSingleOrDefaultAsync(Resolve.FieldById(Id));
         }
 
         protected override async Task OnProvisioningAsync()
@@ -238,6 +264,12 @@ namespace HarshPoint.Provisioning
         {
             get;
             private set;
+        }
+
+        private FieldCollection TargetFieldCollection
+        {
+            get;
+            set;
         }
 
         private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
