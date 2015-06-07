@@ -11,7 +11,13 @@ namespace HarshPoint.Provisioning
         where TField : Field
     {
         [DefaultFromContext]
-        public IResolve<Field> Field
+        public IResolve<Field> Fields
+        {
+            get;
+            set;
+        }
+
+        public Boolean NoPushChangesToLists
         {
             get;
             set;
@@ -19,15 +25,25 @@ namespace HarshPoint.Provisioning
 
         protected override async Task InitializeAsync()
         {
-            FieldResolved = (await ResolveAsync(Field)).Cast<TField>();
+            FieldsResolved = (await ResolveAsync(Fields)).Cast<TField>();
 
             await base.InitializeAsync();
         }
 
-        private IEnumerable<TField> FieldResolved
+        protected IEnumerable<TField> FieldsResolved
         {
             get;
-            set;
+            private set;
+        }
+
+        protected void UpdateField(TField field)
+        {
+            if (field == null)
+            {
+                throw Error.ArgumentNull(nameof(field));
+            }
+
+            field.UpdateAndPushChanges(!NoPushChangesToLists);
         }
     }
 }

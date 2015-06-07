@@ -1,14 +1,32 @@
 ﻿using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
     public sealed class HarshTaxonomyField : HarshFieldProvisioner<TaxonomyField>
     {
+        public IResolveSingle<TermSet> TermSet
+        {
+            get;
+            set;
+        }
+
+        protected override async Task OnProvisioningAsync()
+        {
+            await base.OnProvisioningAsync();
+
+            var termSet = await ResolveSingleAsync(TermSet);
+
+            foreach (var field in FieldsResolved)
+            {
+                field.SspId = termSet.TermStore.Id;
+                field.TermSetId = termSet.Id;
+
+                UpdateField(field);
+            }
+
+            await ClientContext.ExecuteQueryAsync();
+        }
     }
 }
