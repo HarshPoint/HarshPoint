@@ -2,35 +2,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveTermSetById
-        : Implementation.Resolvable<TermSet, Guid, HarshProvisionerContext, ResolveTermSetById>
+        : Implementation.NestedResolvable<TermStore, TermSet, Guid, HarshProvisionerContext, ResolveTermSetById>
     {
-        private Func<TaxonomySession, TermStore> _termStore = TermStoreDefaultSiteCollection;
-
-        public ResolveTermSetById(IEnumerable<Guid> ids)
-            : base(ids)
+        public ResolveTermSetById(IResolve<TermStore> termStore, IEnumerable<Guid> ids)
+            : base(termStore, ids)
         {
         }
 
-        public ResolveTermSetById InDefaultKeywordStore()
+        protected override async Task<IEnumerable<TermSet>> ResolveChainElement(HarshProvisionerContext context, TermStore parent)
         {
-            return this.With(r => r._termStore, TermStoreDefaultSiteCollection);
+            var result = Identifiers.Select(parent.GetTermSet);
+
+            foreach (var termSet in result)
+            {
+                context.ClientContext.Load(termSet);
+            }
+
+            await context.ClientContext.ExecuteQueryAsync();
+            return result;
         }
-
-        protected override Task<IEnumerable<TermSet>> ResolveChainElement(HarshProvisionerContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static readonly Func<TaxonomySession, TermStore> TermStoreDefaultKeywords =
-            session => session.GetDefaultKeywordsTermStore();
-
-        private static readonly Func<TaxonomySession, TermStore> TermStoreDefaultSiteCollection =
-            session => session.GetDefaultSiteCollectionTermStore();
     }
 }

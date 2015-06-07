@@ -71,6 +71,16 @@ namespace HarshPoint.Provisioning
             return new ResolveListByUrl(urls);
         }
 
+        public static ResolveTermStoreKeywordsDefault TermStoreKeywordsDefault()
+        {
+            return new ResolveTermStoreKeywordsDefault();
+        }
+
+        public static ResolveTermStoreSiteCollectionDefault TermStoreSiteCollectionDefault()
+        {
+            return new ResolveTermStoreSiteCollectionDefault();
+        }
+
         public static ResolvedResolver<T> Value<T>(params T[] values)
         {
             return new ResolvedResolver<T>(values);

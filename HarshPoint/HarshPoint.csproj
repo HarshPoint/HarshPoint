@@ -67,6 +67,7 @@
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermSetById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveTermStore.cs" />
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
