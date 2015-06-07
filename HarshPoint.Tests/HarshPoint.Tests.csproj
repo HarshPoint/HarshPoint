@@ -103,6 +103,7 @@
     <Compile Include="HarshContentTypeIdTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharePointClientFixture.cs" />
+    <Compile Include="SingleElementCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

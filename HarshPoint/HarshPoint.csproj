@@ -53,6 +53,7 @@
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="HarshLazy.cs" />
+    <Compile Include="HarshSingleElementCollection.cs" />
     <Compile Include="IHarshCloneable.cs" />
     <Compile Include="Provisioning\DefaultFieldGroup.cs" />
     <Compile Include="Provisioning\DefaultFromContextTag`1.cs" />
