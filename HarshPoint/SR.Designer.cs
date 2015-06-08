@@ -197,6 +197,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified content type ID &apos;{0}&apos; is not absolute..
+        /// </summary>
+        internal static string HarshContentTypeId_CannotIsChildOfRelative {
+            get {
+                return ResourceManager.GetString("HarshContentTypeId_CannotIsChildOfRelative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified string &apos;{0}&apos; is not a valid content type ID. Expected a 32-character ID after the &quot;00&quot; separator..
         /// </summary>
         internal static string HarshContentTypeId_Expected_32chars_ID_after_00 {

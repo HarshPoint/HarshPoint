@@ -3,6 +3,7 @@
 [Type]$T_HarshProvisionerBase    = 'HarshPoint.Provisioning.Implementation.HarshProvisionerBase'
 [Type]$T_HarshProvisionerContext = 'HarshPoint.Provisioning.HarshProvisionerContext'
 [Type]$T_IDefaultFromContextTag  = 'HarshPoint.Provisioning.IDefaultFromContextTag'
+[Type]$T_Resolve                 = 'HarshPoint.Provisioning.Resolve'
 [Type]$T_SPOCredentials          = 'Microsoft.SharePoint.Client.SharePointOnlineCredentials'
 
 function New-HarshProvisioner {
@@ -99,7 +100,7 @@ function Field {
         $Children
     )
 
-    New-HarshProvisioner HarshFieldSchemaXmlProvisioner $Children @{
+    New-HarshProvisioner HarshField $Children @{
         DisplayName   = $DisplayName
         Id            = $Id
         InternalName  = $InternalName
@@ -115,10 +116,104 @@ function FieldRef {
     )
 
     New-HarshProvisioner HarshFieldRef $null @{
-        Fields = [HarshPoint.Provisioning.Resolve]::FieldByInternalName($InternalName)
+        Fields = $T_Resolve::FieldByInternalName($InternalName)
     }
 }
 
+function List {
+
+    [CmdletBinding()]
+    param (
+
+        [Parameter(Position=0, Mandatory)]
+        [String]
+        $Title,
+
+        [Parameter(Position=1, Mandatory)]
+        [String]
+        $Url,
+
+        [Parameter(Position=2)]
+        [ScriptBlock]
+        $Children,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ListTemplateType]
+        $TemplateType = 'GenericList'
+    )
+
+    New-HarshProvisioner HarshList $Children @{
+        TemplateType = $TemplateType
+        Title        = $Title
+        Url          = $Url
+    }
+}
+
+
+function ContentTypeRef {
+
+    [CmdletBinding()]
+    param (
+
+        [Parameter(Position=0, Mandatory)]
+        [HarshPoint.HarshContentTypeId[]]
+        $ContentTypeId
+    )
+
+    New-HarshProvisioner HarshContentTypeRef $null @{
+        ContentTypes = $T_Resolve::ContentTypeById($ContentTypeId)
+    }
+}
+
+function RemoveContentTypeRef {
+
+    [CmdletBinding()]
+    param (
+        [Parameter(Position=0, Mandatory)]
+        [HarshPoint.HarshContentTypeId[]]
+        $ContentTypeId
+    )
+
+    New-HarshProvisioner HarshRemoveContentTypeRef $null @{
+        ContentTypes = $T_Resolve::ContentTypeById($ContentTypeId)
+    }
+}
+
+function Invoke-WithProvisionerContext {
+    [CmdletBinding()]
+    param (
+
+        [Parameter(Position = 0)]
+        [Uri]
+        $Url,
+
+        [Parameter(Position = 1)]
+        [ScriptBlock]
+        $ScriptBlock,
+
+        [Parameter()]
+        [String]
+        $UserName,
+        
+        [Parameter()]
+        [String]
+        $Password
+    )
+
+    try {
+        $Credentials = New-Object $T_SPOCredentials $UserName, $Password
+     
+        $ClientContext = New-Object $T_ClientContext $Url
+        $ClientContext.Credentials = $Credentials
+        
+        $Context = New-Object $T_HarshProvisionerContext $ClientContext
+
+        & $ScriptBlock $Context
+    }
+    finally {
+        $ClientContext.Dispose()
+    }
+}
 
 function Provision {
 
@@ -141,20 +236,13 @@ function Provision {
         [String]
         $Password
     )
-
-    try {
-        $Credentials = New-Object $T_SPOCredentials $UserName, $Password
-     
-        $ClientContext = New-Object $T_ClientContext $Url
-        $ClientContext.Credentials = $Credentials
-        
-        $Context = New-Object $T_HarshProvisionerContext $ClientContext
-
+    
+    Invoke-WithProvisionerContext -Url      $Url `
+                                  -UserName $UserName `
+                                  -Password $Password `
+                                  -ScriptBlock {
 
         $Provisioner = New-HarshProvisioner HarshProvisioner $Children
-        $Provisioner.ProvisionAsync($Context).Wait()
-    }
-    finally {
-        $ClientContext.Dispose()
+        $Provisioner.ProvisionAsync($args[0]).Wait()
     }
 }

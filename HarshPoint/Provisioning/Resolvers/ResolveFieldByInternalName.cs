@@ -9,8 +9,10 @@ namespace HarshPoint.Provisioning.Resolvers
         : Implementation.Resolvable<Field, String, HarshProvisionerContext, ResolveFieldByInternalName>
     {
         public ResolveFieldByInternalName(IEnumerable<String> names)
-            : base(names, StringComparer.OrdinalIgnoreCase)
+            : base(names, StringComparer.Ordinal)
         {
+            // uses Ordinal instead of OrdinalIgnoreCase comparer, because there apparently
+            // are fields tha`t differ only in case (ParentId vs. ParentID)
         }
 
         protected override Task<IEnumerable<Field>> ResolveChainElement(HarshProvisionerContext context)

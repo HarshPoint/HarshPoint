@@ -52,6 +52,7 @@
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="HarshBuiltInContentTypeIds.cs" />
     <Compile Include="HarshLazy.cs" />
     <Compile Include="HarshSingleElementCollection.cs" />
     <Compile Include="IHarshCloneable.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Provisioning\HarshFieldProvisioner.cs" />
     <Compile Include="Provisioning\HarshFieldRef.cs" />
     <Compile Include="Provisioning\HarshList.cs" />
+    <Compile Include="Provisioning\HarshRemoveContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshTaxonomyField.cs" />
     <Compile Include="Provisioning\IDefaultFromContextTag.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />

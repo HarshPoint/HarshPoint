@@ -54,6 +54,51 @@ namespace HarshPoint
             private set;
         }
 
+        public Boolean IsChildOf(HarshContentTypeId parent)
+        {
+            if (parent == null)
+            {
+                throw Error.ArgumentNull(nameof(parent));
+            }
+
+            if (!parent.IsAbsolute)
+            {
+                throw Error.ArgumentOutOfRangeFormat(
+                    nameof(parent),
+                    SR.HarshContentTypeId_CannotIsChildOfRelative,
+                    parent
+                );
+            }
+
+            if (!IsAbsolute)
+            {
+                throw Error.InvalidOperation(
+                    SR.HarshContentTypeId_CannotIsChildOfRelative,
+                    this
+                );
+            }
+
+            return _value.StartsWith(parent._value);
+        }
+
+        public Boolean IsDirectChildOf(HarshContentTypeId parent)
+        {
+            if (!IsChildOf(parent))
+            {
+                return false;
+            }
+
+            var otherLength = parent._value.Length;
+
+            if (_value.Length == otherLength + 2 || 
+                _value.Length == otherLength + 34)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public HarshContentTypeId Append(HarshContentTypeId contentTypeId)
         {
             if (contentTypeId == null)

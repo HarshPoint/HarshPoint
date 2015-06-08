@@ -159,6 +159,9 @@
   <data name="HarshContentTypeId_CannotAppendAbsoluteCTId" xml:space="preserve">
     <value>The specified content type ID '{0}' cannot be appended to '{1}', because it is already an absolute content type ID..</value>
   </data>
+  <data name="HarshContentTypeId_CannotIsChildOfRelative" xml:space="preserve">
+    <value>The specified content type ID '{0}' is not absolute.</value>
+  </data>
   <data name="HarshContentTypeId_Expected_32chars_ID_after_00" xml:space="preserve">
     <value>The specified string '{0}' is not a valid content type ID. Expected a 32-character ID after the "00" separator.</value>
   </data>
