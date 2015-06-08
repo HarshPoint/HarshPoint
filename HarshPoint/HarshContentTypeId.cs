@@ -78,6 +78,11 @@ namespace HarshPoint
                 );
             }
 
+            if (_value.Length <= parent._value.Length)
+            {
+                return false;
+            }
+
             return _value.StartsWith(parent._value);
         }
 

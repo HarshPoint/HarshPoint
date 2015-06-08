@@ -75,5 +75,41 @@ namespace HarshPoint.Tests
 
             Assert.Equal(expected, ctidA.Append(ctidB).ToString());
         }
+
+        [Theory]
+        [InlineData(true, "0x0101", "0x01")]
+        [InlineData(true, "0x0100b95aa984636a4b9996fdbbb47966bbec", "0x01")]
+        [InlineData(true, "0x010100b95aa984636a4b9996fdbbb47966bbec", "0x0101")]
+
+        [InlineData(false, "0x0101", "0x0101")]
+        [InlineData(false, "0x0101", "0x02")]
+        [InlineData(false, "0x0101", "0x0200b95aa984636a4b9996fdbbb47966bbec")]
+        public void IsChildOf(Boolean expected, String ctidStr, String parentStr)
+        {
+            var ctid = HarshContentTypeId.Parse(ctidStr);
+            var parent = HarshContentTypeId.Parse(parentStr);
+
+            Assert.Equal(expected, ctid.IsChildOf(parent));
+        }
+
+        [Theory]
+
+        [InlineData(true, "0x0101", "0x01")]
+        [InlineData(true, "0x0100b95aa984636a4b9996fdbbb47966bbec", "0x01")]
+        [InlineData(true, "0x010100b95aa984636a4b9996fdbbb47966bbec", "0x0101")]
+
+        [InlineData(false, "0x0101", "0x0101")]
+        [InlineData(false, "0x0101", "0x02")]
+        [InlineData(false, "0x0101", "0x0200b95aa984636a4b9996fdbbb47966bbec")]
+
+        [InlineData(false, "0x010101", "0x01")]
+        [InlineData(false, "0x0100b95aa984636a4b9996fdbbb47966bbec00b95aa984636a4b9996fdbbb47966bbec", "0x01")]
+        public void IsDirectChildOf(Boolean expected, String ctidStr, String parentStr)
+        {
+            var ctid = HarshContentTypeId.Parse(ctidStr);
+            var parent = HarshContentTypeId.Parse(parentStr);
+
+            Assert.Equal(expected, ctid.IsDirectChildOf(parent));
+        }
     }
 }
