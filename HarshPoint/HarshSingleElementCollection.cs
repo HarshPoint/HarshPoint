@@ -9,7 +9,7 @@ namespace HarshPoint
         public static IEnumerable<T> Create<T>(T value) => new HarshSingleElementCollection<T>(value);
     }
 
-    public struct HarshSingleElementCollection<T> : IEnumerable<T>
+    public sealed class HarshSingleElementCollection<T> : IEnumerable<T>
     {
         private readonly T _value;
 

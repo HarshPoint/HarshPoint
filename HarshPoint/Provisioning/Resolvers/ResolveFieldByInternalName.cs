@@ -1,7 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
@@ -10,21 +9,17 @@ namespace HarshPoint.Provisioning.Resolvers
         : Implementation.Resolvable<Field, String, HarshProvisionerContext, ResolveFieldByInternalName>
     {
         public ResolveFieldByInternalName(IEnumerable<String> names)
-            : base(names)
+            : base(names, StringComparer.OrdinalIgnoreCase)
         {
         }
 
-        protected override async Task<IEnumerable<Field>> ResolveChainElement(HarshProvisionerContext context)
+        protected override Task<IEnumerable<Field>> ResolveChainElement(HarshProvisionerContext context)
         {
-            var fields = context.ClientContext.LoadQuery(
-                context.Web.Fields.Include(
-                    f => f.Id,
-                    f => f.InternalName
-                )
+            return this.ResolveIdentifiers(
+                context,
+                context.Web.Fields.IncludeWithDefaultProperties(f => f.InternalName),
+                f => f.InternalName
             );
-
-            await context.ClientContext.ExecuteQueryAsync();
-            return fields.Where(f => Identifiers.Contains(f.InternalName));
         }
     }
 }

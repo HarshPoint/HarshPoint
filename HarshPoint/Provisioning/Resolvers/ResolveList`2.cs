@@ -7,8 +7,8 @@ namespace HarshPoint.Provisioning.Resolvers
         : Implementation.Resolvable<List, TIdentifier, HarshProvisionerContext, TSelf>
         where TSelf : ResolveList<TIdentifier, TSelf>
     {
-        protected ResolveList(IEnumerable<TIdentifier> identifiers)
-            : base(identifiers)
+        protected ResolveList(IEnumerable<TIdentifier> identifiers, IEqualityComparer<TIdentifier> idComparer = null)
+            : base(identifiers, idComparer)
         {
         }
 

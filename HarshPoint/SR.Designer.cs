@@ -332,6 +332,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified url &apos;{0}&apos; is not relative to &apos;{1}&apos;..
+        /// </summary>
+        internal static string HarshUrl_UrlNotRelativeTo {
+            get {
+                return ResourceManager.GetString("HarshUrl_UrlNotRelativeTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} resolved in more than one result..
         /// </summary>
         internal static string Resolvable_ManyResults {

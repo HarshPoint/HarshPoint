@@ -1,6 +1,5 @@
 ﻿using Microsoft.SharePoint.Client;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
@@ -12,20 +11,15 @@ namespace HarshPoint.Provisioning.Resolvers
             : base(identifiers)
         {
         }
-        
-        protected override async Task<IEnumerable<ContentType>> ResolveChainElement(HarshProvisionerContext context)
+
+
+        protected override Task<IEnumerable<ContentType>> ResolveChainElement(HarshProvisionerContext context)
         {
-            var results = Identifiers
-                .Select(id => context.Web.ContentTypes.GetById(id.ToString()))
-                .ToArray();
-
-            foreach (var ct in results)
-            {
-                context.ClientContext.Load(ct);
-            }
-
-            await context.ClientContext.ExecuteQueryAsync();
-            return results;
+            return this.ResolveIdentifiers(
+                context,
+                context.Web.ContentTypes.Include(ct => ct.StringId),
+                ct => HarshContentTypeId.Parse(ct.StringId)
+            );
         }
     }
 }

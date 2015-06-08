@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -9,7 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
          where TContext : HarshProvisionerContextBase
          where TSelf : NestedResolvable<T1, T2, TIdentifier, TContext, TSelf>
     {
-        protected NestedResolvable(IResolve<T1> parent, IEnumerable<TIdentifier> identifiers)
+        protected NestedResolvable(IResolve<T1> parent, IEnumerable<TIdentifier> identifiers, IEqualityComparer<TIdentifier> idComparer = null)
             : base(parent)
         {
             if (identifiers == null)
@@ -17,20 +18,20 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(identifiers));
             }
 
-            Identifiers = new List<TIdentifier>(identifiers);
+            Identifiers = identifiers.ToImmutableHashSet();
+            IdentifierComparer = idComparer ?? EqualityComparer<TIdentifier>.Default;
         }
 
-        public ICollection<TIdentifier> Identifiers
+        public IEqualityComparer<TIdentifier> IdentifierComparer
         {
             get;
             private set;
         }
 
-        public override ResolvableChain Clone()
+        public IImmutableSet<TIdentifier> Identifiers
         {
-            var result = (NestedResolvable<T1, T2, TIdentifier, TContext, TSelf>)base.Clone();
-            result.Identifiers = new List<TIdentifier>(Identifiers);
-            return result;
+            get;
+            private set;
         }
 
         protected override Object ToLogObject()

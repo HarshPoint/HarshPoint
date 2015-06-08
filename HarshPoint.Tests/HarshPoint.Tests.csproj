@@ -93,6 +93,7 @@
     <Compile Include="Provisioning\DefaultFromContextTests.cs" />
     <Compile Include="Provisioning\FieldProvisionerTests.cs" />
     <Compile Include="Provisioning\FieldSchemaXmlBuilderTests.cs" />
+    <Compile Include="Provisioning\ListProvisioning.cs" />
     <Compile Include="Provisioning\PotentiallyDestructiveTests.cs" />
     <Compile Include="Provisioning\ResolvableChainTests.cs" />
     <Compile Include="Provisioning\ResolvableTests.cs" />

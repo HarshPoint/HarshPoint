@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace HarshPoint
 {
-    public sealed class HarshContentTypeId
+    public sealed class HarshContentTypeId : IEquatable<HarshContentTypeId>
     {
         private static readonly Regex CTIdRegex = new Regex(@"(?x)
             ^
@@ -17,6 +17,25 @@ namespace HarshPoint
         private HarshContentTypeId(String value)
         {
             _value = value.ToUpperInvariant();
+        }
+
+        public override Boolean Equals(Object obj) => Equals(obj as HarshContentTypeId);
+
+        public Boolean Equals(HarshContentTypeId other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return 
+                IsAbsolute.Equals(other.IsAbsolute) &&
+                _value.Equals(other._value);
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return _value.GetHashCode();
         }
 
         public override String ToString()

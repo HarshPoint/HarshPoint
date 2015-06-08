@@ -16,6 +16,36 @@ namespace HarshPoint
             return String.Join("/", parts);
         }
 
+        public static String EnsureRelativeTo(String url, String relativeTo)
+        {
+            if (String.IsNullOrWhiteSpace(url))
+            {
+                throw Error.ArgumentNullOrWhitespace(nameof(url));
+            }
+
+            if (String.IsNullOrWhiteSpace(relativeTo))
+            {
+                throw Error.ArgumentNullOrWhitespace(nameof(relativeTo));
+            }
+
+            if (!relativeTo.EndsWith("/"))
+            {
+                relativeTo += '/';
+            }
+
+            if (url.StartsWith(relativeTo, StringComparison.OrdinalIgnoreCase))
+            {
+                return url.Substring(relativeTo.Length);
+            }
+
+            throw Error.ArgumentOutOfRangeFormat(
+                nameof(url),
+                SR.HarshUrl_UrlNotRelativeTo,
+                url,
+                relativeTo
+            );
+        }
+
         public static async Task<String> EnsureServerRelative(Folder folder, String url)
         {
             if (folder == null)
@@ -59,7 +89,7 @@ namespace HarshPoint
             }
 
             return url
-                .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries )
+                .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
                 .LastOrDefault();
         }
 

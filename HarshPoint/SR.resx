@@ -207,6 +207,9 @@
   <data name="HarshProvisionerMetadata_NoValueTypeDefaultFromContext" xml:space="preserve">
     <value>DefaultFromContext properties must be reference types. The specified property '{0}.{1}' is of type '{2}'. </value>
   </data>
+  <data name="HarshUrl_UrlNotRelativeTo" xml:space="preserve">
+    <value>The specified url '{0}' is not relative to '{1}'.</value>
+  </data>
   <data name="Resolvable_ManyResults" xml:space="preserve">
     <value>The {0} resolved in more than one result.</value>
   </data>

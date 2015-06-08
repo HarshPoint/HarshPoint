@@ -9,6 +9,11 @@ namespace HarshPoint.Provisioning.Resolvers
     {
         protected override Task<IEnumerable<TermStore>> ResolveChainElement(HarshProvisionerContext context)
         {
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
             return Task.FromResult(
                 HarshSingleElementCollection.Create(
                     context.TaxonomySession.GetDefaultKeywordsTermStore()

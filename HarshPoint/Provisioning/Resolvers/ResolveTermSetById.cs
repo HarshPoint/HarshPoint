@@ -14,17 +14,13 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override async Task<IEnumerable<TermSet>> ResolveChainElement(HarshProvisionerContext context, TermStore parent)
+        protected override Task<IEnumerable<TermSet>> ResolveChainElement(HarshProvisionerContext context, TermStore parent)
         {
-            var result = Identifiers.Select(parent.GetTermSet);
-
-            foreach (var termSet in result)
-            {
-                context.ClientContext.Load(termSet);
-            }
-
-            await context.ClientContext.ExecuteQueryAsync();
-            return result;
+            return this.ResolveIdentifiers(
+                context,
+                parent.Groups.SelectMany(group => group.TermSets),
+                termSet => termSet.Id
+            );
         }
     }
 }

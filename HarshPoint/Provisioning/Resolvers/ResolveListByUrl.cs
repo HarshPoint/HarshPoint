@@ -1,26 +1,25 @@
-﻿using System;
+﻿using Microsoft.SharePoint.Client;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.SharePoint.Client;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveListByUrl : ResolveList<String, ResolveListByUrl>
     {
-        public ResolveListByUrl(IEnumerable<String> identifiers)
-            : base(identifiers)
+        public ResolveListByUrl(IEnumerable<String> urls)
+            : base(urls, StringComparer.OrdinalIgnoreCase) // TODO: replace with slash-tolerant comparer
         {
         }
 
-        protected override Task<IEnumerable<List>> ResolveChainElement(HarshProvisionerContext context)
+        protected override async Task<IEnumerable<List>> ResolveChainElement(HarshProvisionerContext context)
         {
-            if (context == null)
-            {
-                throw Error.ArgumentNull(nameof(context));
-            }
+            var webServerRelativeUrl = await context.Web.EnsurePropertyAvailable(w => w.ServerRelativeUrl);
 
-            return Identifiers.SelectSequentially(
-                id => context.Web.GetListByWebRelativeUrl(id)
+            return await this.ResolveIdentifiers(
+                context,
+                context.Web.Lists.Include(l => l.RootFolder.ServerRelativeUrl),
+                l => HarshUrl.EnsureRelativeTo(l.RootFolder.ServerRelativeUrl, webServerRelativeUrl)
             );
         }
     }
