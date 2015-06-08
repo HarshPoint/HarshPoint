@@ -78,11 +78,7 @@
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
-    <Compile Include="HarshDebugTraceListener.cs" />
     <Compile Include="HarshTask.cs" />
-    <Compile Include="HarshTextWriterTraceListener.cs" />
-    <Compile Include="HarshTraceEvent.cs" />
-    <Compile Include="HarshTraceListener.cs" />
     <Compile Include="HarshUrl.cs" />
     <Compile Include="Provisioning\DefaultFromContextAttribute.cs" />
     <Compile Include="Provisioning\HarshContentType.cs" />
@@ -115,8 +111,6 @@
     <Compile Include="HarshContentTypeId.cs" />
     <Compile Include="HarshInMemoryObjectCache.cs" />
     <Compile Include="HarshObjectMetadata.cs" />
-    <Compile Include="HarshTrace.cs" />
-    <Compile Include="HarshTraceSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerBase.cs" />
     <Compile Include="Provisioning\HarshField.cs" />

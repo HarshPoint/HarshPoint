@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
@@ -66,9 +67,9 @@ namespace HarshPoint.Entity.Metadata
             {
                 if (!property.CanWrite || !property.SetMethod.IsPublic)
                 {
-                    Trace.WriteInfo(
-                        "CreateFieldMetadata: skipping non-writable property {0}.{1}.",
-                        ObjectTypeInfo.FullName,
+                    Logger.Debug(
+                        "CreateFieldMetadata: skipping non-writable property {Type}.{Property}.",
+                        ObjectTypeInfo,
                         property.Name
                     );
                     continue;
@@ -76,9 +77,9 @@ namespace HarshPoint.Entity.Metadata
 
                 if (!property.CanRead || !property.GetMethod.IsPublic)
                 {
-                    Trace.WriteInfo(
-                        "CreateFieldMetadata: skipping non-readable property {0}.{1}.",
-                        ObjectTypeInfo.FullName,
+                    Logger.Debug(
+                        "CreateFieldMetadata: skipping non-readable property {Type}.{Property}.",
+                        ObjectTypeInfo,
                         property.Name
                     );
                     continue;
@@ -88,9 +89,9 @@ namespace HarshPoint.Entity.Metadata
 
                 if (fieldAttr == null)
                 {
-                    Trace.WriteInfo(
-                        "CreateFieldMetadata: skipping property {0}.{1}, has no FieldAttribute.",
-                        ObjectTypeInfo.FullName,
+                    Logger.Debug(
+                        "CreateFieldMetadata: skipping property {Type}.{Property}, has no FieldAttribute.",
+                        ObjectTypeInfo,
                         property.Name
                     );
                     continue;
@@ -122,9 +123,7 @@ namespace HarshPoint.Entity.Metadata
             throw new NotImplementedException("TODO: more entity types to come :)");
         }
 
-        private static readonly HarshTraceSource Trace =
-            new HarshTraceSource(typeof(HarshEntityMetadata));
-
+        private static readonly ILogger Logger = Log.ForContext<HarshEntityMetadata>();
         private static readonly TypeInfo HarshEntityTypeInfo = typeof(HarshEntity).GetTypeInfo();
     }
 }
