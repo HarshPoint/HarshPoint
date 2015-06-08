@@ -16,7 +16,7 @@ namespace HarshPoint
             return String.Join("/", parts);
         }
 
-        public static String EnsureRelativeTo(String url, String relativeTo)
+        public static String GetRelativeTo(String url, String relativeTo)
         {
             if (String.IsNullOrWhiteSpace(url))
             {
@@ -28,7 +28,7 @@ namespace HarshPoint
                 throw Error.ArgumentNullOrWhitespace(nameof(relativeTo));
             }
 
-            if (!relativeTo.EndsWith("/"))
+            if (!relativeTo.EndsWith("/", StringComparison.Ordinal))
             {
                 relativeTo += '/';
             }
@@ -81,14 +81,14 @@ namespace HarshPoint
             return EnsureUrlServerRelative(webServerRelativeUrl, url);
         }
 
-        public static String GetLeaf(String url)
+        public static String GetLeaf(String path)
         {
-            if (String.IsNullOrWhiteSpace(url))
+            if (String.IsNullOrWhiteSpace(path))
             {
-                throw Error.ArgumentNullOrWhitespace(nameof(url));
+                throw Error.ArgumentNullOrWhitespace(nameof(path));
             }
 
-            return url
+            return path
                 .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
                 .LastOrDefault();
         }

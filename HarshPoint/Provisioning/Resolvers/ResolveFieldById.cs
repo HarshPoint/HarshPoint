@@ -15,6 +15,11 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override Task<IEnumerable<Field>> ResolveChainElement(HarshProvisionerContext context)
         {
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
             return this.ResolveIdentifiers(
                 context,
                 context.Web.Fields.Include(f => f.Id),

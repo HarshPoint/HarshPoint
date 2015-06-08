@@ -77,7 +77,6 @@
     <Compile Include="Provisioning\ResolveTermStoreExtensions.cs" />
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
-    <Compile Include="Extensions\WebExtensions.cs" />
     <Compile Include="HarshTask.cs" />
     <Compile Include="HarshUrl.cs" />
     <Compile Include="Provisioning\DefaultFromContextAttribute.cs" />

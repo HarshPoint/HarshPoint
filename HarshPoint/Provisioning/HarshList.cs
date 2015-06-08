@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
@@ -42,6 +43,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
         public String Url
         {
             get;

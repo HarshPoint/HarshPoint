@@ -15,6 +15,11 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override Task<IEnumerable<ContentType>> ResolveChainElement(HarshProvisionerContext context)
         {
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
             return this.ResolveIdentifiers(
                 context,
                 context.Web.ContentTypes.Include(ct => ct.StringId),

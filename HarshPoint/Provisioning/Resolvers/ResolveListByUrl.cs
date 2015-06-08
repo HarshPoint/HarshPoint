@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning.Resolvers
             return await this.ResolveIdentifiers(
                 context,
                 context.Web.Lists.Include(l => l.RootFolder.ServerRelativeUrl),
-                l => HarshUrl.EnsureRelativeTo(l.RootFolder.ServerRelativeUrl, webServerRelativeUrl)
+                l => HarshUrl.GetRelativeTo(l.RootFolder.ServerRelativeUrl, webServerRelativeUrl)
             );
         }
     }

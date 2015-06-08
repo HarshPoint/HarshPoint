@@ -83,7 +83,7 @@ namespace HarshPoint
                 return false;
             }
 
-            return _value.StartsWith(parent._value);
+            return _value.StartsWith(parent._value, StringComparison.Ordinal);
         }
 
         public Boolean IsDirectChildOf(HarshContentTypeId parent)

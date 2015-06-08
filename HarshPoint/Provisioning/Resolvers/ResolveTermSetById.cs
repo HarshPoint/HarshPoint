@@ -16,6 +16,16 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override Task<IEnumerable<TermSet>> ResolveChainElement(HarshProvisionerContext context, TermStore parent)
         {
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
+            if (parent == null)
+            {
+                throw Error.ArgumentNull(nameof(parent));
+            }
+
             return this.ResolveIdentifiers(
                 context,
                 parent.Groups.SelectMany(group => group.TermSets),

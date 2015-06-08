@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint
 {
+    [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
     public static class HarshSingleElementCollection
     {
         public static IEnumerable<T> Create<T>(T value) => new HarshSingleElementCollection<T>(value);
