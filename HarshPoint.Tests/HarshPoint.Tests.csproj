@@ -87,6 +87,7 @@
     <Compile Include="HarshTraceSourceTests.cs" />
     <Compile Include="HarshTraceTestListener.cs" />
     <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
+    <Compile Include="Provisioning\ContentTypeRef.cs" />
     <Compile Include="Provisioning\ContentTypeTests.cs" />
     <Compile Include="Provisioning\ContextStateResolver.cs" />
     <Compile Include="Provisioning\ContextStateStack.cs" />

@@ -8,6 +8,7 @@ namespace HarshPoint.Provisioning
     {
         public HarshList()
         {
+            ModifyChildrenContextState(() => List);
             TemplateType = ListTemplateType.GenericList;
         }
 

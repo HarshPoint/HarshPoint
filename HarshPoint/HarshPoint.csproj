@@ -57,6 +57,7 @@
     <Compile Include="IHarshCloneable.cs" />
     <Compile Include="Provisioning\DefaultFieldGroup.cs" />
     <Compile Include="Provisioning\DefaultFromContextTag`1.cs" />
+    <Compile Include="Provisioning\HarshContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshFieldProvisioner.cs" />
     <Compile Include="Provisioning\HarshFieldRef.cs" />
     <Compile Include="Provisioning\HarshList.cs" />
