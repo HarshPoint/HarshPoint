@@ -80,6 +80,8 @@ namespace HarshPoint.Tests
         [InlineData(true, "0x0101", "0x01")]
         [InlineData(true, "0x0100b95aa984636a4b9996fdbbb47966bbec", "0x01")]
         [InlineData(true, "0x010100b95aa984636a4b9996fdbbb47966bbec", "0x0101")]
+        [InlineData(true, "0x0100b95aa984636a4b9996fdbbb47966bbec00b95aa984636a4b9996fdbbb47966bbec", "0x01")]
+        [InlineData(true, "0x0100b95aa984636a4b9996fdbbb47966bbec00b95aa984636a4b9996fdbbb47966bbec", "0x0100b95aa984636a4b9996fdbbb47966bbec")]
 
         [InlineData(false, "0x0101", "0x0101")]
         [InlineData(false, "0x0101", "0x02")]
@@ -90,6 +92,17 @@ namespace HarshPoint.Tests
             var parent = HarshContentTypeId.Parse(parentStr);
 
             Assert.Equal(expected, ctid.IsChildOf(parent));
+        }
+
+        [Theory]
+        [InlineData(typeof(ArgumentOutOfRangeException), "0x01", "01")]
+        [InlineData(typeof(InvalidOperationException), "01", "0x01")]
+        public void IsChildOf_fails(Type exceptionType, String ctidStr, String parentStr)
+        {
+            var ctid = HarshContentTypeId.Parse(ctidStr);
+            var parent = HarshContentTypeId.Parse(parentStr);
+
+            Assert.Throws(exceptionType, () => ctid.IsChildOf(parent));
         }
 
         [Theory]
