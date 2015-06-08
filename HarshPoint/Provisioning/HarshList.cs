@@ -58,7 +58,7 @@ namespace HarshPoint.Provisioning
             await base.InitializeAsync();
         }
 
-        protected override async Task OnProvisioningAsync()
+        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
             if (List.IsNull())
             {
@@ -73,7 +73,7 @@ namespace HarshPoint.Provisioning
                 await ClientContext.ExecuteQueryAsync();
             }
 
-            await base.OnProvisioningAsync();
+            return await base.OnProvisioningAsync();
         }
 
         private IResolveSingle<List> ListResolver => Resolve.ListByUrl(Url);

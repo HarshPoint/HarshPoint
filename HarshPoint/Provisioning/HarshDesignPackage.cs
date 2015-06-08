@@ -34,13 +34,13 @@ namespace HarshPoint.Provisioning
             };
         }
 
-        protected override async Task OnProvisioningAsync()
+        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
             DesignPackage.Install(ClientContext, Site, PackageInfo, PackageUrl);
             DesignPackage.Apply(ClientContext, Site, PackageInfo);
 
             await ClientContext.ExecuteQueryAsync();
-            await base.OnProvisioningAsync();
+            return await base.OnProvisioningAsync();
         }
         
         private Folder CatalogFolder

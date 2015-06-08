@@ -1,4 +1,5 @@
-﻿using HarshPoint.Server.Provisioning;
+﻿using HarshPoint.Provisioning;
+using HarshPoint.Server.Provisioning;
 using Moq;
 using Moq.Protected;
 using System;
@@ -40,8 +41,8 @@ namespace HarshPoint.Server.Tests
             var mock = new Mock<HarshServerProvisioner>();
 
             mock.Protected()
-                .Setup<Task>("OnProvisioningAsync")
-                .Returns(HarshTask.Completed)
+                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
+                .Returns(Task.FromResult(new HarshProvisionerResult(mock.Object)))
                 .Verifiable();
 
             await mock.Object.ProvisionAsync(SPFixture.WebContext);
@@ -54,7 +55,7 @@ namespace HarshPoint.Server.Tests
             var mock = new Mock<HarshServerProvisioner>();
 
             mock.Protected()
-                .Setup<Task>("OnProvisioningAsync")
+                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
                 .Throws<Exception>();
 
             mock.Protected()
@@ -88,8 +89,8 @@ namespace HarshPoint.Server.Tests
             var mock = new Mock<HarshServerProvisioner>();
 
             mock.Protected()
-                .Setup<Task>("OnUnprovisioningAsync")
-                .Returns(HarshTask.Completed)
+                .Setup<Task<HarshProvisionerResult>>("OnUnprovisioningAsync")
+                .Returns(Task.FromResult(new HarshProvisionerResult(mock.Object)))
                 .Verifiable();
 
             await mock.Object.UnprovisionAsync(SPFixture.WebContext);

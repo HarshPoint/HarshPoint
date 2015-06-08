@@ -24,7 +24,7 @@ namespace HarshPoint.Provisioning
             ResolvedContentType = await ResolveSingleAsync(ContentType);
         }
 
-        protected override async Task OnProvisioningAsync()
+        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
             var fieldLinks = ClientContext.LoadQuery(
                 ResolvedContentType.FieldLinks.Include(
@@ -48,6 +48,8 @@ namespace HarshPoint.Provisioning
 
             ResolvedContentType.Update(updateChildren: true);
             await ClientContext.ExecuteQueryAsync();
+
+            return await base.OnProvisioningAsync();
         }
 
         private ContentType ResolvedContentType

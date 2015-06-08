@@ -72,7 +72,7 @@ namespace HarshPoint.Provisioning
             }
         }
 
-        protected override async Task OnProvisioningAsync()
+        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
             if (ContentType.IsNull())
             {
@@ -101,7 +101,7 @@ namespace HarshPoint.Provisioning
                 ContentTypeAdded = false;
             }
 
-            await base.OnProvisioningAsync();
+            return await base.OnProvisioningAsync();
         }
     }
 }

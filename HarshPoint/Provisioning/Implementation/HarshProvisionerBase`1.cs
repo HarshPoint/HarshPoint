@@ -48,7 +48,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         internal HarshProvisionerMetadata Metadata
             => HarshLazy.Initialize(ref _metadata, () => new HarshProvisionerMetadata(GetType()));
-        
+
         internal Boolean HasChildren
         {
             get
@@ -87,17 +87,17 @@ namespace HarshPoint.Provisioning.Implementation
             ModifyChildrenContextState(() => state);
         }
 
-        public async Task ProvisionAsync(TContext context)
+        public Task<HarshProvisionerResult> ProvisionAsync(TContext context)
         {
             if (context == null)
             {
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            await RunWithContext(OnProvisioningAsync, context);
+            return RunWithContext(OnProvisioningAsync, context);
         }
 
-        public async Task UnprovisionAsync(TContext context)
+        public Task<HarshProvisionerResult> UnprovisionAsync(TContext context)
         {
             if (context == null)
             {
@@ -106,44 +106,50 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (MayDeleteUserData || context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
             {
-                await RunWithContext(OnUnprovisioningAsync, context);
+                return RunWithContext(OnUnprovisioningAsync, context);
             }
+
+            return Task.FromResult<HarshProvisionerResult>(
+                new HarshProvisionerResultNotRun(this)
+            );
         }
 
-        protected override Task InitializeAsync()
+        protected virtual Task InitializeAsync()
         {
             return HarshTask.Completed;
         }
 
-        protected override Task OnProvisioningAsync()
+        protected virtual void Complete()
         {
-            return ProvisionChildrenAsync();
+        }
+
+        protected virtual async Task<HarshProvisionerResult> OnProvisioningAsync()
+        {
+            return new HarshProvisionerResult(
+                this,
+                await ProvisionChildrenAsync()
+            );
         }
 
         [NeverDeletesUserData]
-        protected override Task OnUnprovisioningAsync()
+        protected virtual async Task<HarshProvisionerResult> OnUnprovisioningAsync()
         {
-            return UnprovisionChildrenAsync();
+            return new HarshProvisionerResult(
+                this,
+                await UnprovisionChildrenAsync()
+            );
         }
 
-        protected Task ProvisionChildrenAsync()
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        protected Task<IEnumerable<HarshProvisionerResult>> ProvisionChildrenAsync()
         {
-            return ProvisionChildrenAsync(null);
+            return RunChildren(ProvisionChild);
         }
 
-        protected Task ProvisionChildrenAsync(TContext context)
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        protected Task<IEnumerable<HarshProvisionerResult>> UnprovisionChildrenAsync()
         {
-            return RunChildren(ProvisionChild, context);
-        }
-
-        protected Task UnprovisionChildrenAsync()
-        {
-            return UnprovisionChildrenAsync(null);
-        }
-
-        protected Task UnprovisionChildrenAsync(TContext context)
-        {
-            return RunChildren(UnprovisionChild, context, reverse: true);
+            return RunChildren(UnprovisionChild, reverse: true);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -182,9 +188,9 @@ namespace HarshPoint.Provisioning.Implementation
             return new Collection<HarshProvisionerBase>();
         }
 
-        internal abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
+        internal abstract Task<HarshProvisionerResult> ProvisionChild(HarshProvisionerBase provisioner, TContext context);
 
-        internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
+        internal abstract Task<HarshProvisionerResult> UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
 
         private void InitializeDefaultFromContextProperties()
         {
@@ -222,39 +228,39 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        private TContext ModifyChildrenContextState(TContext context)
+        private TContext PrepareChildrenContext()
         {
             if (_childrenContextStateModifiers == null)
             {
-                return context;
+                return Context;
             }
 
             return _childrenContextStateModifiers
                 .Select(fn => fn())
                 .Where(state => state != null)
                 .Aggregate(
-                    context, (ctx, state) => (TContext)ctx.PushState(state)
+                    Context, (ctx, state) => (TContext)ctx.PushState(state)
                 );
         }
 
-        private async Task RunChildren(Func<HarshProvisionerBase, TContext, Task> action, TContext context, Boolean reverse = false)
+        private Task<IEnumerable<HarshProvisionerResult>> RunChildren(
+            Func<HarshProvisionerBase, TContext, Task<HarshProvisionerResult>> action,
+            Boolean reverse = false)
         {
             if (!HasChildren)
             {
-                return;
+                return NoResults;
             }
 
             var children = reverse ? _children.Reverse() : _children;
+            var context = PrepareChildrenContext();
 
-            context = ModifyChildrenContextState(context ?? Context);
-
-            foreach (var child in children)
-            {
-                await action(child, context);
-            }
+            return children.SelectSequentially(
+                child => action(child, context)
+            );
         }
 
-        private async Task RunWithContext(Func<Task> action, TContext context)
+        private async Task<HarshProvisionerResult> RunWithContext(Func<Task<HarshProvisionerResult>> action, TContext context)
         {
             if (action == null)
             {
@@ -275,7 +281,7 @@ namespace HarshPoint.Provisioning.Implementation
                     InitializeDefaultFromContextProperties();
 
                     await InitializeAsync();
-                    await action();
+                    return await action();
                 }
                 finally
                 {
@@ -291,5 +297,10 @@ namespace HarshPoint.Provisioning.Implementation
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         protected static readonly ICollection<HarshProvisionerBase> NoChildren =
             ImmutableList<HarshProvisionerBase>.Empty;
+
+        private static readonly Task<IEnumerable<HarshProvisionerResult>> NoResults =
+            Task.FromResult<IEnumerable<HarshProvisionerResult>>(
+                ImmutableList<HarshProvisionerResult>.Empty
+            );
     }
 }

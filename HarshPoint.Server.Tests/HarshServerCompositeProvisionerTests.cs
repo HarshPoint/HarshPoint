@@ -30,13 +30,13 @@ namespace HarshPoint.Server.Tests
             var p2 = new Mock<HarshServerProvisioner>();
 
             p1.Protected()
-                .Setup<Task>("OnProvisioningAsync")
-                .Returns(HarshTask.Completed)
+                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
+                .Returns(Task.FromResult(new HarshProvisionerResult(p1.Object)))
                 .Callback(() => seq += "1");
 
             p2.Protected()
-                .Setup<Task>("OnProvisioningAsync")
-                .Returns(HarshTask.Completed)
+                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
+                .Returns(Task.FromResult(new HarshProvisionerResult(p2.Object)))
                 .Callback(() => seq += "2");
 
             var composite = new HarshServerProvisioner()
@@ -58,13 +58,13 @@ namespace HarshPoint.Server.Tests
             var p2 = new Mock<HarshServerProvisioner>();
 
             p1.Protected()
-                .Setup<Task>("OnUnprovisioningAsync")
-                .Returns(HarshTask.Completed)
+                .Setup<Task<HarshProvisionerResult>>("OnUnprovisioningAsync")
+                .Returns(Task.FromResult(new HarshProvisionerResult(p1.Object)))
                 .Callback(() => seq += "1");
 
             p2.Protected()
-                .Setup<Task>("OnUnprovisioningAsync")
-                .Returns(HarshTask.Completed)
+                .Setup<Task<HarshProvisionerResult>>("OnUnprovisioningAsync")
+                .Returns(Task.FromResult(new HarshProvisionerResult(p2.Object)))
                 .Callback(() => seq += "2");
 
             var ctx = ServerOM.WebContext.AllowDeleteUserData();
@@ -84,7 +84,7 @@ namespace HarshPoint.Server.Tests
             var p = new Mock<HarshProvisioner>();
 
             p.Protected()
-                .Setup<Task>("OnProvisioningAsync")
+                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
                 .Returns(async () =>
                 {
                     Assert.NotNull(p.Object.ClientContext);
@@ -94,6 +94,8 @@ namespace HarshPoint.Server.Tests
                     await p.Object.ClientContext.ExecuteQueryAsync();
 
                     Assert.Equal(ServerOM.Web.Url, p.Object.Web.Url);
+
+                    return new HarshProvisionerResult(p.Object);
                 });
 
             var composite = new HarshServerProvisioner()

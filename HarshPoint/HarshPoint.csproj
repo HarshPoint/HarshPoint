@@ -66,6 +66,8 @@
     <Compile Include="Provisioning\HarshTaxonomyField.cs" />
     <Compile Include="Provisioning\IDefaultFromContextTag.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
+    <Compile Include="Provisioning\HarshProvisionerResult.cs" />
+    <Compile Include="Provisioning\Implementation\HarshProvisionerResultNotRun.cs" />
     <Compile Include="Provisioning\Implementation\Resolvable.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedResolver.cs" />
     <Compile Include="Provisioning\Resolvers\ClientObjectResolvableExtensions.cs" />

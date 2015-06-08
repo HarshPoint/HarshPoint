@@ -77,7 +77,7 @@ namespace HarshPoint.Tests.Provisioning
 
         private class DestructiveUnprovision : HarshProvisioner
         {
-            protected override Task OnUnprovisioningAsync()
+            protected override Task<HarshProvisionerResult> OnUnprovisioningAsync()
             {
                 throw new InvalidOperationException("In an unsafe OnUnprovisioningAsync.");
             }
@@ -86,7 +86,7 @@ namespace HarshPoint.Tests.Provisioning
         private class NeverDeletesUnprovision : HarshProvisioner
         {
             [NeverDeletesUserData]
-            protected override Task OnUnprovisioningAsync()
+            protected override Task<HarshProvisionerResult> OnUnprovisioningAsync()
             {
                 throw new InvalidOperationException("In a safe OnUnprovisioningAsync.");
             }
@@ -94,7 +94,7 @@ namespace HarshPoint.Tests.Provisioning
 
         private class DestructiveUnprovisionSafeBase : NeverDeletesUnprovision
         {
-            protected override Task OnUnprovisioningAsync()
+            protected override Task<HarshProvisionerResult> OnUnprovisioningAsync()
             {
                 return base.OnUnprovisioningAsync();
             }

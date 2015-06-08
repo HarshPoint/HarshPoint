@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ namespace HarshPoint
             return String.Join("/", parts);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#")]
         public static String GetRelativeTo(String url, String relativeTo)
         {
             if (String.IsNullOrWhiteSpace(url))
@@ -46,6 +48,7 @@ namespace HarshPoint
             );
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "1#")]
         public static async Task<String> EnsureServerRelative(Folder folder, String url)
         {
             if (folder == null)
@@ -57,6 +60,7 @@ namespace HarshPoint
             return EnsureUrlServerRelative(folder.ServerRelativeUrl, url);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "1#")]
         public static async Task<String> EnsureServerRelative(Site site, String url)
         {
             if (site == null)
@@ -68,6 +72,7 @@ namespace HarshPoint
             return EnsureUrlServerRelative(site.ServerRelativeUrl, url);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "1#")]
         public static async Task<String> EnsureServerRelative(Web web, String url)
         {
             if (web == null)

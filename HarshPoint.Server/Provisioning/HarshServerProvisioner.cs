@@ -1,4 +1,5 @@
-﻿using HarshPoint.Provisioning.Implementation;
+﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System;
@@ -85,7 +86,7 @@ namespace HarshPoint.Server.Provisioning
             }
         }
 
-        internal sealed override async Task ProvisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
+        internal sealed override async Task<HarshProvisionerResult> ProvisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
         {
             if (provisioner == null)
             {
@@ -96,11 +97,13 @@ namespace HarshPoint.Server.Provisioning
 
             if (ShouldProvisionChild(serverProvisioner))
             {
-                await serverProvisioner.ProvisionAsync(context);
+                return await serverProvisioner.ProvisionAsync(context);
             }
+
+            return new HarshProvisionerResultNotRun(this);
         }
 
-        internal sealed override async Task UnprovisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
+        internal sealed override async Task<HarshProvisionerResult> UnprovisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
         {
             if (provisioner == null)
             {
@@ -111,8 +114,10 @@ namespace HarshPoint.Server.Provisioning
 
             if (ShouldUnprovisionChild(serverProvisioner))
             {
-                await serverProvisioner.UnprovisionAsync(context);
+                return await serverProvisioner.UnprovisionAsync(context);
             }
+
+            return new HarshProvisionerResultNotRun(this);
         }
     }
 }

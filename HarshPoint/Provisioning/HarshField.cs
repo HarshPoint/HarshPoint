@@ -215,7 +215,7 @@ namespace HarshPoint.Provisioning
             Field = await ResolveSingleOrDefaultAsync(Resolve.FieldById(Id));
         }
 
-        protected override async Task OnProvisioningAsync()
+        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
             SchemaXml = await SchemaXmlBuilder.Update(Field, SchemaXml);
 
@@ -244,10 +244,10 @@ namespace HarshPoint.Provisioning
                 }
             }
 
-            await base.OnProvisioningAsync();
+            return await base.OnProvisioningAsync();
         }
 
-        protected override async Task OnUnprovisioningAsync()
+        protected override async Task<HarshProvisionerResult> OnUnprovisioningAsync()
         {
             if (!Field.IsNull())
             {
@@ -257,7 +257,7 @@ namespace HarshPoint.Provisioning
                 FieldRemoved = true;
             }
 
-            await base.OnUnprovisioningAsync();
+            return await base.OnUnprovisioningAsync();
         }
 
         internal HarshFieldSchemaXmlBuilder SchemaXmlBuilder

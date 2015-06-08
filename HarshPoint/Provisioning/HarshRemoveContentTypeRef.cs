@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task OnProvisioningAsync()
+        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
             var removeCtIds = (await ResolveAsync(ContentTypes))
                 .Select(ct => HarshContentTypeId.Parse(ct.StringId))
@@ -51,7 +51,7 @@ namespace HarshPoint.Provisioning
             }
 
             await ClientContext.ExecuteQueryAsync();
-            await base.OnProvisioningAsync();
+            return await base.OnProvisioningAsync();
         }
     }
 }
