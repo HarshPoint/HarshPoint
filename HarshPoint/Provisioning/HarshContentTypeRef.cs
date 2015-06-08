@@ -20,12 +20,6 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        public Boolean RemoveOthersExceptFolder
-        {
-            get;
-            set;
-        }
-        
         protected override async Task OnProvisioningAsync()
         {
             var contentTypes = await ResolveAsync(ContentTypes);
