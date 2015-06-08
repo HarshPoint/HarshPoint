@@ -100,7 +100,7 @@ namespace HarshPoint.Server.Provisioning
                 return await serverProvisioner.ProvisionAsync(context);
             }
 
-            return new HarshProvisionerResultNotRun(this);
+            return new HarshProvisionerResultNotRun();
         }
 
         internal sealed override async Task<HarshProvisionerResult> UnprovisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
@@ -117,7 +117,7 @@ namespace HarshPoint.Server.Provisioning
                 return await serverProvisioner.UnprovisionAsync(context);
             }
 
-            return new HarshProvisionerResultNotRun(this);
+            return new HarshProvisionerResultNotRun();
         }
     }
 }

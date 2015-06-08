@@ -27,11 +27,7 @@ namespace HarshPoint.Tests.Provisioning
                 DisplayName = "Title",
             };
 
-            await prov.ProvisionAsync(ClientOM.Context);
-
-            Assert.False(prov.FieldAdded);
-            Assert.False(prov.FieldRemoved);
-            Assert.False(prov.FieldUpdated);
+            Assert.IsType(typeof(HarshProvisionerResult), await prov.ProvisionAsync(ClientOM.Context));
         }
 
         [Fact]

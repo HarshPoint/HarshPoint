@@ -34,7 +34,7 @@ namespace HarshPoint.Server.Tests
 
             prov.Protected()
                 .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult(prov.Object)))
+                .Returns(Task.FromResult(new HarshProvisionerResult()))
                 .Verifiable();
 
             prov.Protected()
@@ -60,7 +60,7 @@ namespace HarshPoint.Server.Tests
 
             clientProv.Protected()
                 .Setup<Task<HarshProvisionerResult>>("OnUnprovisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult(clientProv.Object)))
+                .Returns(Task.FromResult(new HarshProvisionerResult()))
                 .Verifiable();
 
             clientProv.Protected()
@@ -89,7 +89,7 @@ namespace HarshPoint.Server.Tests
 
                     Assert.Equal(ServerOM.Web.Url, clientProv.Object.Web.Url, StringComparer.OrdinalIgnoreCase);
 
-                    return new HarshProvisionerResult(clientProv.Object);
+                    return new HarshProvisionerResult();
                 });
 
             var serverProv = clientProv.Object.ToServerProvisioner();
@@ -108,7 +108,7 @@ namespace HarshPoint.Server.Tests
                     await clientProv.Object.ClientContext.ExecuteQueryAsync();
 
                     Assert.Equal(ServerOM.Site.Url, clientProv.Object.Site.Url, StringComparer.OrdinalIgnoreCase);
-                    return new HarshProvisionerResult(clientProv.Object);
+                    return new HarshProvisionerResult();
                 });
 
             var serverProv = clientProv.Object.ToServerProvisioner();

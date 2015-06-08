@@ -94,7 +94,11 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            return RunWithContext(OnProvisioningAsync, context);
+            return RunWithContext(
+                OnProvisioningAsync, 
+                ProvisionChildrenAsync,
+                context
+            );
         }
 
         public Task<HarshProvisionerResult> UnprovisionAsync(TContext context)
@@ -106,11 +110,15 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (MayDeleteUserData || context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
             {
-                return RunWithContext(OnUnprovisioningAsync, context);
+                return RunWithContext(
+                    OnUnprovisioningAsync, 
+                    UnprovisionChildrenAsync,
+                    context
+                );
             }
 
             return Task.FromResult<HarshProvisionerResult>(
-                new HarshProvisionerResultNotRun(this)
+                new HarshProvisionerResultNotRun() { Provisioner = this }
             );
         }
 
@@ -123,33 +131,15 @@ namespace HarshPoint.Provisioning.Implementation
         {
         }
 
-        protected virtual async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected virtual Task<HarshProvisionerResult> OnProvisioningAsync()
         {
-            return new HarshProvisionerResult(
-                this,
-                await ProvisionChildrenAsync()
-            );
+            return Task.FromResult(new HarshProvisionerResult());
         }
 
         [NeverDeletesUserData]
-        protected virtual async Task<HarshProvisionerResult> OnUnprovisioningAsync()
+        protected virtual Task<HarshProvisionerResult> OnUnprovisioningAsync()
         {
-            return new HarshProvisionerResult(
-                this,
-                await UnprovisionChildrenAsync()
-            );
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected Task<IEnumerable<HarshProvisionerResult>> ProvisionChildrenAsync()
-        {
-            return RunChildren(ProvisionChild);
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected Task<IEnumerable<HarshProvisionerResult>> UnprovisionChildrenAsync()
-        {
-            return RunChildren(UnprovisionChild, reverse: true);
+            return Task.FromResult(new HarshProvisionerResult());
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -243,7 +233,17 @@ namespace HarshPoint.Provisioning.Implementation
                 );
         }
 
-        private Task<IEnumerable<HarshProvisionerResult>> RunChildren(
+        private Task<IEnumerable<HarshProvisionerResult>> ProvisionChildrenAsync()
+        {
+            return RunChildren(ProvisionChild);
+        }
+
+        private Task<IEnumerable<HarshProvisionerResult>> UnprovisionChildrenAsync()
+        {
+            return RunChildren(UnprovisionChild, reverse: true);
+        }
+
+        private async Task<IEnumerable<HarshProvisionerResult>> RunChildren(
             Func<HarshProvisionerBase, TContext, Task<HarshProvisionerResult>> action,
             Boolean reverse = false)
         {
@@ -255,16 +255,24 @@ namespace HarshPoint.Provisioning.Implementation
             var children = reverse ? _children.Reverse() : _children;
             var context = PrepareChildrenContext();
 
-            return children.SelectSequentially(
+            return await children.SelectSequentially(
                 child => action(child, context)
             );
         }
 
-        private async Task<HarshProvisionerResult> RunWithContext(Func<Task<HarshProvisionerResult>> action, TContext context)
+        private async Task<HarshProvisionerResult> RunWithContext(
+            Func<Task<HarshProvisionerResult>> action,  
+            Func<Task<IEnumerable<HarshProvisionerResult>>> childAction,
+            TContext context)
         {
             if (action == null)
             {
                 throw Error.ArgumentNull(nameof(action));
+            }
+
+            if (childAction == null)
+            {
+                throw Error.ArgumentNull(nameof(childAction));
             }
 
             if (context == null)
@@ -276,31 +284,47 @@ namespace HarshPoint.Provisioning.Implementation
 
             try
             {
+                HarshProvisionerResult result;
+
                 try
                 {
                     InitializeDefaultFromContextProperties();
 
                     await InitializeAsync();
-                    return await action();
+                    result = await action();
                 }
                 finally
                 {
                     Complete();
                 }
+
+                if (result == null)
+                {
+                    result = new HarshProvisionerResult();
+                }
+
+                var childResults = await childAction();
+
+                result.ChildResults = childResults?.ToImmutableArray() ?? NoResults;
+                result.Provisioner = this;
+
+                return result;
             }
             finally
             {
                 Context = null;
             }
+
         }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         protected static readonly ICollection<HarshProvisionerBase> NoChildren =
             ImmutableList<HarshProvisionerBase>.Empty;
 
-        private static readonly Task<IEnumerable<HarshProvisionerResult>> NoResults =
-            Task.FromResult<IEnumerable<HarshProvisionerResult>>(
-                ImmutableList<HarshProvisionerResult>.Empty
-            );
+        private static readonly ImmutableArray<HarshProvisionerResult> NoResults =
+            ImmutableArray<HarshProvisionerResult>.Empty;
+
+        private static readonly Task<IEnumerable<HarshProvisionerResult>> NoResultsTask =
+            Task.FromResult<IEnumerable<HarshProvisionerResult>>(NoResults);
     }
 }

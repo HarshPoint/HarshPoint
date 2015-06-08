@@ -30,12 +30,12 @@ namespace HarshPoint.Tests.Provisioning
 
             p1.Protected()
                 .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult(p1.Object)))
+                .Returns(Task.FromResult(new HarshProvisionerResult()))
                 .Callback(() => seq += "1");
 
             p2.Protected()
                 .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult(p2.Object)))
+                .Returns(Task.FromResult(new HarshProvisionerResult()))
                 .Callback(() => seq += "2");
 
             var ctx = ClientOM.Context.AllowDeleteUserData();
@@ -59,12 +59,12 @@ namespace HarshPoint.Tests.Provisioning
 
             p1.Protected()
                 .Setup<Task<HarshProvisionerResult>>("OnUnprovisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult(p1.Object)))
+                .Returns(Task.FromResult(new HarshProvisionerResult()))
                 .Callback(() => seq += "1");
 
             p2.Protected()
                 .Setup<Task<HarshProvisionerResult>>("OnUnprovisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult(p2.Object)))
+                .Returns(Task.FromResult(new HarshProvisionerResult()))
                 .Callback(() => seq += "2");
 
             var ctx = ClientOM.Context.AllowDeleteUserData();
@@ -84,7 +84,7 @@ namespace HarshPoint.Tests.Provisioning
             var p = new Mock<HarshProvisioner>();
             p.Protected()
                 .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult(p.Object)))
+                .Returns(Task.FromResult(new HarshProvisionerResult()))
                 .Callback(() =>
                 {
                     Assert.Equal(ClientOM.Web, p.Object.Web);

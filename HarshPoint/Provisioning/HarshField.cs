@@ -1,6 +1,7 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -171,40 +172,9 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether a field was created during the last operation.
-        /// </summary>
-        public Boolean FieldAdded
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether a field was removed during the last operation.
-        /// </summary>
-        public Boolean FieldRemoved
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether a field was updated during the last operation.
-        /// </summary>
-        public Boolean FieldUpdated
-        {
-            get;
-            private set;
-        }
-
         protected override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-
-            FieldAdded = false;
-            FieldRemoved = false;
-            FieldUpdated = false;
 
             if (Id == Guid.Empty)
             {
@@ -228,7 +198,8 @@ namespace HarshPoint.Provisioning
                 );
 
                 await ClientContext.ExecuteQueryAsync();
-                FieldAdded = true;
+
+                return new HarshFieldResultAdded() { Field = Field };
             }
             else
             {
@@ -240,7 +211,8 @@ namespace HarshPoint.Provisioning
                     Field.UpdateAndPushChanges(PushChangesToLists);
 
                     await ClientContext.ExecuteQueryAsync();
-                    FieldUpdated = true;
+
+                    return new HarshFieldResultUpdated() { Field = Field };
                 }
             }
 
@@ -254,7 +226,7 @@ namespace HarshPoint.Provisioning
                 Field.DeleteObject();
                 await ClientContext.ExecuteQueryAsync();
 
-                FieldRemoved = true;
+                return new HarshFieldResultRemoved();
             }
 
             return await base.OnUnprovisioningAsync();
@@ -298,4 +270,19 @@ namespace HarshPoint.Provisioning
             }
         }
     }
+
+    public abstract class HarshFieldResult : HarshProvisionerResult
+    {
+        public Field Field
+        {
+            get;
+            set;
+        }
+    }
+
+    public sealed class HarshFieldResultRemoved : HarshProvisionerResult { }
+
+    public sealed class HarshFieldResultAdded : HarshFieldResult { }
+
+    public sealed class HarshFieldResultUpdated : HarshFieldResult { }
 }
