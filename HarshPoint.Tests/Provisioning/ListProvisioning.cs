@@ -31,8 +31,8 @@ namespace HarshPoint.Tests.Provisioning
             await prov.ProvisionAsync(Fixture.Context);
 
             Fixture.ClientContext.Load(
-                prov.List, 
-                l => l.Title, 
+                prov.List,
+                l => l.Title,
                 l => l.BaseTemplate
             );
 
@@ -42,6 +42,41 @@ namespace HarshPoint.Tests.Provisioning
             Assert.NotNull(prov.List);
             Assert.Equal("Documents", prov.List.Title);
             Assert.Equal((Int32)ListTemplateType.DocumentLibrary, prov.List.BaseTemplate);
+        }
+
+        [Fact]
+        public async Task Random_list_is_added()
+        {
+            var name = Guid.NewGuid().ToString("n");
+
+            var prov = new HarshList()
+            {
+                Title = name,
+                Url = "Lists/" + name,
+            };
+
+            try
+            {
+                await prov.ProvisionAsync(Fixture.Context);
+
+                Fixture.ClientContext.Load(
+                    prov.List,
+                    l => l.Title,
+                    l => l.BaseTemplate
+                );
+
+                await Fixture.ClientContext.ExecuteQueryAsync();
+
+                Assert.True(prov.ListAdded);
+                Assert.NotNull(prov.List);
+                Assert.Equal(name, prov.List.Title);
+                Assert.Equal((Int32)ListTemplateType.GenericList, prov.List.BaseTemplate);
+            }
+            finally
+            {
+                prov.List.DeleteObject();
+                await Fixture.ClientContext.ExecuteQueryAsync();
+            }
         }
     }
 }
