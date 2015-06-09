@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client.Taxonomy;
+﻿using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override Task<IEnumerable<TermSet>> ResolveChainElement(HarshProvisionerContext context, TermStore parent)
+        protected override async Task<IEnumerable<TermSet>> ResolveChainElement(HarshProvisionerContext context, TermStore parent)
         {
             if (context == null)
             {
@@ -26,10 +27,19 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(parent));
             }
 
+            var groups = context.ClientContext.LoadQuery(
+                parent.Groups.Include(
+                    g => g.TermSets.Include(
+                        ts => ts.Id
+                    )
+                )
+            );
+            await context.ClientContext.ExecuteQueryAsync();
+
             return this.ResolveIdentifiers(
                 context,
-                parent.Groups.SelectMany(group => group.TermSets),
-                termSet => termSet.Id
+                groups.SelectMany(g => g.TermSets),
+                ts => ts.Id
             );
         }
     }

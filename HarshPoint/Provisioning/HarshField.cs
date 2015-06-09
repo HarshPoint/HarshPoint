@@ -191,15 +191,18 @@ namespace HarshPoint.Provisioning
 
             if (Field.IsNull())
             {
-                Field = TargetFieldCollection.AddFieldAsXml(
+                TargetFieldCollection.AddFieldAsXml(
                     SchemaXml.ToString(),
                     AddToDefaultView,
                     AddFieldOptions
                 );
-
-                ClientContext.Load(Field, f => f.InternalName);
                 await ClientContext.ExecuteQueryAsync();
 
+                // we need to load the field once more, because the 
+                // instance returned by AddFieldAsXml is always a Field,
+                // not the concerete subtype (e.g. TaxonomyField).
+
+                Field = await ResolveSingleAsync(Resolve.FieldById(Id));
                 return ResultFactory.Added(Field);
             }
             else

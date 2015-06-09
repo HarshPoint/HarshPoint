@@ -84,14 +84,30 @@ function TaxonomyField {
 
     param (
         [Guid]
+        $Id,
+
+        [String]
+        $InternalName,
+
+        [String]
+        $DisplayName,
+
+
+        [Guid]
         $TermSetId
     )
 
-    New-HarshProvisioner HarshTaxonomyField $null @{
-        TermSet = [HarshPoint.Provisioning.ResolveTermStoreExtensions]::TermSetById(
-            $T_Resolve::TermStoreSiteCollectionDefault(),
-            $TermSetId
-        )
+    Field -Id           $Id `
+          -InternalName $InternalName `
+          -DisplayName  $DisplayName `
+          -Type         TaxonomyFieldType `
+          -Children {
+        New-HarshProvisioner HarshTaxonomyField $null @{
+            TermSet = [HarshPoint.Provisioning.ResolveTermStoreExtensions]::TermSetById(
+                $T_Resolve::TermStoreSiteCollectionDefault(),
+                $TermSetId
+            )
+        }
     }
 }
 

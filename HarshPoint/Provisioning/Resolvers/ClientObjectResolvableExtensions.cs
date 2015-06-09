@@ -24,10 +24,33 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(resolvable));
             }
 
-            return ResolveIdentifiers(
+            return ResolveQuery(
                 context, 
                 resolvable.Identifiers, 
                 query, 
+                idSelector,
+                resolvable.IdentifierComparer
+            );
+        }
+
+        public static IEnumerable<T> ResolveIdentifiers<T, TIdentifier, TSelf>(
+            this Resolvable<T, TIdentifier, HarshProvisionerContext, TSelf> resolvable,
+            HarshProvisionerContext context,
+            IEnumerable<T> items,
+            Func<T, TIdentifier> idSelector
+        )
+            where T : ClientObject
+            where TSelf : Resolvable<T, TIdentifier, HarshProvisionerContext, TSelf>
+        {
+            if (resolvable == null)
+            {
+                throw Error.ArgumentNull(nameof(resolvable));
+            }
+
+            return ResolveItems(
+                context,
+                resolvable.Identifiers,
+                items,
                 idSelector,
                 resolvable.IdentifierComparer
             );
@@ -47,7 +70,7 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(resolvable));
             }
 
-            return ResolveIdentifiers(
+            return ResolveQuery(
                 context,
                 resolvable.Identifiers,
                 query,
@@ -56,7 +79,31 @@ namespace HarshPoint.Provisioning.Resolvers
             );
         }
 
-        private static async Task<IEnumerable<T>> ResolveIdentifiers<T, TIdentifier>(
+
+        public static IEnumerable<T2> ResolveIdentifiers<T1, T2, TIdentifier, TSelf>(
+            this NestedResolvable<T1, T2, TIdentifier, HarshProvisionerContext, TSelf> resolvable,
+            HarshProvisionerContext context,
+            IEnumerable<T2> items,
+            Func<T2, TIdentifier> idSelector
+        )
+            where T2 : ClientObject
+            where TSelf : NestedResolvable<T1, T2, TIdentifier, HarshProvisionerContext, TSelf>
+        {
+            if (resolvable == null)
+            {
+                throw Error.ArgumentNull(nameof(resolvable));
+            }
+
+            return ResolveItems(
+                context,
+                resolvable.Identifiers,
+                items,
+                idSelector,
+                resolvable.IdentifierComparer
+            );
+        }
+
+        private static async Task<IEnumerable<T>> ResolveQuery<T, TIdentifier>(
             HarshProvisionerContext context,
             IEnumerable<TIdentifier> identifiers,
             IQueryable<T> query,
@@ -87,6 +134,45 @@ namespace HarshPoint.Provisioning.Resolvers
             
             var items = context.ClientContext.LoadQuery(query);
             await context.ClientContext.ExecuteQueryAsync();
+
+            return ResolveItems(
+                context,
+                identifiers,
+                items,
+                idSelector,
+                idComparer
+            );
+        }
+
+
+        private static IEnumerable<T> ResolveItems<T, TIdentifier>(
+            HarshProvisionerContext context,
+            IEnumerable<TIdentifier> identifiers,
+            IEnumerable<T> items,
+            Func<T, TIdentifier> idSelector,
+            IEqualityComparer<TIdentifier> idComparer
+        )
+            where T : ClientObject
+        {
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
+            if (identifiers == null)
+            {
+                throw Error.ArgumentNull(nameof(identifiers));
+            }
+
+            if (items == null)
+            {
+                throw Error.ArgumentNull(nameof(items));
+            }
+
+            if (idSelector == null)
+            {
+                throw Error.ArgumentNull(nameof(idSelector));
+            }
 
             var byId = items.ToImmutableDictionary(idSelector, idComparer);
 

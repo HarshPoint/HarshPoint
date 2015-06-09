@@ -28,7 +28,8 @@ namespace HarshPoint.Provisioning
         {
             var fieldLinks = ClientContext.LoadQuery(
                 ResolvedContentType.FieldLinks.Include(
-                    fl => fl.Id
+                    fl => fl.Id,
+                    fl => fl.Name
                 )
             );
 

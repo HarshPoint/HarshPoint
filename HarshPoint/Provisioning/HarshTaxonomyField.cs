@@ -14,11 +14,12 @@ namespace HarshPoint.Provisioning
 
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
-            var termSet = await ResolveSingleAsync(TermSet);
+            var termSet = await ResolveSingleAsync(TermSet); // TODO: include support on provisioners
+            var sspId = await termSet.TermStore.EnsurePropertyAvailable(ts => ts.Id);
 
             foreach (var field in FieldsResolved)
             {
-                field.SspId = termSet.TermStore.Id;
+                field.SspId = sspId;
                 field.TermSetId = termSet.Id;
 
                 UpdateField(field);
