@@ -134,15 +134,15 @@ namespace HarshPoint.Tests.Provisioning
             }
             finally
             {
-                if (!ct.ContentType.IsNull())
+                if (ct.Result.ObjectAdded)
                 {
-                    ct.ContentType.DeleteObject();
+                    ct.Result.Object.DeleteObject();
                     await Fixture.ClientContext.ExecuteQueryAsync();
                 }
 
-                if (!field.Field.IsNull())
+                if (field.Result.ObjectAdded)
                 {
-                    field.Field.DeleteObject();
+                    field.Result.Object.DeleteObject();
                     await Fixture.ClientContext.ExecuteQueryAsync();
                 }
             }

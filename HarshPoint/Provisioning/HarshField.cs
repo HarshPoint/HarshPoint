@@ -166,12 +166,6 @@ namespace HarshPoint.Provisioning
             get { return SchemaXmlBuilder.Transformers; }
         }
 
-        public Field Field
-        {
-            get;
-            private set;
-        }
-
         protected override async Task InitializeAsync()
         {
             await base.InitializeAsync();
@@ -199,7 +193,7 @@ namespace HarshPoint.Provisioning
 
                 await ClientContext.ExecuteQueryAsync();
 
-                return new HarshFieldResultAdded() { Field = Field };
+                return ResultFactory.Added(Field);
             }
             else
             {
@@ -212,11 +206,11 @@ namespace HarshPoint.Provisioning
 
                     await ClientContext.ExecuteQueryAsync();
 
-                    return new HarshFieldResultUpdated() { Field = Field };
+                    return ResultFactory.Updated(Field);
                 }
             }
 
-            return await base.OnProvisioningAsync();
+            return ResultFactory.Unchanged(Field);
         }
 
         protected override async Task<HarshProvisionerResult> OnUnprovisioningAsync()
@@ -226,7 +220,7 @@ namespace HarshPoint.Provisioning
                 Field.DeleteObject();
                 await ClientContext.ExecuteQueryAsync();
 
-                return new HarshFieldResultRemoved();
+                return ResultFactory.Removed(Field.InternalName);
             }
 
             return await base.OnUnprovisioningAsync();
@@ -238,12 +232,21 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
+        private Field Field
+        {
+            get;
+            set;
+        }
+
         private FieldCollection TargetFieldCollection
         {
             get;
             set;
         }
 
+        private static readonly HarshProvisionerObjectResultFactory<Field, String> ResultFactory =
+            new HarshProvisionerObjectResultFactory<Field, String>(f => f.InternalName);
+         
         private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
 
         private static void ValidateNotEmptyGuid(String propertyName, Object value)
@@ -270,19 +273,4 @@ namespace HarshPoint.Provisioning
             }
         }
     }
-
-    public abstract class HarshFieldResult : HarshProvisionerResult
-    {
-        public Field Field
-        {
-            get;
-            set;
-        }
-    }
-
-    public sealed class HarshFieldResultRemoved : HarshProvisionerResult { }
-
-    public sealed class HarshFieldResultAdded : HarshFieldResult { }
-
-    public sealed class HarshFieldResultUpdated : HarshFieldResult { }
 }

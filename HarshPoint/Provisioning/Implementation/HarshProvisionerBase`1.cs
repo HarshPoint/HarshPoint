@@ -49,6 +49,12 @@ namespace HarshPoint.Provisioning.Implementation
         internal HarshProvisionerMetadata Metadata
             => HarshLazy.Initialize(ref _metadata, () => new HarshProvisionerMetadata(GetType()));
 
+        public dynamic Result
+        {
+            get;
+            private set;
+        }
+
         internal Boolean HasChildren
         {
             get
@@ -94,11 +100,11 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            return RunWithContext(
-                OnProvisioningAsync, 
-                ProvisionChildrenAsync,
+            return RunSelfAndChildren(
                 context
-            );
+,
+                OnProvisioningAsync,
+                ProvisionChildrenAsync);
         }
 
         public Task<HarshProvisionerResult> UnprovisionAsync(TContext context)
@@ -110,11 +116,11 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (MayDeleteUserData || context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
             {
-                return RunWithContext(
-                    OnUnprovisioningAsync, 
-                    UnprovisionChildrenAsync,
+                return RunSelfAndChildren(
                     context
-                );
+,
+                    OnUnprovisioningAsync,
+                    UnprovisionChildrenAsync);
             }
 
             return Task.FromResult<HarshProvisionerResult>(
@@ -260,29 +266,26 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        private async Task<HarshProvisionerResult> RunWithContext(
-            Func<Task<HarshProvisionerResult>> action,  
-            Func<Task<IEnumerable<HarshProvisionerResult>>> childAction,
-            TContext context)
+        private async Task<HarshProvisionerResult> RunWithContext(TContext context, Func<Task<HarshProvisionerResult>> action)
         {
-            if (action == null)
-            {
-                throw Error.ArgumentNull(nameof(action));
-            }
-
-            if (childAction == null)
-            {
-                throw Error.ArgumentNull(nameof(childAction));
-            }
-
-            if (context == null)
-            {
-                throw Error.ArgumentNull(nameof(context));
-            }
-
             Context = context;
 
             try
+            {
+                return await action();
+            }
+            finally
+            {
+                Context = null;
+            }
+        }
+
+        private Task<HarshProvisionerResult> RunSelfAndChildren(
+            TContext context,
+            Func<Task<HarshProvisionerResult>> action,
+            Func<Task<IEnumerable<HarshProvisionerResult>>> childAction)
+        {
+            return RunWithContext(context, async () =>
             {
                 HarshProvisionerResult result;
 
@@ -304,27 +307,24 @@ namespace HarshPoint.Provisioning.Implementation
                 }
 
                 var childResults = await childAction();
+                return ProcessResult(result, childResults);
+            });
+        }
 
-                result.ChildResults = childResults?.ToImmutableArray() ?? NoResults;
-                result.Provisioner = this;
+        private HarshProvisionerResult ProcessResult(HarshProvisionerResult result, IEnumerable<HarshProvisionerResult> childResults)
+        {
+            result.ChildResults = childResults?.ToImmutableArray() ?? NoResults;
+            result.Provisioner = this;
 
-                return result;
-            }
-            finally
-            {
-                Context = null;
-            }
-
+            Result = result;
+            return result;
         }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         protected static readonly ICollection<HarshProvisionerBase> NoChildren =
-            ImmutableList<HarshProvisionerBase>.Empty;
+            ImmutableArray<HarshProvisionerBase>.Empty;
 
         private static readonly ImmutableArray<HarshProvisionerResult> NoResults =
             ImmutableArray<HarshProvisionerResult>.Empty;
-
-        private static readonly Task<IEnumerable<HarshProvisionerResult>> NoResultsTask =
-            Task.FromResult<IEnumerable<HarshProvisionerResult>>(NoResults);
     }
 }

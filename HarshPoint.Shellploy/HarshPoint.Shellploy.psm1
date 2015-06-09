@@ -80,6 +80,20 @@ function ContentType {
     }
 }
 
+function TaxonomyField {
+
+    param (
+        [Guid]
+        $TermSetId
+    )
+
+    New-HarshProvisioner HarshTaxonomyField $null @{
+        TermSet = [HarshPoint.Provisioning.ResolveTermStoreExtensions]::TermSetById(
+            $T_Resolve::TermStoreSiteCollectionDefault(),
+            $TermSetId
+        )
+    }
+}
 
 function Field {
 
