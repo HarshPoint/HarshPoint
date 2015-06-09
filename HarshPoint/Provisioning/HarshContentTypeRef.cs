@@ -28,9 +28,13 @@ namespace HarshPoint.Provisioning
             foreach (var list in lists)
             {
                 list.ContentTypesEnabled = true;
+                list.Update();
 
                 var existingCts = ClientContext.LoadQuery(
-                    list.ContentTypes.Include(ct => ct.StringId)
+                    list.ContentTypes.Include(
+                        ct => ct.Name,
+                        ct => ct.StringId
+                    )
                 );
 
                 await ClientContext.ExecuteQueryAsync();
@@ -46,8 +50,6 @@ namespace HarshPoint.Provisioning
                 {
                     list.ContentTypes.AddExistingContentType(ct);
                 }
-
-                list.Update();
             }
 
             await ClientContext.ExecuteQueryAsync();

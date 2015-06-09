@@ -27,7 +27,8 @@ namespace HarshPoint.Tests.Provisioning
                 DisplayName = "Title",
             };
 
-            Assert.IsType(typeof(HarshProvisionerResult), await prov.ProvisionAsync(ClientOM.Context));
+            await prov.ProvisionAsync(ClientOM.Context);
+            Assert.False(prov.Result.ObjectAdded);
         }
 
         [Fact]

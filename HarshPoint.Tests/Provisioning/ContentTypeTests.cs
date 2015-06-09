@@ -34,7 +34,7 @@ namespace HarshPoint.Tests.Provisioning
 
             await prov.ProvisionAsync(Fixture.Context);
 
-            Assert.False(prov.ContentTypeAdded);
+            Assert.False(prov.Result.ObjectAdded);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 await prov.ProvisionAsync(Fixture.Context);
 
-                Assert.True(prov.ContentTypeAdded);
+                Assert.True(prov.Result.ObjectAdded);
                 Assert.False(prov.ContentType.IsNull());
 
                 Fixture.ClientContext.Load(
@@ -134,15 +134,15 @@ namespace HarshPoint.Tests.Provisioning
             }
             finally
             {
-                if (ct.Result.ObjectAdded)
+                if (ct.ContentType != null)
                 {
-                    ct.Result.Object.DeleteObject();
+                    ct.ContentType.DeleteObject();
                     await Fixture.ClientContext.ExecuteQueryAsync();
                 }
 
-                if (field.Result.ObjectAdded)
+                if (field.Field != null)
                 {
-                    field.Result.Object.DeleteObject();
+                    field.Field.DeleteObject();
                     await Fixture.ClientContext.ExecuteQueryAsync();
                 }
             }

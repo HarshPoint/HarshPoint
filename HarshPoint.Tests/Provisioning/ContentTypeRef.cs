@@ -47,8 +47,9 @@ namespace HarshPoint.Tests.Provisioning
             try
             {
                 await ct.ProvisionAsync(Fixture.Context);
-                Assert.True(ct.ContentTypeAdded);
-                Assert.NotNull(ct.ContentType);
+
+                Assert.True(ct.Result.ObjectAdded);
+                Assert.NotNull(ct.Result.Object);
 
                 await list.ProvisionAsync(Fixture.Context);
 

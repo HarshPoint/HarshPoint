@@ -129,6 +129,12 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        public Field Field
+        {
+            get;
+            private set;
+        }
+
         public Boolean PushChangesToLists
         {
             get;
@@ -191,6 +197,7 @@ namespace HarshPoint.Provisioning
                     AddFieldOptions
                 );
 
+                ClientContext.Load(Field, f => f.InternalName);
                 await ClientContext.ExecuteQueryAsync();
 
                 return ResultFactory.Added(Field);
@@ -232,12 +239,6 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        private Field Field
-        {
-            get;
-            set;
-        }
-
         private FieldCollection TargetFieldCollection
         {
             get;
@@ -246,7 +247,7 @@ namespace HarshPoint.Provisioning
 
         private static readonly HarshProvisionerObjectResultFactory<Field, String> ResultFactory =
             new HarshProvisionerObjectResultFactory<Field, String>(f => f.InternalName);
-         
+
         private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
 
         private static void ValidateNotEmptyGuid(String propertyName, Object value)

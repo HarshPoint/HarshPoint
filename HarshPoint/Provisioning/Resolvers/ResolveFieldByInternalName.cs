@@ -24,7 +24,10 @@ namespace HarshPoint.Provisioning.Resolvers
 
             return this.ResolveIdentifiers(
                 context,
-                context.Web.Fields.IncludeWithDefaultProperties(f => f.InternalName),
+                context.Web.Fields.IncludeWithDefaultProperties(
+                    f => f.Id,
+                    f => f.InternalName
+                ),
                 f => f.InternalName
             );
         }

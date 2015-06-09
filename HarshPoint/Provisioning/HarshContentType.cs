@@ -17,12 +17,6 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        public Boolean ContentTypeAdded
-        {
-            get;
-            private set;
-        }
-
         public String Description
         {
             get;
@@ -94,14 +88,13 @@ namespace HarshPoint.Provisioning
 
                 await ClientContext.ExecuteQueryAsync();
 
-                ContentTypeAdded = true;
-            }
-            else
-            {
-                ContentTypeAdded = false;
+                return ResultFactory.Added(ContentType);
             }
 
-            return await base.OnProvisioningAsync();
+            return ResultFactory.Unchanged(ContentType);
         }
+
+        private static readonly HarshProvisionerObjectResultFactory<ContentType, String> ResultFactory =
+            new HarshProvisionerObjectResultFactory<ContentType, String>(ct => ct.Name);
     }
 }

@@ -21,7 +21,11 @@ namespace HarshPoint.Provisioning.Resolvers
 
             return this.ResolveIdentifiers(
                 context,
-                context.Web.ContentTypes.Include(ct => ct.StringId),
+                context.Web.ContentTypes.Include(
+                    ct => ct.Id,
+                    ct => ct.Name,
+                    ct => ct.StringId
+                ),
                 ct => HarshContentTypeId.Parse(ct.StringId)
             );
         }

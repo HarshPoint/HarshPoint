@@ -22,7 +22,10 @@ namespace HarshPoint.Provisioning.Resolvers
 
             return this.ResolveIdentifiers(
                 context,
-                context.Web.Fields.Include(f => f.Id),
+                context.Web.Fields.Include(
+                    f => f.Id,
+                    f => f.InternalName
+                ),
                 f => f.Id
             );
         }
