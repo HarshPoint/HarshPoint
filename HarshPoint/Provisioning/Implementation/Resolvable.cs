@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 
@@ -48,6 +49,56 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return null;
+        }
+
+        public static IEnumerable<T> ResolveItems<T, TIdentifier, TProvisionerContext>(
+            Object resolvable,
+            ResolveContext<TProvisionerContext> context,
+            IEnumerable<TIdentifier> identifiers,
+            IEnumerable<T> items,
+            Func<T, TIdentifier> idSelector,
+            IEqualityComparer<TIdentifier> idComparer = null
+        )
+            where TProvisionerContext : HarshProvisionerContextBase
+        {
+            if (resolvable == null)
+            {
+                throw Error.ArgumentNull(nameof(resolvable));
+            }
+
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
+            if (identifiers == null)
+            {
+                throw Error.ArgumentNull(nameof(identifiers));
+            }
+
+            if (items == null)
+            {
+                throw Error.ArgumentNull(nameof(items));
+            }
+
+            if (idSelector == null)
+            {
+                throw Error.ArgumentNull(nameof(idSelector));
+            }
+
+            var byId = items.ToImmutableDictionary(idSelector, idComparer);
+
+            return identifiers.Select(id =>
+            {
+                T value;
+
+                if (!byId.TryGetValue(id, out value))
+                {
+                    context.AddFailure(resolvable, id);
+                }
+
+                return value;
+            });
         }
     }
 }

@@ -65,8 +65,8 @@ namespace HarshPoint.Provisioning.Implementation
             => (await ResolveChainElement(context)).SelectMany(g => g);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        async Task<IEnumerable<IGrouping<T1, T2>>> IResolvableChainElement<IGrouping<T1, T2>>.ResolveChainElement(IResolveContext context)
-            => await ResolveChainElement(context);
+        Task<IEnumerable<IGrouping<T1, T2>>> IResolvableChainElement<IGrouping<T1, T2>>.ResolveChainElement(IResolveContext context)
+            => ResolveChainElement(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Task<IEnumerable<T2>> IResolve<T2>.ResolveAsync(IResolveContext context)

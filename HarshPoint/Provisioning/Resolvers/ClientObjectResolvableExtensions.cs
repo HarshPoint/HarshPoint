@@ -2,7 +2,6 @@
 using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,6 +24,7 @@ namespace HarshPoint.Provisioning.Resolvers
             }
 
             return ResolveQuery(
+                resolvable,
                 context,
                 resolvable.Identifiers,
                 query.QueryBuilder(parent),
@@ -48,6 +48,7 @@ namespace HarshPoint.Provisioning.Resolvers
             }
 
             return ResolveQuery(
+                resolvable,
                 context,
                 resolvable.Identifiers,
                 query.QueryBuilder(parent),
@@ -71,7 +72,9 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(resolvable));
             }
 
-            return ResolveItems(
+            return Resolvable.ResolveItems(
+                resolvable,
+                context,
                 resolvable.Identifiers,
                 items,
                 idSelector,
@@ -80,6 +83,7 @@ namespace HarshPoint.Provisioning.Resolvers
         }
 
         private static async Task<IEnumerable<T>> ResolveQuery<T, TIdentifier>(
+            Object resolvable,
             ResolveContext<HarshProvisionerContext> context,
             IEnumerable<TIdentifier> identifiers,
             IQueryable<T> query,
@@ -111,7 +115,9 @@ namespace HarshPoint.Provisioning.Resolvers
             var items = context.ProvisionerContext.ClientContext.LoadQuery(query);
             await context.ProvisionerContext.ClientContext.ExecuteQueryAsync();
 
-            return ResolveItems(
+            return Resolvable.ResolveItems(
+                resolvable,
+                context,
                 identifiers,
                 items,
                 idSelector,
@@ -119,37 +125,5 @@ namespace HarshPoint.Provisioning.Resolvers
             );
         }
 
-        private static IEnumerable<T> ResolveItems<T, TIdentifier>(
-            IEnumerable<TIdentifier> identifiers,
-            IEnumerable<T> items,
-            Func<T, TIdentifier> idSelector,
-            IEqualityComparer<TIdentifier> idComparer
-        )
-            where T : ClientObject
-        {
-            if (identifiers == null)
-            {
-                throw Error.ArgumentNull(nameof(identifiers));
-            }
-
-            if (items == null)
-            {
-                throw Error.ArgumentNull(nameof(items));
-            }
-
-            if (idSelector == null)
-            {
-                throw Error.ArgumentNull(nameof(idSelector));
-            }
-
-            var byId = items.ToImmutableDictionary(idSelector, idComparer);
-
-            return identifiers.Select(id =>
-            {
-                T ct = null;
-                byId.TryGetValue(id, out ct);
-                return ct;
-            });
-        }
     }
 }
