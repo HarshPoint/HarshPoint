@@ -53,6 +53,7 @@
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="HarshBuiltInContentTypeIds.cs" />
+    <Compile Include="HarshBuiltInFieldId.cs" />
     <Compile Include="HarshLazy.cs" />
     <Compile Include="HarshSingleElementCollection.cs" />
     <Compile Include="IHarshCloneable.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Provisioning\HarshFieldProvisioner.cs" />
     <Compile Include="Provisioning\HarshFieldRef.cs" />
     <Compile Include="Provisioning\HarshList.cs" />
+    <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshProvisionerObjectResult.cs" />
     <Compile Include="Provisioning\HarshProvisionerObjectResultFactory`2.cs" />
     <Compile Include="Provisioning\HarshRemoveContentTypeRef.cs" />
@@ -72,9 +74,13 @@
     <Compile Include="Provisioning\Implementation\HarshProvisionerResultNotRun.cs" />
     <Compile Include="Provisioning\Implementation\Resolvable.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedResolver.cs" />
+    <Compile Include="Provisioning\ResolveListExtensions.cs" />
     <Compile Include="Provisioning\Resolvers\ClientObjectResolvableExtensions.cs" />
+    <Compile Include="Provisioning\Resolvers\ClientObjectResolveQuery.cs" />
+    <Compile Include="Provisioning\Resolvers\ClientObjectResolveQuery`3.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveListFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermSetById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreKeywordsDefault.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreSiteCollectionDefault.cs" />

@@ -16,10 +16,5 @@ namespace HarshPoint.Provisioning.Resolvers
             : base(identifiers, idComparer)
         {
         }
-
-        public ResolveListRootFolder RootFolder()
-        {
-            return new ResolveListRootFolder(this);
-        }
     }
 }

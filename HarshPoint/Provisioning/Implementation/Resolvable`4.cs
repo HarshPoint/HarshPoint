@@ -24,11 +24,6 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(identifiers));
             }
 
-            if (identifierComparer == null)
-            {
-                identifierComparer = EqualityComparer<TIdentifier>.Default;
-            }
-
             Identifiers = ImmutableHashSet.CreateRange(identifierComparer, identifiers);
             IdentifierComparer = identifierComparer;
         }

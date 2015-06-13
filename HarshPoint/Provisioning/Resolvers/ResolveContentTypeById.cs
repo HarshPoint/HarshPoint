@@ -19,14 +19,10 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            return this.ResolveIdentifiers(
+            return this.ResolveClientObjectQuery(
                 context,
-                context.Web.ContentTypes.Include(
-                    ct => ct.Id,
-                    ct => ct.Name,
-                    ct => ct.StringId
-                ),
-                ct => HarshContentTypeId.Parse(ct.StringId)
+                context.Web.ContentTypes,
+                ClientObjectResolveQuery.ContentTypeById
             );
         }
     }

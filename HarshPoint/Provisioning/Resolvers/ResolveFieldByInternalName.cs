@@ -9,10 +9,8 @@ namespace HarshPoint.Provisioning.Resolvers
         : Implementation.Resolvable<Field, String, HarshProvisionerContext, ResolveFieldByInternalName>
     {
         public ResolveFieldByInternalName(IEnumerable<String> names)
-            : base(names, StringComparer.Ordinal)
+            : base(names)
         {
-            // uses Ordinal instead of OrdinalIgnoreCase comparer, because there apparently
-            // are fields tha`t differ only in case (ParentId vs. ParentID)
         }
 
         protected override Task<IEnumerable<Field>> ResolveChainElement(HarshProvisionerContext context)
@@ -22,13 +20,10 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            return this.ResolveIdentifiers(
+            return this.ResolveClientObjectQuery(
                 context,
-                context.Web.Fields.IncludeWithDefaultProperties(
-                    f => f.Id,
-                    f => f.InternalName
-                ),
-                f => f.InternalName
+                context.Web.Fields,
+                ClientObjectResolveQuery.FieldByInternalName
             );
         }
     }

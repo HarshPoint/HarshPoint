@@ -24,7 +24,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             Identifiers = identifiers.ToImmutableHashSet();
-            IdentifierComparer = identifierComparer ?? EqualityComparer<TIdentifier>.Default;
+            IdentifierComparer = identifierComparer;
         }
 
         public IEqualityComparer<TIdentifier> IdentifierComparer

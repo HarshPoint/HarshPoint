@@ -11,9 +11,16 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override async Task<IEnumerable<Folder>> ResolveChainElement(HarshProvisionerContext context, List parent)
+        protected override Task<IEnumerable<Folder>> ResolveChainElement(HarshProvisionerContext context, List parent)
         {
-            return new[] { await parent.EnsurePropertyAvailable(l => l.RootFolder) };
+            if (parent == null)
+            {
+                throw Error.ArgumentNull(nameof(parent));
+            }
+
+            return Task.FromResult(
+                HarshSingleElementCollection.Create(parent.RootFolder)
+            );
         }
     }
 }

@@ -10,75 +10,51 @@ namespace HarshPoint.Provisioning.Resolvers
 {
     internal static class ClientObjectResolvableExtensions
     {
-        public static Task<IEnumerable<T>> ResolveIdentifiers<T, TIdentifier, TSelf>(
+        public static Task<IEnumerable<T>> ResolveClientObjectQuery<T, TIdentifier, TParent, TSelf>(
             this Resolvable<T, TIdentifier, HarshProvisionerContext, TSelf> resolvable,
             HarshProvisionerContext context,
-            IQueryable<T> query,
-            Func<T, TIdentifier> idSelector
+            TParent parent,
+            ClientObjectResolveQuery<T, TParent, TIdentifier> query
         )
             where T : ClientObject
             where TSelf : Resolvable<T, TIdentifier, HarshProvisionerContext, TSelf>
         {
-            if (resolvable == null)
+            if (query == null)
             {
-                throw Error.ArgumentNull(nameof(resolvable));
+                throw Error.ArgumentNull(nameof(query));
             }
 
             return ResolveQuery(
-                context, 
-                resolvable.Identifiers, 
-                query, 
-                idSelector,
-                resolvable.IdentifierComparer
-            );
-        }
-
-        public static IEnumerable<T> ResolveIdentifiers<T, TIdentifier, TSelf>(
-            this Resolvable<T, TIdentifier, HarshProvisionerContext, TSelf> resolvable,
-            HarshProvisionerContext context,
-            IEnumerable<T> items,
-            Func<T, TIdentifier> idSelector
-        )
-            where T : ClientObject
-            where TSelf : Resolvable<T, TIdentifier, HarshProvisionerContext, TSelf>
-        {
-            if (resolvable == null)
-            {
-                throw Error.ArgumentNull(nameof(resolvable));
-            }
-
-            return ResolveItems(
                 context,
                 resolvable.Identifiers,
-                items,
-                idSelector,
-                resolvable.IdentifierComparer
+                query.QueryBuilder(parent),
+                query.IdentifierSelector,
+                query.IdentifierComparer
             );
         }
 
-        public static Task<IEnumerable<T2>> ResolveIdentifiers<T1, T2, TIdentifier, TSelf>(
+        public static Task<IEnumerable<T2>> ResolveClientObjectQuery<T1, T2, TIdentifier, TParent, TSelf>(
             this NestedResolvable<T1, T2, TIdentifier, HarshProvisionerContext, TSelf> resolvable,
             HarshProvisionerContext context,
-            IQueryable<T2> query,
-            Func<T2, TIdentifier> idSelector
+            TParent parent,
+            ClientObjectResolveQuery<T2, TParent, TIdentifier> query
         )
             where T2 : ClientObject
             where TSelf : NestedResolvable<T1, T2, TIdentifier, HarshProvisionerContext, TSelf>
         {
-            if (resolvable == null)
+            if (query == null)
             {
-                throw Error.ArgumentNull(nameof(resolvable));
+                throw Error.ArgumentNull(nameof(query));
             }
 
             return ResolveQuery(
                 context,
                 resolvable.Identifiers,
-                query,
-                idSelector,
-                resolvable.IdentifierComparer
+                query.QueryBuilder(parent),
+                query.IdentifierSelector,
+                query.IdentifierComparer
             );
         }
-
 
         public static IEnumerable<T2> ResolveIdentifiers<T1, T2, TIdentifier, TSelf>(
             this NestedResolvable<T1, T2, TIdentifier, HarshProvisionerContext, TSelf> resolvable,
@@ -131,7 +107,7 @@ namespace HarshPoint.Provisioning.Resolvers
             {
                 throw Error.ArgumentNull(nameof(idSelector));
             }
-            
+
             var items = context.ClientContext.LoadQuery(query);
             await context.ClientContext.ExecuteQueryAsync();
 
@@ -143,7 +119,6 @@ namespace HarshPoint.Provisioning.Resolvers
                 idComparer
             );
         }
-
 
         private static IEnumerable<T> ResolveItems<T, TIdentifier>(
             HarshProvisionerContext context,

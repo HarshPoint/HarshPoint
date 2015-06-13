@@ -21,7 +21,7 @@ namespace HarshPoint.Provisioning
         {
             ModifyChildrenContextState(() => Field);
 
-            TypeName = "Text";
+            Type = FieldType.Text;
             SchemaXmlBuilder = new HarshFieldSchemaXmlBuilder()
             {
                 Transformers =
@@ -98,6 +98,25 @@ namespace HarshPoint.Provisioning
         {
             get;
             set;
+        }
+
+        public FieldType Type
+        {
+            get
+            {
+                FieldType result;
+
+                if (Enum.TryParse(TypeName, ignoreCase: true, result: out result))
+                {
+                    return result;
+                }
+
+                return FieldType.Invalid;
+            }
+            set
+            {
+                TypeName = value.ToString();
+            }
         }
 
         [DefaultFromContext(typeof(DefaultFieldGroup))]

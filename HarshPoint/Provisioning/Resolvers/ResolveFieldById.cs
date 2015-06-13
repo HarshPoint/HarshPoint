@@ -20,13 +20,10 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            return this.ResolveIdentifiers(
+            return this.ResolveClientObjectQuery(
                 context,
-                context.Web.Fields.Include(
-                    f => f.Id,
-                    f => f.InternalName
-                ),
-                f => f.Id
+                context.Web.Fields,
+                ClientObjectResolveQuery.FieldById
             );
         }
     }
