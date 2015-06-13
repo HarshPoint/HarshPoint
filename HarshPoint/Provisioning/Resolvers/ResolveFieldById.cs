@@ -13,7 +13,7 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override Task<IEnumerable<Field>> ResolveChainElement(HarshProvisionerContext context)
+        protected override Task<IEnumerable<Field>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
         {
             if (context == null)
             {
@@ -22,7 +22,7 @@ namespace HarshPoint.Provisioning.Resolvers
 
             return this.ResolveClientObjectQuery(
                 context,
-                context.Web.Fields,
+                context.ProvisionerContext.Web.Fields,
                 ClientObjectResolveQuery.FieldById
             );
         }

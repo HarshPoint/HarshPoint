@@ -13,10 +13,15 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override Task<IEnumerable<List>> ResolveChainElement(HarshProvisionerContext context)
+        protected override Task<IEnumerable<List>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
         {
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
             return Task.FromResult(
-                Identifiers.Cast<Int32>().Select(id => context.Web.GetCatalog(id))
+                Identifiers.Cast<Int32>().Select(id => context.ProvisionerContext.Web.GetCatalog(id))
             );
         }
     }

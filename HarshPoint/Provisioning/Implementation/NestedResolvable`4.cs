@@ -58,7 +58,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected abstract Task<IEnumerable<T2>> ResolveChainElement(TContext context, T1 parent);
+        protected abstract Task<IEnumerable<T2>> ResolveChainElement(ResolveContext<TContext> context, T1 parent);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         async Task<IEnumerable<T2>> IResolvableChainElement<T2>.ResolveChainElement(IResolveContext context)
@@ -90,11 +90,11 @@ namespace HarshPoint.Provisioning.Implementation
             var parents = await Parents.ResolveAsync(context);
 
             return await parents.SelectSequentially(
-                p => ResolveChildren(typedContext.ProvisionerContext, p)
+                p => ResolveChildren(typedContext, p)
             );
         }
 
-        private async Task<IGrouping<T1, T2>> ResolveChildren(TContext context, T1 parent)
+        private async Task<IGrouping<T1, T2>> ResolveChildren(ResolveContext<TContext> context, T1 parent)
         {
             return ResolvedGrouping.Create(
                 parent,

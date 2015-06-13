@@ -6,7 +6,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace HarshPoint.Provisioning.Implementation
 {
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
-    public abstract class NestedResolvable<T1, T2, TIdentifier, TContext, TSelf> : NestedResolvable<T1, T2, TContext, TSelf>
+    public abstract class NestedResolvable<T1, T2, TIdentifier, TContext, TSelf>
+        : NestedResolvable<T1, T2, TContext, TSelf>
          where TContext : HarshProvisionerContextBase
          where TSelf : NestedResolvable<T1, T2, TIdentifier, TContext, TSelf>
     {

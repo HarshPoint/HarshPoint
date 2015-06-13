@@ -159,7 +159,7 @@ namespace HarshPoint.Tests.Provisioning
 
             public T[] Results { get; private set; }
 
-            protected override Task<IEnumerable<T>> ResolveChainElement(HarshProvisionerContext context)
+            protected override Task<IEnumerable<T>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
             {
                 return Task.FromResult<IEnumerable<T>>(Results);
             }
@@ -186,7 +186,7 @@ namespace HarshPoint.Tests.Provisioning
                 set;
             }
 
-            protected override Task<IEnumerable<T2>> ResolveChainElement(HarshProvisionerContext context, T1 parent)
+            protected override Task<IEnumerable<T2>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context, T1 parent)
             {
                 return Task.FromResult(
                     Enumerable.Repeat(

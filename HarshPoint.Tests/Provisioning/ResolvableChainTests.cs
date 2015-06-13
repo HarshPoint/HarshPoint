@@ -38,7 +38,7 @@ namespace HarshPoint.Tests.Provisioning
 
         [Fact]
         public async Task ResolveSingle_fails_no_results()
-        {
+            {
             IResolveSingle<String> chain = new DummyChain();
 
             await Assert.ThrowsAsync<InvalidOperationException>(

@@ -15,7 +15,7 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override async Task<IEnumerable<TermSet>> ResolveChainElement(HarshProvisionerContext context, TermStore parent)
+        protected override async Task<IEnumerable<TermSet>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context, TermStore parent)
         {
             if (context == null)
             {
@@ -27,14 +27,14 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(parent));
             }
 
-            var groups = context.ClientContext.LoadQuery(
+            var groups = context.ProvisionerContext.ClientContext.LoadQuery(
                 parent.Groups.Include(
                     g => g.TermSets.Include(
                         ts => ts.Id
                     )
                 )
             );
-            await context.ClientContext.ExecuteQueryAsync();
+            await context.ProvisionerContext.ClientContext.ExecuteQueryAsync();
 
             return this.ResolveIdentifiers(
                 context,

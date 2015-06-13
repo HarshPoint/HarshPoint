@@ -12,7 +12,7 @@ namespace HarshPoint.Provisioning.Resolvers
     {
         public static Task<IEnumerable<T>> ResolveClientObjectQuery<T, TIdentifier, TParent, TSelf>(
             this Resolvable<T, TIdentifier, HarshProvisionerContext, TSelf> resolvable,
-            HarshProvisionerContext context,
+            ResolveContext<HarshProvisionerContext> context,
             TParent parent,
             ClientObjectResolveQuery<T, TParent, TIdentifier> query
         )
@@ -35,7 +35,7 @@ namespace HarshPoint.Provisioning.Resolvers
 
         public static Task<IEnumerable<T2>> ResolveClientObjectQuery<T1, T2, TIdentifier, TParent, TSelf>(
             this NestedResolvable<T1, T2, TIdentifier, HarshProvisionerContext, TSelf> resolvable,
-            HarshProvisionerContext context,
+            ResolveContext<HarshProvisionerContext> context,
             TParent parent,
             ClientObjectResolveQuery<T2, TParent, TIdentifier> query
         )
@@ -58,7 +58,7 @@ namespace HarshPoint.Provisioning.Resolvers
 
         public static IEnumerable<T2> ResolveIdentifiers<T1, T2, TIdentifier, TSelf>(
             this NestedResolvable<T1, T2, TIdentifier, HarshProvisionerContext, TSelf> resolvable,
-            HarshProvisionerContext context,
+            ResolveContext<HarshProvisionerContext> context,
             IEnumerable<T2> items,
             Func<T2, TIdentifier> idSelector,
             IEqualityComparer<TIdentifier> idComparer = null
@@ -72,7 +72,6 @@ namespace HarshPoint.Provisioning.Resolvers
             }
 
             return ResolveItems(
-                context,
                 resolvable.Identifiers,
                 items,
                 idSelector,
@@ -81,7 +80,7 @@ namespace HarshPoint.Provisioning.Resolvers
         }
 
         private static async Task<IEnumerable<T>> ResolveQuery<T, TIdentifier>(
-            HarshProvisionerContext context,
+            ResolveContext<HarshProvisionerContext> context,
             IEnumerable<TIdentifier> identifiers,
             IQueryable<T> query,
             Func<T, TIdentifier> idSelector,
@@ -109,11 +108,10 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(idSelector));
             }
 
-            var items = context.ClientContext.LoadQuery(query);
-            await context.ClientContext.ExecuteQueryAsync();
+            var items = context.ProvisionerContext.ClientContext.LoadQuery(query);
+            await context.ProvisionerContext.ClientContext.ExecuteQueryAsync();
 
             return ResolveItems(
-                context,
                 identifiers,
                 items,
                 idSelector,
@@ -122,7 +120,6 @@ namespace HarshPoint.Provisioning.Resolvers
         }
 
         private static IEnumerable<T> ResolveItems<T, TIdentifier>(
-            HarshProvisionerContext context,
             IEnumerable<TIdentifier> identifiers,
             IEnumerable<T> items,
             Func<T, TIdentifier> idSelector,
@@ -130,11 +127,6 @@ namespace HarshPoint.Provisioning.Resolvers
         )
             where T : ClientObject
         {
-            if (context == null)
-            {
-                throw Error.ArgumentNull(nameof(context));
-            }
-
             if (identifiers == null)
             {
                 throw Error.ArgumentNull(nameof(identifiers));

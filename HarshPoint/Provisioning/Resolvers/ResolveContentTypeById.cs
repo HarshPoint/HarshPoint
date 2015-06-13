@@ -12,7 +12,7 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override Task<IEnumerable<ContentType>> ResolveChainElement(HarshProvisionerContext context)
+        protected override Task<IEnumerable<ContentType>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
         {
             if (context == null)
             {
@@ -21,7 +21,7 @@ namespace HarshPoint.Provisioning.Resolvers
 
             return this.ResolveClientObjectQuery(
                 context,
-                context.Web.ContentTypes,
+                context.ProvisionerContext.Web.ContentTypes,
                 ClientObjectResolveQuery.ContentTypeById
             );
         }

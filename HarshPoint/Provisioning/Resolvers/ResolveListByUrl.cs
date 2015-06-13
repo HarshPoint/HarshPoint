@@ -12,13 +12,11 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override async Task<IEnumerable<List>> ResolveChainElement(HarshProvisionerContext context)
+        protected override async Task<IEnumerable<List>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
         {
-            await context.Web.EnsurePropertyAvailable(w => w.ServerRelativeUrl);
-
             return await this.ResolveClientObjectQuery(
                 context,
-                context.Web,
+                context.ProvisionerContext.Web,
                 ClientObjectResolveQuery.ListByUrl
             );
         }

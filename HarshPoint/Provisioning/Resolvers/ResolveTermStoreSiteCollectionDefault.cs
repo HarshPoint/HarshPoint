@@ -7,7 +7,7 @@ namespace HarshPoint.Provisioning.Resolvers
     public sealed class ResolveTermStoreSiteCollectionDefault
         : Implementation.Resolvable<TermStore, HarshProvisionerContext, ResolveTermStoreSiteCollectionDefault>
     {
-        protected override Task<IEnumerable<TermStore>> ResolveChainElement(HarshProvisionerContext context)
+        protected override Task<IEnumerable<TermStore>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
         {
             if (context == null)
             {
@@ -16,7 +16,7 @@ namespace HarshPoint.Provisioning.Resolvers
 
             return Task.FromResult(
                 HarshSingleElementCollection.Create(
-                    context.TaxonomySession.GetDefaultSiteCollectionTermStore()
+                    context.ProvisionerContext.TaxonomySession.GetDefaultSiteCollectionTermStore()
                 )
             );
         }
