@@ -39,7 +39,7 @@ namespace HarshPoint.Provisioning
 
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
-            var folder = await ResolveSingleOrDefaultAsync(Folder);
+            var folder = await TryResolveSingleAsync(Folder);
 
             var fci = new FileCreationInformation()
             {

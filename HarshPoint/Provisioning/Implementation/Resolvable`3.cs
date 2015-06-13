@@ -26,15 +26,15 @@ namespace HarshPoint.Provisioning.Implementation
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected abstract Task<IEnumerable<T>> ResolveChainElement(TContext context);
 
-        Task<IEnumerable<T>> IResolvableChainElement<T>.ResolveChainElement(HarshProvisionerContextBase context)
-            => ResolveChainElement(ValidateContext<TContext>(context));
+        Task<IEnumerable<T>> IResolvableChainElement<T>.ResolveChainElement(IResolveContext context)
+            => ResolveChainElement(ValidateContext<TContext>(context).ProvisionerContext);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<IEnumerable<T>> IResolve<T>.ResolveAsync(HarshProvisionerContextBase context)
+        Task<IEnumerable<T>> IResolve<T>.ResolveAsync(IResolveContext context)
             => ResolveChain<T>(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<T> IResolveSingle<T>.ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
-            => ResolveChainSingleOrDefault<T>(context);
+        Task<T> IResolveSingle<T>.ResolveSingleAsync(IResolveContext context)
+            => ResolveChainSingle<T>(context);
     }
 }

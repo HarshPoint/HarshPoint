@@ -61,36 +61,36 @@ namespace HarshPoint.Provisioning.Implementation
         protected abstract Task<IEnumerable<T2>> ResolveChainElement(TContext context, T1 parent);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        async Task<IEnumerable<T2>> IResolvableChainElement<T2>.ResolveChainElement(HarshProvisionerContextBase context)
+        async Task<IEnumerable<T2>> IResolvableChainElement<T2>.ResolveChainElement(IResolveContext context)
             => (await ResolveChainElement(context)).SelectMany(g => g);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        async Task<IEnumerable<IGrouping<T1, T2>>> IResolvableChainElement<IGrouping<T1, T2>>.ResolveChainElement(HarshProvisionerContextBase context)
+        async Task<IEnumerable<IGrouping<T1, T2>>> IResolvableChainElement<IGrouping<T1, T2>>.ResolveChainElement(IResolveContext context)
             => await ResolveChainElement(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<IEnumerable<T2>> IResolve<T2>.ResolveAsync(HarshProvisionerContextBase context)
+        Task<IEnumerable<T2>> IResolve<T2>.ResolveAsync(IResolveContext context)
             => ResolveChain<T2>(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<IEnumerable<IGrouping<T1, T2>>> IResolve<IGrouping<T1, T2>>.ResolveAsync(HarshProvisionerContextBase context)
+        Task<IEnumerable<IGrouping<T1, T2>>> IResolve<IGrouping<T1, T2>>.ResolveAsync(IResolveContext context)
             => ResolveChain<IGrouping<T1, T2>>(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<T2> IResolveSingle<T2>.ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
-            => ResolveChainSingleOrDefault<T2>(context);
+        Task<T2> IResolveSingle<T2>.ResolveSingleAsync(IResolveContext context)
+            => ResolveChainSingle<T2>(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<IGrouping<T1, T2>> IResolveSingle<IGrouping<T1, T2>>.ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
-            => ResolveChainSingleOrDefault<IGrouping<T1, T2>>(context);
+        Task<IGrouping<T1, T2>> IResolveSingle<IGrouping<T1, T2>>.ResolveSingleAsync(IResolveContext context)
+            => ResolveChainSingle<IGrouping<T1, T2>>(context);
             
-        private async Task<IEnumerable<IGrouping<T1, T2>>> ResolveChainElement(HarshProvisionerContextBase context)
+        private async Task<IEnumerable<IGrouping<T1, T2>>> ResolveChainElement(IResolveContext context)
         {
             var typedContext = ValidateContext<TContext>(context);
             var parents = await Parents.ResolveAsync(context);
 
             return await parents.SelectSequentially(
-                p => ResolveChildren(typedContext, p)
+                p => ResolveChildren(typedContext.ProvisionerContext, p)
             );
         }
 

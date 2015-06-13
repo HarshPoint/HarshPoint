@@ -23,7 +23,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = "one";
             IResolveSingle<String> chain = new DummyChain(expected);
 
-            var actual = await chain.ResolveSingleOrDefaultAsync(ClientOM.Context);
+            var actual = await chain.ResolveSingleAsync(ClientOM.ResolveContext);
             Assert.Equal(expected, actual);
         }
 
@@ -32,7 +32,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             IResolveSingle<String> chain = new DummyChain();
 
-            var result = await chain.ResolveSingleOrDefaultAsync(ClientOM.Context);
+            var result = await chain.ResolveSingleAsync(ClientOM.ResolveContext);
             Assert.Null(result);
         }
 
@@ -42,7 +42,7 @@ namespace HarshPoint.Tests.Provisioning
             IResolveSingle<String> chain = new DummyChain();
 
             await Assert.ThrowsAsync<InvalidOperationException>(
-                () => chain.ResolveSingleAsync(ClientOM.Context)
+                () => chain.ResolveSingleAsync(ClientOM.ResolveContext)
             );
         }
 
@@ -52,7 +52,7 @@ namespace HarshPoint.Tests.Provisioning
             IResolveSingle<String> chain = new DummyChain("one", "two", "three");
 
             await Assert.ThrowsAsync<InvalidOperationException>(
-                () => chain.ResolveSingleOrDefaultAsync(ClientOM.Context)
+                () => chain.ResolveSingleAsync(ClientOM.ResolveContext)
             );
         }
 
@@ -61,7 +61,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             IResolve<String> chain = new DummyChain();
 
-            var actual = await chain.ResolveAsync(ClientOM.Context);
+            var actual = await chain.ResolveAsync(ClientOM.ResolveContext);
             Assert.Empty(actual);
         }
 
@@ -71,7 +71,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = "one";
             IResolve<String> chain = new DummyChain(expected);
 
-            var actual = await chain.ResolveAsync(ClientOM.Context);
+            var actual = await chain.ResolveAsync(ClientOM.ResolveContext);
             Assert.Equal(expected, Assert.Single(actual));
         }
 
@@ -81,7 +81,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = new[] { "one", "two" };
             IResolve<String> chain = new DummyChain(expected);
 
-            var actual = await chain.ResolveAsync(ClientOM.Context);
+            var actual = await chain.ResolveAsync(ClientOM.ResolveContext);
             Assert.Equal(expected, actual);
         }
 
@@ -105,7 +105,7 @@ namespace HarshPoint.Tests.Provisioning
 
             other.Results = new[] { "aaa" };
 
-            var actual = await combined.ResolveAsync(ClientOM.Context);
+            var actual = await combined.ResolveAsync(ClientOM.ResolveContext);
             Assert.Empty(actual);
         }
 
@@ -116,7 +116,7 @@ namespace HarshPoint.Tests.Provisioning
             var other = new DummyChain("bbb");
             var combined = (IResolve<String>)dummy.And(other);
 
-            var result = await combined.ResolveAsync(ClientOM.Context);
+            var result = await combined.ResolveAsync(ClientOM.ResolveContext);
 
             Assert.Equal(2, result.Count());
             Assert.Contains("aaa", result);
@@ -148,19 +148,19 @@ namespace HarshPoint.Tests.Provisioning
                 return clone;
             }
 
-            public Task<IEnumerable<String>> ResolveChainElement(HarshProvisionerContextBase context)
+            public Task<IEnumerable<String>> ResolveChainElement(IResolveContext context)
             {
                 return Task.FromResult<IEnumerable<String>>(Results);
             }
 
-            Task<IEnumerable<string>> IResolve<string>.ResolveAsync(HarshProvisionerContextBase context)
+            Task<IEnumerable<String>> IResolve<String>.ResolveAsync(IResolveContext context)
             {
                 return ResolveChain<String>(context);
             }
 
-            Task<string> IResolveSingle<string>.ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
+            Task<String> IResolveSingle<String>.ResolveSingleAsync(IResolveContext context)
             {
-                return ResolveChainSingleOrDefault<String>(context);
+                return ResolveChainSingle<String>(context);
             }
         }
     }

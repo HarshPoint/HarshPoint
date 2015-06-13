@@ -21,7 +21,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             await EnsureDocuments();
 
             var resolver = (IResolveSingle<List>)Resolve.ListByUrl("Shared Documents");
-            var list = await resolver.ResolveSingleOrDefaultAsync(ClientOM.Context);
+            var list = await resolver.ResolveSingleAsync(ClientOM.ResolveContext);
 
             Assert.NotNull(list);
             Assert.EndsWith(
@@ -36,7 +36,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             await EnsureDocuments();
 
             var resolver = (IResolveSingle<Folder>)Resolve.ListByUrl("Shared Documents").RootFolder();
-            var folder = await resolver.ResolveSingleOrDefaultAsync(ClientOM.Context);
+            var folder = await resolver.ResolveSingleAsync(ClientOM.ResolveContext);
 
             Assert.NotNull(folder);
             Assert.EndsWith(

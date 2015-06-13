@@ -41,7 +41,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected async Task<IEnumerable<T>> ResolveChain<T>(HarshProvisionerContextBase context)
+        protected async Task<IEnumerable<T>> ResolveChain<T>(IResolveContext context)
         {
             var resultSets = await Chain
                 .Cast<IResolvableChainElement<T>>()
@@ -50,7 +50,7 @@ namespace HarshPoint.Provisioning.Implementation
             return resultSets.SelectMany(r => r);
         }
 
-        protected async Task<T> ResolveChainSingleOrDefault<T>(HarshProvisionerContextBase context)
+        protected async Task<T> ResolveChainSingle<T>(IResolveContext context)
         {
             var values = (await ResolveChain<T>(context)).ToArray();
 
@@ -84,7 +84,7 @@ namespace HarshPoint.Provisioning.Implementation
             set;
         }
 
-        protected static TContext ValidateContext<TContext>(HarshProvisionerContextBase context)
+        protected static ResolveContext<TContext> ValidateContext<TContext>(IResolveContext context)
             where TContext : HarshProvisionerContextBase
         {
             if (context == null)
@@ -92,13 +92,13 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            var typedContext = (context as TContext);
+            var typedContext = (context as ResolveContext<TContext>);
 
             if (typedContext == null)
             {
                 throw Error.ArgumentOutOfRange_ObjectNotAssignableTo(
                     nameof(context),
-                    typeof(TContext).GetTypeInfo(),
+                    typeof(ResolveContext<TContext>).GetTypeInfo(),
                     context
                 );
             }

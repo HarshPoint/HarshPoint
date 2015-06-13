@@ -7,6 +7,6 @@ namespace HarshPoint.Provisioning.Implementation
     public interface IResolvableChainElement<T>
     {
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        Task<IEnumerable<T>> ResolveChainElement(HarshProvisionerContextBase context);
+        Task<IEnumerable<T>> ResolveChainElement(IResolveContext context);
     }
 }

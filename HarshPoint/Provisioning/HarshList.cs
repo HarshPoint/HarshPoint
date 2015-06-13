@@ -52,7 +52,7 @@ namespace HarshPoint.Provisioning
 
         protected override async Task InitializeAsync()
         {
-            List = await ResolveSingleOrDefaultAsync(ListResolver);
+            List = await TryResolveSingleAsync(ListResolver);
             ListAdded = false;
 
             await base.InitializeAsync();

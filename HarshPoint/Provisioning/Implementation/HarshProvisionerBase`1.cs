@@ -149,34 +149,47 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected Task<IEnumerable<T>> ResolveAsync<T>(IResolve<T> resolver)
+        protected Task<IEnumerable<T>> TryResolveAsync<T>(IResolve<T> resolver)
         {
             if (resolver == null)
             {
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            return resolver.ResolveAsync(Context);
+            return resolver.ResolveAsync(
+                new ResolveContext<TContext>(Context)
+            );
         }
 
-        protected Task<T> ResolveSingleOrDefaultAsync<T>(IResolveSingle<T> resolver)
+        protected Task<T> TryResolveSingleAsync<T>(IResolveSingle<T> resolver)
         {
             if (resolver == null)
             {
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            return resolver.ResolveSingleOrDefaultAsync(Context);
+            return resolver.ResolveSingleAsync(
+                new ResolveContext<TContext>(Context)
+            );
         }
 
-        protected Task<T> ResolveSingleAsync<T>(IResolveSingle<T> resolver)
+        protected async Task<T> ResolveSingleAsync<T>(IResolveSingle<T> resolver)
         {
             if (resolver == null)
             {
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            return resolver.ResolveSingleAsync(Context);
+            var result = await resolver.ResolveSingleAsync(
+                new ResolveContext<TContext>(Context)
+            );
+
+            if (result == null)
+            {
+                throw Error.InvalidOperation(SR.Resolvable_NoResult);
+            }
+
+            return result;
         }
 
         protected virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()

@@ -21,11 +21,11 @@ namespace HarshPoint.Provisioning
 
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
-            var removeCtIds = (await ResolveAsync(ContentTypes))
+            var removeCtIds = (await TryResolveAsync(ContentTypes))
                 .Select(ct => HarshContentTypeId.Parse(ct.StringId))
                 .ToArray();
 
-            var lists = await ResolveAsync(Lists);
+            var lists = await TryResolveAsync(Lists);
 
             foreach (var list in lists)
             {

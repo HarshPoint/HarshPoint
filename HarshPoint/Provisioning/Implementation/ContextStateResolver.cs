@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ContextStateResolver<T> : IResolve<T>, IResolveSingle<T>
     {
-        public Task<IEnumerable<T>> ResolveAsync(HarshProvisionerContextBase context)
+        public Task<IEnumerable<T>> ResolveAsync(IResolveContext context)
         {
             if (context == null)
             {
@@ -14,11 +14,11 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return Task.FromResult(
-                context.GetState<T>()
+                context.ProvisionerContext.GetState<T>()
             );
         }
 
-        public Task<T> ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
+        public Task<T> ResolveSingleAsync(IResolveContext context)
         {
             if (context == null)
             {
@@ -26,7 +26,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return Task.FromResult(
-                context.GetState<T>().FirstOrDefault()
+                context.ProvisionerContext.GetState<T>().FirstOrDefault()
             );
         }
     }

@@ -35,7 +35,7 @@ namespace HarshPoint.Provisioning
 
             await ClientContext.ExecuteQueryAsync();
 
-            var flcis = from field in await ResolveAsync(Fields)
+            var flcis = from field in await TryResolveAsync(Fields)
                         where !fieldLinks.Any(fl => fl.Id == field.Id)
                         select new FieldLinkCreationInformation()
                         {

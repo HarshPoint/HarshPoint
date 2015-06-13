@@ -58,7 +58,7 @@ namespace HarshPoint.Provisioning
 
             if (Id != null)
             {
-                ContentType = await ResolveSingleOrDefaultAsync(Resolve.ContentTypeById(Id));
+                ContentType = await TryResolveSingleAsync(Resolve.ContentTypeById(Id));
             }
             else
             {
@@ -74,7 +74,7 @@ namespace HarshPoint.Provisioning
 
                 if (ParentContentType != null)
                 {
-                    parentContentType = await ResolveSingleOrDefaultAsync(ParentContentType);
+                    parentContentType = await TryResolveSingleAsync(ParentContentType);
                 }
 
                 ContentType = Web.ContentTypes.Add(new ContentTypeCreationInformation()

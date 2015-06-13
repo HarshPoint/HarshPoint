@@ -201,7 +201,7 @@ namespace HarshPoint.Provisioning
             }
 
             TargetFieldCollection = Web.Fields;
-            Field = await ResolveSingleOrDefaultAsync(Resolve.FieldById(Id));
+            Field = await TryResolveSingleAsync(Resolve.FieldById(Id));
         }
 
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()

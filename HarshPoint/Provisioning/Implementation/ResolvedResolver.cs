@@ -16,12 +16,12 @@ namespace HarshPoint.Provisioning.Implementation
             Values = values.ToImmutableList();
         }
 
-        public Task<IEnumerable<T>> ResolveAsync(HarshProvisionerContextBase context)
+        public Task<IEnumerable<T>> ResolveAsync(IResolveContext context)
         {
             return Task.FromResult(Values);
         }
 
-        public Task<T> ResolveSingleOrDefaultAsync(HarshProvisionerContextBase context)
+        public Task<T> ResolveSingleAsync(IResolveContext context)
         {
             return Task.FromResult( 
                 Resolvable.EnsureSingleOrDefault(this, Values)

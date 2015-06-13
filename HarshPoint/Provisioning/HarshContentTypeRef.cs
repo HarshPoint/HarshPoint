@@ -22,8 +22,8 @@ namespace HarshPoint.Provisioning
 
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
-            var contentTypes = await ResolveAsync(ContentTypes);
-            var lists = await ResolveAsync(Lists); // todo: Include support on resolvers!!!
+            var contentTypes = await TryResolveAsync(ContentTypes);
+            var lists = await TryResolveAsync(Lists); // todo: Include support on resolvers!!!
 
             foreach (var list in lists)
             {

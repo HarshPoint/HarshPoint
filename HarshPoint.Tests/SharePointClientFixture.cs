@@ -32,6 +32,9 @@ namespace HarshPoint.Tests
             private set;
         }
 
+        public ResolveContext<HarshProvisionerContext> ResolveContext
+            => new ResolveContext<HarshProvisionerContext>(Context);
+
         public ClientContext ClientContext
         {
             get;

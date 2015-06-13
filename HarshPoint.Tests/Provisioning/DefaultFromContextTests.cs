@@ -167,7 +167,7 @@ namespace HarshPoint.Tests.Provisioning
 
         private class DummyResolver : IResolve<String>
         {
-            public Task<IEnumerable<string>> ResolveAsync(HarshProvisionerContextBase context)
+            public Task<IEnumerable<string>> ResolveAsync(IResolveContext context)
             {
                 throw new NotImplementedException();
             }

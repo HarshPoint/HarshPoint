@@ -25,7 +25,7 @@ namespace HarshPoint.Provisioning
 
         protected override async Task InitializeAsync()
         {
-            FieldsResolved = (await ResolveAsync(Fields)).Cast<TField>();
+            FieldsResolved = (await TryResolveAsync(Fields)).Cast<TField>();
 
             await base.InitializeAsync();
         }

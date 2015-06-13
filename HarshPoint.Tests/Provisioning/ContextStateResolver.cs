@@ -1,4 +1,5 @@
-﻿using HarshPoint.Provisioning.Implementation;
+﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -20,8 +21,9 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = ClientOM.Context.PushState("42");
             var resolver = new ContextStateResolver<String>();
 
-            var single = await resolver.ResolveSingleOrDefaultAsync(ctx);
-            var many = await resolver.ResolveAsync(ctx);
+            var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
+            var single = await resolver.ResolveSingleAsync(resolveCtx);
+            var many = await resolver.ResolveAsync(resolveCtx);
 
             Assert.Equal("42", single);
             Assert.Single(many, "42");
@@ -33,8 +35,9 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = ClientOM.Context.PushState("4242").PushState("42");
             var resolver = new ContextStateResolver<String>();
 
-            var single = await resolver.ResolveSingleOrDefaultAsync(ctx);
-            var many = await resolver.ResolveAsync(ctx);
+            var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
+            var single = await resolver.ResolveSingleAsync(resolveCtx);
+            var many = await resolver.ResolveAsync(resolveCtx);
 
             Assert.Equal("42", single);
             Assert.Single(many, "42");
@@ -49,8 +52,9 @@ namespace HarshPoint.Tests.Provisioning
 
             var resolver = new ContextStateResolver<String>();
 
-            var single = await resolver.ResolveSingleOrDefaultAsync(ctx);
-            var many = await resolver.ResolveAsync(ctx);
+            var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
+            var single = await resolver.ResolveSingleAsync(resolveCtx);
+            var many = await resolver.ResolveAsync(resolveCtx);
 
             Assert.Equal("42", single);
             Assert.Collection(
