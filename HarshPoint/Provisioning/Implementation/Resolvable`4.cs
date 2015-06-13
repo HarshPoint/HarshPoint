@@ -13,33 +13,21 @@ namespace HarshPoint.Provisioning.Implementation
         where TSelf : Resolvable<T, TIdentifier, TContext, TSelf>
     {
         protected Resolvable(IEnumerable<TIdentifier> identifiers)
-            : this(identifiers, null)
-        {
-        }
-
-        protected Resolvable(IEnumerable<TIdentifier> identifiers, IEqualityComparer<TIdentifier> identifierComparer)
         {
             if (identifiers == null)
             {
                 throw Error.ArgumentNull(nameof(identifiers));
             }
 
-            Identifiers = ImmutableHashSet.CreateRange(identifierComparer, identifiers);
-            IdentifierComparer = identifierComparer;
+            Identifiers = identifiers.ToImmutableArray();
         }
 
-        public IImmutableSet<TIdentifier> Identifiers
+        public IImmutableList<TIdentifier> Identifiers
         {
             get;
             private set;
         }
-
-        public IEqualityComparer<TIdentifier> IdentifierComparer
-        {
-            get;
-            private set;
-        }
-
+        
         protected override Object ToLogObject()
         {
             return Identifiers;

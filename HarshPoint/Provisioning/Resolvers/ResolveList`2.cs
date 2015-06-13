@@ -11,10 +11,5 @@ namespace HarshPoint.Provisioning.Resolvers
             : base(identifiers)
         {
         }
-
-        protected ResolveList(IEnumerable<TIdentifier> identifiers, IEqualityComparer<TIdentifier> idComparer)
-            : base(identifiers, idComparer)
-        {
-        }
     }
 }

@@ -11,11 +11,6 @@ namespace HarshPoint.Provisioning.Implementation
          where TSelf : NestedResolvable<T1, T2, TIdentifier, TContext, TSelf>
     {
         protected NestedResolvable(IResolve<T1> parent, IEnumerable<TIdentifier> identifiers)
-            : this(parent, identifiers, null)
-        {
-        }
-
-        protected NestedResolvable(IResolve<T1> parent, IEnumerable<TIdentifier> identifiers, IEqualityComparer<TIdentifier> identifierComparer)
             : base(parent)
         {
             if (identifiers == null)
@@ -23,17 +18,10 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(identifiers));
             }
 
-            Identifiers = identifiers.ToImmutableHashSet();
-            IdentifierComparer = identifierComparer;
+            Identifiers = identifiers.ToImmutableArray();
         }
 
-        public IEqualityComparer<TIdentifier> IdentifierComparer
-        {
-            get;
-            private set;
-        }
-
-        public IImmutableSet<TIdentifier> Identifiers
+        public IImmutableList<TIdentifier> Identifiers
         {
             get;
             private set;

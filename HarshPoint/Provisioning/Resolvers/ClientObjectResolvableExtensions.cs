@@ -60,7 +60,8 @@ namespace HarshPoint.Provisioning.Resolvers
             this NestedResolvable<T1, T2, TIdentifier, HarshProvisionerContext, TSelf> resolvable,
             HarshProvisionerContext context,
             IEnumerable<T2> items,
-            Func<T2, TIdentifier> idSelector
+            Func<T2, TIdentifier> idSelector,
+            IEqualityComparer<TIdentifier> idComparer = null
         )
             where T2 : ClientObject
             where TSelf : NestedResolvable<T1, T2, TIdentifier, HarshProvisionerContext, TSelf>
@@ -75,7 +76,7 @@ namespace HarshPoint.Provisioning.Resolvers
                 resolvable.Identifiers,
                 items,
                 idSelector,
-                resolvable.IdentifierComparer
+                idComparer
             );
         }
 
