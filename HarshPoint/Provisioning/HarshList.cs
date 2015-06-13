@@ -76,7 +76,7 @@ namespace HarshPoint.Provisioning
             return await base.OnProvisioningAsync();
         }
 
-        private IResolveSingle<List> ListResolver => Resolve.ListByUrl(Url);
+        private IResolve<List> ListResolver => Resolve.ListByUrl(Url);
     }
 
 }

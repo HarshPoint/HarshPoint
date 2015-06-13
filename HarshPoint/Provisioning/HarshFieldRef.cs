@@ -7,7 +7,7 @@ namespace HarshPoint.Provisioning
     public class HarshFieldRef : HarshProvisioner
     {
         [DefaultFromContext]
-        public IResolveSingle<ContentType> ContentType
+        public IResolve<ContentType> ContentType
         {
             get;
             set;

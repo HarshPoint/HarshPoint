@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning
 {
     public sealed class HarshTaxonomyField : HarshFieldProvisioner<TaxonomyField>
     {
-        public IResolveSingle<TermSet> TermSet
+        public IResolve<TermSet> TermSet
         {
             get;
             set;

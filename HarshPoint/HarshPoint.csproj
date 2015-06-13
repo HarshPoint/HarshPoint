@@ -109,7 +109,6 @@
     <Compile Include="Provisioning\Implementation\Resolvable`3.cs" />
     <Compile Include="Provisioning\Implementation\Resolvable`4.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedGrouping.cs" />
-    <Compile Include="Provisioning\IResolveSingle`1.cs" />
     <Compile Include="Provisioning\IResolve`1.cs" />
     <Compile Include="Provisioning\Resolve.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentTypeById.cs" />

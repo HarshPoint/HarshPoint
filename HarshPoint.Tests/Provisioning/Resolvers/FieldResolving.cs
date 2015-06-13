@@ -18,11 +18,11 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task Documents_Title_field_gets_resolved_by_id()
         {
-            IResolveSingle<Field> resolver = Resolve
+            IResolve<Field> resolver = Resolve
                 .ListByUrl("Shared Documents")
                 .FieldById(HarshBuiltInFieldId.Title);
 
-            var field = await resolver.ResolveSingleAsync(Fixture.ResolveContext);
+            var field = Assert.Single(await resolver.ResolveAsync(Fixture.ResolveContext));
 
             Assert.NotNull(field);
             Assert.Equal("Title", field.InternalName);

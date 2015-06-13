@@ -31,11 +31,11 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 
         public async Task MasterPage_RootFolder_gets_resolved()
         {
-            IResolveSingle<Folder> resolver = Resolve
+            IResolve<Folder> resolver = Resolve
                 .Catalog(ListTemplateType.MasterPageCatalog)
                 .RootFolder();
 
-            var folder = await resolver.ResolveSingleAsync(ClientOM.ResolveContext);
+            var folder = Assert.Single(await resolver.ResolveAsync(ClientOM.ResolveContext));
 
             Assert.Contains(
                 "/_catalogs/masterpage",

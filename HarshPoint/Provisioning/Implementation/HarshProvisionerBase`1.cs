@@ -161,27 +161,33 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        protected Task<T> TryResolveSingleAsync<T>(IResolveSingle<T> resolver)
+        protected async Task<T> TryResolveSingleAsync<T>(IResolve<T> resolver)
         {
             if (resolver == null)
             {
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            return resolver.ResolveSingleAsync(
-                new ResolveContext<TContext>(Context)
+            return Resolvable.EnsureSingleOrDefault(
+                resolver, 
+                await resolver.ResolveAsync(
+                    new ResolveContext<TContext>(Context)
+                )
             );
         }
 
-        protected async Task<T> ResolveSingleAsync<T>(IResolveSingle<T> resolver)
+        protected async Task<T> ResolveSingleAsync<T>(IResolve<T> resolver)
         {
             if (resolver == null)
             {
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            var result = await resolver.ResolveSingleAsync(
-                new ResolveContext<TContext>(Context)
+            var result = Resolvable.EnsureSingleOrDefault(
+                resolver, 
+                await resolver.ResolveAsync(
+                    new ResolveContext<TContext>(Context)
+                )
             );
 
             if (result == null)

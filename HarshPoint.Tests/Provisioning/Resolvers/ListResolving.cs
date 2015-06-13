@@ -1,6 +1,7 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,8 +21,8 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             await EnsureDocuments();
 
-            var resolver = (IResolveSingle<List>)Resolve.ListByUrl("Shared Documents");
-            var list = await resolver.ResolveSingleAsync(ClientOM.ResolveContext);
+            var resolver = (IResolve<List>)Resolve.ListByUrl("Shared Documents");
+            var list = Assert.Single(await resolver.ResolveAsync(ClientOM.ResolveContext));
 
             Assert.NotNull(list);
             Assert.EndsWith(
@@ -35,8 +36,8 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             await EnsureDocuments();
 
-            var resolver = (IResolveSingle<Folder>)Resolve.ListByUrl("Shared Documents").RootFolder();
-            var folder = await resolver.ResolveSingleAsync(ClientOM.ResolveContext);
+            var resolver = (IResolve<Folder>)Resolve.ListByUrl("Shared Documents").RootFolder();
+            var folder = Assert.Single(await resolver.ResolveAsync(ClientOM.ResolveContext));
 
             Assert.NotNull(folder);
             Assert.EndsWith(

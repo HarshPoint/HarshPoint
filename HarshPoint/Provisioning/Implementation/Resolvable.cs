@@ -41,8 +41,7 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 var definition = info.GetGenericTypeDefinition();
 
-                if ((definition == typeof(IResolve<>)) ||
-                    (definition == typeof(IResolveSingle<>)))
+                if (definition == typeof(IResolve<>))
                 {
                     return info.GenericTypeArguments[0];
                 }

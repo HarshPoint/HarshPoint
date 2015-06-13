@@ -8,8 +8,7 @@ namespace HarshPoint.Provisioning.Implementation
     public abstract class Resolvable<T, TContext, TSelf> :
         ResolvableChain,
         IResolvableChainElement<T>,
-        IResolve<T>,
-        IResolveSingle<T>
+        IResolve<T>
         where TContext : HarshProvisionerContextBase
         where TSelf : Resolvable<T, TContext, TSelf>
     {
@@ -32,9 +31,5 @@ namespace HarshPoint.Provisioning.Implementation
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Task<IEnumerable<T>> IResolve<T>.ResolveAsync(IResolveContext context)
             => ResolveChain<T>(context);
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<T> IResolveSingle<T>.ResolveSingleAsync(IResolveContext context)
-            => ResolveChainSingle<T>(context);
     }
 }

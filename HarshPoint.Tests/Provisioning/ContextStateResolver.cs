@@ -22,10 +22,8 @@ namespace HarshPoint.Tests.Provisioning
             var resolver = new ContextStateResolver<String>();
 
             var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
-            var single = await resolver.ResolveSingleAsync(resolveCtx);
             var many = await resolver.ResolveAsync(resolveCtx);
 
-            Assert.Equal("42", single);
             Assert.Single(many, "42");
         }
 
@@ -36,10 +34,8 @@ namespace HarshPoint.Tests.Provisioning
             var resolver = new ContextStateResolver<String>();
 
             var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
-            var single = await resolver.ResolveSingleAsync(resolveCtx);
             var many = await resolver.ResolveAsync(resolveCtx);
 
-            Assert.Equal("42", single);
             Assert.Single(many, "42");
         }
 
@@ -53,10 +49,8 @@ namespace HarshPoint.Tests.Provisioning
             var resolver = new ContextStateResolver<String>();
 
             var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
-            var single = await resolver.ResolveSingleAsync(resolveCtx);
             var many = await resolver.ResolveAsync(resolveCtx);
 
-            Assert.Equal("42", single);
             Assert.Collection(
                 many,
                 x => Assert.Equal("42", x),

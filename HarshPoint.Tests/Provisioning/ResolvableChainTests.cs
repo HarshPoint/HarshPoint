@@ -18,45 +18,6 @@ namespace HarshPoint.Tests.Provisioning
         public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
-        public async Task ResolveSingleOrDefault_returns_one_result()
-        {
-            var expected = "one";
-            IResolveSingle<String> chain = new DummyChain(expected);
-
-            var actual = await chain.ResolveSingleAsync(ClientOM.ResolveContext);
-            Assert.Equal(expected, actual);
-        }
-
-
-        public async Task ResolveSingleOrDefault_returns_null()
-        {
-            IResolveSingle<String> chain = new DummyChain();
-
-            var result = await chain.ResolveSingleAsync(ClientOM.ResolveContext);
-            Assert.Null(result);
-        }
-
-        [Fact]
-        public async Task ResolveSingle_fails_no_results()
-            {
-            IResolveSingle<String> chain = new DummyChain();
-
-            await Assert.ThrowsAsync<InvalidOperationException>(
-                () => chain.ResolveSingleAsync(ClientOM.ResolveContext)
-            );
-        }
-
-        [Fact]
-        public async Task ResolveSingleOrDefault_fails_many_results()
-        {
-            IResolveSingle<String> chain = new DummyChain("one", "two", "three");
-
-            await Assert.ThrowsAsync<InvalidOperationException>(
-                () => chain.ResolveSingleAsync(ClientOM.ResolveContext)
-            );
-        }
-
-        [Fact]
         public async Task Resolve_returns_no_results()
         {
             IResolve<String> chain = new DummyChain();
@@ -123,7 +84,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Contains("bbb", result);
         }
 
-        private sealed class DummyChain : ResolvableChain, IResolvableChainElement<String>, IResolve<String>, IResolveSingle<String>
+        private sealed class DummyChain : ResolvableChain, IResolvableChainElement<String>, IResolve<String>
         {
             public DummyChain(params String[] results)
             {
@@ -156,11 +117,6 @@ namespace HarshPoint.Tests.Provisioning
             Task<IEnumerable<String>> IResolve<String>.ResolveAsync(IResolveContext context)
             {
                 return ResolveChain<String>(context);
-            }
-
-            Task<String> IResolveSingle<String>.ResolveSingleAsync(IResolveContext context)
-            {
-                return ResolveChainSingle<String>(context);
             }
         }
     }

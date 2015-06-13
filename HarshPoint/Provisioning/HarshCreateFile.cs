@@ -13,7 +13,7 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        public IResolveSingle<Folder> Folder
+        public IResolve<Folder> Folder
         {
             get;
             set;
