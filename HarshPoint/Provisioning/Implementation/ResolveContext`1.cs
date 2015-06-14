@@ -2,15 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace HarshPoint.Provisioning
 {
     public sealed class ResolveContext<TProvisionerContext> : IResolveContext
         where TProvisionerContext : HarshProvisionerContextBase
     {
-        private IImmutableList<ResolveFailure> _failures = ImmutableList<ResolveFailure>.Empty;
+        private List<ResolveFailure> _failures;
 
-        internal ResolveContext(TProvisionerContext provisionerContext, Boolean throwOnFailure = false)
+        internal ResolveContext(TProvisionerContext provisionerContext)
         {
             if (provisionerContext == null)
             {
@@ -18,7 +19,6 @@ namespace HarshPoint.Provisioning
             }
 
             ProvisionerContext = provisionerContext;
-            ThrowOnFailure = throwOnFailure;
         }
 
         public void AddFailure(Object resolvable, Object identifier)
@@ -33,19 +33,26 @@ namespace HarshPoint.Provisioning
                 throw Error.ArgumentNull(nameof(identifier));
             }
 
-            _failures = _failures.Add(new ResolveFailure(resolvable, identifier));
+            if (_failures == null)
+            {
+                _failures = new List<ResolveFailure>();
+            }
+
+            _failures.Add(new ResolveFailure(resolvable, identifier));
+        }
+
+        public void ValidateNoFailures()
+        {
+            if (_failures != null && _failures.Any())
+            {
+                throw new ResolveFailedException(_failures);
+            }
         }
 
         public IReadOnlyCollection<ResolveFailure> Failures
             => _failures;
 
         public TProvisionerContext ProvisionerContext
-        {
-            get;
-            private set;
-        }
-
-        public Boolean ThrowOnFailure
         {
             get;
             private set;

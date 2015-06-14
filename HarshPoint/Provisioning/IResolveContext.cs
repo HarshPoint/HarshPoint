@@ -11,10 +11,5 @@ namespace HarshPoint.Provisioning
         {
             get;
         }
-
-        Boolean ThrowOnFailure
-        {
-            get;
-        }
     }
 }

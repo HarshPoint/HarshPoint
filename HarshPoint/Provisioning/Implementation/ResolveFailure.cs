@@ -20,6 +20,11 @@ namespace HarshPoint.Provisioning.Implementation
             Identifier = identifier;
         }
 
+        public override String ToString()
+        {
+            return String.Concat(Resolvable, ": ", Identifier);
+        }
+
         public Object Identifier
         {
             get;

@@ -49,15 +49,6 @@ namespace HarshPoint.Provisioning.Implementation
                 
             return resultSets.SelectMany(r => r);
         }
-
-        protected async Task<T> ResolveChainSingle<T>(IResolveContext context)
-        {
-            var values = (await ResolveChain<T>(context)).ToArray();
-
-            return Resolvable.EnsureSingleOrDefault(
-                this, values
-            );
-        }
     
         protected virtual Object ToLogObject()
         {

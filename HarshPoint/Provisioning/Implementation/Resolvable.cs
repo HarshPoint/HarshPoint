@@ -8,26 +8,6 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal static class Resolvable
     {
-        public static T EnsureSingleOrDefault<T>(Object resolvable, IEnumerable<T> values)
-        {
-            if (resolvable == null)
-            {
-                throw Error.ArgumentNull(nameof(resolvable));
-            }
-
-            if (values == null)
-            {
-                throw Error.ArgumentNull(nameof(values));
-            }
-
-            switch (values.Count())
-            {
-                case 0: return default(T);
-                case 1: return values.First();
-                default: throw Error.InvalidOperation(SR.Resolvable_ManyResults, resolvable);
-            }
-        }
-
         public static Type GetResolvedType(Type interfaceType)
         {
             if (interfaceType == null)
@@ -50,15 +30,14 @@ namespace HarshPoint.Provisioning.Implementation
             return null;
         }
 
-        public static IEnumerable<T> ResolveItems<T, TIdentifier, TProvisionerContext>(
+        public static IEnumerable<T> ResolveItems<T, TIdentifier>(
             Object resolvable,
-            ResolveContext<TProvisionerContext> context,
+            IResolveContext context,
             IEnumerable<TIdentifier> identifiers,
             IEnumerable<T> items,
             Func<T, TIdentifier> idSelector,
             IEqualityComparer<TIdentifier> idComparer = null
         )
-            where TProvisionerContext : HarshProvisionerContextBase
         {
             if (resolvable == null)
             {

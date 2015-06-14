@@ -68,7 +68,7 @@ namespace HarshPoint.Tests.Provisioning
                 return Task.FromResult(
                     Resolvable.ResolveItems(
                         this,
-                        (ResolveContext<HarshProvisionerContext>)(context),
+                        context,
                         _identifiers,
                         _items,
                         item => item
