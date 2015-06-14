@@ -1,5 +1,6 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 
 namespace HarshPoint.Tests
@@ -50,5 +51,8 @@ namespace HarshPoint.Tests
         {
             get { return ClientContext?.Web; }
         }
+
+        public TaxonomySession TaxonomySession
+            => Context?.TaxonomySession;
     }
 }

@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning
 {
     public static class ResolveTermStoreExtensions
     {
-        public static ResolveTermSetById TermSetById(this IResolve<TermStore> termStore, params Guid[] ids)
+        public static ResolveTermStoreTermSetById TermSetById(this IResolve<TermStore> termStore, params Guid[] ids)
         {
             if (termStore == null)
             {
@@ -18,7 +18,7 @@ namespace HarshPoint.Provisioning
                 throw Error.ArgumentNull(nameof(ids));
             }
 
-            return new ResolveTermSetById(termStore, ids);
+            return new ResolveTermStoreTermSetById(termStore, ids);
         }
     }
 }

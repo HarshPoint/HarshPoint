@@ -1,5 +1,7 @@
 ﻿using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Taxonomy;
 using System;
+using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -45,6 +47,17 @@ namespace HarshPoint.Provisioning.Implementation
 
                 // case sensitive because there are fields that differ only in case
                 StringComparer.Ordinal
+            );
+
+        public static readonly ClientObjectResolveQuery<TermSet, TermGroup, TermStore, Guid> TermStoreTermSetById =
+            new ClientObjectResolveQuery<TermSet, TermGroup, TermStore, Guid>(
+                termSet => termSet.Id,
+                termStore => termStore.Groups.Include(
+                    group => group.TermSets.Include(
+                        termSet => termSet.Id
+                    )
+                ),
+                groups => groups.SelectMany(group => group.TermSets)
             );
     }
 }

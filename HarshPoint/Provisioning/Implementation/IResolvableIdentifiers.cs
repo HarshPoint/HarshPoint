@@ -61,13 +61,14 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        public static async Task<IEnumerable<T>> ResolveQuery<T, TParent, TIdentifier>(
+        public static async Task<IEnumerable<T>> ResolveQuery<T, TIntermediate, TParent, TIdentifier>(
             this IResolvableIdentifiers<TIdentifier> resolvable,
-            ClientObjectResolveQuery<T, TParent, TIdentifier> resolveQuery,
+            ClientObjectResolveQuery<T, TIntermediate, TParent, TIdentifier> resolveQuery,
             ResolveContext<HarshProvisionerContext> context,
             TParent parent
         )
             where T : ClientObject
+            where TIntermediate : ClientObject
         {
             if (context == null)
             {
@@ -87,8 +88,10 @@ namespace HarshPoint.Provisioning.Implementation
             var query = resolveQuery.QueryBuilder(parent);
             var clientContext = context.ProvisionerContext.ClientContext;
 
-            var items = clientContext.LoadQuery(query);
+            var intermediate = clientContext.LoadQuery(query);
             await clientContext.ExecuteQueryAsync();
+
+            var items = resolveQuery.PostQueryTransform(intermediate);
 
             return resolvable.ResolveItems(
                 context,

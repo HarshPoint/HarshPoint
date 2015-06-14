@@ -5,12 +5,13 @@ using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ClientObjectResolveQuery<T, TParent, TIdentifier>
-        where T : ClientObject
+    internal class ClientObjectResolveQuery<T, TIntermediate, TParent, TIdentifier>
+        where TIntermediate : ClientObject
     {
         public ClientObjectResolveQuery(
             Func<T, TIdentifier> identifierSelector,
-            Func<TParent, IQueryable<T>> queryBuilder,
+            Func<TParent, IQueryable<TIntermediate>> queryBuilder,
+            Func<IEnumerable<TIntermediate>, IEnumerable<T>> postQueryTransform,
             IEqualityComparer<TIdentifier> identifierComparer = null
         )
         {
@@ -24,8 +25,14 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(queryBuilder));
             }
 
+            if (postQueryTransform == null)
+            {
+                throw Error.ArgumentNull(nameof(postQueryTransform));
+            }
+
             IdentifierComparer = identifierComparer ?? EqualityComparer<TIdentifier>.Default;
             IdentifierSelector = identifierSelector;
+            PostQueryTransform = postQueryTransform;
             QueryBuilder = queryBuilder;
         }
 
@@ -41,10 +48,35 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        public Func<TParent, IQueryable<T>> QueryBuilder
+        public Func<IEnumerable<TIntermediate>, IEnumerable<T>> PostQueryTransform
         {
             get;
             private set;
+        }
+
+        public Func<TParent, IQueryable<TIntermediate>> QueryBuilder
+        {
+            get;
+            private set;
+        }
+    }
+
+    internal class ClientObjectResolveQuery<T, TParent, TIdentifier> :
+        ClientObjectResolveQuery<T, T, TParent, TIdentifier>
+        where T : ClientObject
+    {
+        public ClientObjectResolveQuery(
+            Func<T, TIdentifier> identifierSelector,
+            Func<TParent, IQueryable<T>> queryBuilder,
+            IEqualityComparer<TIdentifier> identifierComparer = null
+        )
+            : base(
+                  identifierSelector,
+                  queryBuilder,
+                  results => results,
+                  identifierComparer
+            )
+        {
         }
     }
 }

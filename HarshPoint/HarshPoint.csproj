@@ -85,7 +85,7 @@
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListFieldById.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveTermSetById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveTermStoreTermSetById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreKeywordsDefault.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreSiteCollectionDefault.cs" />
     <Compile Include="Provisioning\ResolveTermStoreExtensions.cs" />
