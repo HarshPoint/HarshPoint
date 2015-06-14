@@ -17,7 +17,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task Default_SiteCollection_TermStore_gets_resolved()
         {
-            IResolve<TermStore> resolver = Resolve.TermStoreSiteCollectionDefault();
+            var resolver = Resolve.TermStoreSiteCollectionDefault();
             var termStore = await resolver.ResolveSingleAsync(Fixture.ResolveContext);
             Assert.NotNull(termStore);
 
@@ -33,7 +33,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task Default_Keywords_TermStore_gets_resolved()
         {
-            IResolve<TermStore> resolver = Resolve.TermStoreKeywordsDefault();
+            var resolver = Resolve.TermStoreKeywordsDefault();
             var termStore = await resolver.ResolveSingleAsync(Fixture.ResolveContext);
             Assert.NotNull(termStore);
 
