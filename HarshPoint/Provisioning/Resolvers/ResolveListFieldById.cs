@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,10 +26,10 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(parent));
             }
 
-            return this.ResolveClientObjectQuery(
-                context,
-                parent.Fields,
-                ClientObjectResolveQuery.FieldById
+            return this.ResolveQuery(
+                ClientObjectResolveQuery.FieldById,
+                context, 
+                parent.Fields
             );
         }
     }

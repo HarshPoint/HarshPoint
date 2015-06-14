@@ -72,6 +72,7 @@
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
     <Compile Include="Provisioning\HarshProvisionerResult.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerResultNotRun.cs" />
+    <Compile Include="Provisioning\Implementation\IResolvableIdentifiers.cs" />
     <Compile Include="Provisioning\Implementation\ResolveContext`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveFailedException.cs" />
     <Compile Include="Provisioning\Implementation\ResolveFailure.cs" />
@@ -79,9 +80,8 @@
     <Compile Include="Provisioning\Implementation\Resolvable.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedResolver.cs" />
     <Compile Include="Provisioning\ResolveListExtensions.cs" />
-    <Compile Include="Provisioning\Resolvers\ClientObjectResolvableExtensions.cs" />
-    <Compile Include="Provisioning\Resolvers\ClientObjectResolveQuery.cs" />
-    <Compile Include="Provisioning\Resolvers\ClientObjectResolveQuery`3.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery`3.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListFieldById.cs" />

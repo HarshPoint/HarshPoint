@@ -1,12 +1,13 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveFieldByInternalName
-        : Implementation.Resolvable<Field, String, HarshProvisionerContext, ResolveFieldByInternalName>
+    public sealed class ResolveFieldByInternalName :
+        Resolvable<Field, string, HarshProvisionerContext, ResolveFieldByInternalName>
     {
         public ResolveFieldByInternalName(IEnumerable<String> names)
             : base(names)
@@ -20,10 +21,10 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            return this.ResolveClientObjectQuery(
+            return this.ResolveQuery(
+                ClientObjectResolveQuery.FieldByInternalName,
                 context,
-                context.ProvisionerContext.Web.Fields,
-                ClientObjectResolveQuery.FieldByInternalName
+                context.ProvisionerContext.Web.Fields
             );
         }
     }

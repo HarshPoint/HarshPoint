@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveFieldById
-        : Implementation.Resolvable<Field, Guid, HarshProvisionerContext, ResolveFieldById>
+        : Resolvable<Field, Guid, HarshProvisionerContext, ResolveFieldById>
     {
         public ResolveFieldById(IEnumerable<Guid> ids)
             : base(ids)
@@ -20,10 +21,10 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            return this.ResolveClientObjectQuery(
+            return this.ResolveQuery(
+                ClientObjectResolveQuery.FieldById,
                 context,
-                context.ProvisionerContext.Web.Fields,
-                ClientObjectResolveQuery.FieldById
+                context.ProvisionerContext.Web.Fields
             );
         }
     }

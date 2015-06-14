@@ -1,7 +1,7 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
 
-namespace HarshPoint.Provisioning.Resolvers
+namespace HarshPoint.Provisioning.Implementation
 {
     internal static class ClientObjectResolveQuery
     {

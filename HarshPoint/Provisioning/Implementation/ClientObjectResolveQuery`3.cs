@@ -2,9 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace HarshPoint.Provisioning.Resolvers
+namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ClientObjectResolveQuery<T, TParent, TIdentifier>
         where T : ClientObject

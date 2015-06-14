@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,10 +15,10 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override async Task<IEnumerable<List>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
         {
-            return await this.ResolveClientObjectQuery(
+            return await this.ResolveQuery(
+                ClientObjectResolveQuery.ListByUrl,
                 context,
-                context.ProvisionerContext.Web,
-                ClientObjectResolveQuery.ListByUrl
+                context.ProvisionerContext.Web
             );
         }
     }

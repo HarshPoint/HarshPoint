@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace HarshPoint.Provisioning.Resolvers
             );
             await context.ProvisionerContext.ClientContext.ExecuteQueryAsync();
 
-            return this.ResolveIdentifiers(
+            return this.ResolveItems(
                 context,
                 groups.SelectMany(g => g.TermSets),
                 ts => ts.Id

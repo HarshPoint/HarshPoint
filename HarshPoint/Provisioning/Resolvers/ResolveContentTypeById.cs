@@ -1,11 +1,12 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveContentTypeById :
-        Implementation.Resolvable<ContentType, HarshContentTypeId, HarshProvisionerContext, ResolveContentTypeById>
+        Resolvable<ContentType, HarshContentTypeId, HarshProvisionerContext, ResolveContentTypeById>
     {
         public ResolveContentTypeById(IEnumerable<HarshContentTypeId> identifiers)
             : base(identifiers)
@@ -19,10 +20,10 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            return this.ResolveClientObjectQuery(
+            return this.ResolveQuery(
+                ClientObjectResolveQuery.ContentTypeById,
                 context,
-                context.ProvisionerContext.Web.ContentTypes,
-                ClientObjectResolveQuery.ContentTypeById
+                context.ProvisionerContext.Web.ContentTypes
             );
         }
     }

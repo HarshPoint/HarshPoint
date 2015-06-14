@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using System.Collections.Immutable;
 
 namespace HarshPoint.Tests.Provisioning
 {
@@ -52,24 +53,24 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Equal(expectedFailures, ctx.Failures.Select(fail => fail.Identifier));
         }
 
-        private sealed class IdResolver : IResolve<String>
+        private sealed class IdResolver : IResolve<String>, IResolvableIdentifiers<String>
         {
-            private readonly IEnumerable<String> _identifiers;
-            private readonly IEnumerable<String> _items;
+            private readonly IImmutableList<String> _identifiers;
+            private readonly IImmutableList<String> _items;
 
             public IdResolver(IEnumerable<String> items, IEnumerable<String> identifiers)
             {
-                _items = items;
-                _identifiers = identifiers;
+                _items = items.ToImmutableArray();
+                _identifiers = identifiers.ToImmutableArray();
             }
+
+            public IImmutableList<String> Identifiers => _identifiers;
 
             public Task<IEnumerable<String>> TryResolveAsync(IResolveContext context)
             {
                 return Task.FromResult(
-                    Resolvable.ResolveItems(
-                        this,
+                    this.ResolveItems(
                         context,
-                        _identifiers,
                         _items,
                         item => item
                     )
