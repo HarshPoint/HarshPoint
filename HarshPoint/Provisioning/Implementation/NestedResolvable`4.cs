@@ -67,17 +67,17 @@ namespace HarshPoint.Provisioning.Implementation
             => ResolveChainElement(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<IEnumerable<T2>> IResolve<T2>.ResolveAsync(IResolveContext context)
+        Task<IEnumerable<T2>> IResolve<T2>.TryResolveAsync(IResolveContext context)
             => ResolveChain<T2>(context);
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<IEnumerable<IGrouping<T1, T2>>> IResolve<IGrouping<T1, T2>>.ResolveAsync(IResolveContext context)
+        Task<IEnumerable<IGrouping<T1, T2>>> IResolve<IGrouping<T1, T2>>.TryResolveAsync(IResolveContext context)
             => ResolveChain<IGrouping<T1, T2>>(context);
             
         private async Task<IEnumerable<IGrouping<T1, T2>>> ResolveChainElement(IResolveContext context)
         {
             var typedContext = ValidateContext<TContext>(context);
-            var parents = await Parents.ResolveAsync(context);
+            var parents = await Parents.TryResolveAsync(context);
 
             return await parents.SelectSequentially(
                 p => ResolveChildren(typedContext, p)

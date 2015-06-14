@@ -29,7 +29,7 @@ namespace HarshPoint.Provisioning.Implementation
             => ResolveChainElement(ValidateContext<TContext>(context));
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        Task<IEnumerable<T>> IResolve<T>.ResolveAsync(IResolveContext context)
+        Task<IEnumerable<T>> IResolve<T>.TryResolveAsync(IResolveContext context)
             => ResolveChain<T>(context);
     }
 }

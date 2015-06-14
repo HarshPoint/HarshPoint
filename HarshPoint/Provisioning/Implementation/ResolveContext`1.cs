@@ -28,10 +28,6 @@ namespace HarshPoint.Provisioning
                 throw Error.ArgumentNull(nameof(resolvable));
             }
 
-            if (identifier == null)
-            {
-                throw Error.ArgumentNull(nameof(identifier));
-            }
 
             if (_failures == null)
             {

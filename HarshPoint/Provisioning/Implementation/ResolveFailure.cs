@@ -4,16 +4,16 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public sealed class ResolveFailure
     {
+        public ResolveFailure(Object resolvable)
+            : this(resolvable, null)
+        {
+        }
+
         public ResolveFailure(Object resolvable, Object identifier)
         {
             if (resolvable == null)
             {
                 throw Error.ArgumentNull(nameof(resolvable));
-            }
-
-            if (identifier == null)
-            {
-                throw Error.ArgumentNull(nameof(identifier));
             }
 
             Resolvable = resolvable;
@@ -22,7 +22,12 @@ namespace HarshPoint.Provisioning.Implementation
 
         public override String ToString()
         {
-            return String.Concat(Resolvable, ": ", Identifier);
+            if (Identifier != null)
+            {
+                return String.Concat(Resolvable, ": ", Identifier);
+            }
+
+            return Resolvable.ToString();
         }
 
         public Object Identifier

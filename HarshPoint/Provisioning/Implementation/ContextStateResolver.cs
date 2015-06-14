@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ContextStateResolver<T> : IResolve<T>
     {
-        public Task<IEnumerable<T>> ResolveAsync(IResolveContext context)
+        public Task<IEnumerable<T>> TryResolveAsync(IResolveContext context)
         {
             if (context == null)
             {

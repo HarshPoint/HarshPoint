@@ -16,7 +16,7 @@ namespace HarshPoint.Provisioning.Implementation
             Values = values.ToImmutableList();
         }
 
-        public Task<IEnumerable<T>> ResolveAsync(IResolveContext context)
+        public Task<IEnumerable<T>> TryResolveAsync(IResolveContext context)
         {
             return Task.FromResult(Values);
         }

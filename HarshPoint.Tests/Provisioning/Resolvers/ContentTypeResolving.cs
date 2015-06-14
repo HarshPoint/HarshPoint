@@ -22,7 +22,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         public async Task Valid_id_gets_resolved(String id)
         {
             IResolve<ContentType> resolver = Resolve.ContentTypeById(id);
-            var ct = Assert.Single(await resolver.ResolveAsync(Fixture.ResolveContext));
+            var ct = Assert.Single(await resolver.TryResolveAsync(Fixture.ResolveContext));
 
             Assert.False(ct.IsNull());
             Assert.Equal(id, await ct.EnsurePropertyAvailable(c => c.StringId));

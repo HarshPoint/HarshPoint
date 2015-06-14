@@ -20,7 +20,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Failures_are_recorded()
         {
-            var items = new[] { "42", "4242" };
+            var items = new[] { "42", "4242", "unused" };
             var ids = new[]
             {
                 "1",
@@ -34,7 +34,7 @@ namespace HarshPoint.Tests.Provisioning
             };
 
             var expectedResults = ids
-                .Select(x => items.Contains(x) ? x : null)
+                .Where(x => items.Contains(x))
                 .ToArray();
 
             var expectedFailures = ids
@@ -43,7 +43,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var resolver = new IdResolver(items, ids);
             var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
-            var results = await resolver.ResolveAsync(ctx);
+            var results = await resolver.TryResolveAsync(ctx);
 
             Assert.Equal(expectedResults, results);
 
@@ -63,7 +63,7 @@ namespace HarshPoint.Tests.Provisioning
                 _identifiers = identifiers;
             }
 
-            public Task<IEnumerable<String>> ResolveAsync(IResolveContext context)
+            public Task<IEnumerable<String>> TryResolveAsync(IResolveContext context)
             {
                 return Task.FromResult(
                     Resolvable.ResolveItems(

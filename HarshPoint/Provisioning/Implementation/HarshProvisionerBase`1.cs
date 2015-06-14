@@ -149,61 +149,53 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected async Task<IEnumerable<T>> TryResolveAsync<T>(IResolve<T> resolver)
+        protected Task<IEnumerable<T>> TryResolveAsync<T>(IResolve<T> resolver)
         {
             if (resolver == null)
             {
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            var context = CreateResolveContext();
-            var results = await resolver.ResolveAsync(context);
-
-            return results.Where(r => r != null);
+            return resolver.TryResolveAsync(
+                CreateResolveContext()
+            );
         }
 
-        protected async Task<T> TryResolveSingleAsync<T>(IResolve<T> resolver)
+        protected Task<T> TryResolveSingleAsync<T>(IResolve<T> resolver)
         {
             if (resolver == null)
             {
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            var results = await TryResolveAsync(resolver);
-            return results.FirstOrDefault();
+            return resolver.TryResolveSingleAsync(
+                CreateResolveContext()
+            );
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected async Task<IEnumerable<T>> ResolveAsync<T>(IResolve<T> resolver)
+        protected Task<IEnumerable<T>> ResolveAsync<T>(IResolve<T> resolver)
         {
             if (resolver == null)
             {
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            var context = CreateResolveContext();
-            var results = await resolver.ResolveAsync(context);
-
-            context.ValidateNoFailures();
-
-            return results.Where(r => r != null);
+            return resolver.ResolveAsync(
+                CreateResolveContext()
+            );
         }
 
-        protected async Task<T> ResolveSingleAsync<T>(IResolve<T> resolver)
+        protected Task<T> ResolveSingleAsync<T>(IResolve<T> resolver)
         {
             if (resolver == null)
             {
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
-            var results = await ResolveAsync(resolver);
-
-            switch (results.Count())
-            {
-                case 1: return results.First();
-                case 0: throw Error.InvalidOperation(SR.Resolvable_NoResult, resolver);
-                default: throw Error.InvalidOperation(SR.Resolvable_ManyResults, resolver);
-            }
+            return resolver.ResolveSingleAsync(
+                CreateResolveContext()
+            );
         }
 
         protected virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
@@ -211,14 +203,14 @@ namespace HarshPoint.Provisioning.Implementation
             return new Collection<HarshProvisionerBase>();
         }
 
-        protected virtual ResolveContext<TContext> CreateResolveContext()
-        {
-            return new ResolveContext<TContext>(Context);
-        }
-
         internal abstract Task<HarshProvisionerResult> ProvisionChild(HarshProvisionerBase provisioner, TContext context);
 
         internal abstract Task<HarshProvisionerResult> UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
+
+        private ResolveContext<TContext> CreateResolveContext()
+        {
+            return new ResolveContext<TContext>(Context);
+        }
 
         private void InitializeDefaultFromContextProperties()
         {

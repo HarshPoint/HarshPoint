@@ -22,7 +22,7 @@ namespace HarshPoint.Tests.Provisioning
             var resolver = new ContextStateResolver<String>();
 
             var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
-            var many = await resolver.ResolveAsync(resolveCtx);
+            var many = await resolver.TryResolveAsync(resolveCtx);
 
             Assert.Single(many, "42");
         }
@@ -34,7 +34,7 @@ namespace HarshPoint.Tests.Provisioning
             var resolver = new ContextStateResolver<String>();
 
             var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
-            var many = await resolver.ResolveAsync(resolveCtx);
+            var many = await resolver.TryResolveAsync(resolveCtx);
 
             Assert.Single(many, "42");
         }
@@ -49,7 +49,7 @@ namespace HarshPoint.Tests.Provisioning
             var resolver = new ContextStateResolver<String>();
 
             var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
-            var many = await resolver.ResolveAsync(resolveCtx);
+            var many = await resolver.TryResolveAsync(resolveCtx);
 
             Assert.Collection(
                 many,

@@ -19,7 +19,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         public async Task MasterPage_catalog_gets_resolved()
         {
             var resolver = (IResolve<List>)Resolve.Catalog(ListTemplateType.MasterPageCatalog);
-            var catalogs = await resolver.ResolveAsync(ClientOM.ResolveContext);
+            var catalogs = await resolver.TryResolveAsync(ClientOM.ResolveContext);
 
             var catalog = Assert.Single(catalogs);
 
@@ -35,7 +35,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
                 .Catalog(ListTemplateType.MasterPageCatalog)
                 .RootFolder();
 
-            var folder = Assert.Single(await resolver.ResolveAsync(ClientOM.ResolveContext));
+            var folder = Assert.Single(await resolver.TryResolveAsync(ClientOM.ResolveContext));
 
             Assert.Contains(
                 "/_catalogs/masterpage",

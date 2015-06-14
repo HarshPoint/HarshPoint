@@ -66,17 +66,19 @@ namespace HarshPoint.Provisioning.Implementation
 
             var byId = items.ToImmutableDictionary(idSelector, idComparer);
 
-            return identifiers.Select(id =>
+            foreach (var id in identifiers)
             {
                 T value;
 
-                if (!byId.TryGetValue(id, out value))
+                if (byId.TryGetValue(id, out value))
+                {
+                    yield return value;
+                }
+                else
                 {
                     context.AddFailure(resolvable, id);
                 }
-
-                return value;
-            });
+            }
         }
     }
 }
