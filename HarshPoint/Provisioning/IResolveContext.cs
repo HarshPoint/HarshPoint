@@ -14,22 +14,4 @@ namespace HarshPoint.Provisioning
             get;
         }
     }
-
-    public static class IResolveContextExtensions
-    {
-        public static void AddFailure(this IResolveContext context, Object resolvable)
-        {
-            if (context == null)
-            {
-                throw Error.ArgumentNull(nameof(context));
-            }
-
-            if (resolvable==null)
-            {
-                throw Error.ArgumentNull(nameof(resolvable));
-            }
-
-            context.AddFailure(resolvable, null);
-        }
-    }
 }
