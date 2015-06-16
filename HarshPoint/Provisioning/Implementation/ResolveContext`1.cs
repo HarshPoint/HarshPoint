@@ -5,18 +5,17 @@ using System.Linq;
 
 namespace HarshPoint.Provisioning
 {
-    public sealed class ResolveContext<TProvisionerContext> : IResolveContext
+    public class ResolveContext<TProvisionerContext> : IResolveContext
         where TProvisionerContext : HarshProvisionerContextBase
     {
         private List<ResolveFailure> _failures;
 
-        internal ResolveContext(TProvisionerContext provisionerContext)
+        public ResolveContext()
         {
-            if (provisionerContext == null)
-            {
-                throw Error.ArgumentNull(nameof(provisionerContext));
-            }
+        }
 
+        public ResolveContext(TProvisionerContext provisionerContext)
+        {
             ProvisionerContext = provisionerContext;
         }
 
@@ -50,7 +49,7 @@ namespace HarshPoint.Provisioning
         public TProvisionerContext ProvisionerContext
         {
             get;
-            private set;
+            internal set;
         }
 
         HarshProvisionerContextBase IResolveContext.ProvisionerContext => ProvisionerContext;

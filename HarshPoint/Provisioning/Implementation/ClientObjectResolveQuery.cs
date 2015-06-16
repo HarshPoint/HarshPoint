@@ -10,11 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
         public static readonly ClientObjectResolveQuery<ContentType, ContentTypeCollection, HarshContentTypeId> ContentTypeById =
             new ClientObjectResolveQuery<ContentType, ContentTypeCollection, HarshContentTypeId>(
                 ct => HarshContentTypeId.Parse(ct.StringId),
-                contentTypeCollection => contentTypeCollection.Include(
-                    ct => ct.StringId,
-                    ct => ct.Name // shouldn't be here and users should Include()
-                                  // it themselves, once that functionaly is available
-                )
+                contentTypes => contentTypes.Include(ct => ct.StringId)
             );
 
         public static readonly ClientObjectResolveQuery<List, Web, String> ListByUrl =
@@ -30,32 +26,23 @@ namespace HarshPoint.Provisioning.Implementation
         public static readonly ClientObjectResolveQuery<Field, FieldCollection, Guid> FieldById =
             new ClientObjectResolveQuery<Field, FieldCollection, Guid>(
                 field => field.Id,
-                fieldCollection => fieldCollection.Include(
-                    field => field.Id,
-                    field => field.InternalName // shouldn't be here and users should Include()
-                )                               // it themselves, once that functionaly is available
+                fields => fields.Include(f => f.Id)
             );
 
         public static readonly ClientObjectResolveQuery<Field, FieldCollection, String> FieldByInternalName =
             new ClientObjectResolveQuery<Field, FieldCollection, String>(
                 field => field.InternalName,
-                fieldCollection => fieldCollection.Include(
-                    field => field.Id, // shouldn't be here and users should Include()
-                                       // it themselves, once that functionaly is available
-                    field => field.InternalName 
-                ),
-
-                // case sensitive because there are fields that differ only in case
-                StringComparer.Ordinal
+                fields => fields.Include(f => f.InternalName),
+                StringComparer.Ordinal // case sensitive because there are fields that differ only in case
             );
 
         public static readonly ClientObjectResolveQuery<TermSet, TermGroup, TermStore, Guid> TermStoreTermSetById =
             new ClientObjectResolveQuery<TermSet, TermGroup, TermStore, Guid>(
                 termSet => termSet.Id,
-                termStore => termStore.Groups.Include(
-                    group => group.TermSets.Include(
-                        termSet => termSet.Id
-                    )
+                (termStore, retrievals) => termStore.Groups.Include(
+                    group => group.TermSets
+                        .Include(retrievals)
+                        .Include(termSet => termSet.Id)
                 ),
                 groups => groups.SelectMany(group => group.TermSets)
             );

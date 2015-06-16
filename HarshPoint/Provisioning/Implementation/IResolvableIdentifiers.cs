@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -85,7 +87,13 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(parent));
             }
 
-            var query = resolveQuery.QueryBuilder(parent);
+            var retrievals = 
+                (context as ClientObjectResolveContext<T>)
+                ?.Retrievals
+                ?.ToArray() 
+                ?? new Expression<Func<T, Object>>[0];
+
+            var query = resolveQuery.QueryBuilder(parent, retrievals);
             var clientContext = context.ProvisionerContext.ClientContext;
 
             var intermediate = clientContext.LoadQuery(query);

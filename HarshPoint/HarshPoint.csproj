@@ -69,6 +69,7 @@
     <Compile Include="Provisioning\HarshRemoveContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshTaxonomyField.cs" />
     <Compile Include="Provisioning\IDefaultFromContextTag.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveContext.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
     <Compile Include="Provisioning\HarshProvisionerResult.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerResultNotRun.cs" />

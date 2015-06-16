@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -10,7 +11,7 @@ namespace HarshPoint.Provisioning.Implementation
     {
         public ClientObjectResolveQuery(
             Func<T, TIdentifier> identifierSelector,
-            Func<TParent, IQueryable<TIntermediate>> queryBuilder,
+            Func<TParent, Expression<Func<T, Object>>[], IQueryable<TIntermediate>> queryBuilder,
             Func<IEnumerable<TIntermediate>, IEnumerable<T>> postQueryTransform,
             IEqualityComparer<TIdentifier> identifierComparer = null
         )
@@ -54,7 +55,7 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        public Func<TParent, IQueryable<TIntermediate>> QueryBuilder
+        public Func<TParent, Expression<Func<T, Object>>[], IQueryable<TIntermediate>> QueryBuilder
         {
             get;
             private set;
@@ -72,7 +73,7 @@ namespace HarshPoint.Provisioning.Implementation
         )
             : base(
                   identifierSelector,
-                  queryBuilder,
+                  (parent, retrievals) => queryBuilder(parent).Include(retrievals),
                   results => results,
                   identifierComparer
             )
