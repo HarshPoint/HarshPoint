@@ -201,7 +201,7 @@ namespace HarshPoint.Provisioning
             }
 
             TargetFieldCollection = Web.Fields;
-            Field = await TryResolveSingleAsync(Resolve.FieldById(Id));
+            await ResolveField();
         }
 
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
@@ -221,7 +221,7 @@ namespace HarshPoint.Provisioning
                 // instance returned by AddFieldAsXml is always a Field,
                 // not the concerete subtype (e.g. TaxonomyField).
 
-                Field = await ResolveSingleAsync(Resolve.FieldById(Id));
+                await ResolveField();
                 return ResultFactory.Added(Field);
             }
             else
@@ -265,6 +265,15 @@ namespace HarshPoint.Provisioning
         {
             get;
             set;
+        }
+
+        private async Task ResolveField()
+        {
+            Field = await TryResolveSingleAsync(
+                Resolve.FieldById(Id),
+                f => f.Id,
+                f => f.InternalName
+            );
         }
 
         private static readonly HarshProvisionerObjectResultFactory<Field, String> ResultFactory =

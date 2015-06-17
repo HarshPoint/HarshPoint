@@ -93,7 +93,7 @@ namespace HarshPoint.Provisioning.Implementation
                 ?.ToArray() 
                 ?? new Expression<Func<T, Object>>[0];
 
-            var query = resolveQuery.QueryBuilder(parent, retrievals);
+            var query = resolveQuery.CreateQuery(parent, retrievals);
             var clientContext = context.ProvisionerContext.ClientContext;
 
             var intermediate = clientContext.LoadQuery(query);

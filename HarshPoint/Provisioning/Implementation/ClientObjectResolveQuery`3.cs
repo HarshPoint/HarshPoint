@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -11,7 +12,7 @@ namespace HarshPoint.Provisioning.Implementation
     {
         public ClientObjectResolveQuery(
             Func<T, TIdentifier> identifierSelector,
-            Func<TParent, Expression<Func<T, Object>>[], IQueryable<TIntermediate>> queryBuilder,
+            Func<TParent, IQueryable<TIntermediate>> queryBuilder,
             Func<IEnumerable<TIntermediate>, IEnumerable<T>> postQueryTransform,
             IEqualityComparer<TIdentifier> identifierComparer = null
         )
@@ -37,6 +38,16 @@ namespace HarshPoint.Provisioning.Implementation
             QueryBuilder = queryBuilder;
         }
 
+        public IQueryable<TIntermediate> CreateQuery(TParent parent, Expression<Func<T, Object>>[] retrievals)
+        {
+            var query = QueryBuilder(parent);
+
+            var transformer = new ClientObjectResolveRetrievalTransformer<T>(retrievals);
+            var replacedRetrievals = transformer.Process(query.Expression);
+
+            return query.Provider.CreateQuery<TIntermediate>(replacedRetrievals);
+        }
+
         public IEqualityComparer<TIdentifier> IdentifierComparer
         {
             get;
@@ -55,11 +66,12 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        public Func<TParent, Expression<Func<T, Object>>[], IQueryable<TIntermediate>> QueryBuilder
+        private Func<TParent, IQueryable<TIntermediate>> QueryBuilder
         {
             get;
-            private set;
+            set;
         }
+
     }
 
     internal class ClientObjectResolveQuery<T, TParent, TIdentifier> :
@@ -73,7 +85,7 @@ namespace HarshPoint.Provisioning.Implementation
         )
             : base(
                   identifierSelector,
-                  (parent, retrievals) => queryBuilder(parent).Include(retrievals),
+                  queryBuilder,
                   results => results,
                   identifierComparer
             )

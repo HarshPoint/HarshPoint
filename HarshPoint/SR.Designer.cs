@@ -71,6 +71,40 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified expression doesn&apos;t pass a new array expression as the second argument to the Include call.
+        ///
+        ///{0}.
+        /// </summary>
+        internal static string ClientObjectResolveQueryRetrievalVisitor_IncludeArgNotArray {
+            get {
+                return ResourceManager.GetString("ClientObjectResolveQueryRetrievalVisitor_IncludeArgNotArray", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified expression contains more than one Include call.
+        ///
+        ///{0}
+        ///{1}.
+        /// </summary>
+        internal static string ClientObjectResolveQueryRetrievalVisitor_MoreIncludeCallsNotSupported {
+            get {
+                return ResourceManager.GetString("ClientObjectResolveQueryRetrievalVisitor_MoreIncludeCallsNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified expression doesn&apos;t contain any Include calls.
+        ///
+        ///{0}.
+        /// </summary>
+        internal static string ClientObjectResolveQueryRetrievalVisitor_NoIncludeCall {
+            get {
+                return ResourceManager.GetString("ClientObjectResolveQueryRetrievalVisitor_NoIncludeCall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The content type ID could not be determined because no parent of the specified type &apos;{0}&apos; defines an absolute content type ID..
         /// </summary>
         internal static string ContentTypeIdBuilder_NoAbsoluteIDInHierarchy {

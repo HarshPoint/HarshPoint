@@ -22,10 +22,14 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
                 .ListByUrl("Shared Documents")
                 .FieldById(HarshBuiltInFieldId.Title);
 
-            var field = Assert.Single(await resolver.TryResolveAsync(Fixture.ResolveContext));
+            var field = Assert.Single(
+                await resolver.TryResolveAsync(
+                    Fixture.ResolveContext
+                )
+            );
 
             Assert.NotNull(field);
-            Assert.Equal("Title", field.InternalName);
+            Assert.Equal("Title", await field.EnsurePropertyAvailable(f => f.InternalName));
         }
 
         private async Task EnsureDocuments()

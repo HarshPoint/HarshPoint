@@ -85,6 +85,7 @@
     <Compile Include="Entity\TestEntity.cs" />
     <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
     <Compile Include="Extensions\TypeInfoExtensionsTests.cs" />
+    <Compile Include="Provisioning\ClientObjectQueryRetrievalsReplacing.cs" />
     <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
     <Compile Include="Provisioning\ContentTypeRef.cs" />
     <Compile Include="Provisioning\ContentTypeTests.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Provisioning\Resolvers\FieldResolving.cs" />
     <Compile Include="Provisioning\Resolvers\ListResolving.cs" />
     <Compile Include="Provisioning\Resolvers\TaxonomyResolving.cs" />
+    <Compile Include="Provisioning\RetrievalResolving.cs" />
     <Compile Include="Reflection\MethodInfoExtensionsTests.cs" />
     <Compile Include="HarshContentTypeIdTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

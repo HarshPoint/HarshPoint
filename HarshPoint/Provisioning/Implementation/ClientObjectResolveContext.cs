@@ -10,7 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private IImmutableList<Expression<Func<T, Object>>> _retrievals;
 
-        public ClientObjectResolveContext(IEnumerable<Expression<Func<T, Object>>> retrievals)
+        public ClientObjectResolveContext(params Expression<Func<T, Object>>[] retrievals)
         {
             if (retrievals == null)
             {

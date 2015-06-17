@@ -58,7 +58,10 @@ namespace HarshPoint.Provisioning
 
             if (Id != null)
             {
-                ContentType = await TryResolveSingleAsync(Resolve.ContentTypeById(Id));
+                ContentType = await TryResolveSingleAsync(
+                    Resolve.ContentTypeById(Id),
+                    ct => ct.Name
+                );
             }
             else
             {

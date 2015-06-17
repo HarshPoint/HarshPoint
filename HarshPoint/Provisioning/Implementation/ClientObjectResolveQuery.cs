@@ -39,10 +39,8 @@ namespace HarshPoint.Provisioning.Implementation
         public static readonly ClientObjectResolveQuery<TermSet, TermGroup, TermStore, Guid> TermStoreTermSetById =
             new ClientObjectResolveQuery<TermSet, TermGroup, TermStore, Guid>(
                 termSet => termSet.Id,
-                (termStore, retrievals) => termStore.Groups.Include(
-                    group => group.TermSets
-                        .Include(retrievals)
-                        .Include(termSet => termSet.Id)
+                termStore => termStore.Groups.Include(
+                    group => group.TermSets.Include(termSet => termSet.Id)
                 ),
                 groups => groups.SelectMany(group => group.TermSets)
             );

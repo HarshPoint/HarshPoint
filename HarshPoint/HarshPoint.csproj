@@ -54,6 +54,7 @@
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="HarshBuiltInContentTypeIds.cs" />
     <Compile Include="HarshBuiltInFieldId.cs" />
+    <Compile Include="HarshExpression.cs" />
     <Compile Include="HarshLazy.cs" />
     <Compile Include="HarshSingleElementCollection.cs" />
     <Compile Include="IHarshCloneable.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Provisioning\HarshTaxonomyField.cs" />
     <Compile Include="Provisioning\IDefaultFromContextTag.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveContext.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveRetrievalTransformer.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
     <Compile Include="Provisioning\HarshProvisionerResult.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerResultNotRun.cs" />
