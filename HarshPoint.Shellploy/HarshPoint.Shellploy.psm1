@@ -53,6 +53,10 @@ function New-DefaultFromContextTag {
     New-Object "HarshPoint.Provisioning.$Name" -Property @{ Value = $Value }
 }
 
+function DefaultContentTypeGroup($Value) {
+    New-DefaultFromContextTag DefaultContentTypeGroup $Value
+}
+
 function DefaultFieldGroup($Value) {
     New-DefaultFromContextTag DefaultFieldGroup $Value
 }

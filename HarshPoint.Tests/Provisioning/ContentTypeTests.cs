@@ -147,5 +147,33 @@ namespace HarshPoint.Tests.Provisioning
                 }
             }
         }
+
+        [Fact]
+        public async Task Default_group_is_used()
+        {
+            var prov = new HarshContentType()
+            {
+                Id = HarshContentTypeId.Parse("0x010044fbfdb9defa4244831062437d181c6f"),
+                Name = "44fbfdb9defa4244831062437d181c6f",
+            };
+
+            try
+            {
+                var ctx = Fixture.Context.PushState(new DefaultContentTypeGroup()
+                {
+                    Value = Group
+                });
+
+                await prov.ProvisionAsync(ctx);
+
+                Assert.True(prov.Result.ObjectAdded);
+                Assert.Equal(Group, prov.ContentType.Group);
+            }
+            finally
+            {
+                Fixture.Web.ContentTypes.GetById("0x010044fbfdb9defa4244831062437d181c6f").DeleteObject();
+                await Fixture.ClientContext.ExecuteQueryAsync();
+            }
+        }
     }
 }
