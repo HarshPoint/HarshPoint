@@ -26,7 +26,7 @@ namespace HarshPoint.Provisioning
 
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
-            var fieldLinks = ClientContext.LoadQuery(
+            var existingFieldLinks = ClientContext.LoadQuery(
                 ResolvedContentType.FieldLinks.Include(
                     fl => fl.Id,
                     fl => fl.Name
@@ -35,8 +35,13 @@ namespace HarshPoint.Provisioning
 
             await ClientContext.ExecuteQueryAsync();
 
-            var flcis = from field in await TryResolveAsync(Fields)
-                        where !fieldLinks.Any(fl => fl.Id == field.Id)
+            var fields = await ResolveAsync(
+                Fields,
+                f => f.Id
+            );
+
+            var flcis = from field in fields
+                        where !existingFieldLinks.Any(fl => fl.Id == field.Id)
                         select new FieldLinkCreationInformation()
                         {
                             Field = field,
