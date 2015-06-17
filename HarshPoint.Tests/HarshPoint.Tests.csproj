@@ -85,6 +85,7 @@
     <Compile Include="Entity\TestEntity.cs" />
     <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
     <Compile Include="Extensions\TypeInfoExtensionsTests.cs" />
+    <Compile Include="Provisioning\ClientObjectContextStateResolving.cs" />
     <Compile Include="Provisioning\ClientObjectQueryRetrievalsReplacing.cs" />
     <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
     <Compile Include="Provisioning\ContentTypeRef.cs" />

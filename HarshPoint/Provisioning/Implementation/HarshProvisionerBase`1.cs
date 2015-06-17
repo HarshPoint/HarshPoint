@@ -249,9 +249,7 @@ namespace HarshPoint.Provisioning.Implementation
                 }
                 else if (p.ResolvedType != null)
                 {
-                    value = Activator.CreateInstance(
-                        typeof(ContextStateResolver<>).MakeGenericType(p.ResolvedType)
-                    );
+                    value = ContextStateResolver.Create(p.ResolvedType);
                 }
                 else
                 {

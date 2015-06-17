@@ -22,24 +22,28 @@ namespace HarshPoint.Provisioning
 
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
-            var contentTypes = await TryResolveAsync(ContentTypes);
-            var lists = await TryResolveAsync(Lists); // todo: Include support on resolvers!!!
+            var contentTypes = await ResolveAsync(
+                ContentTypes,
+                ct => ct.Name,
+                ct => ct.StringId
+            );
+
+            var lists = await ResolveAsync(
+                Lists,
+                list => list.ContentTypes.Include(
+                    ct => ct.Name,
+                    ct => ct.StringId
+                )
+            );
 
             foreach (var list in lists)
             {
                 list.ContentTypesEnabled = true;
                 list.Update();
 
-                var existingCts = ClientContext.LoadQuery(
-                    list.ContentTypes.Include(
-                        ct => ct.Name,
-                        ct => ct.StringId
-                    )
+                var existingCtIds = list.ContentTypes.Select(
+                    ct => HarshContentTypeId.Parse(ct.StringId)
                 );
-
-                await ClientContext.ExecuteQueryAsync();
-
-                var existingCtIds = existingCts.Select(ct => HarshContentTypeId.Parse(ct.StringId));
 
                 var toAdd = from ct in contentTypes
                             let id = HarshContentTypeId.Parse(ct.StringId)
