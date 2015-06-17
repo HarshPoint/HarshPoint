@@ -40,7 +40,7 @@ namespace HarshPoint.Tests.Provisioning
         public async Task NestedResolvable_returns_grouping()
         {
             var root = new TestResolvable<String>("42");
-            IResolve<IGrouping<String, Int32>> nested = new NestedTestResolvable<String, Int32>(root, 1);
+            IResolve<IGrouping<String, Int32>> nested = new NestedTestResolvable<String, Int32>(root, 5);
 
             var results = await nested.TryResolveAsync(ClientOM.ResolveContext);
             Assert.NotNull(results);
@@ -48,8 +48,25 @@ namespace HarshPoint.Tests.Provisioning
             var group = Assert.Single(results);
             Assert.Equal("42", group.Key);
 
-            var child = Assert.Single(group);
-            Assert.Equal(42, child);
+            Assert.Equal(5, group.Count());
+            Assert.All(group, i => Assert.Equal(42, i));
+        }
+
+        [Fact]
+        public async Task NestedResolvable_returns_tuple()
+        {
+            var root = new TestResolvable<String>("42");
+            IResolve<Tuple<String, Int32>> nested = new NestedTestResolvable<String, Int32>(root, 5);
+
+            var results = await nested.ResolveAsync(ClientOM.ResolveContext);
+            Assert.NotNull(results);
+            Assert.Equal(5, results.Count());
+
+            Assert.All(results, tuple =>
+            {
+                Assert.Equal("42", tuple.Item1);
+                Assert.Equal(42, tuple.Item2);
+            });
         }
 
         [Fact]
