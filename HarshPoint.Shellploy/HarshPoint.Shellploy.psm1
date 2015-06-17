@@ -272,7 +272,21 @@ function Provision {
                                   -Password $Password `
                                   -ScriptBlock {
 
-        $Provisioner = New-HarshProvisioner HarshProvisioner $Children
-        $Provisioner.ProvisionAsync($args[0]).Wait()
+        param ($Context)
+
+        try {
+            $Provisioner = New-HarshProvisioner HarshProvisioner $Children
+            $Provisioner.ProvisionAsync($Context).Wait()
+        }
+        catch {
+            if ($_.Exception.InnerException -is [AggregateException]) {
+                $_.Exception.InnerException.InnerExceptions |% {
+                    Write-Error $_
+                }
+            }
+            else {
+                Write-Error $_
+            }
+        }
     }
 }
