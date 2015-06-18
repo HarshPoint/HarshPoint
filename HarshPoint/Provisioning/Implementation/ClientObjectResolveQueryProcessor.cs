@@ -23,7 +23,7 @@ namespace HarshPoint.Provisioning.Implementation
             _context = context;
         }
 
-        public Expression Process(Expression expression)
+        public Expression AddContextRetrievals(Expression expression)
         {
             if (expression == null)
             {

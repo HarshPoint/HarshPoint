@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -51,9 +49,9 @@ namespace HarshPoint.Provisioning.Implementation
             if (clientObjectResolveContext != null)
             {
                 var transformer = new ClientObjectResolveQueryProcessor(clientObjectResolveContext);
-                var replacedRetrievals = transformer.Process(query.Expression);
+                var withAddedRetrievals = transformer.AddContextRetrievals(query.Expression);
 
-                query = query.Provider.CreateQuery<TIntermediate>(replacedRetrievals);
+                query = query.Provider.CreateQuery<TIntermediate>(withAddedRetrievals);
             }
 
             return query;

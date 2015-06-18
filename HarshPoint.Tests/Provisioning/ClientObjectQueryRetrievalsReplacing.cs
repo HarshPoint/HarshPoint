@@ -1,11 +1,7 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace HarshPoint.Tests.Provisioning
@@ -22,7 +18,7 @@ namespace HarshPoint.Tests.Provisioning
             var expression = GetExpression(w => w.Lists);
 
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => visitor.Process(expression)
+                () => visitor.AddContextRetrievals(expression)
             );
         }
 
@@ -47,7 +43,7 @@ namespace HarshPoint.Tests.Provisioning
                 )
             );
 
-            var actual = visitor.Process(expression);
+            var actual = visitor.AddContextRetrievals(expression);
 
             Assert.Equal(expected.ToString(), actual.ToString());
         }
@@ -60,7 +56,7 @@ namespace HarshPoint.Tests.Provisioning
             var expression = GetExpression(w => w.Lists.Include().IncludeWithDefaultProperties());
 
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => visitor.Process(expression)
+                () => visitor.AddContextRetrievals(expression)
             );
         }
 
@@ -75,7 +71,7 @@ namespace HarshPoint.Tests.Provisioning
                 w => w.Lists.Include()
             );
 
-            var visited = visitor.Process(expression);
+            var visited = visitor.AddContextRetrievals(expression);
             Assert.NotSame(expression, visited);
 
             var lambda = visited as LambdaExpression;
@@ -107,7 +103,7 @@ namespace HarshPoint.Tests.Provisioning
                 w => w.Lists.Include(l => l.Description)
             );
 
-            var visited = visitor.Process(expression);
+            var visited = visitor.AddContextRetrievals(expression);
             Assert.NotSame(expression, visited);
 
             var lambda = visited as LambdaExpression;
@@ -139,7 +135,7 @@ namespace HarshPoint.Tests.Provisioning
                 w => w.Lists.IncludeWithDefaultProperties()
             );
 
-            var visited = visitor.Process(expression);
+            var visited = visitor.AddContextRetrievals(expression);
             Assert.NotSame(expression, visited);
 
             var lambda = visited as LambdaExpression;
@@ -171,7 +167,7 @@ namespace HarshPoint.Tests.Provisioning
                 w => w.Lists.Include()
             );
 
-            var visited = visitor.Process(expression);
+            var visited = visitor.AddContextRetrievals(expression);
             Assert.NotSame(expression, visited);
 
             var lambda = visited as LambdaExpression;
