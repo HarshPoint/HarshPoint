@@ -17,15 +17,16 @@ namespace HarshPoint.Provisioning.Implementation
 
             var state = context.ProvisionerContext.GetState<T>();
 
-            var retrievalContext = context as ClientObjectResolveContext<T>;
+            var retrievalContext = context as ClientObjectResolveContext;
 
             if (retrievalContext != null)
             {
                 var clientContext = retrievalContext.ProvisionerContext.ClientContext;
+                var retrievals = retrievalContext.GetRetrievals<T>();
 
                 foreach (var item in state)
                 {
-                    clientContext.Load(item, retrievalContext.Retrievals.ToArray());
+                    clientContext.Load(item, retrievals);
                 }
 
                 await clientContext.ExecuteQueryAsync();

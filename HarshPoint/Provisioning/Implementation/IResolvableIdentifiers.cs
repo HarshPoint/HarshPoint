@@ -87,13 +87,7 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(parent));
             }
 
-            var retrievals = 
-                (context as ClientObjectResolveContext<T>)
-                ?.Retrievals
-                ?.ToArray() 
-                ?? new Expression<Func<T, Object>>[0];
-
-            var query = resolveQuery.CreateQuery(parent, retrievals);
+            var query = resolveQuery.CreateQuery(parent, context);
             var clientContext = context.ProvisionerContext.ClientContext;
 
             var intermediate = clientContext.LoadQuery(query);

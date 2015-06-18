@@ -20,16 +20,27 @@ namespace HarshPoint.Tests.Provisioning
         public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
+        public async Task Multiple_equal_includes_dont_fail()
+        {
+            Fixture.ClientContext.Load(Fixture.Web, w => w.Id, w => w.Id);
+            await Fixture.ClientContext.ExecuteQueryAsync();
+        }
+
+        [Fact]
         public async Task Title_gets_resolved_with_InternalName()
         {
+            var ctx = new ClientObjectResolveContext()
+            {
+                ProvisionerContext = Fixture.Context
+            };
+
+            ctx.Include<Field>(
+                f => f.InternalName,
+                f => f.Description
+            );
+
             var field = await Resolve.FieldById(HarshBuiltInFieldId.Title).ResolveSingleAsync(
-                new ClientObjectResolveContext<Field>(
-                    f => f.InternalName,
-                    f => f.Description
-                )
-                {
-                    ProvisionerContext = Fixture.Context
-                }
+                ctx                
             );
 
             Assert.NotNull(field);

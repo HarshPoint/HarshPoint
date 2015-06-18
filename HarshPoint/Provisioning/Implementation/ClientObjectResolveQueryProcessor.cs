@@ -1,23 +1,26 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ClientObjectResolveRetrievalTransformer<T> : ExpressionVisitor
+    internal sealed class ClientObjectResolveQueryProcessor
     {
-        private readonly Expression<Func<T, Object>>[] _retrievals;
+        private readonly ClientObjectResolveContext _context;
 
-        public ClientObjectResolveRetrievalTransformer(params Expression<Func<T, Object>>[] retrievals)
+        private Expression _currentExpression;
+
+        public ClientObjectResolveQueryProcessor(ClientObjectResolveContext context)
         {
-            if (retrievals == null)
+            if (context == null)
             {
-                throw Error.ArgumentNull(nameof(retrievals));
+                throw Error.ArgumentNull(nameof(context));
             }
 
-            _retrievals = retrievals;
+            _context = context;
         }
 
         public Expression Process(Expression expression)
@@ -27,37 +30,50 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(expression));
             }
 
-            var visitor = new Visitor(_retrievals);
-            var result = visitor.Visit(expression);
-
-            if (!visitor.IncludeCallFound)
+            try
             {
-                throw Error.ArgumentOutOfRangeFormat(
-                    nameof(expression),
-                    SR.ClientObjectResolveQueryRetrievalVisitor_NoIncludeCall,
-                    expression
-                );
-            }
+                _currentExpression = expression;
 
-            return result;
+                var visitor = new Visitor(this);
+                var result = visitor.Visit(expression);
+
+                var missingIncludes = _context
+                    .GetRetrievalTypes()
+                    .Except(visitor.IncludeCallsFound);
+
+                if (missingIncludes.Any())
+                {
+                    throw Error.ArgumentOutOfRangeFormat(
+                        nameof(expression),
+                        SR.ClientObjectResolveQueryProcessor_MissingIncludeCalls,
+                        String.Join("\n", missingIncludes.Select(t => t.Name)),
+                        expression
+                    );
+                }
+
+                return result;
+            }
+            finally
+            {
+                _currentExpression = null;
+            }
         }
 
         private sealed class Visitor : ExpressionVisitor
         {
-            private readonly Expression<Func<T, Object>>[] _retrievals;
-
-            public Visitor(Expression<Func<T, Object>>[] retrievals)
+            public Visitor(ClientObjectResolveQueryProcessor owner)
             {
-                _retrievals = retrievals;
+                Owner = owner;
+                IncludeCallsFound = new HashSet<Type>();
             }
 
-            public MethodCallExpression IncludeCall
+            public ClientObjectResolveQueryProcessor Owner
             {
                 get;
                 private set;
             }
 
-            public Boolean IncludeCallFound
+            public HashSet<Type> IncludeCallsFound
             {
                 get;
                 private set;
@@ -75,13 +91,15 @@ namespace HarshPoint.Provisioning.Implementation
                     return base.VisitMethodCall(node);
                 }
 
-                if (IncludeCallFound)
+                var retrievedType = node.Method.GetGenericArguments().Single();
+
+                if (IncludeCallsFound.Contains(retrievedType))
                 {
                     throw Error.ArgumentOutOfRangeFormat(
                         nameof(node),
-                        SR.ClientObjectResolveQueryRetrievalVisitor_MoreIncludeCallsNotSupported,
-                        IncludeCall,
-                        node
+                        SR.ClientObjectResolveQueryProcessor_MoreIncludeCallsNotSupported,
+                        retrievedType,
+                        Owner._currentExpression
                     );
                 }
 
@@ -91,17 +109,17 @@ namespace HarshPoint.Provisioning.Implementation
                 {
                     throw Error.ArgumentOutOfRangeFormat(
                        nameof(node),
-                       SR.ClientObjectResolveQueryRetrievalVisitor_IncludeArgNotArray,
-                       node
+                       SR.ClientObjectResolveQueryProcessor_IncludeArgNotArray,
+                       node,
+                       Owner._currentExpression
                    );
                 }
 
-                IncludeCallFound = true;
+                IncludeCallsFound.Add(retrievedType);
 
                 var retrievalsCombined = new ReadOnlyCollection<Expression>(
                     retrievals.Expressions
-                    .Concat(_retrievals)
-                    .Distinct()
+                    .Concat(Owner._context.GetRetrievals(retrievedType))
                     .ToArray()
                 );
 
@@ -110,17 +128,20 @@ namespace HarshPoint.Provisioning.Implementation
                     return Visit(node.Arguments[0]);
                 }
 
-                IncludeCall = Expression.Call(
+                return Expression.Call(
                     null,
                     node.Method,
                     Visit(node.Arguments[0]),
                     Expression.NewArrayInit(
-                        typeof(Expression<Func<T, Object>>),
+                        typeof(Expression<>).MakeGenericType(
+                            typeof(Func<,>).MakeGenericType(
+                                retrievedType,
+                                typeof(Object)
+                            )
+                        ),
                         Visit(retrievalsCombined)
                     )
                 );
-
-                return IncludeCall;
             }
 
             private static Boolean IsIncludeOrIncludeWithDefaultProperties(MethodCallExpression node)
@@ -141,7 +162,7 @@ namespace HarshPoint.Provisioning.Implementation
                     return false;
                 }
 
-                if (node.Arguments.Count < 2)
+                if (node.Arguments.Count != 2)
                 {
                     return false;
                 }
@@ -154,11 +175,6 @@ namespace HarshPoint.Provisioning.Implementation
                 var genericArguments = node.Method.GetGenericArguments();
 
                 if (genericArguments.Length != 1)
-                {
-                    return false;
-                }
-
-                if (genericArguments[0] != typeof(T))
                 {
                     return false;
                 }

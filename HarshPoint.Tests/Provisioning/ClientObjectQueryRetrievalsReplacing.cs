@@ -15,7 +15,10 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Throws_on_missing_Include()
         {
-            var visitor = new ClientObjectResolveRetrievalTransformer<List>();
+            var ctx = new ClientObjectResolveContext();
+            ctx.Include<List>(l => l.Title);
+
+            var visitor = new ClientObjectResolveQueryProcessor(ctx);
             var expression = GetExpression(w => w.Lists);
 
             Assert.Throws<ArgumentOutOfRangeException>(
@@ -24,10 +27,36 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public void Throws_on_two_Includes()
+        public void Retrievals_of_two_types_are_added()
         {
+            var ctx = new ClientObjectResolveContext();
+            ctx.Include<List>(l => l.Title);
+            ctx.Include<Field>(f => f.InternalName);
 
-            var visitor = new ClientObjectResolveRetrievalTransformer<List>();
+            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var expression = GetExpression(
+                w => w.Lists.Include(
+                    l => l.Fields.Include()
+                )
+            );
+
+            var expected = GetExpression(
+                w => w.Lists.Include(
+                    l => l.Fields.Include(f => f.InternalName),
+                    l => l.Title
+                )
+            );
+
+            var actual = visitor.Process(expression);
+
+            Assert.Equal(expected.ToString(), actual.ToString());
+        }
+
+        [Fact]
+        public void Throws_on_two_Includes_of_same_type()
+        {
+            var ctx = new ClientObjectResolveContext();
+            var visitor = new ClientObjectResolveQueryProcessor(ctx);
             var expression = GetExpression(w => w.Lists.Include().IncludeWithDefaultProperties());
 
             Assert.Throws<ArgumentOutOfRangeException>(
@@ -38,7 +67,10 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Empty_Include_is_replaced_with_retrievals()
         {
-            var visitor = new ClientObjectResolveRetrievalTransformer<List>(l => l.Title);
+            var ctx = new ClientObjectResolveContext();
+            ctx.Include<List>(l => l.Title);
+
+            var visitor = new ClientObjectResolveQueryProcessor(ctx);
             var expression = GetExpression(
                 w => w.Lists.Include()
             );
@@ -66,7 +98,11 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Retrievals_are_added_to_existing_Include()
         {
-            var visitor = new ClientObjectResolveRetrievalTransformer<List>(l => l.Title);
+            var ctx = new ClientObjectResolveContext();
+            ctx.Include<List>(l => l.Title);
+
+            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+
             var expression = GetExpression(
                 w => w.Lists.Include(l => l.Description)
             );
@@ -94,7 +130,11 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Empty_IncludeWitDefaultProperties_is_replaced_with_retrievals()
         {
-            var visitor = new ClientObjectResolveRetrievalTransformer<List>(l => l.Title);
+            var ctx = new ClientObjectResolveContext();
+            ctx.Include<List>(l => l.Title);
+
+            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+
             var expression = GetExpression(
                 w => w.Lists.IncludeWithDefaultProperties()
             );
@@ -122,7 +162,11 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Include_call_is_removed_when_no_retrievals()
         {
-            var visitor = new ClientObjectResolveRetrievalTransformer<List>();
+            var ctx = new ClientObjectResolveContext();
+            ctx.Include<List>();
+
+            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+
             var expression = GetExpression(
                 w => w.Lists.Include()
             );

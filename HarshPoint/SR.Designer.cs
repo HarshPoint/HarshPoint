@@ -71,36 +71,39 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified expression doesn&apos;t pass a new array expression as the second argument to the Include call.
+        ///   Looks up a localized string similar to The specified sub-expression doesn&apos;t pass a new array expression as the second argument to the Include call: {0}
         ///
-        ///{0}.
-        /// </summary>
-        internal static string ClientObjectResolveQueryRetrievalVisitor_IncludeArgNotArray {
-            get {
-                return ResourceManager.GetString("ClientObjectResolveQueryRetrievalVisitor_IncludeArgNotArray", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The specified expression contains more than one Include call.
-        ///
-        ///{0}
+        ///Query:
         ///{1}.
         /// </summary>
-        internal static string ClientObjectResolveQueryRetrievalVisitor_MoreIncludeCallsNotSupported {
+        internal static string ClientObjectResolveQueryProcessor_IncludeArgNotArray {
             get {
-                return ResourceManager.GetString("ClientObjectResolveQueryRetrievalVisitor_MoreIncludeCallsNotSupported", resourceCulture);
+                return ResourceManager.GetString("ClientObjectResolveQueryProcessor_IncludeArgNotArray", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified expression doesn&apos;t contain any Include calls.
+        ///   Looks up a localized string similar to The specified expression doesn&apos;t contain Include calls of the following types:
+        ///{0}
         ///
-        ///{0}.
+        ///Query:
+        ///{1}.
         /// </summary>
-        internal static string ClientObjectResolveQueryRetrievalVisitor_NoIncludeCall {
+        internal static string ClientObjectResolveQueryProcessor_MissingIncludeCalls {
             get {
-                return ResourceManager.GetString("ClientObjectResolveQueryRetrievalVisitor_NoIncludeCall", resourceCulture);
+                return ResourceManager.GetString("ClientObjectResolveQueryProcessor_MissingIncludeCalls", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified expression contains more than one Include call of type &apos;{0}&apos;.
+        ///
+        ///Query:
+        ///{1}.
+        /// </summary>
+        internal static string ClientObjectResolveQueryProcessor_MoreIncludeCallsNotSupported {
+            get {
+                return ResourceManager.GetString("ClientObjectResolveQueryProcessor_MoreIncludeCallsNotSupported", resourceCulture);
             }
         }
         

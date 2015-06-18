@@ -73,7 +73,7 @@
     <Compile Include="Provisioning\IDefaultFromContextTag.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectContextStateResolver`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveContext.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectResolveRetrievalTransformer.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveQueryProcessor.cs" />
     <Compile Include="Provisioning\Implementation\ContextStateResolver.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
     <Compile Include="Provisioning\HarshProvisionerResult.cs" />

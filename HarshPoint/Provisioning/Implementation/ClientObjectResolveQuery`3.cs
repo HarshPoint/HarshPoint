@@ -38,14 +38,25 @@ namespace HarshPoint.Provisioning.Implementation
             QueryBuilder = queryBuilder;
         }
 
-        public IQueryable<TIntermediate> CreateQuery(TParent parent, Expression<Func<T, Object>>[] retrievals)
+        public IQueryable<TIntermediate> CreateQuery(TParent parent, ResolveContext<HarshProvisionerContext> resolveContext)
         {
+            if (parent == null)
+            {
+                throw Error.ArgumentNull(nameof(parent));
+            }
+
             var query = QueryBuilder(parent);
+            var clientObjectResolveContext = (resolveContext as ClientObjectResolveContext);
 
-            var transformer = new ClientObjectResolveRetrievalTransformer<T>(retrievals);
-            var replacedRetrievals = transformer.Process(query.Expression);
+            if (clientObjectResolveContext != null)
+            {
+                var transformer = new ClientObjectResolveQueryProcessor(clientObjectResolveContext);
+                var replacedRetrievals = transformer.Process(query.Expression);
 
-            return query.Provider.CreateQuery<TIntermediate>(replacedRetrievals);
+                query = query.Provider.CreateQuery<TIntermediate>(replacedRetrievals);
+            }
+
+            return query;
         }
 
         public IEqualityComparer<TIdentifier> IdentifierComparer

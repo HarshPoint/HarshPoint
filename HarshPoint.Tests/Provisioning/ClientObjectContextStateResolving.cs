@@ -23,10 +23,11 @@ namespace HarshPoint.Tests.Provisioning
 
             var ctx = Fixture.Context.PushState(Fixture.ClientContext.Web);
 
-            var resolveCtx = new ClientObjectResolveContext<Web>(w => w.SiteLogoUrl)
+            var resolveCtx = new ClientObjectResolveContext()
             {
                 ProvisionerContext = ctx,
             };
+            resolveCtx.Include<Web>(w => w.SiteLogoUrl);
 
             var resolver = new ClientObjectContextStateResolver<Web>();
             var resolvedWeb = await resolver.ResolveSingleAsync(resolveCtx);
@@ -42,10 +43,11 @@ namespace HarshPoint.Tests.Provisioning
 
             var ctx = Fixture.Context.PushState(Fixture.ClientContext.Web);
 
-            var resolveCtx = new ClientObjectResolveContext<Web>(w => w.Lists.Include(l => l.ItemCount))
+            var resolveCtx = new ClientObjectResolveContext()
             {
                 ProvisionerContext = ctx,
             };
+            resolveCtx.Include<Web>(w => w.Lists.Include(l => l.ItemCount));
 
             var resolver = new ClientObjectContextStateResolver<Web>();
             var resolvedWeb = await resolver.ResolveSingleAsync(resolveCtx);
