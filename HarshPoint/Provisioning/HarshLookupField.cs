@@ -21,14 +21,14 @@ namespace HarshPoint.Provisioning
 
             var lookupField = await ResolveSingleAsync(
                 LookupTarget
-                .Include(field => field.Id)
+                .Include(field => field.InternalName)
                 .IncludeOnParent(list => list.Id)
             );
             
             foreach (var field in FieldsResolved)
             {
                 field.LookupList = lookupField.Item1.Id.ToString("B");
-                field.LookupField = lookupField.Item2.Id.ToString("B");
+                field.LookupField = lookupField.Item2.InternalName;
                 field.LookupWebId = Web.Id;
 
                 UpdateField(field);

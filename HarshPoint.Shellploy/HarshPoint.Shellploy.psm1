@@ -126,6 +126,41 @@ function TaxonomyField {
     }
 }
 
+function LookupField {
+
+    param (
+        [Guid]
+        $Id,
+
+        [String]
+        $InternalName,
+
+        [String]
+        $DisplayName,
+
+        [String]
+        $TargetListUrl,
+
+        [String]
+        $TargetField = 'Title'
+    )
+
+    Field -Id           $Id `
+          -InternalName $InternalName `
+          -DisplayName  $DisplayName `
+          -Type         Lookup `
+          -Children {
+        
+        New-HarshProvisioner HarshLookupField $null @{
+
+            LookupTarget = [HarshPoint.Provisioning.ResolveListExtensions]::FieldByInternalname(
+                                $T_Resolve::ListByUrl($TargetListUrl),
+                                $TargetField
+                           )
+        }
+    }
+}
+
 function Field {
 
     param (

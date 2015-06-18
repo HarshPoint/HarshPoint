@@ -11,6 +11,11 @@ namespace HarshPoint.Provisioning
             return new ResolveListFieldById(list, ids);
         }
 
+        public static ResolveListFieldByInternalName FieldByInternalName(this IResolve<List> list, params String[] names)
+        {
+            return new ResolveListFieldByInternalName(list, names);
+        }
+
         public static ResolveListRootFolder RootFolder(this IResolve<List> list)
         {
             return new ResolveListRootFolder(list);

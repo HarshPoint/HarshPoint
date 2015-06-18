@@ -63,7 +63,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.NotNull(provisioned);
             Assert.Equal(FieldType.Lookup, provisioned.FieldTypeKind);
             Assert.Equal(targetList.Id, Guid.Parse(provisioned.LookupList));
-            Assert.Equal(HarshBuiltInFieldId.Title, Guid.Parse(provisioned.LookupField));
+            Assert.Equal("Title", provisioned.LookupField);
             Assert.Equal(Fixture.Web.Id, provisioned.LookupWebId);
         }
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveFieldByInternalName :
-        Resolvable<Field, string, HarshProvisionerContext, ResolveFieldByInternalName>
+        Resolvable<Field, String, HarshProvisionerContext, ResolveFieldByInternalName>
     {
         public ResolveFieldByInternalName(IEnumerable<String> names)
             : base(names)
