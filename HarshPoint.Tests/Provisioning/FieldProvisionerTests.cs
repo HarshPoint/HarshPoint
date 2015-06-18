@@ -32,6 +32,49 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
+        public async Task Existing_field_DisplayName_gets_changed()
+        {
+            var id = Guid.NewGuid();
+
+            try
+            {
+                var prov = new HarshField()
+                {
+                    Id = id,
+                    InternalName = id.ToString("n"),
+                    DisplayName = id.ToString("n") + "-before"
+                };
+
+                await prov.ProvisionAsync(ClientOM.Context);
+
+                ClientOM.ClientContext.Load(prov.Field, f => f.Title);
+                await ClientOM.ClientContext.ExecuteQueryAsync();
+
+                Assert.Equal(prov.DisplayName, prov.Field.Title);
+
+                prov = new HarshField()
+                {
+                    Id = id,
+                    InternalName = id.ToString("n"),
+                    DisplayName = id.ToString("n") + "-after"
+                };
+
+                await prov.ProvisionAsync(ClientOM.Context);
+
+                ClientOM.ClientContext.Load(prov.Field, f => f.Title);
+                await ClientOM.ClientContext.ExecuteQueryAsync();
+
+                Assert.Equal(prov.DisplayName, prov.Field.Title);
+            }
+            finally
+            {
+                ClientOM.Web.Fields.GetById(id).DeleteObject();
+                await ClientOM.ClientContext.ExecuteQueryAsync();
+            }
+
+        }
+
+        [Fact]
         public void Fails_if_id_missing()
         {
             var prov = new HarshField()
