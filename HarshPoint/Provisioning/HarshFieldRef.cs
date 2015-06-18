@@ -1,4 +1,5 @@
 ﻿using Microsoft.SharePoint.Client;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,6 +20,18 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        public Boolean Hidden
+        {
+            get;
+            set;
+        }
+
+        public Boolean Required
+        {
+            get;
+            set;
+        }
+
         protected override async Task InitializeAsync()
         {
             ResolvedContentType = await ResolveSingleAsync(ContentType);
@@ -26,7 +39,7 @@ namespace HarshPoint.Provisioning
 
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
-            var existingFieldLinks = ClientContext.LoadQuery(
+            var existingLinks = ClientContext.LoadQuery(
                 ResolvedContentType.FieldLinks.Include(
                     fl => fl.Id,
                     fl => fl.Name
@@ -40,16 +53,18 @@ namespace HarshPoint.Provisioning
                 f => f.Id
             );
 
-            var flcis = from field in fields
-                        where !existingFieldLinks.Any(fl => fl.Id == field.Id)
-                        select new FieldLinkCreationInformation()
-                        {
-                            Field = field,
-                        };
+            var links = from field in fields
+                        select
+                            existingLinks.FirstOrDefault(fl => fl.Id == field.Id) 
+                            ?? 
+                            ResolvedContentType.FieldLinks.Add(
+                                new FieldLinkCreationInformation() { Field = field }
+                            );
 
-            foreach (var flci in flcis)
+            foreach (var link in links)
             {
-                ResolvedContentType.FieldLinks.Add(flci);
+                link.Hidden = Hidden;
+                link.Required = Required;
             }
 
             ResolvedContentType.Update(updateChildren: true);

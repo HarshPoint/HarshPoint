@@ -63,18 +63,22 @@ function DefaultFieldGroup($Value) {
 
 function ContentType {
 
+    [CmdletBinding()]
     param (
+        [Parameter(Position=0, Mandatory)]
         [HarshPoint.HarshContentTypeId]
         $Id,
 
+        [Parameter(Position=1, Mandatory)]
         [String]
         $Name,
+         
+        [Parameter(Position=2)]
+        [ScriptBlock]
+        $Children,
 
         [String]
-        $Group,
-         
-        [ScriptBlock]
-        $Children
+        $Group
     )
 
     New-HarshProvisioner HarshContentType $Children @{
@@ -152,11 +156,19 @@ function FieldRef {
 
     param (
         [String]
-        $InternalName
+        $InternalName,
+
+        [Switch]
+        $Hidden,
+
+        [Switch]
+        $Required
     )
 
     New-HarshProvisioner HarshFieldRef $null @{
-        Fields = $T_Resolve::FieldByInternalName($InternalName)
+        Fields   = $T_Resolve::FieldByInternalName($InternalName)
+        Hidden   = $Hidden
+        Required = $Required
     }
 }
 
