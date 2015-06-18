@@ -106,7 +106,7 @@ namespace HarshPoint.Provisioning.Implementation
 
                 var str = value as String;
 
-                if (String.IsNullOrEmpty(str))
+                if ((str != null) && (str.Length == 0))
                 {
                     return true;
                 }
@@ -119,7 +119,7 @@ namespace HarshPoint.Provisioning.Implementation
                 get;
                 private set;
             }
-            
+
             public PropertyInfo Property
             {
                 get;
