@@ -16,8 +16,13 @@ namespace HarshPoint.Provisioning
 
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
+            ClientContext.Load(Web, w => w.Id);
+            await ClientContext.ExecuteQueryAsync();
+
             var lookupField = await ResolveSingleAsync(
                 LookupTarget
+                .Include(field => field.Id)
+                .IncludeOnParent(list => list.Id)
             );
             
             foreach (var field in FieldsResolved)

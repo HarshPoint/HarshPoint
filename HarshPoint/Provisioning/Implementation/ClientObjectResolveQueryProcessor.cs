@@ -1,6 +1,5 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,8 +9,6 @@ namespace HarshPoint.Provisioning.Implementation
     internal sealed class ClientObjectResolveQueryProcessor
     {
         private readonly ClientObjectResolveContext _context;
-
-        private Expression _currentExpression;
 
         public ClientObjectResolveQueryProcessor(ClientObjectResolveContext context)
         {
@@ -30,50 +27,19 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(expression));
             }
 
-            try
-            {
-                _currentExpression = expression;
-
-                var visitor = new Visitor(this);
-                var result = visitor.Visit(expression);
-
-                var missingIncludes = _context
-                    .GetRetrievalTypes()
-                    .Except(visitor.IncludeCallsFound);
-
-                if (missingIncludes.Any())
-                {
-                    throw Error.ArgumentOutOfRangeFormat(
-                        nameof(expression),
-                        SR.ClientObjectResolveQueryProcessor_MissingIncludeCalls,
-                        String.Join("\n", missingIncludes.Select(t => t.Name)),
-                        expression
-                    );
-                }
-
-                return result;
-            }
-            finally
-            {
-                _currentExpression = null;
-            }
+            var visitor = new Visitor(_context);
+            var result = visitor.Visit(expression);
+            return result;
         }
 
         private sealed class Visitor : ExpressionVisitor
         {
-            public Visitor(ClientObjectResolveQueryProcessor owner)
+            public Visitor(ClientObjectResolveContext resolveContext)
             {
-                Owner = owner;
-                IncludeCallsFound = new HashSet<Type>();
+                ResolveContext = resolveContext;
             }
 
-            public ClientObjectResolveQueryProcessor Owner
-            {
-                get;
-                private set;
-            }
-
-            public HashSet<Type> IncludeCallsFound
+            public ClientObjectResolveContext ResolveContext
             {
                 get;
                 private set;
@@ -92,17 +58,6 @@ namespace HarshPoint.Provisioning.Implementation
                 }
 
                 var retrievedType = node.Method.GetGenericArguments().Single();
-
-                if (IncludeCallsFound.Contains(retrievedType))
-                {
-                    throw Error.ArgumentOutOfRangeFormat(
-                        nameof(node),
-                        SR.ClientObjectResolveQueryProcessor_MoreIncludeCallsNotSupported,
-                        retrievedType,
-                        Owner._currentExpression
-                    );
-                }
-
                 var retrievals = node.Arguments[1] as NewArrayExpression;
 
                 if (retrievals == null)
@@ -110,16 +65,13 @@ namespace HarshPoint.Provisioning.Implementation
                     throw Error.ArgumentOutOfRangeFormat(
                        nameof(node),
                        SR.ClientObjectResolveQueryProcessor_IncludeArgNotArray,
-                       node,
-                       Owner._currentExpression
+                       node
                    );
                 }
 
-                IncludeCallsFound.Add(retrievedType);
-
                 var retrievalsCombined = new ReadOnlyCollection<Expression>(
                     retrievals.Expressions
-                    .Concat(Owner._context.GetRetrievals(retrievedType))
+                    .Concat(ResolveContext.GetRetrievals(retrievedType))
                     .ToArray()
                 );
 

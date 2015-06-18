@@ -9,7 +9,7 @@ namespace HarshPoint.Tests.Provisioning
     public class ClientObjectQueryRetrievalsReplacing
     {
         [Fact]
-        public void Throws_on_missing_Include()
+        public void Does_not_modify_expression_without_Include()
         {
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>(l => l.Title);
@@ -17,9 +17,9 @@ namespace HarshPoint.Tests.Provisioning
             var visitor = new ClientObjectResolveQueryProcessor(ctx);
             var expression = GetExpression(w => w.Lists);
 
-            Assert.Throws<ArgumentOutOfRangeException>(
-                () => visitor.AddContextRetrievals(expression)
-            );
+            var actual = visitor.AddContextRetrievals(expression);
+
+            Assert.Equal(expression.ToString(), actual.ToString());
         }
 
         [Fact]
@@ -46,18 +46,6 @@ namespace HarshPoint.Tests.Provisioning
             var actual = visitor.AddContextRetrievals(expression);
 
             Assert.Equal(expected.ToString(), actual.ToString());
-        }
-
-        [Fact]
-        public void Throws_on_two_Includes_of_same_type()
-        {
-            var ctx = new ClientObjectResolveContext();
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
-            var expression = GetExpression(w => w.Lists.Include().IncludeWithDefaultProperties());
-
-            Assert.Throws<ArgumentOutOfRangeException>(
-                () => visitor.AddContextRetrievals(expression)
-            );
         }
 
         [Fact]

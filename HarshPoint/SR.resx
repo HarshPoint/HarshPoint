@@ -118,23 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ClientObjectResolveQueryProcessor_IncludeArgNotArray" xml:space="preserve">
-    <value>The specified sub-expression doesn't pass a new array expression as the second argument to the Include call: {0}
+    <value>The specified sub-expression doesn't pass a new array expression as the second argument to the Include call:
 
-Query:
-{1}</value>
-  </data>
-  <data name="ClientObjectResolveQueryProcessor_MissingIncludeCalls" xml:space="preserve">
-    <value>The specified expression doesn't contain Include calls of the following types:
-{0}
-
-Query:
-{1}</value>
-  </data>
-  <data name="ClientObjectResolveQueryProcessor_MoreIncludeCallsNotSupported" xml:space="preserve">
-    <value>The specified expression contains more than one Include call of type '{0}'.
-
-Query:
-{1}</value>
+{0}</value>
   </data>
   <data name="ClientObject_IsNullNotLoaded" xml:space="preserve">
     <value>The specified object hasn't been loaded yet, cannot determine if it is null.</value>
