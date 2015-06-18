@@ -193,7 +193,8 @@ copy "$(TargetDir)*.pdb" "D:\src\Iadw\packages-to-be-nuggetized"
 
 copy "$(TargetDir)*.dll" "$(SolutionDir)HarshPoint.Shellploy"
 copy "$(TargetDir)*.pdb" "$(SolutionDir)HarshPoint.Shellploy"
-</PostBuildEvent>
+
+xcopy "$(SolutionDir)HarshPoint.ShellPloy" "D:\src\Iadw\packages-to-be-nuggetized\HarshPoint.ShellPloy" /i /s /y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

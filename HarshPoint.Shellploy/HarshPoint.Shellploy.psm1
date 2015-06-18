@@ -96,9 +96,11 @@ function TaxonomyField {
         [String]
         $DisplayName,
 
-
         [Guid]
-        $TermSetId
+        $TermSetId,
+
+        [Switch]
+        $AllowMultipleValues
     )
 
     Field -Id           $Id `
@@ -106,7 +108,11 @@ function TaxonomyField {
           -DisplayName  $DisplayName `
           -Type         TaxonomyFieldType `
           -Children {
+        
         New-HarshProvisioner HarshTaxonomyField $null @{
+
+            AllowMultipleValues = $AllowMultipleValues.IsPresent
+            
             TermSet = [HarshPoint.Provisioning.ResolveTermStoreExtensions]::TermSetById(
                 $T_Resolve::TermStoreSiteCollectionDefault(),
                 $TermSetId
