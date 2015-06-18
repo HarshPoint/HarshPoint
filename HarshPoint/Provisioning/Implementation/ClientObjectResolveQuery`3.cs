@@ -1,7 +1,9 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -11,8 +13,20 @@ namespace HarshPoint.Provisioning.Implementation
         public ClientObjectResolveQuery(
             Func<T, TIdentifier> identifierSelector,
             Func<TParent, IQueryable<TIntermediate>> queryBuilder,
-            Func<IEnumerable<TIntermediate>, IEnumerable<T>> postQueryTransform,
-            IEqualityComparer<TIdentifier> identifierComparer = null
+            Func<IEnumerable<TIntermediate>, IEnumerable<T>> postQueryTransform
+        )
+            : this(
+                (_, obj) => identifierSelector(obj),
+                queryBuilder,
+                postQueryTransform
+            )
+        {
+        }
+
+        public ClientObjectResolveQuery(
+            Func<TParent, T, TIdentifier> identifierSelector,
+            Func<TParent, IQueryable<TIntermediate>> queryBuilder,
+            Func<IEnumerable<TIntermediate>, IEnumerable<T>> postQueryTransform
         )
         {
             if (identifierSelector == null)
@@ -30,7 +44,8 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(postQueryTransform));
             }
 
-            IdentifierComparer = identifierComparer ?? EqualityComparer<TIdentifier>.Default;
+            ParentIncludes = ImmutableList<Expression<Func<TParent, Object>>>.Empty;
+
             IdentifierSelector = identifierSelector;
             PostQueryTransform = postQueryTransform;
             QueryBuilder = queryBuilder;
@@ -57,13 +72,36 @@ namespace HarshPoint.Provisioning.Implementation
             return query;
         }
 
+        public ClientObjectResolveQuery<T, TIntermediate, TParent, TIdentifier> WithIdentifierComparer(IEqualityComparer<TIdentifier> identifierComparer)
+        {
+            IdentifierComparer = identifierComparer ?? EqualityComparer<TIdentifier>.Default;
+            return this;
+        }
+
+        public ClientObjectResolveQuery<T, TIntermediate, TParent, TIdentifier> WithIncludesOnParent(params Expression<Func<TParent, Object>>[] retrievals)
+        {
+            if (retrievals == null)
+            {
+                throw Error.ArgumentNull(nameof(retrievals));
+            }
+
+            ParentIncludes = ParentIncludes.AddRange(retrievals);
+            return this;
+        }
+
         public IEqualityComparer<TIdentifier> IdentifierComparer
         {
             get;
             private set;
         }
 
-        public Func<T, TIdentifier> IdentifierSelector
+        public Func<TParent, T, TIdentifier> IdentifierSelector
+        {
+            get;
+            private set;
+        }
+
+        public IImmutableList<Expression<Func<TParent, Object>>> ParentIncludes
         {
             get;
             private set;
@@ -80,7 +118,6 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             set;
         }
-
     }
 
     internal class ClientObjectResolveQuery<T, TParent, TIdentifier> :
@@ -88,15 +125,25 @@ namespace HarshPoint.Provisioning.Implementation
         where T : ClientObject
     {
         public ClientObjectResolveQuery(
+            Func<TParent, T, TIdentifier> identifierSelector,
+            Func<TParent, IQueryable<T>> queryBuilder
+        )
+            : base(
+                identifierSelector,
+                queryBuilder,
+                results => results
+            )
+        {
+        }
+
+        public ClientObjectResolveQuery(
             Func<T, TIdentifier> identifierSelector,
-            Func<TParent, IQueryable<T>> queryBuilder,
-            IEqualityComparer<TIdentifier> identifierComparer = null
+            Func<TParent, IQueryable<T>> queryBuilder
         )
             : base(
                   identifierSelector,
                   queryBuilder,
-                  results => results,
-                  identifierComparer
+                  results => results
             )
         {
         }

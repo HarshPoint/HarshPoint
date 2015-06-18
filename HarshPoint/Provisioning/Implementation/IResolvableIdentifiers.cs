@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -44,7 +45,10 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(idSelector));
             }
 
-            var byId = items.ToImmutableDictionary(idSelector, idComparer);
+            var byId = items.ToImmutableDictionary(
+                idSelector,
+                idComparer
+            );
 
             foreach (var id in resolvable.Identifiers)
             {
@@ -68,6 +72,7 @@ namespace HarshPoint.Provisioning.Implementation
             TParent parent
         )
             where T : ClientObject
+            where TParent : ClientObject
             where TIntermediate : ClientObject
         {
             if (context == null)
@@ -88,6 +93,11 @@ namespace HarshPoint.Provisioning.Implementation
             var query = resolveQuery.CreateQuery(parent, context);
             var clientContext = context.ProvisionerContext.ClientContext;
 
+            if (resolveQuery.ParentIncludes.Any())
+            {
+                clientContext.Load(parent, resolveQuery.ParentIncludes.ToArray());
+            }
+
             var intermediate = clientContext.LoadQuery(query);
             await clientContext.ExecuteQueryAsync();
 
@@ -96,7 +106,7 @@ namespace HarshPoint.Provisioning.Implementation
             return resolvable.ResolveItems(
                 context,
                 items,
-                resolveQuery.IdentifierSelector,
+                id => resolveQuery.IdentifierSelector(parent, id),
                 resolveQuery.IdentifierComparer
             );
         }
