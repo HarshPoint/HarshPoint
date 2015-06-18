@@ -95,6 +95,25 @@ namespace HarshPoint.Provisioning.Implementation
                 Setter = property.MakeSetter<Object, Object>();
             }
 
+            public Boolean HasDefaultValue(Object provisioner)
+            {
+                var value = Getter(provisioner);
+
+                if (value == null)
+                {
+                    return true;
+                }
+
+                var str = value as String;
+
+                if (String.IsNullOrEmpty(str))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
             public Func<Object, Object> Getter
             {
                 get;

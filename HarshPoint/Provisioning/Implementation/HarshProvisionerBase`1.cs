@@ -233,7 +233,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             var properties = Metadata
                 .DefaultFromContextProperties
-                .Where(p => p.Getter(this) == null);
+                .Where(p => p.HasDefaultValue(this));
 
             foreach (var p in properties)
             {

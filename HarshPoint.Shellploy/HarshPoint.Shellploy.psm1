@@ -77,6 +77,7 @@ function ContentType {
         [ScriptBlock]
         $Children,
 
+        [Parameter()]
         [String]
         $Group
     )
