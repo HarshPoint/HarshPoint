@@ -49,8 +49,7 @@ namespace HarshPoint.Provisioning
             await ClientContext.ExecuteQueryAsync();
 
             var fields = await ResolveAsync(
-                Fields,
-                f => f.Id
+                Fields.Include(f => f.Id)
             );
 
             var links = from field in fields

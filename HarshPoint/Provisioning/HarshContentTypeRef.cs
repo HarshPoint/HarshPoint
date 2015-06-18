@@ -22,16 +22,18 @@ namespace HarshPoint.Provisioning
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
             var contentTypes = await ResolveAsync(
-                ContentTypes,
-                ct => ct.Name,
-                ct => ct.StringId
+                ContentTypes.Include(
+                    ct => ct.Name,
+                    ct => ct.StringId
+                )
             );
 
             var lists = await ResolveAsync(
-                Lists,
-                list => list.ContentTypes.Include(
-                    ct => ct.Name,
-                    ct => ct.StringId
+                Lists.Include(
+                    list => list.ContentTypes.Include(
+                        ct => ct.Name,
+                        ct => ct.StringId
+                    )
                 )
             );
 

@@ -269,9 +269,10 @@ namespace HarshPoint.Provisioning
         private async Task ResolveField()
         {
             Field = await TryResolveSingleAsync(
-                Resolve.FieldById(Id),
-                f => f.Id,
-                f => f.InternalName
+                Resolve.FieldById(Id).Include(
+                    f => f.Id,
+                    f => f.InternalName
+                )
             );
         }
 

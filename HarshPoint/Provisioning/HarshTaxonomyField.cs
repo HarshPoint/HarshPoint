@@ -22,7 +22,9 @@ namespace HarshPoint.Provisioning
         
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
-            var termSet = await ResolveSingleAsync(TermSet, ts => ts.TermStore.Id);
+            var termSet = await ResolveSingleAsync(
+                TermSet.Include(ts => ts.TermStore.Id)
+            );
 
             foreach (var field in FieldsResolved)
             {

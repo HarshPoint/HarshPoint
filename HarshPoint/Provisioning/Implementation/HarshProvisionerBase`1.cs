@@ -101,8 +101,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return RunSelfAndChildren(
-                context
-,
+                context,
                 OnProvisioningAsync,
                 ProvisionChildrenAsync);
         }
@@ -151,28 +150,17 @@ namespace HarshPoint.Provisioning.Implementation
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected Task<IEnumerable<T>> TryResolveAsync<T>(IResolve<T> resolver)
         {
-            return TryResolveAsync(resolver, context: null);
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected Task<IEnumerable<T>> TryResolveAsync<T>(IResolve<T> resolver, ResolveContext<TContext> context)
-        {
             if (resolver == null)
             {
                 throw Error.ArgumentNull(nameof(resolver));
             }
 
             return resolver.TryResolveAsync(
-                PrepareResolveContext(context)
+                PrepareResolveContext()
             );
         }
 
         protected Task<T> TryResolveSingleAsync<T>(IResolve<T> resolver)
-        {
-            return TryResolveSingleAsync(resolver, context: null);
-        }
-
-        protected Task<T> TryResolveSingleAsync<T>(IResolve<T> resolver, ResolveContext<TContext> context)
         {
             if (resolver == null)
             {
@@ -180,18 +168,12 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return resolver.TryResolveSingleAsync(
-                PrepareResolveContext(context)
+                PrepareResolveContext()
             );
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected Task<IEnumerable<T>> ResolveAsync<T>(IResolve<T> resolver)
-        {
-            return ResolveAsync(resolver, context: null);
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected Task<IEnumerable<T>> ResolveAsync<T>(IResolve<T> resolver, ResolveContext<TContext> context)
         {
             if (resolver == null)
             {
@@ -199,16 +181,11 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return resolver.ResolveAsync(
-                PrepareResolveContext(context)
+                PrepareResolveContext()
             );
         }
 
         protected Task<T> ResolveSingleAsync<T>(IResolve<T> resolver)
-        {
-            return ResolveSingleAsync(resolver, context: null);
-        }
-
-        protected Task<T> ResolveSingleAsync<T>(IResolve<T> resolver, ResolveContext<TContext> context)
         {
             if (resolver == null)
             {
@@ -216,13 +193,18 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return resolver.ResolveSingleAsync(
-                PrepareResolveContext(context)
+                PrepareResolveContext()
             );
         }
 
         protected virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
         {
             return new Collection<HarshProvisionerBase>();
+        }
+
+        internal virtual ResolveContext<TContext> CreateResolveContext()
+        {
+            return new ResolveContext<TContext>();
         }
 
         internal abstract Task<HarshProvisionerResult> ProvisionChild(HarshProvisionerBase provisioner, TContext context);
@@ -278,15 +260,10 @@ namespace HarshPoint.Provisioning.Implementation
                 );
         }
 
-        private ResolveContext<TContext> PrepareResolveContext(ResolveContext<TContext> resolveContext)
+        private ResolveContext<TContext> PrepareResolveContext()
         {
-            if (resolveContext == null)
-            {
-                resolveContext = new ResolveContext<TContext>();
-            }
-
+            var resolveContext = CreateResolveContext();
             resolveContext.ProvisionerContext = Context;
-
             return resolveContext;
         }
 
