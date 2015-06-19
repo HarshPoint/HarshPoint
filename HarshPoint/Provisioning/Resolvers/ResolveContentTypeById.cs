@@ -23,7 +23,8 @@ namespace HarshPoint.Provisioning.Resolvers
             return this.ResolveQuery(
                 ClientObjectResolveQuery.ContentTypeById,
                 context,
-                context.ProvisionerContext.Web.ContentTypes
+                context.ProvisionerContext.Web.ContentTypes,
+                context.ProvisionerContext.Web.AvailableContentTypes
             );
         }
     }
