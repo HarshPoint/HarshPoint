@@ -20,8 +20,7 @@ namespace HarshPoint.Provisioning.Implementation
         public static IEnumerable<T> ResolveItems<T, TIdentifier>(
             this IResolvableIdentifiers<TIdentifier> resolvable,
             IResolveContext context,
-            IEnumerable<T> items,
-            Func<T, TIdentifier> idSelector,
+            IEnumerable<Tuple<TIdentifier, T>> items,
             IEqualityComparer<TIdentifier> idComparer = null
         )
         {
@@ -40,13 +39,9 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(items));
             }
 
-            if (idSelector == null)
-            {
-                throw Error.ArgumentNull(nameof(idSelector));
-            }
-
-            var byId = items.ToImmutableDictionary(
-                idSelector,
+            var byId = items.ToImmutableDictionaryFirstWins(
+                tuple => tuple.Item1,
+                tuple => tuple.Item2,
                 idComparer
             );
 
@@ -69,7 +64,7 @@ namespace HarshPoint.Provisioning.Implementation
             this IResolvableIdentifiers<TIdentifier> resolvable,
             ClientObjectResolveQuery<T, TIntermediate, TParent, TIdentifier> resolveQuery,
             ResolveContext<HarshProvisionerContext> context,
-            TParent parent
+            params TParent[] parents
         )
             where T : ClientObject
             where TParent : ClientObject
@@ -85,28 +80,46 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(resolveQuery));
             }
 
-            if (parent == null)
+            if (parents == null)
             {
-                throw Error.ArgumentNull(nameof(parent));
+                throw Error.ArgumentNull(nameof(parents));
             }
 
-            var query = resolveQuery.CreateQuery(parent, context);
+            var intermediates = new Dictionary<TParent, IEnumerable<TIntermediate>>();
             var clientContext = context.ProvisionerContext.ClientContext;
 
-            if (resolveQuery.ParentIncludes.Any())
+            foreach (var parent in parents)
             {
-                clientContext.Load(parent, resolveQuery.ParentIncludes.ToArray());
+                var query = resolveQuery.CreateQuery(parent, context);
+
+                if (resolveQuery.ParentIncludes.Any())
+                {
+                    clientContext.Load(parent, resolveQuery.ParentIncludes.ToArray());
+                }
+
+                intermediates.Add(
+                    parent,
+                    clientContext.LoadQuery(query)
+                );
             }
 
-            var intermediate = clientContext.LoadQuery(query);
             await clientContext.ExecuteQueryAsync();
 
-            var items = resolveQuery.PostQueryTransform(intermediate);
+            var items = intermediates.Select(
+                results => ResolvedGrouping.Create(
+                    results.Key,
+                    resolveQuery.PostQueryTransform(results.Value)
+                )
+            );
 
             return resolvable.ResolveItems(
                 context,
-                items,
-                id => resolveQuery.IdentifierSelector(parent, id),
+                from grouping in items
+                from item in grouping
+                select Tuple.Create(
+                    resolveQuery.IdentifierSelector(grouping.Key, item),
+                    item
+                ),
                 resolveQuery.IdentifierComparer
             );
         }

@@ -98,6 +98,24 @@ namespace HarshPoint
                 .LastOrDefault();
         }
 
+        public static String GetLeafWithoutExtension(String path)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                throw Error.ArgumentNullOrWhitespace(nameof(path));
+            }
+
+            var leaf = GetLeaf(path);
+            var lastDot = leaf.LastIndexOf('.');
+
+            if (lastDot > -1)
+            {
+                return leaf.Substring(0, lastDot);
+            }
+
+            return leaf;
+        }
+
         private static String EnsureUrlServerRelative(String rootUrl, String url)
         {
             if (String.IsNullOrWhiteSpace(rootUrl))

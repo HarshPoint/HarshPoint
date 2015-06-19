@@ -71,8 +71,7 @@ namespace HarshPoint.Tests.Provisioning
                 return Task.FromResult(
                     this.ResolveItems(
                         context,
-                        _items,
-                        item => item
+                        _items.Select(i => Tuple.Create(i, i))
                     )
                 );
             }

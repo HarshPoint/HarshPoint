@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace HarshPoint
     public static class IEnumerableExtensions
     {
         public static TElement FirstOrDefaultByProperty<TElement, TProperty>(
-            this IEnumerable<TElement> sequence, 
+            this IEnumerable<TElement> sequence,
             Func<TElement, TProperty> projection,
             TProperty value,
             IEqualityComparer<TProperty> equalityComparer
@@ -30,7 +31,7 @@ namespace HarshPoint
                 equalityComparer = EqualityComparer<TProperty>.Default;
             }
 
-            return sequence.FirstOrDefault(element => 
+            return sequence.FirstOrDefault(element =>
                 equalityComparer.Equals(
                     projection(element),
                     value
@@ -63,5 +64,48 @@ namespace HarshPoint
 
             return results;
         }
+
+        public static IImmutableDictionary<TKey, TElement> ToImmutableDictionaryFirstWins<TSource, TKey, TElement>(
+            this IEnumerable<TSource> sequence,
+            Func<TSource, TKey> keySelector,
+            Func<TSource, TElement> elementSelector,
+            IEqualityComparer<TKey> keyComparer
+        )
+        {
+            if (sequence == null)
+            {
+                throw Error.ArgumentNull(nameof(sequence));
+            }
+
+            if (keySelector == null)
+            {
+                throw Error.ArgumentNull(nameof(keySelector));
+            }
+
+            if (elementSelector == null)
+            {
+                throw Error.ArgumentNull(nameof(elementSelector));
+            }
+
+            var builder = ImmutableDictionary<TKey, TElement>.Empty
+                .WithComparers(keyComparer)
+                .ToBuilder();
+
+            foreach (var item in sequence)
+            {
+                var key = keySelector(item);
+
+                if (builder.ContainsKey(key))
+                {
+                    continue;
+                }
+
+                var value = elementSelector(item);
+                builder.Add(key, value);
+            }
+
+            return builder.ToImmutable();
+        }
+
     }
 }

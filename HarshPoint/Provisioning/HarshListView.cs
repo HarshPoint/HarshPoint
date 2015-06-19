@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,22 +42,34 @@ namespace HarshPoint.Provisioning
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
             var lists = await ResolveAsync(
-                Lists.Include(
-                    l => l.RootFolder.ServerRelativeUrl,
-                    l => l.Views.Include(
-                        v => v.ServerRelativeUrl,
-                        v => v.Title
-                    )
-                )
+                (IResolve<IGrouping<List, View>>)Lists.ViewByUrl(Url)
             );
 
-            foreach (var list in lists)
+            foreach (var grouping in lists)
             {
-                var listRoot = list.RootFolder.ServerRelativeUrl;
+                var list = grouping.Key;
+                var view = grouping.SingleOrDefault();
 
+                if (view == null)
+                {
+                    view = list.Views.Add(new ViewCreationInformation()
+                    {
+                        Title = InitialTitle,
+                        ViewFields = ViewFields.ToArray(),
+                    });
+                }
+
+                view.Title = Title;
+                view.Update();
             }
 
-            throw new NotImplementedException();
+            await ClientContext.ExecuteQueryAsync();
+            return await base.OnProvisioningAsync();
+        }
+
+        private String InitialTitle
+        {
+            get { return HarshUrl.GetLeafWithoutExtension(Url); }
         }
 
     }

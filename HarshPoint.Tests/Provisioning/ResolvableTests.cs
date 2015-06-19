@@ -84,6 +84,19 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
+        public async Task NestedResolvable_returns_empty_grouping()
+        {
+            var root = new TestResolvable<String>("42");
+            var nested = new NestedTestResolvable<String, Int32>(root, 0);
+
+            var results = await ((IResolve<IGrouping<String, Int32>>)(nested)).TryResolveAsync(ClientOM.ResolveContext);
+            Assert.NotNull(results);
+
+            var grouping = Assert.Single(results);
+            Assert.Equal("42", grouping.Key);
+            Assert.Empty(grouping);
+        }
+        [Fact]
         public async Task NestedResolvable_returns_more_groupings()
         {
             var root = new TestResolvable<String>("42", "4242");

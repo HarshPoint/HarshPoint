@@ -24,7 +24,8 @@ namespace HarshPoint.Provisioning.Resolvers
             return this.ResolveQuery(
                 ClientObjectResolveQuery.FieldByInternalName,
                 context,
-                context.ProvisionerContext.Web.Fields
+                context.ProvisionerContext.Web.Fields,
+                context.ProvisionerContext.Web.AvailableFields
             );
         }
     }
