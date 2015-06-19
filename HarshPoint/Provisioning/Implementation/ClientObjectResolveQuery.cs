@@ -23,6 +23,15 @@ namespace HarshPoint.Provisioning.Implementation
             )
             .WithIdentifierComparer(StringComparer.OrdinalIgnoreCase);
 
+        public static readonly ClientObjectResolveQuery<View, View, List, String> ListViewByTitle =
+            new ClientObjectResolveQuery<View, List, String>(
+                view => view.Title,
+                list => list.Views.Include(
+                    view => view.Title
+                )
+            )
+            .WithIdentifierComparer(StringComparer.OrdinalIgnoreCase);
+
         public static readonly ClientObjectResolveQuery<View, View, List, String> ListViewByUrl =
             new ClientObjectResolveQuery<View, List, String>(
                 (list, view) => HarshUrl.GetRelativeTo(view.ServerRelativeUrl, list.RootFolder.ServerRelativeUrl),

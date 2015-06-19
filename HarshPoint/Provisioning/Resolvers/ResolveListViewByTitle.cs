@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveListViewByUrl : 
-        NestedResolvable<List, View, String, HarshProvisionerContext, ResolveListViewByUrl>
+    public sealed class ResolveListViewByTitle : 
+        NestedResolvable<List, View, String, HarshProvisionerContext, ResolveListViewByTitle>
     {
-        public ResolveListViewByUrl(IResolve<List> parent, IEnumerable<String> urls) 
-            : base(parent, urls)
+        public ResolveListViewByTitle(IResolve<List> parent, IEnumerable<String> titles) 
+            : base(parent, titles)
         {
         }
 
         protected override Task<IEnumerable<View>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context, List parent)
         {
             return this.ResolveQuery(
-                ClientObjectResolveQuery.ListViewByUrl,
+                ClientObjectResolveQuery.ListViewByTitle,
                 context,
                 parent
             );

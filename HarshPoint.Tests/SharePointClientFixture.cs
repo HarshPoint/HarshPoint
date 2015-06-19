@@ -1,4 +1,5 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
@@ -34,7 +35,7 @@ namespace HarshPoint.Tests
         }
 
         public ResolveContext<HarshProvisionerContext> ResolveContext
-            => new ResolveContext<HarshProvisionerContext>(Context);
+            => new ClientObjectResolveContext() { ProvisionerContext = Context };
 
         public ClientContext ClientContext
         {

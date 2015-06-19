@@ -20,5 +20,15 @@ namespace HarshPoint.Provisioning
         {
             return new ResolveListRootFolder(list);
         }
+
+        public static ResolveListViewByTitle ViewByTitle(this IResolve<List> list, params String[] titles)
+        {
+            return new ResolveListViewByTitle(list, titles);
+        }
+
+        public static ResolveListViewByUrl ViewByUrl(this IResolve<List> list, params String[] urls)
+        {
+            return new ResolveListViewByUrl(list, urls);
+        }
     }
 }
