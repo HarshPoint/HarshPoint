@@ -73,6 +73,16 @@ namespace HarshPoint
         }
 
 
+        public static PropertyInfo ExtractSinglePropertyAccess(this Expression expression)
+        {
+            if (expression == null)
+            {
+                throw Error.ArgumentNull(nameof(expression));
+            }
+
+            return (PropertyInfo)ExtractMemberAccess(expression).First();
+        }
+
         public static FieldInfo TryExtractSingleFieldAccess(this Expression expression)
         {
             if (expression == null)

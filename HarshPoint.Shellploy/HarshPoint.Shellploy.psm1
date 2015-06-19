@@ -118,6 +118,33 @@ function DateTimeField {
     }
 }
 
+function FieldMultilineText {
+    param(
+        [Guid]
+        $Id,
+
+        [String]
+        $InternalName,
+
+        [String]
+        $DisplayName,
+
+        [Switch]
+        $RichText
+    )
+    
+    Field -Id           $Id `
+          -InternalName $InternalName `
+          -DisplayName  $DisplayName `
+          -Type         Note `
+          -Children {
+        
+        New-HarshProvisioner HarshFieldMultilineText $null @{
+            RichText = $RichText
+        }
+    }
+}
+
 function TaxonomyField {
 
     param (

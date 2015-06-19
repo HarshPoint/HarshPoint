@@ -116,8 +116,7 @@ namespace HarshPoint.Provisioning.Implementation
             if (MayDeleteUserData || context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
             {
                 return RunSelfAndChildren(
-                    context
-,
+                    context,
                     OnUnprovisioningAsync,
                     UnprovisionChildrenAsync);
             }
