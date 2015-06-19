@@ -6,7 +6,7 @@ using System;
 
 namespace HarshPoint.Tests
 {
-    public class SharePointClientFixture
+    public class SharePointClientFixture : IDisposable
     {
         public SharePointClientFixture()
         {
@@ -36,6 +36,12 @@ namespace HarshPoint.Tests
 
         public ResolveContext<HarshProvisionerContext> ResolveContext
             => new ClientObjectResolveContext() { ProvisionerContext = Context };
+
+        public void Dispose()
+        {
+            Context = null;
+            ClientContext?.Dispose();
+        }
 
         public ClientContext ClientContext
         {

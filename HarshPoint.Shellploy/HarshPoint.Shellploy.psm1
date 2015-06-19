@@ -89,6 +89,35 @@ function ContentType {
     }
 }
 
+function DateTimeField {
+
+    param (
+        [Guid]
+        $Id,
+
+        [String]
+        $InternalName,
+
+        [String]
+        $DisplayName,
+
+        [Switch]
+        $DateOnly
+    )
+
+    
+    Field -Id           $Id `
+          -InternalName $InternalName `
+          -DisplayName  $DisplayName `
+          -Type         DateTime `
+          -Children {
+        
+        New-HarshProvisioner HarshDateTimeField $null @{
+            DisplayFormat = $(if ($DateOnly) { 'DateOnly'} else { 'DateTime' })
+        }
+    }
+}
+
 function TaxonomyField {
 
     param (

@@ -66,6 +66,7 @@
     <Compile Include="Provisioning\HarshFieldRef.cs" />
     <Compile Include="Provisioning\HarshList.cs" />
     <Compile Include="Provisioning\HarshListView.cs" />
+    <Compile Include="Provisioning\HarshDateTimeField.cs" />
     <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshProvisionerObjectResult.cs" />
     <Compile Include="Provisioning\HarshProvisionerObjectResultFactory`2.cs" />
