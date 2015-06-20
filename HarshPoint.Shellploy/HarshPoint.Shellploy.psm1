@@ -145,7 +145,7 @@ function FieldMultilineText {
     }
 }
 
-function TaxonomyField {
+function FieldTaxonomy {
 
     param (
         [Guid]
@@ -161,7 +161,10 @@ function TaxonomyField {
         $TermSetId,
 
         [Switch]
-        $AllowMultipleValues
+        $AllowMultipleValues,
+
+        [Switch]
+        $RenderPath
     )
 
     Field -Id           $Id `
@@ -170,10 +173,11 @@ function TaxonomyField {
           -Type         TaxonomyFieldType `
           -Children {
         
-        New-HarshProvisioner HarshTaxonomyField $null @{
+        New-HarshProvisioner HarshFieldTaxonomy $null @{
 
             AllowMultipleValues = $AllowMultipleValues.IsPresent
-            
+            IsPathRendered      = $RenderPath.IsPresent
+
             TermSet = [HarshPoint.Provisioning.ResolveTermStoreExtensions]::TermSetById(
                 $T_Resolve::TermStoreSiteCollectionDefault(),
                 $TermSetId

@@ -5,9 +5,15 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-    public sealed class HarshTaxonomyField : HarshFieldProvisioner<TaxonomyField>
+    public sealed class HarshFieldTaxonomy : HarshFieldProvisioner<TaxonomyField>
     {
         public Boolean? AllowMultipleValues
+        {
+            get;
+            set;
+        }
+
+        public Boolean? IsPathRendered
         {
             get;
             set;
@@ -19,7 +25,6 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        
         protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
         {
             var termSet = await ResolveSingleAsync(
@@ -30,11 +35,9 @@ namespace HarshPoint.Provisioning
             {
                 field.SspId = termSet.TermStore.Id;
                 field.TermSetId = termSet.Id;
-                
-                if (AllowMultipleValues.HasValue)
-                {
-                    field.AllowMultipleValues = AllowMultipleValues.Value;
-                }
+
+                SetPropertyIfHasValue(field, AllowMultipleValues, f => f.AllowMultipleValues);
+                SetPropertyIfHasValue(field, IsPathRendered, f => f.IsPathRendered);
 
                 UpdateField(field);
             }
