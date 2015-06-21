@@ -203,7 +203,7 @@ namespace HarshPoint.Provisioning
             await ResolveField();
         }
 
-        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected override async Task OnProvisioningAsync()
         {
             SchemaXml = await SchemaXmlBuilder.Update(Field, SchemaXml);
 
@@ -221,7 +221,6 @@ namespace HarshPoint.Provisioning
                 // not the concerete subtype (e.g. TaxonomyField).
 
                 await ResolveField();
-                return ResultFactory.Added(Field);
             }
             else
             {
@@ -233,25 +232,17 @@ namespace HarshPoint.Provisioning
                     Field.UpdateAndPushChanges(PushChangesToLists);
 
                     await ClientContext.ExecuteQueryAsync();
-
-                    return ResultFactory.Updated(Field);
                 }
             }
-
-            return ResultFactory.Unchanged(Field);
         }
 
-        protected override async Task<HarshProvisionerResult> OnUnprovisioningAsync()
+        protected override async Task OnUnprovisioningAsync()
         {
             if (!Field.IsNull())
             {
                 Field.DeleteObject();
                 await ClientContext.ExecuteQueryAsync();
-
-                return ResultFactory.Removed(Field.InternalName);
             }
-
-            return await base.OnUnprovisioningAsync();
         }
 
         internal HarshFieldSchemaXmlBuilder SchemaXmlBuilder
@@ -275,9 +266,6 @@ namespace HarshPoint.Provisioning
                 )
             );
         }
-
-        private static readonly HarshProvisionerObjectResultFactory<Field, String> ResultFactory =
-            new HarshProvisionerObjectResultFactory<Field, String>(f => f.InternalName);
 
         private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
 

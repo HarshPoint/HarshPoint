@@ -24,12 +24,11 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected override async Task OnProvisioningAsync()
         {
             Web.Features.Add(FeatureId, Force, FeatureDefinitionScope);
 
             await ClientContext.ExecuteQueryAsync();
-            return await base.OnProvisioningAsync();
         }
     }
 }

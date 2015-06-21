@@ -86,7 +86,7 @@ namespace HarshPoint.Server.Provisioning
             }
         }
 
-        internal sealed override async Task<HarshProvisionerResult> ProvisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
+        internal sealed override async Task ProvisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
         {
             if (provisioner == null)
             {
@@ -97,13 +97,11 @@ namespace HarshPoint.Server.Provisioning
 
             if (ShouldProvisionChild(serverProvisioner))
             {
-                return await serverProvisioner.ProvisionAsync(context);
+                await serverProvisioner.ProvisionAsync(context);
             }
-
-            return new HarshProvisionerResultNotRun();
         }
 
-        internal sealed override async Task<HarshProvisionerResult> UnprovisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
+        internal sealed override async Task UnprovisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
         {
             if (provisioner == null)
             {
@@ -114,10 +112,8 @@ namespace HarshPoint.Server.Provisioning
 
             if (ShouldUnprovisionChild(serverProvisioner))
             {
-                return await serverProvisioner.UnprovisionAsync(context);
+                await serverProvisioner.UnprovisionAsync(context);
             }
-
-            return new HarshProvisionerResultNotRun();
         }
     }
 }

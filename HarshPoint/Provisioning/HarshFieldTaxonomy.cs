@@ -25,7 +25,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected override async Task OnProvisioningAsync()
         {
             var termSet = await ResolveSingleAsync(
                 TermSet.Include(ts => ts.TermStore.Id)
@@ -43,8 +43,6 @@ namespace HarshPoint.Provisioning
             }
 
             await ClientContext.ExecuteQueryAsync();
-
-            return await base.OnProvisioningAsync();
         }
     }
 }

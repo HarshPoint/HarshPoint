@@ -69,8 +69,6 @@
     <Compile Include="Provisioning\HarshDateTimeField.cs" />
     <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
-    <Compile Include="Provisioning\HarshProvisionerObjectResult.cs" />
-    <Compile Include="Provisioning\HarshProvisionerObjectResultFactory`2.cs" />
     <Compile Include="Provisioning\HarshRemoveContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshFieldTaxonomy.cs" />
     <Compile Include="Provisioning\IDefaultFromContextTag.cs" />
@@ -79,8 +77,6 @@
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQueryProcessor.cs" />
     <Compile Include="Provisioning\Implementation\ContextStateResolver.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
-    <Compile Include="Provisioning\HarshProvisionerResult.cs" />
-    <Compile Include="Provisioning\Implementation\HarshProvisionerResultNotRun.cs" />
     <Compile Include="Provisioning\Implementation\IResolvableIdentifiers.cs" />
     <Compile Include="Provisioning\Implementation\ResolvableContextModification`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveContext`1.cs" />

@@ -37,7 +37,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected override async Task OnProvisioningAsync()
         {
             var folder = await TryResolveSingleAsync(Folder);
 
@@ -50,8 +50,6 @@ namespace HarshPoint.Provisioning
 
             AddedFile = folder.Files.Add(fci);
             await folder.Context.ExecuteQueryAsync();
-
-            return await base.OnProvisioningAsync();
         }
     }
 }

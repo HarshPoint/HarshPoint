@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected override async Task OnProvisioningAsync()
         {
             var contentTypes = await ResolveAsync(
                 ContentTypes.Include(
@@ -58,7 +58,6 @@ namespace HarshPoint.Provisioning
             }
 
             await ClientContext.ExecuteQueryAsync();
-            return await base.OnProvisioningAsync();
         }
     }
 }

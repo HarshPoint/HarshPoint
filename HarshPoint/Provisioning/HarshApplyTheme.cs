@@ -33,7 +33,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected override async Task OnProvisioningAsync()
         {
             await Web.EnsurePropertyAvailable(w => w.ServerRelativeUrl);
 
@@ -49,8 +49,6 @@ namespace HarshPoint.Provisioning
             );
 
             await ClientContext.ExecuteQueryAsync();
-
-            return await base.OnProvisioningAsync();
         }
 
         private async Task<String> EnsureServerRelativeOrNull(String url)

@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected override async Task OnProvisioningAsync()
         {
             ClientContext.Load(Web, w => w.Id);
             await ClientContext.ExecuteQueryAsync();
@@ -35,8 +35,6 @@ namespace HarshPoint.Provisioning
             }
 
             await ClientContext.ExecuteQueryAsync();
-
-            return await base.OnProvisioningAsync();
         }
     }
 }

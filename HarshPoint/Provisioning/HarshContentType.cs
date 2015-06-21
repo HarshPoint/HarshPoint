@@ -69,7 +69,7 @@ namespace HarshPoint.Provisioning
             }
         }
 
-        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected override async Task OnProvisioningAsync()
         {
             if (ContentType.IsNull())
             {
@@ -90,14 +90,7 @@ namespace HarshPoint.Provisioning
                 });
 
                 await ClientContext.ExecuteQueryAsync();
-
-                return ResultFactory.Added(ContentType);
             }
-
-            return ResultFactory.Unchanged(ContentType);
         }
-
-        private static readonly HarshProvisionerObjectResultFactory<ContentType, String> ResultFactory =
-            new HarshProvisionerObjectResultFactory<ContentType, String>(ct => ct.Name);
     }
 }

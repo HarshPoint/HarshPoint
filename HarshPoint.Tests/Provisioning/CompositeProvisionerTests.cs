@@ -29,13 +29,13 @@ namespace HarshPoint.Tests.Provisioning
             var p2 = new Mock<HarshProvisioner>();
 
             p1.Protected()
-                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult()))
+                .Setup<Task>("OnProvisioningAsync")
+                .Returns(HarshTask.Completed)
                 .Callback(() => seq += "1");
 
             p2.Protected()
-                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult()))
+                .Setup<Task>("OnProvisioningAsync")
+                .Returns(HarshTask.Completed)
                 .Callback(() => seq += "2");
 
             var ctx = ClientOM.Context.AllowDeleteUserData();
@@ -58,13 +58,13 @@ namespace HarshPoint.Tests.Provisioning
             var p2 = new Mock<HarshProvisioner>();
 
             p1.Protected()
-                .Setup<Task<HarshProvisionerResult>>("OnUnprovisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult()))
+                .Setup<Task>("OnUnprovisioningAsync")
+                .Returns(HarshTask.Completed)
                 .Callback(() => seq += "1");
 
             p2.Protected()
-                .Setup<Task<HarshProvisionerResult>>("OnUnprovisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult()))
+                .Setup<Task>("OnUnprovisioningAsync")
+                .Returns(HarshTask.Completed)
                 .Callback(() => seq += "2");
 
             var ctx = ClientOM.Context.AllowDeleteUserData();
@@ -83,8 +83,8 @@ namespace HarshPoint.Tests.Provisioning
         {
             var p = new Mock<HarshProvisioner>();
             p.Protected()
-                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult()))
+                .Setup<Task>("OnProvisioningAsync")
+                .Returns(HarshTask.Completed)
                 .Callback(() =>
                 {
                     Assert.Equal(ClientOM.Web, p.Object.Web);
@@ -123,14 +123,15 @@ namespace HarshPoint.Tests.Provisioning
             {
                 ModifyChildrenContextState(() => "1234");
             }
-            protected override Task<HarshProvisionerResult> OnProvisioningAsync()
+
+            protected override Task OnProvisioningAsync()
             {
                 Assert.Empty(Context.StateStack);
                 return base.OnProvisioningAsync();
             }
 
             [NeverDeletesUserData]
-            protected override Task<HarshProvisionerResult> OnUnprovisioningAsync()
+            protected override Task OnUnprovisioningAsync()
             {
                 Assert.Empty(Context.StateStack);
                 return base.OnUnprovisioningAsync();
@@ -139,14 +140,14 @@ namespace HarshPoint.Tests.Provisioning
 
         private class ExpectsModifiedContext : HarshProvisioner
         {
-            protected override Task<HarshProvisionerResult> OnProvisioningAsync()
+            protected override Task OnProvisioningAsync()
             {
                 Assert.Single(Context.StateStack, "1234");
                 return base.OnProvisioningAsync();
             }
 
             [NeverDeletesUserData]
-            protected override Task<HarshProvisionerResult> OnUnprovisioningAsync()
+            protected override Task OnUnprovisioningAsync()
             {
                 Assert.Single(Context.StateStack, "1234");
                 return base.OnUnprovisioningAsync();

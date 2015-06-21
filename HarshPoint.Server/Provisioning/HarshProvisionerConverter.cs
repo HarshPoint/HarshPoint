@@ -91,12 +91,12 @@ namespace HarshPoint.Server.Provisioning
                 return NoChildren;
             }
 
-            protected override Task<HarshProvisionerResult> OnProvisioningAsync()
+            protected override Task OnProvisioningAsync()
             {
                 return Provisioner.ProvisionAsync(ProvisionerContext);
             }
 
-            protected override Task<HarshProvisionerResult> OnUnprovisioningAsync()
+            protected override Task OnUnprovisioningAsync()
             {
                 return Provisioner.UnprovisionAsync(ProvisionerContext);
             }

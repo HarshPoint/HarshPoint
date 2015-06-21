@@ -32,7 +32,7 @@ namespace HarshPoint.Provisioning
             await base.InitializeAsync();
         }
 
-        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected override async Task OnProvisioningAsync()
         {
             if (Group.IsNull())
             {
@@ -44,8 +44,6 @@ namespace HarshPoint.Provisioning
 
                 await ClientContext.ExecuteQueryAsync();
             }
-
-            return await base.OnProvisioningAsync();
         }
 
         private Group Group

@@ -40,7 +40,7 @@ namespace HarshPoint.Provisioning
             return new ClientObjectResolveContext();
         }
 
-        internal sealed override Task<HarshProvisionerResult> ProvisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
+        internal sealed override Task ProvisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
         {
             if (provisioner == null)
             {
@@ -50,7 +50,7 @@ namespace HarshPoint.Provisioning
             return ((HarshProvisioner)(provisioner)).ProvisionAsync(context);
         }
 
-        internal sealed override Task<HarshProvisionerResult> UnprovisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
+        internal sealed override Task UnprovisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
         {
             if (provisioner == null)
             {

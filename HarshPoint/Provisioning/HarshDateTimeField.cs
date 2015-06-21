@@ -17,7 +17,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task<HarshProvisionerResult> OnProvisioningAsync()
+        protected override async Task OnProvisioningAsync()
         {
             foreach (var field in FieldsResolved)
             {
@@ -35,8 +35,6 @@ namespace HarshPoint.Provisioning
             }
 
             await ClientContext.ExecuteQueryAsync();
-
-            return await base.OnProvisioningAsync();
         }
     }
 }
