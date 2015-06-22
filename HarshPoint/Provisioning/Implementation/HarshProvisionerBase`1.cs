@@ -16,29 +16,29 @@ namespace HarshPoint.Provisioning.Implementation
     public abstract class HarshProvisionerBase<TContext> : HarshProvisionerBase
         where TContext : HarshProvisionerContextBase
     {
+        private readonly HarshScopedValue<TContext> _context;
+        private readonly HarshScopedValue<ILogger> _logger;
+
         private ICollection<HarshProvisionerBase> _children;
         private ICollection<Func<Object>> _childrenContextStateModifiers;
         private HarshProvisionerMetadata _metadata;
 
         protected HarshProvisionerBase()
         {
-            Logger = Log.ForContext(GetType());
+            _context = new HarshScopedValue<TContext>();
+            _logger = new HarshScopedValue<ILogger>(
+                Log.ForContext(GetType())
+            );
         }
 
         public TContext Context
-        {
-            get;
-            private set;
-        }
+            => _context.Value;
 
         public ICollection<HarshProvisionerBase> Children
             => HarshLazy.Initialize(ref _children, CreateChildrenCollection);
 
         public ILogger Logger
-        {
-            get;
-            private set;
-        }
+            => _logger.Value;
 
         public Boolean MayDeleteUserData
         {
@@ -288,15 +288,14 @@ namespace HarshPoint.Provisioning.Implementation
 
         private async Task RunWithContext(TContext context, Func<Task> action)
         {
-            Context = context;
+            var contextLogger = Logger.ForContext(
+                "ProvisionerContext", context, destructureObjects: true
+            );
 
-            try
+            using (_context.Enter(context))
+            using (_logger.Enter(contextLogger))
             {
                 await action();
-            }
-            finally
-            {
-                Context = null;
             }
         }
 
