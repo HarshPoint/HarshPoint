@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveListByUrl : ResolveList<String, ResolveListByUrl>
+    public sealed class ResolveListByUrl : 
+        Resolvable<List, String, HarshProvisionerContext, ResolveListByUrl>
     {
         public ResolveListByUrl(IEnumerable<String> urls)
             : base(urls)

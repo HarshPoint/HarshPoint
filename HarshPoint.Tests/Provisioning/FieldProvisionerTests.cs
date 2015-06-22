@@ -23,7 +23,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             var prov = new HarshField()
             {
-                Id = new Guid("fa564e0f-0c70-4ab9-b863-0177e6ddd247"), // SPBuiltInFieldId.Title
+                Id = HarshBuiltInFieldId.Title,
                 DisplayName = "Title",
             };
 

@@ -127,7 +127,6 @@
     <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveCatalog.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListRootFolder.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveList`2.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />
     <Compile Include="Reflection\MethodBaseExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />

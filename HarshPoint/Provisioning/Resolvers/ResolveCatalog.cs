@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveCatalog : ResolveList<ListTemplateType, ResolveCatalog>
+    public sealed class ResolveCatalog : 
+        Resolvable<List, ListTemplateType, HarshProvisionerContext, ResolveCatalog>
     {
         public ResolveCatalog(IEnumerable<ListTemplateType> identifiers)
             : base(identifiers)
