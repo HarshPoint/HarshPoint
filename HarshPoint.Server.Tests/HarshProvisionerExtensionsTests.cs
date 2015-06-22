@@ -33,8 +33,8 @@ namespace HarshPoint.Server.Tests
                 .Verifiable();
 
             prov.Protected()
-                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult()))
+                .Setup<Task>("OnProvisioningAsync")
+                .Returns(HarshTask.Completed)
                 .Verifiable();
 
             prov.Protected()
@@ -59,8 +59,8 @@ namespace HarshPoint.Server.Tests
                 .Verifiable();
 
             clientProv.Protected()
-                .Setup<Task<HarshProvisionerResult>>("OnUnprovisioningAsync")
-                .Returns(Task.FromResult(new HarshProvisionerResult()))
+                .Setup<Task>("OnUnprovisioningAsync")
+                .Returns(HarshTask.Completed)
                 .Verifiable();
 
             clientProv.Protected()
@@ -81,15 +81,13 @@ namespace HarshPoint.Server.Tests
         {
             var clientProv = new Mock<HarshProvisioner>();
             clientProv.Protected()
-                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
+                .Setup<Task>("OnProvisioningAsync")
                 .Returns(async () =>
                 {
                     clientProv.Object.ClientContext.Load(clientProv.Object.Web, w => w.Url);
                     await clientProv.Object.ClientContext.ExecuteQueryAsync();
 
                     Assert.Equal(ServerOM.Web.Url, clientProv.Object.Web.Url, StringComparer.OrdinalIgnoreCase);
-
-                    return new HarshProvisionerResult();
                 });
 
             var serverProv = clientProv.Object.ToServerProvisioner();
@@ -101,14 +99,13 @@ namespace HarshPoint.Server.Tests
         {
             var clientProv = new Mock<HarshProvisioner>();
             clientProv.Protected()
-                .Setup<Task<HarshProvisionerResult>>("OnProvisioningAsync")
+                .Setup<Task>("OnProvisioningAsync")
                 .Returns(async () =>
                 {
                     clientProv.Object.ClientContext.Load(clientProv.Object.Site, s => s.Url);
                     await clientProv.Object.ClientContext.ExecuteQueryAsync();
 
                     Assert.Equal(ServerOM.Site.Url, clientProv.Object.Site.Url, StringComparer.OrdinalIgnoreCase);
-                    return new HarshProvisionerResult();
                 });
 
             var serverProv = clientProv.Object.ToServerProvisioner();
