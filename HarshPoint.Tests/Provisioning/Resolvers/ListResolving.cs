@@ -10,22 +10,22 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
     {
         public ListResolving(SharePointClientFixture fixture)
         {
-            ClientOM = fixture;
+            Fixture = fixture;
         }
 
-        public SharePointClientFixture ClientOM { get; private set; }
+        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
         public async Task Documents_list_gets_resolved_by_url()
         {
-            await EnsureDocuments();
+            await Fixture.EnsureTestList();
 
-            var resolver = (IResolve<List>)Resolve.ListByUrl("Shared Documents");
-            var list = Assert.Single(await resolver.TryResolveAsync(ClientOM.ResolveContext));
+            var resolver = (IResolve<List>)Resolve.ListByUrl(SharePointClientFixture.TestListUrl);
+            var list = Assert.Single(await resolver.TryResolveAsync(Fixture.ResolveContext));
 
             Assert.NotNull(list);
             Assert.EndsWith(
-                "/Shared Documents",
+                "/" + SharePointClientFixture.TestListUrl,
                 await list.RootFolder.EnsurePropertyAvailable(f => f.ServerRelativeUrl)
             );
         }
@@ -33,38 +33,16 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task Documents_RootFolder_gets_resolved_by_url()
         {
-            await EnsureDocuments();
+            await Fixture.EnsureTestList();
 
-            var resolver = (IResolve<Folder>)Resolve.ListByUrl("Shared Documents").RootFolder();
-            var folder = Assert.Single(await resolver.TryResolveAsync(ClientOM.ResolveContext));
+            var resolver = (IResolve<Folder>)Resolve.ListByUrl(SharePointClientFixture.TestListUrl).RootFolder();
+            var folder = Assert.Single(await resolver.TryResolveAsync(Fixture.ResolveContext));
 
             Assert.NotNull(folder);
             Assert.EndsWith(
-                "/Shared Documents",
+                "/" + SharePointClientFixture.TestListUrl,
                 await folder.EnsurePropertyAvailable(f => f.ServerRelativeUrl)
             );
-        }
-
-        private async Task EnsureDocuments()
-        {
-            var list = ClientOM.Web.Lists.GetByTitle("Documents");
-            ClientOM.ClientContext.Load(list);
-
-            await ClientOM.ClientContext.ExecuteQueryAsync();
-
-            if (list.IsNull())
-            {
-                list = ClientOM.Web.Lists.Add(new ListCreationInformation()
-                {
-                    Url = "Shared%20Documents",
-                    Title = "Documents",
-                    TemplateType = (Int32)ListTemplateType.DocumentLibrary,
-                    DocumentTemplateType = (Int32)DocumentTemplateType.Word,
-                });
-
-                await ClientOM.ClientContext.ExecuteQueryAsync();
-            }
-
         }
     }
 }

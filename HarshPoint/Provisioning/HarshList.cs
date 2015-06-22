@@ -19,6 +19,7 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
+        [Obsolete]
         public Boolean ListAdded
         {
             get;

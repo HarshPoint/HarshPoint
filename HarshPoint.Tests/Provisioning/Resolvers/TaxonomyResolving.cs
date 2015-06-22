@@ -1,4 +1,5 @@
 ﻿using HarshPoint.Provisioning;
+using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Threading.Tasks;
@@ -70,16 +71,11 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             var store = Fixture.TaxonomySession.GetDefaultSiteCollectionTermStore();
             var group = store.GetGroup(GroupId);
 
-            try
+            await Fixture.ClientContext.ExecuteQueryAsync();
+
+            if (group.IsNull())
             {
-                await Fixture.ClientContext.ExecuteQueryAsync();
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                if (group.IsNull())
-                {
-                    group = store.CreateGroup(GroupId.ToString("n"), GroupId);
-                }
+                group = store.CreateGroup(GroupId.ToString("n"), GroupId);
             }
 
             var termSet = group.TermSets.GetById(TermSetId);
@@ -88,13 +84,9 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             {
                 await Fixture.ClientContext.ExecuteQueryAsync();
             }
-            catch (ArgumentOutOfRangeException)
+            catch (ServerException)
             {
-                if (termSet.IsNull())
-                {
-                    termSet = group.CreateTermSet(TermSetId.ToString("n"), TermSetId, 1033);
-                }
-
+                termSet = group.CreateTermSet(TermSetId.ToString("n"), TermSetId, 1033);
                 await Fixture.ClientContext.ExecuteQueryAsync();
             }
 

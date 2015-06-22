@@ -18,8 +18,10 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task Documents_Title_field_gets_resolved_by_id()
         {
+            await Fixture.EnsureTestList();
+
             IResolve<Field> resolver = Resolve
-                .ListByUrl("Shared Documents")
+                .ListByUrl(SharePointClientFixture.TestListUrl)
                 .FieldById(HarshBuiltInFieldId.Title);
 
             var field = Assert.Single(
@@ -30,28 +32,6 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 
             Assert.NotNull(field);
             Assert.Equal("Title", await field.EnsurePropertyAvailable(f => f.InternalName));
-        }
-
-        private async Task EnsureDocuments()
-        {
-            var list = Fixture.Web.Lists.GetByTitle("Documents");
-            Fixture.ClientContext.Load(list);
-
-            await Fixture.ClientContext.ExecuteQueryAsync();
-
-            if (list.IsNull())
-            {
-                list = Fixture.Web.Lists.Add(new ListCreationInformation()
-                {
-                    Url = "Shared%20Documents",
-                    Title = "Documents",
-                    TemplateType = (Int32)ListTemplateType.DocumentLibrary,
-                    DocumentTemplateType = (Int32)DocumentTemplateType.Word,
-                });
-
-                await Fixture.ClientContext.ExecuteQueryAsync();
-            }
-
         }
     }
 }

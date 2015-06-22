@@ -3,14 +3,18 @@ using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
+using System.Threading.Tasks;
 
 namespace HarshPoint.Tests
 {
     public class SharePointClientFixture : IDisposable
     {
+        public const String TestListUrl = "HarshPoint Tests";
+        public const String TestListTitle = "HarshPoint Tests";
+
         public SharePointClientFixture()
         {
-            var url = Environment.GetEnvironmentVariable("HarshPointTestUrl");
+            var url = ""; //Environment.GetEnvironmentVariable("HarshPointTestUrl");
 
             if (String.IsNullOrWhiteSpace(url))
             {
@@ -26,6 +30,29 @@ namespace HarshPoint.Tests
             }
 
             Context = new HarshProvisionerContext(ClientContext);
+        }
+
+        public async Task EnsureTestList()
+        {
+            var list = Web.Lists.GetByTitle(TestListTitle);
+            ClientContext.Load(list);
+
+            try
+            {
+                await ClientContext.ExecuteQueryAsync();
+            }
+            catch (ServerException)
+            {
+                list = Web.Lists.Add(new ListCreationInformation()
+                {
+                    Url = TestListUrl,
+                    Title = TestListTitle,
+                    TemplateType = (Int32)ListTemplateType.DocumentLibrary,
+                    DocumentTemplateType = (Int32)DocumentTemplateType.Word,
+                });
+
+                await ClientContext.ExecuteQueryAsync();
+            }
         }
 
         public HarshProvisionerContext Context

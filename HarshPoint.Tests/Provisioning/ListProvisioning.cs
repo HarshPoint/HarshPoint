@@ -18,10 +18,12 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Existing_list_is_not_added()
         {
+            await Fixture.EnsureTestList();
+
             var prov = new HarshList()
             {
-                Title = "Documents",
-                Url = "Shared Documents",
+                Title = SharePointClientFixture.TestListTitle,
+                Url = SharePointClientFixture.TestListUrl,
                 TemplateType = ListTemplateType.DocumentLibrary
             };
 
@@ -37,7 +39,7 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.False(prov.ListAdded);
             Assert.NotNull(prov.List);
-            Assert.Equal("Documents", prov.List.Title);
+            Assert.Equal(SharePointClientFixture.TestListTitle, prov.List.Title);
             Assert.Equal((Int32)ListTemplateType.DocumentLibrary, prov.List.BaseTemplate);
         }
 
