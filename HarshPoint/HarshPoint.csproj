@@ -89,7 +89,7 @@
     <Compile Include="Provisioning\ResolveClientObjectExtension.cs" />
     <Compile Include="Provisioning\ResolveListExtensions.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery`3.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery`4.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListFieldById.cs" />
