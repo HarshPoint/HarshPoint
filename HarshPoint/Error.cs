@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.Provisioning.Implementation;
+using System;
 using System.Globalization;
 using System.Reflection;
 
@@ -31,6 +32,11 @@ namespace HarshPoint
             );
         }
 
+        public static Exception ArgumentOutOfRange_EmptySequence(String paramName)
+        {
+            return ArgumentOutOfRange(paramName, SR.Error_SequenceEmpty);
+        }
+
         public static Exception ArgumentOutOfRange_ObjectNotAssignableTo(String paramName, TypeInfo baseType, Object shouldHaveBeenAssignable)
         {
             return ArgumentOutOfRangeFormat(
@@ -48,6 +54,13 @@ namespace HarshPoint
                 SR.Error_TypeNotAssignableFrom,
                 baseType.FullName,
                 shouldHaveBeenAssignable.FullName
+            );
+        }
+
+        public static Exception ProvisionerMetadataFormat(String format, params Object[] args)
+        {
+            return new HarshProvisionerMetadataException(
+                Format(format, args)
             );
         }
 

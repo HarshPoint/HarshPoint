@@ -140,6 +140,9 @@
   <data name="Error_ObjectNotAssignableTo" xml:space="preserve">
     <value>The specified object '{0}' is not a subtype of '{1}'.</value>
   </data>
+  <data name="Error_SequenceEmpty" xml:space="preserve">
+    <value>Value cannot be an empty sequence.</value>
+  </data>
   <data name="Error_TypeNotAssignableFrom" xml:space="preserve">
     <value>The specified type '{0}' is not assignable from '{1}'.</value>
   </data>
@@ -208,6 +211,22 @@
   </data>
   <data name="HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace" xml:space="preserve">
     <value>The {0} cannot be null or a whitespace-only string.</value>
+  </data>
+  <data name="HarshProvisionerMetadataException_MoreParametersWithSameSet" xml:space="preserve">
+    <value>Parameters cannot be members of the same parameter set multiple times.
+
+Property: {0}.{1}
+Duplicate parameter sets: {2}</value>
+  </data>
+  <data name="HarshProvisionerMetadataException_ParameterBothCommonAndInSet" xml:space="preserve">
+    <value>Parameters can either be shared by all parameter sets by having ParameterSetName equal to null, or belong to one or more named parameter sets.
+
+Property: {0}.{1}</value>
+  </data>
+  <data name="HarshProvisionerMetadataException_ParameterMustBeReadWrite" xml:space="preserve">
+    <value>Parameter properties must be readable and writable.
+
+Property: {0}.{1}</value>
   </data>
   <data name="HarshProvisionerMetadata_NoTagTypesOnResolvers" xml:space="preserve">
     <value>The specified property '{0}.{1}' is of type IResolve or IResolveSingle and cannot have a TagType set.</value>

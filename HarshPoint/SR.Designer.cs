@@ -127,6 +127,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value cannot be an empty sequence..
+        /// </summary>
+        internal static string Error_SequenceEmpty {
+            get {
+                return ResourceManager.GetString("Error_SequenceEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not assignable from &apos;{1}&apos;..
         /// </summary>
         internal static string Error_TypeNotAssignableFrom {
@@ -348,6 +357,40 @@ namespace HarshPoint {
         internal static string HarshProvisionerMetadata_NoValueTypeDefaultFromContext {
             get {
                 return ResourceManager.GetString("HarshProvisionerMetadata_NoValueTypeDefaultFromContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameters cannot be members of the same parameter set multiple times.
+        ///
+        ///Property: {0}.{1}
+        ///Duplicate parameter sets: {2}.
+        /// </summary>
+        internal static string HarshProvisionerMetadataException_MoreParametersWithSameSet {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadataException_MoreParametersWithSameSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameters can either be shared by all parameter sets by having ParameterSetName equal to null, or belong to one or more named parameter sets.
+        ///
+        ///Property: {0}.{1}.
+        /// </summary>
+        internal static string HarshProvisionerMetadataException_ParameterBothCommonAndInSet {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadataException_ParameterBothCommonAndInSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter properties must be readable and writable.
+        ///
+        ///Property: {0}.{1}.
+        /// </summary>
+        internal static string HarshProvisionerMetadataException_ParameterMustBeReadWrite {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadataException_ParameterMustBeReadWrite", resourceCulture);
             }
         }
         

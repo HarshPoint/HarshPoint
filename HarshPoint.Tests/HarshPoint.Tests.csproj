@@ -99,6 +99,7 @@
     <Compile Include="Provisioning\IdentifierResolving.cs" />
     <Compile Include="Provisioning\ListProvisioning.cs" />
     <Compile Include="Provisioning\LookupProvisioning.cs" />
+    <Compile Include="Provisioning\ParameterSetMetadataBuilding.cs" />
     <Compile Include="Provisioning\PotentiallyDestructiveTests.cs" />
     <Compile Include="Provisioning\ResolvableChainTests.cs" />
     <Compile Include="Provisioning\ResolvableTests.cs" />
