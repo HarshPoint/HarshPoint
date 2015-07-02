@@ -1,21 +1,17 @@
 ﻿using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using HarshPoint.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ParameterSetMetadataBuilder
     {
-        private const String DefaultDefaultParameterSetName = "__DefaultParameterSet";
-
-        private static readonly ILogger Logger = Log.ForContext<ParameterSetMetadataBuilder>();
+        private static readonly String DefaultDefaultParameterSetName = "__DefaultParameterSet";
         private static readonly StringComparer ParameterSetNameComparer = StringComparer.Ordinal;
+
+        private readonly ILogger Logger;
 
         public ParameterSetMetadataBuilder(Type type)
         {
@@ -24,7 +20,12 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(type));
             }
 
+            Logger = Log
+                .ForContext<ParameterSetMetadataBuilder>()
+                .ForContext("ProcessedType", type);
+
             Properties = type.GetRuntimeProperties();
+
         }
 
         public String DefaultParameterSetName
@@ -43,9 +44,13 @@ namespace HarshPoint.Provisioning.Implementation
         {
             var parameters = BuildParameterMetadata();
 
+            Logger.Debug("Found parameters: {@Parameters}", parameters);
+
             var commonParameters = parameters
                 .Where(p => p.ParameterSetName == null)
                 .ToArray();
+
+            Logger.Debug("Found common parameters: {@CommonParameters}", commonParameters);
 
             var parameterSets = parameters
                 .Where(p => p.ParameterSetName != null)
@@ -60,17 +65,23 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (parameterSets.Any())
             {
+                Logger.Debug("Found parameter sets: {@ParameterSets}", parameterSets);
+
                 return parameterSets;
             }
 
-            return new[]
-            {
-                new ParameterSetMetadata(
-                    DefaultDefaultParameterSetName,
-                    commonParameters,
-                    isDefault: true
-                )
-            };
+            var defaultParameterSet = new ParameterSetMetadata(
+                DefaultDefaultParameterSetName,
+                commonParameters,
+                isDefault: true
+            );
+
+            Logger.Debug(
+                "Found default parameter set: @{DefaultParameterSet}", 
+                defaultParameterSet
+            );
+
+            return new[] { defaultParameterSet };
         }
 
         private Boolean IsDefaultParameterSet(String name, Int32 index)
