@@ -229,8 +229,8 @@ Duplicate parameter sets: {2}</value>
 
 Property: {0}.{1}</value>
   </data>
-  <data name="HarshProvisionerMetadata_ParameterMustBeReadWrite" xml:space="preserve">
-    <value>Parameter properties must be readable and writable.
+  <data name="HarshProvisionerMetadata_ParameterMustBeReadWriteInstance" xml:space="preserve">
+    <value>Parameter properties must be readable and writable and cannot be static.
 
 Property: {0}.{1}</value>
   </data>

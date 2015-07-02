@@ -24,8 +24,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .ForContext<ParameterSetMetadataBuilder>()
                 .ForContext("ProcessedType", type);
 
-            Properties = type.GetRuntimeProperties();
-
+            ProcessedType = type;
         }
 
         public String DefaultParameterSetName
@@ -34,7 +33,7 @@ namespace HarshPoint.Provisioning.Implementation
             set;
         }
 
-        public IEnumerable<PropertyInfo> Properties
+        public Type ProcessedType
         {
             get;
             private set;
@@ -42,6 +41,11 @@ namespace HarshPoint.Provisioning.Implementation
 
         public IEnumerable<ParameterSetMetadata> Build()
         {
+            Logger.Debug(
+                "Building parameter set metadata for {ProcessedType}",
+                ProcessedType
+            );
+
             var parameters = BuildParameterMetadata();
 
             Logger.Debug("Found parameters: {@Parameters}", parameters);
@@ -77,7 +81,7 @@ namespace HarshPoint.Provisioning.Implementation
             );
 
             Logger.Debug(
-                "Found default parameter set: @{DefaultParameterSet}", 
+                "Found default parameter set: {@DefaultParameterSet}", 
                 defaultParameterSet
             );
 
@@ -96,7 +100,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         private IEnumerable<ParameterMetadata> BuildParameterMetadata()
         {
-            return from property in Properties
+            return from property in ProcessedType.GetRuntimeProperties()
 
                    let paramAttrs = property
                       .GetCustomAttributes<ParameterAttribute>(inherit: true)
@@ -171,17 +175,23 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (!property.CanRead || 
                 !property.CanWrite ||
-                !property.GetMethod.IsPublic || 
-                !property.SetMethod.IsPublic)
+                !IsPublicInstance(property.GetMethod) ||
+                !IsPublicInstance(property.SetMethod)
+            )
             {
                 throw Error.ProvisionerMetadataFormat(
-                    SR.HarshProvisionerMetadata_ParameterMustBeReadWrite,
+                    SR.HarshProvisionerMetadata_ParameterMustBeReadWriteInstance,
                     property.DeclaringType.FullName,
                     property.Name
                 );
             }
 
             return true;
+        }
+
+        private static Boolean IsPublicInstance(MethodBase method)
+        {
+            return method.IsPublic && !method.IsStatic;
         }
     }
 }

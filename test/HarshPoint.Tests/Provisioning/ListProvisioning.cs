@@ -3,17 +3,16 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ListProvisioning : IClassFixture<SharePointClientFixture>
+    public class ListProvisioning : SharePointClientTest
     {
-        public ListProvisioning(SharePointClientFixture fix)
+        public ListProvisioning(SharePointClientFixture fixture, ITestOutputHelper output) 
+            : base(fixture, output)
         {
-            Fixture = fix;
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
         public async Task Existing_list_is_not_added()

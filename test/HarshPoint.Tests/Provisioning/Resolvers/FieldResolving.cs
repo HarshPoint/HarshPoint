@@ -3,17 +3,16 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning.Resolvers
 {
-    public class FieldResolving : IClassFixture<SharePointClientFixture>
+    public class FieldResolving : SharePointClientTest
     {
-        public FieldResolving(SharePointClientFixture fixture)
+        public FieldResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
+            : base(fixture, output)
         {
-            Fixture = fixture;
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
         public async Task Documents_Title_field_gets_resolved_by_id()

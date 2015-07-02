@@ -1,28 +1,26 @@
 ﻿using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ContextStateStack : IClassFixture<SharePointClientFixture>
+    public class ContextStateStack : SharePointClientTest
     {
-        public ContextStateStack(SharePointClientFixture fixture)
+        public ContextStateStack(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
-            ClientOM = fixture;
         }
-
-        public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
         public void Context_StateStack_empty_by_default()
         {
-            Assert.Empty(ClientOM.Context.StateStack);
+            Assert.Empty(Fixture.Context.StateStack);
         }
 
         [Fact]
         public void Context_PushStack_adds_object()
         {
-            var ctx = ClientOM.Context.PushState("42");
+            var ctx = Fixture.Context.PushState("42");
 
-            Assert.Empty(ClientOM.Context.StateStack);
+            Assert.Empty(Fixture.Context.StateStack);
             Assert.Single(ctx.StateStack, "42");
         }
     }

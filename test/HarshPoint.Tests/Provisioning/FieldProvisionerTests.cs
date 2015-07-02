@@ -2,20 +2,15 @@
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class FieldProvisionerTests : IClassFixture<SharePointClientFixture>
+    public class FieldProvisionerTests : SharePointClientTest
     {
-        public FieldProvisionerTests(SharePointClientFixture data)
+        public FieldProvisionerTests(SharePointClientFixture fixture, ITestOutputHelper output)
+            : base(fixture, output)
         {
-            ClientOM = data;
-        }
-
-        public SharePointClientFixture ClientOM
-        {
-            get;
-            set;
         }
 
         [Fact(Skip = "inconclusive")]
@@ -27,7 +22,7 @@ namespace HarshPoint.Tests.Provisioning
                 DisplayName = "Title",
             };
 
-            await prov.ProvisionAsync(ClientOM.Context);
+            await prov.ProvisionAsync(Fixture.Context);
             //Assert.False(prov.Result.ObjectAdded);
         }
 
@@ -45,10 +40,10 @@ namespace HarshPoint.Tests.Provisioning
                     DisplayName = internalName + "-before"
                 };
 
-                await prov.ProvisionAsync(ClientOM.Context);
+                await prov.ProvisionAsync(Fixture.Context);
 
-                ClientOM.ClientContext.Load(prov.Field, f => f.Title);
-                await ClientOM.ClientContext.ExecuteQueryAsync();
+                Fixture.ClientContext.Load(prov.Field, f => f.Title);
+                await Fixture.ClientContext.ExecuteQueryAsync();
 
                 Assert.Equal(prov.DisplayName, prov.Field.Title);
 
@@ -59,17 +54,17 @@ namespace HarshPoint.Tests.Provisioning
                     DisplayName = internalName + "-after"
                 };
 
-                await prov.ProvisionAsync(ClientOM.Context);
+                await prov.ProvisionAsync(Fixture.Context);
 
-                ClientOM.ClientContext.Load(prov.Field, f => f.Title);
-                await ClientOM.ClientContext.ExecuteQueryAsync();
+                Fixture.ClientContext.Load(prov.Field, f => f.Title);
+                await Fixture.ClientContext.ExecuteQueryAsync();
 
                 Assert.Equal(prov.DisplayName, prov.Field.Title);
             }
             finally
             {
-                ClientOM.Web.Fields.GetById(id).DeleteObject();
-                await ClientOM.ClientContext.ExecuteQueryAsync();
+                Fixture.Web.Fields.GetById(id).DeleteObject();
+                await Fixture.ClientContext.ExecuteQueryAsync();
             }
 
         }

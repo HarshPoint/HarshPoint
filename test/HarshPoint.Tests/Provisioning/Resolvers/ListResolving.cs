@@ -3,17 +3,16 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning.Resolvers
 {
-    public class ListResolving : IClassFixture<SharePointClientFixture>
+    public class ListResolving : SharePointClientTest
     {
-        public ListResolving(SharePointClientFixture fixture)
+        public ListResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
+            : base(fixture, output)
         {
-            Fixture = fixture;
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
         public async Task Documents_list_gets_resolved_by_url()

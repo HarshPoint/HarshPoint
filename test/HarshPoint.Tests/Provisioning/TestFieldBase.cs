@@ -1,28 +1,23 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
     public abstract class TestFieldBase<TField, TProvisioner> :
-        IClassFixture<SharePointClientFixture>
+        SharePointClientTest
         where TField : Field
         where TProvisioner : HarshFieldProvisioner<TField>
     {
-        protected TestFieldBase(SharePointClientFixture fixture, FieldType fieldType)
+        protected TestFieldBase(FieldType fieldType, SharePointClientFixture fixture, ITestOutputHelper output)
+            : base(fixture, output)
         {
-            Fixture = fixture;
             FieldType = fieldType;
         }
 
         public FieldType FieldType { get; private set; }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         protected Task RunWithField(TProvisioner provisioner, Action<TField> action)
         {

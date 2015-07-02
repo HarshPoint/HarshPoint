@@ -5,17 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class DefaultFromContextTests : IClassFixture<SharePointClientFixture>
+    public class DefaultFromContextTests : SharePointClientTest
     {
-        public DefaultFromContextTests(SharePointClientFixture fixture)
+        public DefaultFromContextTests(SharePointClientFixture fixture, ITestOutputHelper output)
+            : base(fixture, output)
         {
-            ClientOM = fixture;
         }
-
-        public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
         public void Metadata_finds_DefaultFromContext_single_resolver()
@@ -66,7 +65,7 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Null(prov.Resolver);
 
-            await prov.ProvisionAsync(ClientOM.Context);
+            await prov.ProvisionAsync(Fixture.Context);
 
             Assert.NotNull(prov.Resolver);
             Assert.IsType<ContextStateResolver<String>>(prov.Resolver);
@@ -79,7 +78,7 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Null(prov.SingleResolver);
 
-            await prov.ProvisionAsync(ClientOM.Context);
+            await prov.ProvisionAsync(Fixture.Context);
 
             Assert.NotNull(prov.SingleResolver);
             Assert.IsType<ContextStateResolver<String>>(prov.SingleResolver);
@@ -92,7 +91,7 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Null(prov.StringProperty);
 
-            await prov.ProvisionAsync(ClientOM.Context.PushState("42"));
+            await prov.ProvisionAsync(Fixture.Context.PushState("42"));
 
             Assert.Equal("42", prov.StringProperty);
         }
@@ -103,7 +102,7 @@ namespace HarshPoint.Tests.Provisioning
             var prov = new TaggedProvisioner();
             Assert.Null(prov.TaggedStringProperty);
 
-            var state = ClientOM.Context
+            var state = Fixture.Context
                 .PushState("red herring")
                 .PushState(new DummyTag() { Value = "424242" });
 
@@ -119,7 +118,7 @@ namespace HarshPoint.Tests.Provisioning
             var resolver = new DummyResolver();
             prov.Resolver = resolver;
 
-            await prov.ProvisionAsync(ClientOM.Context);
+            await prov.ProvisionAsync(Fixture.Context);
 
             Assert.Same(resolver, prov.Resolver);
         }

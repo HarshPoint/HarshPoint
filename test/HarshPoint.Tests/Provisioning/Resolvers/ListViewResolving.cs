@@ -6,20 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning.Resolvers
 {
-    public class ListViewResolving : IClassFixture<SharePointClientFixture>
+    public class ListViewResolving : SharePointClientTest
     {
         private const String ListTitle = "e156d2d63e5941b69e97f05ee1f92a13";
         private const String ViewTitle = "TestView";
 
-        public ListViewResolving(SharePointClientFixture fixture)
+        public ListViewResolving(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
-            Fixture = fixture;
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
         public async Task View_get_resolved_by_Title()

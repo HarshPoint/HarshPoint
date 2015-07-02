@@ -4,20 +4,14 @@ using Moq.Protected;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class HarshCompositeProvisionerTests : IClassFixture<SharePointClientFixture>
+    public class HarshCompositeProvisionerTests : SharePointClientTest
     {
-        public HarshCompositeProvisionerTests(SharePointClientFixture fixture)
+        public HarshCompositeProvisionerTests(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
-            ClientOM = fixture;
-        }
-
-        public SharePointClientFixture ClientOM
-        {
-            get;
-            set;
         }
 
         [Fact]
@@ -38,7 +32,7 @@ namespace HarshPoint.Tests.Provisioning
                 .Returns(HarshTask.Completed)
                 .Callback(() => seq += "2");
 
-            var ctx = ClientOM.Context.AllowDeleteUserData();
+            var ctx = Fixture.Context.AllowDeleteUserData();
 
             var composite = new HarshProvisioner()
             {
@@ -67,7 +61,7 @@ namespace HarshPoint.Tests.Provisioning
                 .Returns(HarshTask.Completed)
                 .Callback(() => seq += "2");
 
-            var ctx = ClientOM.Context.AllowDeleteUserData();
+            var ctx = Fixture.Context.AllowDeleteUserData();
 
             var composite = new HarshProvisioner()
             {
@@ -87,14 +81,14 @@ namespace HarshPoint.Tests.Provisioning
                 .Returns(HarshTask.Completed)
                 .Callback(() =>
                 {
-                    Assert.Equal(ClientOM.Web, p.Object.Web);
+                    Assert.Equal(Fixture.Web, p.Object.Web);
                 });
 
             var composite = new HarshProvisioner()
             {
                 Children = { p.Object }
             };
-            await composite.ProvisionAsync(ClientOM.Context);
+            await composite.ProvisionAsync(Fixture.Context);
         }
 
         [Fact]
@@ -104,7 +98,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Children = { new ExpectsModifiedContext() }
             };
-            await composite.ProvisionAsync(ClientOM.Context);
+            await composite.ProvisionAsync(Fixture.Context);
         }
 
         [Fact]
@@ -114,7 +108,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Children = { new ExpectsModifiedContext() }
             };
-            await composite.UnprovisionAsync(ClientOM.Context);
+            await composite.UnprovisionAsync(Fixture.Context);
         }
         
         private class ModifiesChildContextUsingModifier : HarshProvisioner

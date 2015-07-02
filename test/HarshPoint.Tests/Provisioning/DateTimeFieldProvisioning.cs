@@ -3,13 +3,14 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
     public class DateTimeFieldProvisioning : TestFieldBase<FieldDateTime, HarshDateTimeField>
     {
-        public DateTimeFieldProvisioning(SharePointClientFixture fixture)
-            : base(fixture, FieldType.DateTime)
+        public DateTimeFieldProvisioning(SharePointClientFixture fixture, ITestOutputHelper output) 
+            : base(FieldType.DateTime, fixture, output)
         {
         }
 

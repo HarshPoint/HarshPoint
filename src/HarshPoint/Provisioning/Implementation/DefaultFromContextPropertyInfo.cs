@@ -1,4 +1,4 @@
-﻿using HarshPoint.Reflection;
+﻿using Destructurama.Attributed;
 using System;
 using System.Reflection;
 
@@ -33,12 +33,14 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
+        [LogAsScalar]
         public Type ResolvedType
         {
             get;
             private set;
         }
 
+        [LogAsScalar]
         public Type TagType
         {
             get;

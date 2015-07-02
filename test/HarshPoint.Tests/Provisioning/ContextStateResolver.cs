@@ -3,22 +3,20 @@ using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ContextStateResolver : IClassFixture<SharePointClientFixture>
+    public class ContextStateResolver : SharePointClientTest
     {
-        public ContextStateResolver(SharePointClientFixture fixture)
+        public ContextStateResolver(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
-            ClientOM = fixture;
         }
-
-        public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
         public async Task Resolves_String()
         {
-            var ctx = ClientOM.Context.PushState("42");
+            var ctx = Fixture.Context.PushState("42");
             var resolver = new ContextStateResolver<String>();
 
             var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
@@ -30,7 +28,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Resolves_most_recent_String()
         {
-            var ctx = ClientOM.Context.PushState("4242").PushState("42");
+            var ctx = Fixture.Context.PushState("4242").PushState("42");
             var resolver = new ContextStateResolver<String>();
 
             var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
@@ -42,7 +40,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Flattens_enumerable_states()
         {
-            var ctx = ClientOM.Context
+            var ctx = Fixture.Context
                 .PushState("123")
                 .PushState(new[] { "42", "4242" });
 

@@ -5,17 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ResolvableTests : IClassFixture<SharePointClientFixture>
+    public class ResolvableTests : SharePointClientTest
     {
-        public ResolvableTests(SharePointClientFixture fixture)
+        public ResolvableTests(SharePointClientFixture fixture, ITestOutputHelper output)
+            : base(fixture, output)
         {
-            ClientOM = fixture;
         }
-
-        public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
         public async Task TestResolvables_can_be_combined()
@@ -29,7 +28,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.NotSame(combined, foo);
             Assert.NotSame(combined, bar);
 
-            var results = await combined.TryResolveAsync(ClientOM.ResolveContext);
+            var results = await combined.TryResolveAsync(Fixture.ResolveContext);
 
             Assert.Equal(2, results.Count());
             Assert.Contains("foo", results);
@@ -42,7 +41,7 @@ namespace HarshPoint.Tests.Provisioning
             var root = new TestResolvable<String>("42");
             IResolve<IGrouping<String, Int32>> nested = new NestedTestResolvable<String, Int32>(root, 5);
 
-            var results = await nested.TryResolveAsync(ClientOM.ResolveContext);
+            var results = await nested.TryResolveAsync(Fixture.ResolveContext);
             Assert.NotNull(results);
 
             var group = Assert.Single(results);
@@ -58,7 +57,7 @@ namespace HarshPoint.Tests.Provisioning
             var root = new TestResolvable<String>("42");
             IResolve<Tuple<String, Int32>> nested = new NestedTestResolvable<String, Int32>(root, 5);
 
-            var results = await nested.ResolveAsync(ClientOM.ResolveContext);
+            var results = await nested.ResolveAsync(Fixture.ResolveContext);
             Assert.NotNull(results);
             Assert.Equal(5, results.Count());
 
@@ -75,7 +74,7 @@ namespace HarshPoint.Tests.Provisioning
             var root = new TestResolvable<String>("42");
             IResolve<Int32> nested = new NestedTestResolvable<String, Int32>(root, 1);
 
-            var results = await nested.TryResolveAsync(ClientOM.ResolveContext);
+            var results = await nested.TryResolveAsync(Fixture.ResolveContext);
             Assert.NotNull(results);
 
             var child = Assert.Single(results);
@@ -89,7 +88,7 @@ namespace HarshPoint.Tests.Provisioning
             var root = new TestResolvable<String>("42");
             var nested = new NestedTestResolvable<String, Int32>(root, 0);
 
-            var results = await ((IResolve<IGrouping<String, Int32>>)(nested)).TryResolveAsync(ClientOM.ResolveContext);
+            var results = await ((IResolve<IGrouping<String, Int32>>)(nested)).TryResolveAsync(Fixture.ResolveContext);
             Assert.NotNull(results);
 
             var grouping = Assert.Single(results);
@@ -102,7 +101,7 @@ namespace HarshPoint.Tests.Provisioning
             var root = new TestResolvable<String>("42", "4242");
             var nested = new NestedTestResolvable<String, Int32>(root, 2);
 
-            var results = await ((IResolve<IGrouping<String, Int32>>)(nested)).TryResolveAsync(ClientOM.ResolveContext);
+            var results = await ((IResolve<IGrouping<String, Int32>>)(nested)).TryResolveAsync(Fixture.ResolveContext);
             Assert.NotNull(results);
 
             Assert.Equal(2, results.Count());
@@ -124,7 +123,7 @@ namespace HarshPoint.Tests.Provisioning
             var root = new TestResolvable<String>("42", "4242");
             IResolve<Int32> nested = new NestedTestResolvable<String, Int32>(root, 2);
 
-            var results = await nested.TryResolveAsync(ClientOM.ResolveContext);
+            var results = await nested.TryResolveAsync(Fixture.ResolveContext);
             Assert.NotNull(results);
 
             Assert.Equal(4, results.Count());
@@ -143,7 +142,7 @@ namespace HarshPoint.Tests.Provisioning
             };
 
             var combined = normal.And(nested);
-            var results = await ((IResolve<Int32>)(combined)).TryResolveAsync(ClientOM.ResolveContext);
+            var results = await ((IResolve<Int32>)(combined)).TryResolveAsync(Fixture.ResolveContext);
 
             Assert.Equal(3, results.Count());
             Assert.Equal(2, results.Count(x => x == 84));
@@ -160,7 +159,7 @@ namespace HarshPoint.Tests.Provisioning
             };
 
             var combined = nested.And(normal);
-            var results = await ((IResolve<Int32>)(combined)).TryResolveAsync(ClientOM.ResolveContext);
+            var results = await ((IResolve<Int32>)(combined)).TryResolveAsync(Fixture.ResolveContext);
 
             Assert.Equal(3, results.Count());
             Assert.Equal(2, results.Count(x => x == 84));
@@ -176,7 +175,7 @@ namespace HarshPoint.Tests.Provisioning
             var combined = nested.And(normal);
 
             await Assert.ThrowsAsync<InvalidCastException>(
-                () => ((IResolve<IGrouping<Int32, Int32>>)(combined)).TryResolveAsync(ClientOM.ResolveContext)
+                () => ((IResolve<IGrouping<Int32, Int32>>)(combined)).TryResolveAsync(Fixture.ResolveContext)
             );
         }
 

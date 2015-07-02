@@ -3,17 +3,16 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning.Resolvers
 {
-    public class ContentTypeResolving : IClassFixture<SharePointClientFixture>
+    public class ContentTypeResolving : SharePointClientTest
     {
-        public ContentTypeResolving(SharePointClientFixture fix)
+        public ContentTypeResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
+            : base(fixture, output)
         {
-            Fixture = fix;
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Theory]
         [InlineData("0x01")]

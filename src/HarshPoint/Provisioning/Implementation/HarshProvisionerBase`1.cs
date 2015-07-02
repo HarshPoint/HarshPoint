@@ -296,7 +296,7 @@ namespace HarshPoint.Provisioning.Implementation
         private async Task RunWithContext(TContext context, Func<Task> action)
         {
             var contextLogger = Logger.ForContext(
-                "ProvisionerContext", context, destructureObjects: true
+                "ProvisionerContext", context, destructureObjects: false
             );
 
             using (_context.Enter(context))

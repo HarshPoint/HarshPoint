@@ -4,17 +4,16 @@ using Moq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class HarshFieldSchemaXmlBuilderTests : IClassFixture<SharePointClientFixture>
+    public class HarshFieldSchemaXmlBuilderTests : SharePointClientTest
     {
-        public HarshFieldSchemaXmlBuilderTests(SharePointClientFixture data)
+        public HarshFieldSchemaXmlBuilderTests(SharePointClientFixture fixture, ITestOutputHelper output)
+            : base(fixture, output)
         {
-            ClientOM = data;
         }
-
-        public SharePointClientFixture ClientOM { get; set; }
 
         [Fact]
         public async Task Update_with_an_existing_field_calls_only_update_transforms()
@@ -76,9 +75,9 @@ namespace HarshPoint.Tests.Provisioning
 
         private async Task<Field> GetTitleField()
         {
-            var field = ClientOM.Web.AvailableFields.GetByInternalNameOrTitle("Title");
-            ClientOM.ClientContext.Load(field, f => f.SchemaXmlWithResourceTokens);
-            await ClientOM.ClientContext.ExecuteQueryAsync();
+            var field = Fixture.Web.AvailableFields.GetByInternalNameOrTitle("Title");
+            Fixture.ClientContext.Load(field, f => f.SchemaXmlWithResourceTokens);
+            await Fixture.ClientContext.ExecuteQueryAsync();
             return field;
         }
 

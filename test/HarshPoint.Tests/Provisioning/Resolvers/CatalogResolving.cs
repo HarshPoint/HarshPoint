@@ -3,28 +3,27 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning.Resolvers
 {
-    public class CatalogResolving : IClassFixture<SharePointClientFixture>
+    public class CatalogResolving : SharePointClientTest
     {
-        public CatalogResolving(SharePointClientFixture fixture)
+        public CatalogResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
+            : base(fixture, output)
         {
-            ClientOM = fixture;
         }
-
-        public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
         public async Task MasterPage_catalog_gets_resolved()
         {
             var resolver = (IResolve<List>)Resolve.Catalog(ListTemplateType.MasterPageCatalog);
-            var catalogs = await resolver.TryResolveAsync(ClientOM.ResolveContext);
+            var catalogs = await resolver.TryResolveAsync(Fixture.ResolveContext);
 
             var catalog = Assert.Single(catalogs);
 
             Assert.Equal(
-                (Int32)(ListTemplateType.MasterPageCatalog), 
+                (Int32)(ListTemplateType.MasterPageCatalog),
                 await catalog.EnsurePropertyAvailable(l => l.BaseTemplate)
             );
         }
@@ -35,7 +34,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
                 .Catalog(ListTemplateType.MasterPageCatalog)
                 .RootFolder();
 
-            var folder = Assert.Single(await resolver.TryResolveAsync(ClientOM.ResolveContext));
+            var folder = Assert.Single(await resolver.TryResolveAsync(Fixture.ResolveContext));
 
             Assert.Contains(
                 "/_catalogs/masterpage",

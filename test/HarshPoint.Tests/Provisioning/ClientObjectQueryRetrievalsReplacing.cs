@@ -3,11 +3,16 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.Linq.Expressions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ClientObjectQueryRetrievalsReplacing
+    public class ClientObjectQueryRetrievalsReplacing : SeriloggedTest
     {
+        public ClientObjectQueryRetrievalsReplacing(ITestOutputHelper output) : base(output)
+        {
+        }
+
         [Fact]
         public void Does_not_modify_expression_without_Include()
         {

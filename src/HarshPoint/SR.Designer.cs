@@ -384,13 +384,13 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parameter properties must be readable and writable.
+        ///   Looks up a localized string similar to Parameter properties must be readable and writable and cannot be static.
         ///
         ///Property: {0}.{1}.
         /// </summary>
-        internal static string HarshProvisionerMetadata_ParameterMustBeReadWrite {
+        internal static string HarshProvisionerMetadata_ParameterMustBeReadWriteInstance {
             get {
-                return ResourceManager.GetString("HarshProvisionerMetadata_ParameterMustBeReadWrite", resourceCulture);
+                return ResourceManager.GetString("HarshProvisionerMetadata_ParameterMustBeReadWriteInstance", resourceCulture);
             }
         }
         

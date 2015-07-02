@@ -3,17 +3,16 @@ using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class RetrievalResolving : IClassFixture<SharePointClientFixture>
+    public class RetrievalResolving : SharePointClientTest
     {
-        public RetrievalResolving(SharePointClientFixture fix)
+        public RetrievalResolving(SharePointClientFixture fixture, ITestOutputHelper output)
+            : base(fixture, output)
         {
-            Fixture = fix;
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
         public async Task Multiple_equal_includes_dont_fail()

@@ -6,17 +6,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using System.Collections.Immutable;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class IdentifierResolving : IClassFixture<SharePointClientFixture>
+    public class IdentifierResolving : SharePointClientTest
     {
-        public IdentifierResolving(SharePointClientFixture fix)
+        public IdentifierResolving(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
-            Fixture = fix;
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
         public async Task Failures_are_recorded()

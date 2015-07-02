@@ -3,17 +3,16 @@ using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ClientObjectContextStateResolving : IClassFixture<SharePointClientFixture>
+    public class ClientObjectContextStateResolving : SharePointClientTest
     {
-        public ClientObjectContextStateResolving(SharePointClientFixture fixture)
+        public ClientObjectContextStateResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
+            : base(fixture, output)
         {
-            Fixture = fixture;
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
         public async Task Resolves_object_ensures_retrievals()

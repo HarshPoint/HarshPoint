@@ -4,25 +4,22 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ContentTypeTests : IClassFixture<SharePointClientFixture>
+    public class ContentTypeTests : SharePointClientTest
     {
         private String _guid;
         private HarshContentTypeId _id;
 
         private const String Group = "HarshPoint Unit Tests";
 
-        public ContentTypeTests(SharePointClientFixture fix)
+        public ContentTypeTests(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
-            Fixture = fix;
-
             _guid = Guid.NewGuid().ToString("n");
             _id = HarshContentTypeId.Parse("0x01").Append(HarshContentTypeId.Parse(_guid));
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact(Skip = "inconclusive")]
         public async Task Existing_content_type_is_not_provisioned()

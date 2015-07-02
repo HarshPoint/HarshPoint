@@ -1,17 +1,19 @@
 ﻿using HarshPoint.Provisioning;
 using HarshPoint.Provisioning.Implementation;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ParameterSetMetadataBuilding
+    public class ParameterSetMetadataBuilding : SeriloggedTest
     {
+        public ParameterSetMetadataBuilding(ITestOutputHelper output)
+            : base(output)
+        {
+        }
+
         [Fact]
         public void Parameters_get_metadata()
         {

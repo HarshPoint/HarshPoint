@@ -5,24 +5,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ResolvableChainTests : IClassFixture<SharePointClientFixture>
+    public class ResolvableChainTests : SharePointClientTest
     {
-        public ResolvableChainTests(SharePointClientFixture fixture)
+        public ResolvableChainTests(SharePointClientFixture fixture, ITestOutputHelper output)
+            : base(fixture, output)
         {
-            ClientOM = fixture;
         }
-
-        public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
         public async Task TryResolve_returns_no_results()
         {
             IResolve<String> chain = new DummyChain(null, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.TryResolveAsync(ctx);
 
             Assert.Empty(actual);
@@ -35,7 +34,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = "one";
             IResolve<String> chain = new DummyChain(new[] { expected }, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.TryResolveAsync(ctx);
             Assert.Single(actual, expected);
             ctx.ValidateNoFailures();
@@ -47,7 +46,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = new[] { "one", "two" };
             IResolve<String> chain = new DummyChain(expected, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.TryResolveAsync(ctx);
             Assert.Equal(expected, actual);
             ctx.ValidateNoFailures();
@@ -61,7 +60,7 @@ namespace HarshPoint.Tests.Provisioning
 
             IResolve<String> chain = new DummyChain(expectedResults, expectedFails);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.TryResolveAsync(ctx);
             Assert.Equal(expectedResults, actual);
 
@@ -74,7 +73,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             IResolve<String> chain = new DummyChain(null, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.TryResolveSingleAsync(ctx);
 
             Assert.Null(actual);
@@ -87,7 +86,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = "one";
             IResolve<String> chain = new DummyChain(new[] { expected }, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.TryResolveSingleAsync(ctx);
             Assert.Equal(expected, actual);
             ctx.ValidateNoFailures();
@@ -99,7 +98,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = new[] { "one", "two" };
             IResolve<String> chain = new DummyChain(expected, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.TryResolveSingleAsync(ctx);
             Assert.Equal(expected[0], actual);
             ctx.ValidateNoFailures();
@@ -113,7 +112,7 @@ namespace HarshPoint.Tests.Provisioning
 
             IResolve<String> chain = new DummyChain(expectedResults, expectedFails);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.TryResolveSingleAsync(ctx);
             Assert.Equal(expectedResults[0], actual);
 
@@ -127,7 +126,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = "one";
             IResolve<String> chain = new DummyChain(new[] { expected }, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.ResolveAsync(ctx);
             Assert.Single(actual, expected);
             ctx.ValidateNoFailures();
@@ -139,7 +138,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = new[] { "one", "two" };
             IResolve<String> chain = new DummyChain(expected, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.ResolveAsync(ctx);
             Assert.Equal(expected, actual);
             ctx.ValidateNoFailures();
@@ -150,7 +149,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             IResolve<String> chain = new DummyChain(null, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.ResolveAsync(ctx);
 
             Assert.Empty(actual);
@@ -166,7 +165,7 @@ namespace HarshPoint.Tests.Provisioning
 
             IResolve<String> chain = new DummyChain(expectedResults, expectedFails);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
 
             var exc = await Assert.ThrowsAsync<ResolveFailedException>(() => chain.ResolveAsync(ctx));
 
@@ -179,7 +178,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             IResolve<String> chain = new DummyChain(null, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             await Assert.ThrowsAsync<InvalidOperationException>(() => chain.ResolveSingleAsync(ctx));
         }
 
@@ -189,7 +188,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = "one";
             IResolve<String> chain = new DummyChain(new[] { expected }, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var actual = await chain.ResolveSingleAsync(ctx);
             Assert.Equal(expected, actual);
             ctx.ValidateNoFailures();
@@ -201,7 +200,7 @@ namespace HarshPoint.Tests.Provisioning
             var expected = new[] { "one", "two" };
             IResolve<String> chain = new DummyChain(expected, null);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             await Assert.ThrowsAsync<InvalidOperationException>(() => chain.ResolveSingleAsync(ctx));
         }
 
@@ -213,7 +212,7 @@ namespace HarshPoint.Tests.Provisioning
 
             IResolve<String> chain = new DummyChain(expectedResults, expectedFails);
 
-            var ctx = new ResolveContext<HarshProvisionerContext>(ClientOM.Context);
+            var ctx = new ResolveContext<HarshProvisionerContext>(Fixture.Context);
             var exc = await Assert.ThrowsAsync<ResolveFailedException>(() => chain.ResolveSingleAsync(ctx));
 
             Assert.All(exc.Failures, f => Assert.Same(chain, f.Resolvable));
@@ -240,7 +239,7 @@ namespace HarshPoint.Tests.Provisioning
 
             other.Results = new[] { "aaa" };
 
-            var actual = await combined.TryResolveAsync(ClientOM.ResolveContext);
+            var actual = await combined.TryResolveAsync(Fixture.ResolveContext);
             Assert.Empty(actual);
         }
 
@@ -251,7 +250,7 @@ namespace HarshPoint.Tests.Provisioning
             var other = new DummyChain(new[] { "bbb" });
             var combined = (IResolve<String>)dummy.And(other);
 
-            var result = await combined.TryResolveAsync(ClientOM.ResolveContext);
+            var result = await combined.TryResolveAsync(Fixture.ResolveContext);
 
             Assert.Equal(2, result.Count());
             Assert.Contains("aaa", result);

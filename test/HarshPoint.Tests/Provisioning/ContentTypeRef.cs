@@ -3,17 +3,15 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ContentTypeRef : IClassFixture<SharePointClientFixture>
+    public class ContentTypeRef : SharePointClientTest
     {
-        public ContentTypeRef(SharePointClientFixture fix)
+        public ContentTypeRef(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
-            Fixture = fix;
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
         public async Task Content_type_gets_added()

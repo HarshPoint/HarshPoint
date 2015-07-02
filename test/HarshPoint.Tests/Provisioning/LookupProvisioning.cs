@@ -3,19 +3,18 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class LookupProvisioning : IClassFixture<SharePointClientFixture>
+    public class LookupProvisioning : SharePointClientTest
     {
         private const String TargetListUrl = "Lists/2c6280a9273e441abecf2909379712be";
 
-        public LookupProvisioning(SharePointClientFixture fix)
+        public LookupProvisioning(SharePointClientFixture fixture, ITestOutputHelper output) 
+            : base(fixture, output)
         {
-            Fixture = fix;
         }
-
-        public SharePointClientFixture Fixture { get; private set; }
 
         [Fact]
         public async Task Lookup_has_correct_list_id()

@@ -1,4 +1,5 @@
-﻿using HarshPoint.Reflection;
+﻿using Destructurama.Attributed;
+using HarshPoint.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -43,6 +44,7 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
+        [NotLogged]
         public Func<Object, Object> Getter
         {
             get;
@@ -51,6 +53,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         public String Name => PropertyInfo.Name;
 
+        [NotLogged]
         public ParameterAttribute ParameterAttribute
         {
             get;
@@ -59,16 +62,20 @@ namespace HarshPoint.Provisioning.Implementation
 
         public String ParameterSetName => ParameterAttribute.ParameterSetName;
 
+        [NotLogged]
         public PropertyInfo PropertyInfo
         {
             get;
             private set;
         }
 
+        [LogAsScalar]
         public Type PropertyType => PropertyInfo.PropertyType;
 
+        [NotLogged]
         public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
 
+        [NotLogged]
         public Action<Object, Object> Setter
         {
             get;
@@ -99,7 +106,5 @@ namespace HarshPoint.Provisioning.Implementation
 
             return false;
         }
-
-
     }
 }

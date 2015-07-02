@@ -3,29 +3,28 @@ using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class PotentiallyDestructiveTests : IClassFixture<SharePointClientFixture>
+    public class PotentiallyDestructiveTests : SharePointClientTest
     {
-        public PotentiallyDestructiveTests(SharePointClientFixture data)
+        public PotentiallyDestructiveTests(SharePointClientFixture fixture, ITestOutputHelper output) 
+            : base(fixture, output)
         {
-            ClientOM = data;
         }
-
-        public SharePointClientFixture ClientOM { get; private set; }
 
         [Fact]
         public async Task Destructive_Unprovision_not_called_by_default()
         {
             var destructive = new DestructiveUnprovision();
-            await destructive.UnprovisionAsync(ClientOM.Context);
+            await destructive.UnprovisionAsync(Fixture.Context);
         }
 
         [Fact]
         public async Task Destructive_Unprovision_not_called_when_MayDeleteUserData()
         {
-            var ctx = ClientOM.Context.AllowDeleteUserData();
+            var ctx = Fixture.Context.AllowDeleteUserData();
 
             var destructive = new DestructiveUnprovision();
             await Assert.ThrowsAsync<InvalidOperationException>(() => destructive.UnprovisionAsync(ctx));
@@ -35,13 +34,13 @@ namespace HarshPoint.Tests.Provisioning
         public async Task Safe_Unprovision_called_by_default()
         {
             var safe = new NeverDeletesUnprovision();
-            await Assert.ThrowsAsync<InvalidOperationException>(() => safe.UnprovisionAsync(ClientOM.Context));
+            await Assert.ThrowsAsync<InvalidOperationException>(() => safe.UnprovisionAsync(Fixture.Context));
         }
 
         [Fact]
         public async Task Safe_Unprovision_called_when_MayDeleteUserData()
         {
-            var ctx = ClientOM.Context.AllowDeleteUserData();
+            var ctx = Fixture.Context.AllowDeleteUserData();
             var safe = new NeverDeletesUnprovision();
             await Assert.ThrowsAsync<InvalidOperationException>(() => safe.UnprovisionAsync(ctx));
         }
@@ -56,7 +55,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Unprovisioner_with_MayDeleteUserData_runs_with_context_MayDeleteUserData_false()
         {
-            var ctx = ClientOM.Context.AllowDeleteUserData();
+            var ctx = Fixture.Context.AllowDeleteUserData();
 
             var prov = new DestructiveUnprovision();
             prov.MayDeleteUserData = true;
@@ -67,7 +66,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Unprovisioner_without_MayDeleteUserData_runs_with_context_MayDeleteUserData_true()
         {
-            var ctx = ClientOM.Context.AllowDeleteUserData();
+            var ctx = Fixture.Context.AllowDeleteUserData();
 
             var prov = new DestructiveUnprovision();
             prov.MayDeleteUserData = false;
