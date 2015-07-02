@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Reflection;
 
 namespace HarshPoint.Entity.Metadata
@@ -8,8 +9,8 @@ namespace HarshPoint.Entity.Metadata
         private static readonly HarshEntityMetadataRepository _singleton =
             new HarshEntityMetadataRepository();
 
-        private readonly HarshInMemoryObjectCache<TypeInfo, HarshEntityMetadata> _cache =
-            new HarshInMemoryObjectCache<TypeInfo, HarshEntityMetadata>();
+        private ImmutableDictionary<TypeInfo, HarshEntityMetadata> _cache =
+            ImmutableDictionary<TypeInfo, HarshEntityMetadata>.Empty;
 
         private HarshEntityMetadataRepository()
         {
@@ -32,7 +33,11 @@ namespace HarshPoint.Entity.Metadata
                 throw Error.ArgumentNull(nameof(typeInfo));
             }
 
-            return _cache.GetOrAdd(typeInfo, ti => HarshEntityMetadata.Create(this, ti));
+            return ImmutableInterlocked.GetOrAdd(
+                ref _cache,
+                typeInfo,
+                ti => HarshEntityMetadata.Create(this, ti)
+            );
         }
 
         public static HarshEntityMetadataRepository Current
