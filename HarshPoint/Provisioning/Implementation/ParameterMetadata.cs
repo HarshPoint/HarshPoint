@@ -1,12 +1,19 @@
 ﻿using HarshPoint.Reflection;
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ParameterMetadata
     {
-        public ParameterMetadata(PropertyInfo propertyInfo, ParameterAttribute parameterAttribute)
+        public ParameterMetadata(
+            PropertyInfo propertyInfo,
+            ParameterAttribute parameterAttribute,
+            DefaultFromContextPropertyInfo defaultFromContext,
+            IEnumerable<ParameterValidationAttribute> validation = null
+        )
         {
             if (propertyInfo == null)
             {
@@ -20,9 +27,20 @@ namespace HarshPoint.Provisioning.Implementation
 
             PropertyInfo = propertyInfo;
             ParameterAttribute = parameterAttribute;
+            DefaultFromContext = defaultFromContext;
+
+            ValidationAttributes =
+                validation?.ToImmutableArray() ??
+                ImmutableArray<ParameterValidationAttribute>.Empty;
 
             Getter = propertyInfo.MakeGetter<Object, Object>();
             Setter = propertyInfo.MakeSetter<Object, Object>();
+        }
+
+        public DefaultFromContextPropertyInfo DefaultFromContext
+        {
+            get;
+            private set;
         }
 
         public Func<Object, Object> Getter
@@ -56,5 +74,32 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             private set;
         }
+
+        public IReadOnlyList<ParameterValidationAttribute> ValidationAttributes
+        {
+            get;
+            private set;
+        }
+
+        public Boolean HasDefaultValue(Object provisioner)
+        {
+            var value = Getter(provisioner);
+
+            if (value == null)
+            {
+                return true;
+            }
+
+            var str = value as String;
+
+            if ((str != null) && (str.Length == 0))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
     }
 }

@@ -137,8 +137,7 @@ namespace HarshPoint.Tests.Provisioning
 
         private static ParameterSetMetadata[] Build<T>(String defaultParameterSetName = null)
         {
-            var properties = typeof(T).GetTypeInfo().GetProperties();
-            var builder = new ParameterSetMetadataBuilder(properties);
+            var builder = new ParameterSetMetadataBuilder(typeof(T));
 
             if (defaultParameterSetName != null)
             {

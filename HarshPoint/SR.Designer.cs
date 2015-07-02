@@ -343,6 +343,18 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parameters cannot be members of the same parameter set multiple times.
+        ///
+        ///Property: {0}.{1}
+        ///Duplicate parameter sets: {2}.
+        /// </summary>
+        internal static string HarshProvisionerMetadata_MoreParametersWithSameSet {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadata_MoreParametersWithSameSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified property &apos;{0}.{1}&apos; is of type IResolve or IResolveSingle and cannot have a TagType set..
         /// </summary>
         internal static string HarshProvisionerMetadata_NoTagTypesOnResolvers {
@@ -361,25 +373,13 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parameters cannot be members of the same parameter set multiple times.
-        ///
-        ///Property: {0}.{1}
-        ///Duplicate parameter sets: {2}.
-        /// </summary>
-        internal static string HarshProvisionerMetadataException_MoreParametersWithSameSet {
-            get {
-                return ResourceManager.GetString("HarshProvisionerMetadataException_MoreParametersWithSameSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Parameters can either be shared by all parameter sets by having ParameterSetName equal to null, or belong to one or more named parameter sets.
         ///
         ///Property: {0}.{1}.
         /// </summary>
-        internal static string HarshProvisionerMetadataException_ParameterBothCommonAndInSet {
+        internal static string HarshProvisionerMetadata_ParameterBothCommonAndInSet {
             get {
-                return ResourceManager.GetString("HarshProvisionerMetadataException_ParameterBothCommonAndInSet", resourceCulture);
+                return ResourceManager.GetString("HarshProvisionerMetadata_ParameterBothCommonAndInSet", resourceCulture);
             }
         }
         
@@ -388,9 +388,9 @@ namespace HarshPoint {
         ///
         ///Property: {0}.{1}.
         /// </summary>
-        internal static string HarshProvisionerMetadataException_ParameterMustBeReadWrite {
+        internal static string HarshProvisionerMetadata_ParameterMustBeReadWrite {
             get {
-                return ResourceManager.GetString("HarshProvisionerMetadataException_ParameterMustBeReadWrite", resourceCulture);
+                return ResourceManager.GetString("HarshProvisionerMetadata_ParameterMustBeReadWrite", resourceCulture);
             }
         }
         

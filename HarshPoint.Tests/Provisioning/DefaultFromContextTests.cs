@@ -2,6 +2,7 @@
 using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -21,18 +22,19 @@ namespace HarshPoint.Tests.Provisioning
         {
             var metadata = new HarshProvisionerMetadata(typeof(SingleResolverProvisioner));
 
-            var prop = Assert.Single(
-                metadata.DefaultFromContextProperties
+            var param = Assert.Single(
+                metadata.DefaultParameterSet.Parameters
+                    .Where(p => p.DefaultFromContext != null)
             );
 
             Assert.Equal(
                 typeof(SingleResolverProvisioner).GetProperty("SingleResolver"),
-                prop.Property
+                param.PropertyInfo
             );
 
             Assert.Equal(
                 typeof(String),
-                prop.ResolvedType
+                param.DefaultFromContext.ResolvedType
             );
         }
 
@@ -41,18 +43,19 @@ namespace HarshPoint.Tests.Provisioning
         {
             var metadata = new HarshProvisionerMetadata(typeof(ResolverProvisioner));
 
-            var prop = Assert.Single(
-                metadata.DefaultFromContextProperties
+            var param = Assert.Single(
+                metadata.DefaultParameterSet.Parameters
+                    .Where(p => p.DefaultFromContext != null)
             );
 
             Assert.Equal(
                 typeof(ResolverProvisioner).GetProperty("Resolver"),
-                prop.Property
+                param.PropertyInfo
             );
 
             Assert.Equal(
                 typeof(String),
-                prop.ResolvedType
+                param.DefaultFromContext.ResolvedType
             );
         }
 
@@ -123,6 +126,7 @@ namespace HarshPoint.Tests.Provisioning
 
         private class StringProvisioner : HarshProvisioner
         {
+            [Parameter]
             [DefaultFromContext]
             public String StringProperty
             {
@@ -133,6 +137,7 @@ namespace HarshPoint.Tests.Provisioning
 
         private class TaggedProvisioner : HarshProvisioner
         {
+            [Parameter]
             [DefaultFromContext(typeof(DummyTag))]
             public String TaggedStringProperty
             {
@@ -143,6 +148,7 @@ namespace HarshPoint.Tests.Provisioning
 
         private class SingleResolverProvisioner : HarshProvisioner
         {
+            [Parameter]
             [DefaultFromContext]
             public IResolve<String> SingleResolver
             {
@@ -153,6 +159,7 @@ namespace HarshPoint.Tests.Provisioning
 
         private class ResolverProvisioner : HarshProvisioner
         {
+            [Parameter]
             [DefaultFromContext]
             public IResolve<String> Resolver
             {

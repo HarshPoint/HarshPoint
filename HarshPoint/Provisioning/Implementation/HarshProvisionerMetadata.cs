@@ -3,6 +3,7 @@ using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -20,15 +21,21 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
-            DefaultFromContextProperties =
-                GetPropertiesWith<DefaultFromContextAttribute>(inherit: true)
-                .Select(tuple => new DefaultFromContextPropertyInfo(tuple.Item1, tuple.Item2))
-                .ToImmutableHashSet();
+            var parameterSetBuilder = new ParameterSetMetadataBuilder(ObjectType);
+
+            ParameterSets = parameterSetBuilder.Build().ToImmutableArray();
+            DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
         }
 
-        public IImmutableSet<DefaultFromContextPropertyInfo> DefaultFromContextProperties
+        public ParameterSetMetadata DefaultParameterSet
+        {
+            get;
+            private set;
+        }
+
+        public IReadOnlyList<ParameterSetMetadata> ParameterSets
         {
             get;
             private set;
@@ -44,9 +51,9 @@ namespace HarshPoint.Provisioning.Implementation
         {
             var method = ObjectType
                 .GetRuntimeMethods()
-                .Instance()
-                .NonPublic()
                 .Single(m =>
+                    m.IsFamily && 
+                    !m.IsStatic &&
                     StringComparer.Ordinal.Equals(m.Name, methodName) &&
                     !m.GetParameters().Any()
                 );

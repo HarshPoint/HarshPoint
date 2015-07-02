@@ -14,6 +14,7 @@ namespace HarshPoint.Provisioning
             ViewFields = new Collection<String>();
         }
 
+        [Parameter]
         [DefaultFromContext]
         public IResolve<List> Lists
         {

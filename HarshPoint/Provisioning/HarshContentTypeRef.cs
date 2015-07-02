@@ -12,6 +12,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        [Parameter]
         [DefaultFromContext]
         public IResolve<List> Lists
         {

@@ -23,6 +23,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        [Parameter]
         [DefaultFromContext(typeof(DefaultContentTypeGroup))]
         public String Group
         {

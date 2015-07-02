@@ -137,7 +137,6 @@
     <Compile Include="Provisioning\Resolvers\ResolveCatalog.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListRootFolder.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />
-    <Compile Include="Reflection\MethodBaseExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HarshContentTypeId.cs" />
     <Compile Include="HarshInMemoryObjectCache.cs" />

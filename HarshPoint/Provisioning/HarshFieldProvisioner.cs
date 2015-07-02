@@ -12,6 +12,7 @@ namespace HarshPoint.Provisioning
     public abstract class HarshFieldProvisioner<TField> : HarshProvisioner
         where TField : Field
     {
+        [Parameter]
         [DefaultFromContext]
         public IResolve<Field> Fields
         {

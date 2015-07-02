@@ -132,6 +132,10 @@ namespace HarshPoint.Provisioning.Implementation
             return HarshTask.Completed;
         }
 
+        protected virtual void OnValidating()
+        {
+        }
+
         [NeverDeletesUserData]
         protected virtual Task OnUnprovisioningAsync()
         {
@@ -204,25 +208,24 @@ namespace HarshPoint.Provisioning.Implementation
 
         private void InitializeDefaultFromContextProperties()
         {
-            var properties = Metadata
-                .DefaultFromContextProperties
-                .Where(p => p.HasDefaultValue(this));
+            var properties = Metadata.DefaultParameterSet.Parameters
+                .Where(p => (p.DefaultFromContext != null) && p.HasDefaultValue(this));
 
             foreach (var p in properties)
             {
                 Object value = null;
 
-                if (p.TagType != null)
+                if (p.DefaultFromContext.TagType != null)
                 {
                     var tag = Context
-                        .GetState(p.TagType)
+                        .GetState(p.DefaultFromContext.TagType)
                         .FirstOrDefault();
 
                     value = (tag as IDefaultFromContextTag)?.Value;
                 }
-                else if (p.ResolvedType != null)
+                else if (p.DefaultFromContext.ResolvedType != null)
                 {
-                    value = ContextStateResolver.Create(p.ResolvedType);
+                    value = ContextStateResolver.Create(p.DefaultFromContext.ResolvedType);
                 }
                 else
                 {
@@ -234,6 +237,10 @@ namespace HarshPoint.Provisioning.Implementation
                     p.Setter(this, value);
                 }
             }
+        }
+
+        private void ValidateParameters()
+        {
         }
 
         private TContext PrepareChildrenContext()
@@ -310,6 +317,7 @@ namespace HarshPoint.Provisioning.Implementation
                 {
                     InitializeDefaultFromContextProperties();
 
+                    OnValidating();
                     await InitializeAsync();
                     await action();
                 }

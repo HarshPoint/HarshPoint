@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using HarshPoint.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -16,14 +17,14 @@ namespace HarshPoint.Provisioning.Implementation
         private static readonly ILogger Logger = Log.ForContext<ParameterSetMetadataBuilder>();
         private static readonly StringComparer ParameterSetNameComparer = StringComparer.Ordinal;
 
-        public ParameterSetMetadataBuilder(IEnumerable<PropertyInfo> properties)
+        public ParameterSetMetadataBuilder(Type type)
         {
-            if (properties == null)
+            if (type == null)
             {
-                throw Error.ArgumentNull(nameof(properties));
+                throw Error.ArgumentNull(nameof(type));
             }
 
-            Properties = properties;
+            Properties = type.GetRuntimeProperties();
         }
 
         public String DefaultParameterSetName
@@ -60,7 +61,6 @@ namespace HarshPoint.Provisioning.Implementation
             if (parameterSets.Any())
             {
                 return parameterSets;
-
             }
 
             return new[]
@@ -87,18 +87,25 @@ namespace HarshPoint.Provisioning.Implementation
         {
             return from property in Properties
 
-                   let attrs = property
+                   let paramAttrs = property
                       .GetCustomAttributes<ParameterAttribute>(inherit: true)
                       .ToArray()
 
                    where
-                      attrs.Any() &&
+                      paramAttrs.Any() &&
                       IsReadableAndWritable(property) &&
-                      !HasNonUniqueParameterSetNames(property, attrs) &&
-                      !IsBothCommonParameterAndInParameterSet(property, attrs)
+                      !HasNonUniqueParameterSetNames(property, paramAttrs) &&
+                      !IsBothCommonParameterAndInParameterSet(property, paramAttrs)
 
-                   from attr in attrs
-                   select new ParameterMetadata(property, attr);
+                   let defaultFromContext = DefaultFromContextPropertyInfo.FromPropertyInfo(property)
+                   let validation = property.GetCustomAttributes<ParameterValidationAttribute>(inherit: true)
+
+                   from attr in paramAttrs
+                   select new ParameterMetadata(
+                       property,
+                       attr,
+                       defaultFromContext
+                   );
         }
 
         private static Boolean IsBothCommonParameterAndInParameterSet(
@@ -111,7 +118,7 @@ namespace HarshPoint.Provisioning.Implementation
                 if (attributes.Count() > 1)
                 {
                     throw Error.ProvisionerMetadataFormat(
-                        SR.HarshProvisionerMetadataException_ParameterBothCommonAndInSet,
+                        SR.HarshProvisionerMetadata_ParameterBothCommonAndInSet,
                         property.DeclaringType.FullName,
                         property.Name
                     );
@@ -134,7 +141,7 @@ namespace HarshPoint.Provisioning.Implementation
             if (nonUniqueParameterSetNames.Any())
             {
                 throw Error.ProvisionerMetadataFormat(
-                    SR.HarshProvisionerMetadataException_MoreParametersWithSameSet,
+                    SR.HarshProvisionerMetadata_MoreParametersWithSameSet,
                     property.DeclaringType.FullName,
                     property.Name,
                     String.Join(
@@ -157,7 +164,7 @@ namespace HarshPoint.Provisioning.Implementation
                 !property.SetMethod.IsPublic)
             {
                 throw Error.ProvisionerMetadataFormat(
-                    SR.HarshProvisionerMetadataException_ParameterMustBeReadWrite,
+                    SR.HarshProvisionerMetadata_ParameterMustBeReadWrite,
                     property.DeclaringType.FullName,
                     property.Name
                 );

@@ -118,6 +118,7 @@ namespace HarshPoint.Provisioning
             }
         }
 
+        [Parameter]
         [DefaultFromContext(typeof(DefaultFieldGroup))]
         public String Group
         {
