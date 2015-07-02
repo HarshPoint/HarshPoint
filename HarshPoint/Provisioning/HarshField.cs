@@ -170,18 +170,6 @@ namespace HarshPoint.Provisioning
         }
 
         /// <summary>
-        /// Gets or sets the field schema XML. If <c>null</c>,
-        /// the existing schema XML will be modified. If <c>null</c> and
-        /// the field doesn't exist yet, a schema XML will be generated
-        /// from the other properties.
-        /// </summary>
-        public XElement SchemaXml
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Gets the collection of schema XML transformers run when
         /// creating and/or updating a field.
         /// </summary>
@@ -209,16 +197,19 @@ namespace HarshPoint.Provisioning
 
             if (Field.IsNull())
             {
+                Logger.Information("Adding field {InternalName}, id {Id}", InternalName, Id);
+
                 TargetFieldCollection.AddFieldAsXml(
                     SchemaXml.ToString(),
                     AddToDefaultView,
                     AddFieldOptions
                 );
+
                 await ClientContext.ExecuteQueryAsync();
 
                 // we need to load the field once more, because the 
                 // instance returned by AddFieldAsXml is always a Field,
-                // not the concerete subtype (e.g. TaxonomyField).
+                // not the concrete subtype (e.g. TaxonomyField).
 
                 await ResolveField();
             }
@@ -251,6 +242,18 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
+        /// <summary>
+        /// Gets or sets the field schema XML. If <c>null</c>,
+        /// the existing schema XML will be modified. If <c>null</c> and
+        /// the field doesn't exist yet, a schema XML will be generated
+        /// from the other properties.
+        /// </summary>
+        private XElement SchemaXml
+        {
+            get;
+            set;
+        }
+
         private FieldCollection TargetFieldCollection
         {
             get;
@@ -264,6 +267,13 @@ namespace HarshPoint.Provisioning
                     f => f.Id,
                     f => f.InternalName
                 )
+            );
+
+            Logger.Verbose(
+                "Field {InternalName} ID {FieldId} found: {FieldExists}",
+                InternalName,
+                Id,
+                (Field != null)
             );
         }
 
