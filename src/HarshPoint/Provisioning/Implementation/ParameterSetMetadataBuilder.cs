@@ -8,10 +8,10 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ParameterSetMetadataBuilder
     {
-        private static readonly String DefaultDefaultParameterSetName = "__DefaultParameterSet";
+        private static readonly String ImplicitParameterSetName = "__DefaultParameterSet";
         private static readonly StringComparer ParameterSetNameComparer = StringComparer.Ordinal;
 
-        private readonly ILogger Logger;
+        private static readonly ILogger Logger = Log.ForContext<ParameterSetMetadataBuilder>();
 
         public ParameterSetMetadataBuilder(Type type)
         {
@@ -19,10 +19,6 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 throw Error.ArgumentNull(nameof(type));
             }
-
-            Logger = Log
-                .ForContext<ParameterSetMetadataBuilder>()
-                .ForContext("ProcessedType", type);
 
             ProcessedType = type;
         }
@@ -48,13 +44,21 @@ namespace HarshPoint.Provisioning.Implementation
 
             var parameters = BuildParameterMetadata();
 
-            Logger.Debug("Found parameters: {@Parameters}", parameters);
+            Logger.Debug(
+                "{ProcessedType}: All parameters: {@Parameters}", 
+                ProcessedType,
+                parameters
+            );
 
             var commonParameters = parameters
                 .Where(p => p.ParameterSetName == null)
                 .ToArray();
 
-            Logger.Debug("Found common parameters: {@CommonParameters}", commonParameters);
+            Logger.Debug(
+                "{ProcessedType}: Common parameters: {@CommonParameters}", 
+                ProcessedType,
+                commonParameters
+            );
 
             var parameterSets = parameters
                 .Where(p => p.ParameterSetName != null)
@@ -69,23 +73,28 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (parameterSets.Any())
             {
-                Logger.Debug("Found parameter sets: {@ParameterSets}", parameterSets);
+                Logger.Debug(
+                    "{ProcessedType}: Parameter sets: {@ParameterSets}", 
+                    ProcessedType,
+                    parameterSets
+                );
 
                 return parameterSets;
             }
 
-            var defaultParameterSet = new ParameterSetMetadata(
-                DefaultDefaultParameterSetName,
+            var implicitParameterSet = new ParameterSetMetadata(
+                ImplicitParameterSetName,
                 commonParameters,
                 isDefault: true
             );
 
             Logger.Debug(
-                "Found default parameter set: {@DefaultParameterSet}", 
-                defaultParameterSet
+                "{ProcessedType}: Implicit parameter set: {@ImplicitParameterSet}", 
+                ProcessedType,
+                implicitParameterSet
             );
 
-            return new[] { defaultParameterSet };
+            return new[] { implicitParameterSet };
         }
 
         private Boolean IsDefaultParameterSet(String name, Int32 index)

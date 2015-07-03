@@ -17,15 +17,16 @@ namespace HarshPoint.Tests
 
         private static readonly Subject<LogEvent> LogEventSubject = new Subject<LogEvent>();
         private static readonly MessageTemplateTextFormatter Formatter = new MessageTemplateTextFormatter(
-                "{Timestamp:HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}", null);
-
+                "{Timestamp:HH:mm:ss.fff} [{Level}] {SourceContext} {Message}{NewLine}{Exception}", null);
 
         static SeriloggedTest()
         {
             Log.Logger = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
                 .MinimumLevel.Debug()
-                .WriteTo.Observers(observable => observable.Subscribe(logEvent => LogEventSubject.OnNext(logEvent)))
+                .WriteTo.Observers(
+                    observable => observable.Subscribe(logEvent => LogEventSubject.OnNext(logEvent))
+                )
                 .Enrich.FromLogContext()
                 .CreateLogger();
         }
