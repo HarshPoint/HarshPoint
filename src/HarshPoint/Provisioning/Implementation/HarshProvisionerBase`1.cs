@@ -246,7 +246,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        private object GetValueFromContext(Parameter param)
+        private Object GetValueFromContext(Parameter param)
         {
             if (param.DefaultFromContext.TagType != null)
             {
@@ -256,11 +256,11 @@ namespace HarshPoint.Provisioning.Implementation
                     param.DefaultFromContext.TagType
                 );
 
-                var tag = Context
+                return Context
                     .GetState(param.DefaultFromContext.TagType)
-                    .FirstOrDefault();
-
-                return (tag as IDefaultFromContextTag)?.Value;
+                    .Cast<IDefaultFromContextTag>()
+                    .FirstOrDefault()?
+                    .Value;
             }
 
             if (param.DefaultFromContext.ResolvedType != null)
