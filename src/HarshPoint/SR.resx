@@ -237,6 +237,9 @@ Property: {0}.{1}</value>
 
 Property: {0}.{1}</value>
   </data>
+  <data name="HarshProvisionerMetadata_TagTypeNotAssignableFromIDefaultFromContextTag" xml:space="preserve">
+    <value>The specified property '{1}.{2}' has DefaultFromContext TagType of '{0}' that does not implement the IDefaultFromContextTag interface.</value>
+  </data>
   <data name="HarshUrl_UrlNotRelativeTo" xml:space="preserve">
     <value>The specified url '{0}' is not relative to '{1}'.</value>
   </data>

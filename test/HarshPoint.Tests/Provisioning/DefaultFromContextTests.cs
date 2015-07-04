@@ -123,6 +123,14 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Same(resolver, prov.Resolver);
         }
 
+        [Fact]
+        public void Fails_if_TagType_doesnt_implement_IDefaultFromContextTag()
+        {
+            Assert.Throws<HarshProvisionerMetadataException>(
+                () => new ParameterSetBuilder(typeof(WrongTagType)).Build()
+            );
+        }
+
         private class StringProvisioner : HarshProvisioner
         {
             [Parameter]
@@ -177,6 +185,13 @@ namespace HarshPoint.Tests.Provisioning
             {
                 throw new NotImplementedException();
             }
+        }
+
+        private sealed class WrongTagType : HarshProvisioner
+        {
+            [Parameter]
+            [DefaultFromContext(typeof(String))]
+            public String Param { get; set; }
         }
     }
 }

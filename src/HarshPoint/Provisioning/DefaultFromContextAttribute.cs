@@ -12,22 +12,6 @@ namespace HarshPoint.Provisioning
 
         public DefaultFromContextAttribute(Type tagType)
         {
-            if (tagType == null)
-            {
-                return;
-            }
-
-            var info = tagType.GetTypeInfo();
-
-            if (!IDefaultFromContextTagTypeInfo.IsAssignableFrom(info))
-            {
-                throw Error.ArgumentOutOfRange_TypeNotAssignableFrom(
-                    nameof(tagType),
-                    IDefaultFromContextTagTypeInfo,
-                    info
-                );
-            }
-
             TagType = tagType;
         }
 
@@ -36,7 +20,5 @@ namespace HarshPoint.Provisioning
             get;
             private set;
         }
-
-        private static readonly TypeInfo IDefaultFromContextTagTypeInfo = typeof(IDefaultFromContextTag).GetTypeInfo();
     }
 }

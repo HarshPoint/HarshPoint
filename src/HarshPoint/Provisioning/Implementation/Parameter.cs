@@ -54,7 +54,10 @@ namespace HarshPoint.Provisioning.Implementation
 
         [NotLogged]
         public Boolean IsCommonParameter => (ParameterSetName == null);
-        
+
+        [NotLogged]
+        public Boolean IsDefaultFromContext => (DefaultFromContext != null);
+
         public String Name => PropertyInfo.Name;
 
         [NotLogged]

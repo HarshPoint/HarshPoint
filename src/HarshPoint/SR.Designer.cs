@@ -404,6 +404,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified property &apos;{1}.{2}&apos; has DefaultFromContext TagType of &apos;{0}&apos; that does not implement the IDefaultFromContextTag interface..
+        /// </summary>
+        internal static string HarshProvisionerMetadata_TagTypeNotAssignableFromIDefaultFromContextTag {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadata_TagTypeNotAssignableFromIDefaultFromContextTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified url &apos;{0}&apos; is not relative to &apos;{1}&apos;..
         /// </summary>
         internal static string HarshUrl_UrlNotRelativeTo {

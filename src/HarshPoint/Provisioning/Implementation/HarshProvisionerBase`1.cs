@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Serilog.Core.Enrichers;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -46,8 +47,16 @@ namespace HarshPoint.Provisioning.Implementation
             set;
         }
 
+        protected String ParameterSetName => ParameterSet?.Name;
+
         internal Boolean HasChildren
             => (_children != null) && _children.Any();
+
+        internal ParameterSet ParameterSet
+        {
+            get;
+            private set;
+        }
 
         internal HarshProvisionerMetadata Metadata
             => HarshLazy.Initialize(ref _metadata, () => new HarshProvisionerMetadata(GetType()));
@@ -196,37 +205,86 @@ namespace HarshPoint.Provisioning.Implementation
 
         internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
 
-        private void InitializeDefaultFromContextProperties()
+        private void InitializeDefaultFromContext()
         {
-            var properties = Metadata.DefaultParameterSet.Parameters
-                .Where(p => (p.DefaultFromContext != null) && p.HasDefaultValue(this));
+            var parameters = Metadata.Parameters.Where(p => p.IsDefaultFromContext);
 
-            foreach (var p in properties)
+            foreach (var param in parameters)
             {
-                Object value = null;
+                if (!param.HasDefaultValue(this))
+                {
+                    Logger.Debug(
+                        "{Method}: Parameter {Parameter} already has non-default value, skipping",
+                        nameof(InitializeDefaultFromContext),
+                        param
+                    );
 
-                if (p.DefaultFromContext.TagType != null)
-                {
-                    var tag = Context
-                        .GetState(p.DefaultFromContext.TagType)
-                        .FirstOrDefault();
+                    continue;
+                }
 
-                    value = (tag as IDefaultFromContextTag)?.Value;
-                }
-                else if (p.DefaultFromContext.ResolvedType != null)
-                {
-                    value = ContextStateResolver.Create(p.DefaultFromContext.ResolvedType);
-                }
-                else
-                {
-                    value = Context.GetState(p.PropertyType).FirstOrDefault();
-                }
+                var value = GetValueFromContext(param);
 
                 if (value != null)
                 {
-                    p.Setter(this, value);
+                    Logger.Debug(
+                        "{Method}: Setting parameter {Parameter} to {Value}",
+                        nameof(InitializeDefaultFromContext),
+                        param,
+                        value
+                    );
+
+                    param.Setter(this, value);
+                }
+                else
+                {
+                    Logger.Debug(
+                        "{Method}: Got null from context for parameter {Parameter}, skipping",
+                        nameof(InitializeDefaultFromContext),
+                        param
+                    );
                 }
             }
+        }
+
+        private object GetValueFromContext(Parameter param)
+        {
+            if (param.DefaultFromContext.TagType != null)
+            {
+                Logger.Debug(
+                    "Parameter {Parameter} gets default value form context by the tag type {TagType}",
+                    param,
+                    param.DefaultFromContext.TagType
+                );
+
+                var tag = Context
+                    .GetState(param.DefaultFromContext.TagType)
+                    .FirstOrDefault();
+
+                return (tag as IDefaultFromContextTag)?.Value;
+            }
+
+            if (param.DefaultFromContext.ResolvedType != null)
+            {
+                Logger.Debug(
+                    "Parameter {Parameter} resolves objects of type {ResolvedType}",
+                    param,
+                    param.DefaultFromContext.ResolvedType
+                );
+
+                return ContextStateResolver.Create(
+                    param.DefaultFromContext.ResolvedType
+                );
+            }
+
+            Logger.Debug(
+                "Parameter {Parameter} gets default value from context directly by its own type {ParameterType}",
+                param,
+                param.PropertyType
+            );
+
+            return Context
+                .GetState(param.PropertyType)
+                .FirstOrDefault();
         }
 
         private void ValidateParameters()
@@ -286,7 +344,8 @@ namespace HarshPoint.Provisioning.Implementation
         private async Task RunWithContext(TContext context, Func<Task> action)
         {
             var contextLogger = Logger.ForContext(
-                "ProvisionerContext", context, destructureObjects: false
+                new PropertyEnricher("ProvisionerContext", context, destructureObjects: true),
+                new PropertyEnricher("MayDeleteUserData", MayDeleteUserData)
             );
 
             using (_context.Enter(context))
@@ -305,7 +364,7 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 try
                 {
-                    InitializeDefaultFromContextProperties();
+                    InitializeDefaultFromContext();
 
                     OnValidating();
                     await InitializeAsync();

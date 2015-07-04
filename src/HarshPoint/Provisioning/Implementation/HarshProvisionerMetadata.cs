@@ -35,6 +35,9 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
+        public IEnumerable<Parameter> Parameters
+            => ParameterSets.SelectMany(set => set.Parameters);
+
         public IReadOnlyList<ParameterSet> ParameterSets
         {
             get;
@@ -52,7 +55,7 @@ namespace HarshPoint.Provisioning.Implementation
             var method = ObjectType
                 .GetRuntimeMethods()
                 .Single(m =>
-                    m.IsFamily && 
+                    m.IsFamily &&
                     !m.IsStatic &&
                     StringComparer.Ordinal.Equals(m.Name, methodName) &&
                     !m.GetParameters().Any()
