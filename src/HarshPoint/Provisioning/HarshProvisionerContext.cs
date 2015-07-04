@@ -24,14 +24,14 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        public Site Site => ClientContext?.Site;
+        public Site Site => ClientContext.Site;
 
         public TaxonomySession TaxonomySession 
-            => HarshLazy.Initialize(ref _taxonomySession, CreateTaxonomySession);
+            => HarshLazy.Initialize(
+                ref _taxonomySession, 
+                () => TaxonomySession.GetTaxonomySession(ClientContext)
+            );
 
-        public Web Web => ClientContext?.Web;
-
-        private TaxonomySession CreateTaxonomySession()
-            => TaxonomySession.GetTaxonomySession(ClientContext);
+        public Web Web => ClientContext.Web;
     }
 }
