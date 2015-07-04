@@ -46,21 +46,11 @@ namespace HarshPoint.Provisioning.Implementation
             set;
         }
 
+        internal Boolean HasChildren
+            => (_children != null) && _children.Any();
+
         internal HarshProvisionerMetadata Metadata
             => HarshLazy.Initialize(ref _metadata, () => new HarshProvisionerMetadata(GetType()));
-
-        internal Boolean HasChildren
-        {
-            get
-            {
-                if (_children == null || _children.IsReadOnly)
-                {
-                    return false;
-                }
-
-                return _children.Any();
-            }
-        }
 
         public void ModifyChildrenContextState(Func<Object> modifier)
         {
