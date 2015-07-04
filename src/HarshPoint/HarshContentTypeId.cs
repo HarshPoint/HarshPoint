@@ -72,7 +72,7 @@ namespace HarshPoint
 
             if (!IsAbsolute)
             {
-                throw Error.InvalidOperation(
+                throw Error.InvalidOperationFormat(
                     SR.HarshContentTypeId_CannotIsChildOfRelative,
                     this
                 );

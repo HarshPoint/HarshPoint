@@ -13,7 +13,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw Error.ArgumentNullOrWhitespace(nameof(name));
+                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(name));
             }
 
             if (parameters == null)

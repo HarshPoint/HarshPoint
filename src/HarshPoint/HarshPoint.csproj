@@ -54,8 +54,11 @@
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="HarshBuiltInContentTypeIds.cs" />
     <Compile Include="HarshBuiltInFieldId.cs" />
+    <Compile Include="HarshErrorLogger.cs" />
     <Compile Include="HarshExpression.cs" />
     <Compile Include="HarshLazy.cs" />
+    <Compile Include="HarshLog.cs" />
+    <Compile Include="HarshLogger.cs" />
     <Compile Include="HarshScopedValue`1.cs" />
     <Compile Include="HarshSingleElementCollection.cs" />
     <Compile Include="IHarshCloneable.cs" />
@@ -80,6 +83,7 @@
     <Compile Include="Provisioning\Implementation\ContextStateResolver.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyInfo.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
+    <Compile Include="Provisioning\Implementation\HarshProvisionerMetadataExceptionLoggerExtension.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerMetadataException.cs" />
     <Compile Include="Provisioning\Implementation\IResolvableIdentifiers.cs" />
     <Compile Include="Provisioning\Implementation\ParameterMetadata.cs" />

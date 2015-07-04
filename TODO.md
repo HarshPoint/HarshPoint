@@ -4,6 +4,7 @@
 - IAddChild for ShellPloy to call
 - WhatIf
 - Generate ShellPloy from metadata? is that even feasible?
+- Error.xxx on a serilog wrapper to log exceptions where they occur
 
 ## In Progress
 - Parameter validation

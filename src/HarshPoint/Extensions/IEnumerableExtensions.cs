@@ -17,12 +17,12 @@ namespace HarshPoint
                 throw Error.ArgumentNull(nameof(sequence));
             }
 
-            foreach (var item in sequence)
-            {
-                return true;
-            }
+            var enumerator = sequence.GetEnumerator();
 
-            return false;
+            using (enumerator as IDisposable)
+            {
+                return enumerator.MoveNext();
+            }
         }
 
         public static TElement FirstOrDefaultByProperty<TElement, TProperty>(

@@ -25,7 +25,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (ResolvedType != null && TagType != null)
             {
-                throw Error.InvalidOperation(
+                throw Error.InvalidOperationFormat(
                     SR.HarshProvisionerMetadata_NoTagTypesOnResolvers,
                     property.DeclaringType,
                     property.Name

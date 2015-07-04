@@ -8,23 +8,23 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ParameterSetResolver
     {
-        private static readonly ILogger Logger = Log.ForContext<ParameterSetResolver>();
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ParameterSetResolver>();
 
         public ParameterSetResolver(Object target, IEnumerable<ParameterSetMetadata> parameterSets)
         {
             if (target == null)
             {
-                throw Error.ArgumentNull(nameof(target));
+                throw Logger.Error.ArgumentNull(nameof(target));
             }
 
             if (parameterSets == null)
             {
-                throw Error.ArgumentNull(nameof(parameterSets));
+                throw Logger.Error.ArgumentNull(nameof(parameterSets));
             }
 
             if (!parameterSets.Any())
             {
-                throw Error.ArgumentOutOfRange_EmptySequence(nameof(parameterSets));
+                throw Logger.Error.ArgumentEmptySequence(nameof(parameterSets));
             }
 
             DefaultParameterSet = parameterSets.Single(
@@ -77,7 +77,7 @@ namespace HarshPoint.Provisioning.Implementation
                 return result;
             }
 
-            throw Error.InvalidOperation(SR.ParameterSetResolver_Ambiguous);
+            throw Logger.Error.InvalidOperation(SR.ParameterSetResolver_Ambiguous);
         }
 
         public ImmutableDictionary<String, ParameterSetMetadata> ParameterSets

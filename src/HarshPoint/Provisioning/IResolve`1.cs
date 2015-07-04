@@ -66,8 +66,8 @@ namespace HarshPoint.Provisioning
             switch (results.Count())
             {
                 case 1: return results.First();
-                case 0: throw Error.InvalidOperation(SR.Resolvable_NoResult, resolvable);
-                default: throw Error.InvalidOperation(SR.Resolvable_ManyResults, resolvable);
+                case 0: throw Error.InvalidOperationFormat(SR.Resolvable_NoResult, resolvable);
+                default: throw Error.InvalidOperationFormat(SR.Resolvable_ManyResults, resolvable);
             }
         }
     }

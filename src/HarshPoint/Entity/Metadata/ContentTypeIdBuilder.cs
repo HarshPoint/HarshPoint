@@ -45,14 +45,14 @@ namespace HarshPoint.Entity.Metadata
             {
                 if (t == _entityTypeInfo)
                 {
-                    throw Error.InvalidOperation(
+                    throw Error.InvalidOperationFormat(
                         SR.ContentTypeIdBuilder_NoContentTypeAttribute,
                         t.FullName
                     );
                 }
                 else
                 {
-                    throw Error.InvalidOperation(
+                    throw Error.InvalidOperationFormat(
                         SR.ContentTypeIdBuilder_NoContentTypeAttributeBaseClass,
                         t.FullName,
                         _entityTypeInfo.FullName
@@ -75,7 +75,7 @@ namespace HarshPoint.Entity.Metadata
 
                 if (result == null)
                 {
-                    throw Error.InvalidOperation(
+                    throw Error.InvalidOperationFormat(
                         SR.ContentTypeIdBuilder_NoAbsoluteIDInHierarchy,
                         _entityTypeInfo.FullName
                     );

@@ -8,13 +8,13 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ParameterSetMetadataBuilder
     {
-        private static readonly ILogger Logger = Log.ForContext<ParameterSetMetadataBuilder>();
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ParameterSetMetadataBuilder>();
 
         public ParameterSetMetadataBuilder(Type type)
         {
             if (type == null)
             {
-                throw Error.ArgumentNull(nameof(type));
+                throw Logger.Error.ArgumentNull(nameof(type));
             }
 
             ProcessedType = type;
@@ -82,7 +82,7 @@ namespace HarshPoint.Provisioning.Implementation
             if ((DefaultParameterSetName != null) &&
                 !parameterSets.Any(set => set.IsDefault))
             {
-                throw Error.ProvisionerMetadataFormat(
+                throw Logger.Error.ProvisionerMetadata(
                     SR.HarshProvisionerMetadata_DefaultParameterSetNotFound,
                     DefaultParameterSetName,
                     ProcessedType
@@ -162,7 +162,7 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 if (attributes.Count() > 1)
                 {
-                    throw Error.ProvisionerMetadataFormat(
+                    throw Logger.Error.ProvisionerMetadata(
                         SR.HarshProvisionerMetadata_ParameterBothCommonAndInSet,
                         property.DeclaringType.FullName,
                         property.Name
@@ -185,7 +185,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (nonUniqueParameterSetNames.Any())
             {
-                throw Error.ProvisionerMetadataFormat(
+                throw Logger.Error.ProvisionerMetadata(
                     SR.HarshProvisionerMetadata_MoreParametersWithSameSet,
                     property.DeclaringType.FullName,
                     property.Name,
@@ -209,7 +209,7 @@ namespace HarshPoint.Provisioning.Implementation
                 !IsPublicInstance(property.SetMethod)
             )
             {
-                throw Error.ProvisionerMetadataFormat(
+                throw Logger.Error.ProvisionerMetadata(
                     SR.HarshProvisionerMetadata_ParameterMustBeReadWriteInstance,
                     property.DeclaringType.FullName,
                     property.Name

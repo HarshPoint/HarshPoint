@@ -8,7 +8,7 @@ namespace HarshPoint.Provisioning
         {
             if (String.IsNullOrWhiteSpace(parameterName))
             {
-                throw Error.ArgumentNullOrWhitespace(nameof(parameterName));
+                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(parameterName));
             }
 
             ParameterName = parameterName;
@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning
         {
             if (String.IsNullOrWhiteSpace(parameterName))
             {
-                throw Error.ArgumentNullOrWhitespace(nameof(parameterName));
+                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(parameterName));
             }
 
             ParameterName = parameterName;
@@ -30,7 +30,7 @@ namespace HarshPoint.Provisioning
         {
             if (String.IsNullOrWhiteSpace(parameterName))
             {
-                throw Error.ArgumentNullOrWhitespace(nameof(parameterName));
+                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(parameterName));
             }
 
             ParameterName = parameterName;

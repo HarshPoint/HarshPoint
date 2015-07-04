@@ -7,12 +7,29 @@ namespace HarshPoint
 {
     internal static class Error
     {
-        public static Exception ArgumentNull(String paramName)
+        public static ArgumentNullException ArgumentNull(String paramName)
         {
             return new ArgumentNullException(paramName);
         }
 
-        public static Exception ArgumentNullOrWhitespace(String paramName)
+        public static ArgumentOutOfRangeException ArgumentOutOfRange(String paramName, String message)
+        {
+            return new ArgumentOutOfRangeException(paramName, message);
+        }
+
+        public static ArgumentOutOfRangeException ArgumentOutOfRangeFormat(String paramName, String format, params Object[] args)
+        {
+            return new ArgumentOutOfRangeException(paramName,
+                Format(format, args)
+            );
+        }
+
+        public static ArgumentOutOfRangeException ArgumentOutOfRange_EmptySequence(String paramName)
+        {
+            return ArgumentOutOfRange(paramName, SR.Error_SequenceEmpty);
+        }
+
+        public static ArgumentOutOfRangeException ArgumentOutOfRange_NullOrWhitespace(String paramName)
         {
             return ArgumentOutOfRange(
                 paramName,
@@ -20,24 +37,7 @@ namespace HarshPoint
             );
         }
 
-        public static Exception ArgumentOutOfRange(String paramName, String message)
-        {
-            return new ArgumentOutOfRangeException(paramName, message);
-        }
-
-        public static Exception ArgumentOutOfRangeFormat(String paramName, String format, params Object[] args)
-        {
-            return new ArgumentOutOfRangeException(paramName,
-                Format(format, args)
-            );
-        }
-
-        public static Exception ArgumentOutOfRange_EmptySequence(String paramName)
-        {
-            return ArgumentOutOfRange(paramName, SR.Error_SequenceEmpty);
-        }
-
-        public static Exception ArgumentOutOfRange_ObjectNotAssignableTo(String paramName, TypeInfo baseType, Object shouldHaveBeenAssignable)
+        public static ArgumentOutOfRangeException ArgumentOutOfRange_ObjectNotAssignableTo(String paramName, TypeInfo baseType, Object shouldHaveBeenAssignable)
         {
             return ArgumentOutOfRangeFormat(
                 paramName,
@@ -47,7 +47,7 @@ namespace HarshPoint
             );
         }
 
-        public static Exception ArgumentOutOfRange_TypeNotAssignableFrom(String paramName, TypeInfo baseType, TypeInfo shouldHaveBeenAssignable)
+        public static ArgumentOutOfRangeException ArgumentOutOfRange_TypeNotAssignableFrom(String paramName, TypeInfo baseType, TypeInfo shouldHaveBeenAssignable)
         {
             return ArgumentOutOfRangeFormat(
                 paramName,
@@ -57,19 +57,19 @@ namespace HarshPoint
             );
         }
 
-        public static Exception ProvisionerMetadataFormat(String format, params Object[] args)
+        public static HarshProvisionerMetadataException ProvisionerMetadataFormat(String format, params Object[] args)
         {
             return new HarshProvisionerMetadataException(
                 Format(format, args)
             );
         }
 
-        public static Exception InvalidOperation(String message)
+        public static InvalidOperationException InvalidOperation(String message)
         {
             return new InvalidOperationException(message);
         }
 
-        public static Exception InvalidOperation(String format, params Object[] args)
+        public static InvalidOperationException InvalidOperationFormat(String format, params Object[] args)
         {
             return new InvalidOperationException(
                 Format(format, args)

@@ -17,7 +17,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (String.IsNullOrWhiteSpace(action))
             {
-                throw Error.ArgumentNullOrWhitespace(nameof(action));
+                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(action));
             }
 
             if (_runOnUpgradeActions == null)

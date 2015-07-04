@@ -13,7 +13,7 @@ namespace HarshPoint.Server.Provisioning
 
             if (!PublishingWeb.IsPublishingWeb(provisioner.Web))
             {
-                throw Error.InvalidOperation(
+                throw Error.InvalidOperationFormat(
                     SR.HarshProvisionerPublishing_NotAPublishingWeb, provisioner.Web.Url
                 );
             }

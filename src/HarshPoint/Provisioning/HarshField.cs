@@ -284,7 +284,7 @@ namespace HarshPoint.Provisioning
         {
             if (Guid.Empty.Equals(value))
             {
-                throw Error.InvalidOperation(
+                throw Error.InvalidOperationFormat(
                     SR.HarshFieldSchemaXmlProvisioner_PropertyEmptyGuid,
                     propertyName
                 );
@@ -297,7 +297,7 @@ namespace HarshPoint.Provisioning
 
             if (value == null || String.IsNullOrWhiteSpace(asString))
             {
-                throw Error.InvalidOperation(
+                throw Error.InvalidOperationFormat(
                     SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace,
                     propertyName
                 );
