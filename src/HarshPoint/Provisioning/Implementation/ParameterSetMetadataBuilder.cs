@@ -8,9 +8,6 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ParameterSetMetadataBuilder
     {
-        private static readonly String ImplicitParameterSetName = "__DefaultParameterSet";
-        private static readonly StringComparer ParameterSetNameComparer = StringComparer.Ordinal;
-
         private static readonly ILogger Logger = Log.ForContext<ParameterSetMetadataBuilder>();
 
         public ParameterSetMetadataBuilder(Type type)
@@ -21,6 +18,11 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             ProcessedType = type;
+
+            DefaultParameterSetName = type
+                .GetTypeInfo()
+                .GetCustomAttribute<DefaultParameterSetAttribute>(inherit: true)?
+                .DefaultParameterSetName;
         }
 
         public String DefaultParameterSetName
@@ -45,13 +47,19 @@ namespace HarshPoint.Provisioning.Implementation
             var parameters = BuildParameterMetadata();
 
             Logger.Debug(
+                "{ProcessedType}: Default parameter set name: {DefaultParameterSetName}",
+                ProcessedType,
+                DefaultParameterSetName
+            );
+
+            Logger.Debug(
                 "{ProcessedType}: All parameters: {@Parameters}", 
                 ProcessedType,
                 parameters
             );
 
             var commonParameters = parameters
-                .Where(p => p.ParameterSetName == null)
+                .Where(p => p.IsCommonParameter)
                 .ToArray();
 
             Logger.Debug(
@@ -61,8 +69,8 @@ namespace HarshPoint.Provisioning.Implementation
             );
 
             var parameterSets = parameters
-                .Where(p => p.ParameterSetName != null)
-                .GroupBy(p => p.ParameterSetName, ParameterSetNameComparer)
+                .Where(p => !p.IsCommonParameter)
+                .GroupBy(p => p.ParameterSetName, ParameterSetMetadata.NameComparer)
                 .Select(
                     (set, index) => new ParameterSetMetadata(
                         set.Key,
@@ -70,6 +78,16 @@ namespace HarshPoint.Provisioning.Implementation
                         IsDefaultParameterSet(set.Key, index)
                     )
                 );
+
+            if ((DefaultParameterSetName != null) &&
+                !parameterSets.Any(set => set.IsDefault))
+            {
+                throw Error.ProvisionerMetadataFormat(
+                    SR.HarshProvisionerMetadata_DefaultParameterSetNotFound,
+                    DefaultParameterSetName,
+                    ProcessedType
+                );
+            }
 
             if (parameterSets.Any())
             {
@@ -83,7 +101,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             var implicitParameterSet = new ParameterSetMetadata(
-                ImplicitParameterSetName,
+                ParameterSetMetadata.ImplicitParameterSetName,
                 commonParameters,
                 isDefault: true
             );
@@ -101,7 +119,10 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (DefaultParameterSetName != null)
             {
-                return ParameterSetNameComparer.Equals(DefaultParameterSetName, name);
+                return ParameterSetMetadata.NameComparer.Equals(
+                    DefaultParameterSetName, 
+                    name
+                );
             }
 
             return (index == 0);
@@ -158,7 +179,7 @@ namespace HarshPoint.Provisioning.Implementation
         )
         {
             var nonUniqueParameterSetNames = attributes
-                .GroupBy(p => p.ParameterSetName, ParameterSetNameComparer)
+                .GroupBy(p => p.ParameterSetName, ParameterSetMetadata.NameComparer)
                 .Where(set => set.Count() > 1)
                 .Select(set => set.Key);
 

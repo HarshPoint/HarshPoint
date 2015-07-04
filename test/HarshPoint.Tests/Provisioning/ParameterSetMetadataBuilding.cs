@@ -20,7 +20,7 @@ namespace HarshPoint.Tests.Provisioning
             var sets = Build<OnlyDefaultParameterSet>();
             var set = Assert.Single(sets);
 
-            Assert.Equal("__DefaultParameterSet", set.Name);
+            Assert.Equal(ParameterSetMetadata.ImplicitParameterSetName, set.Name);
             Assert.True(set.IsDefault);
             Assert.Equal(2, set.Parameters.Count);
 
@@ -43,7 +43,7 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public void Two_sets_implicit_default_one_common()
+        public void Two_sets_implicit_default()
         {
             var sets = Build<TwoSetsImplicitDefault>();
             Assert.Equal(2, sets.Length);
@@ -53,21 +53,12 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.True(sets[0].IsDefault);
             Assert.False(sets[1].IsDefault);
-
-            Assert.Equal(2, sets[0].Parameters.Count);
-            Assert.Equal(2, sets[1].Parameters.Count);
-
-            Assert.Equal("ParamInSet1", sets[0].Parameters[0].Name);
-            Assert.Equal("CommonParam", sets[0].Parameters[1].Name);
-
-            Assert.Equal("ParamInSet2", sets[1].Parameters[0].Name);
-            Assert.Equal("CommonParam", sets[1].Parameters[1].Name);
         }
 
         [Fact]
         public void Two_sets_explicit_default()
         {
-            var sets = Build<TwoSetsImplicitDefault>("Set2");
+            var sets = Build<TwoSetsExplicitDefault>();
             Assert.Equal(2, sets.Length);
 
             Assert.Equal("Set1", sets[0].Name);
@@ -80,7 +71,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Parameter_in_multiple_sets()
         {
-            var sets = Build<ParameterInMultipleSets>("Set3");
+            var sets = Build<ParameterInMultipleSets>();
             Assert.Equal(3, sets.Length);
 
             Assert.Equal("Set1", sets[0].Name);
@@ -103,6 +94,25 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Equal("ParamInSet3", sets[2].Parameters[0].Name);
             Assert.Equal("CommonParam", sets[2].Parameters[1].Name);
+        }
+
+        [Fact]
+        public void Implicit_named_set_is_default()
+        {
+            var sets = Build<ImplicitNamedSetIsDefault>();
+            var set = Assert.Single(sets);
+
+            Assert.Equal("Set1", set.Name);
+            Assert.True(set.IsDefault);
+            Assert.Equal(2, set.Parameters.Count);
+        }
+
+        [Fact]
+        public void Fails_when_default_set_doesnt_exist()
+        {
+            Assert.Throws<HarshProvisionerMetadataException>(
+                () => Build<WithNonexistentDefaultParamSet>()
+            );
         }
 
         [Fact]
@@ -137,15 +147,9 @@ namespace HarshPoint.Tests.Provisioning
             );
         }
 
-        private static ParameterSetMetadata[] Build<T>(String defaultParameterSetName = null)
+        private static ParameterSetMetadata[] Build<T>()
         {
             var builder = new ParameterSetMetadataBuilder(typeof(T));
-
-            if (defaultParameterSetName != null)
-            {
-                builder.DefaultParameterSetName = defaultParameterSetName;
-            }
-
             return builder.Build().ToArray();
         }
 
@@ -153,7 +157,6 @@ namespace HarshPoint.Tests.Provisioning
         {
             [Parameter]
             public String Param1 { get; set; }
-
 
             [Parameter]
             public String Param2 { get; set; }
@@ -180,6 +183,31 @@ namespace HarshPoint.Tests.Provisioning
             public Object NotAParam { get; set; }
         }
 
+        [DefaultParameterSet("Set2")]
+        private sealed class TwoSetsExplicitDefault
+        {
+            [Parameter(ParameterSetName = "Set1")]
+            public String ParamInSet1 { get; set; }
+
+            [Parameter(ParameterSetName = "Set2")]
+            public String ParamInSet2 { get; set; }
+
+            [Parameter]
+            public Boolean CommonParam { get; set; }
+
+            public Object NotAParam { get; set; }
+        }
+
+        private sealed class ImplicitNamedSetIsDefault
+        {
+            [Parameter(ParameterSetName = "Set1")]
+            public String ParamInSet1 { get; set; }
+
+            [Parameter]
+            public String CommonParam { get; set; }
+        }
+
+        [DefaultParameterSet("Set3")]
         private sealed class ParameterInMultipleSets
         {
             [Parameter(ParameterSetName = "Set1")]
@@ -224,6 +252,11 @@ namespace HarshPoint.Tests.Provisioning
                 get { return null; }
                 internal set { }
             }
+        }
+
+        [DefaultParameterSet("TestParamSet")]
+        private sealed class WithNonexistentDefaultParamSet
+        {
         }
     }
 }

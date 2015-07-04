@@ -62,6 +62,7 @@
     <Compile Include="Provisioning\DefaultContentTypeGroup.cs" />
     <Compile Include="Provisioning\DefaultFieldGroup.cs" />
     <Compile Include="Provisioning\DefaultFromContextTag`1.cs" />
+    <Compile Include="Provisioning\DefaultParameterSetAttribute.cs" />
     <Compile Include="Provisioning\HarshContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshFieldProvisioner.cs" />
     <Compile Include="Provisioning\HarshFieldRef.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Provisioning\Implementation\ParameterMetadata.cs" />
     <Compile Include="Provisioning\Implementation\ParameterSetMetadata.cs" />
     <Compile Include="Provisioning\Implementation\ParameterSetMetadataBuilder.cs" />
+    <Compile Include="Provisioning\Implementation\ParameterSetResolver.cs" />
     <Compile Include="Provisioning\Implementation\ResolvableContextModification`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveContext`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveFailedException.cs" />

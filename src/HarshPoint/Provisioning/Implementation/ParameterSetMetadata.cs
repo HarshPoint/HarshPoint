@@ -6,6 +6,9 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ParameterSetMetadata
     {
+        public static readonly String ImplicitParameterSetName = "__DefaultParameterSet";
+        public static readonly StringComparer NameComparer = StringComparer.Ordinal;
+
         public ParameterSetMetadata(String name, IEnumerable<ParameterMetadata> parameters, Boolean isDefault)
         {
             if (String.IsNullOrWhiteSpace(name))

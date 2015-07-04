@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -9,6 +10,21 @@ namespace HarshPoint
 {
     public static class IEnumerableExtensions
     {
+        public static Boolean Any(this IEnumerable sequence)
+        {
+            if (sequence == null)
+            {
+                throw Error.ArgumentNull(nameof(sequence));
+            }
+
+            foreach (var item in sequence)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public static TElement FirstOrDefaultByProperty<TElement, TProperty>(
             this IEnumerable<TElement> sequence,
             Func<TElement, TProperty> projection,

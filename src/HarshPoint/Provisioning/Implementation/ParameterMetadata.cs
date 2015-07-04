@@ -1,6 +1,7 @@
 ﻿using Destructurama.Attributed;
 using HarshPoint.Reflection;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
@@ -51,6 +52,9 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
+        [NotLogged]
+        public Boolean IsCommonParameter => (ParameterSetName == null);
+        
         public String Name => PropertyInfo.Name;
 
         [NotLogged]
@@ -91,20 +95,23 @@ namespace HarshPoint.Provisioning.Implementation
         public Boolean HasDefaultValue(Object provisioner)
         {
             var value = Getter(provisioner);
-
             if (value == null)
             {
                 return true;
             }
 
-            var str = value as String;
-
-            if ((str != null) && (str.Length == 0))
+            var enumerable = value as IEnumerable;
+            if (enumerable != null)
             {
-                return true;
+                return !enumerable.Any();
             }
 
             return false;
         }
+
+        public override String ToString()
+            => ParameterSetName == null ?
+                PropertyInfo.ToString() :
+                PropertyInfo.ToString() + " (" + ParameterSetName + ')';
     }
 }

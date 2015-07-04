@@ -343,6 +343,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default parameter set &apos;{0}&apos; could not be found on type &apos;{1}&apos;..
+        /// </summary>
+        internal static string HarshProvisionerMetadata_DefaultParameterSetNotFound {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadata_DefaultParameterSetNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameters cannot be members of the same parameter set multiple times.
         ///
         ///Property: {0}.{1}
@@ -400,6 +409,15 @@ namespace HarshPoint {
         internal static string HarshUrl_UrlNotRelativeTo {
             get {
                 return ResourceManager.GetString("HarshUrl_UrlNotRelativeTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter set cannot be resolved using the specified parameters..
+        /// </summary>
+        internal static string ParameterSetResolver_Ambiguous {
+            get {
+                return ResourceManager.GetString("ParameterSetResolver_Ambiguous", resourceCulture);
             }
         }
         

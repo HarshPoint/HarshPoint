@@ -212,6 +212,9 @@
   <data name="HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace" xml:space="preserve">
     <value>The {0} cannot be null or a whitespace-only string.</value>
   </data>
+  <data name="HarshProvisionerMetadata_DefaultParameterSetNotFound" xml:space="preserve">
+    <value>Default parameter set '{0}' could not be found on type '{1}'.</value>
+  </data>
   <data name="HarshProvisionerMetadata_MoreParametersWithSameSet" xml:space="preserve">
     <value>Parameters cannot be members of the same parameter set multiple times.
 
@@ -236,6 +239,9 @@ Property: {0}.{1}</value>
   </data>
   <data name="HarshUrl_UrlNotRelativeTo" xml:space="preserve">
     <value>The specified url '{0}' is not relative to '{1}'.</value>
+  </data>
+  <data name="ParameterSetResolver_Ambiguous" xml:space="preserve">
+    <value>Parameter set cannot be resolved using the specified parameters.</value>
   </data>
   <data name="Resolvable_ManyResults" xml:space="preserve">
     <value>The {0} resolved in more than one result.</value>
