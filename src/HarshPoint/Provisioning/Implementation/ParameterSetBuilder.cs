@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ParameterSetMetadataBuilder
+    internal sealed class ParameterSetBuilder
     {
-        private static readonly HarshLogger Logger = HarshLog.ForContext<ParameterSetMetadataBuilder>();
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ParameterSetBuilder>();
 
-        public ParameterSetMetadataBuilder(Type type)
+        public ParameterSetBuilder(Type type)
         {
             if (type == null)
             {
@@ -37,7 +37,7 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        public IEnumerable<ParameterSetMetadata> Build()
+        public IEnumerable<ParameterSet> Build()
         {
             Logger.Debug(
                 "Building parameter set metadata for {ProcessedType}",
@@ -70,9 +70,9 @@ namespace HarshPoint.Provisioning.Implementation
 
             var parameterSets = parameters
                 .Where(p => !p.IsCommonParameter)
-                .GroupBy(p => p.ParameterSetName, ParameterSetMetadata.NameComparer)
+                .GroupBy(p => p.ParameterSetName, ParameterSet.NameComparer)
                 .Select(
-                    (set, index) => new ParameterSetMetadata(
+                    (set, index) => new ParameterSet(
                         set.Key,
                         set.Concat(commonParameters),
                         IsDefaultParameterSet(set.Key, index)
@@ -100,8 +100,8 @@ namespace HarshPoint.Provisioning.Implementation
                 return parameterSets;
             }
 
-            var implicitParameterSet = new ParameterSetMetadata(
-                ParameterSetMetadata.ImplicitParameterSetName,
+            var implicitParameterSet = new ParameterSet(
+                ParameterSet.ImplicitParameterSetName,
                 commonParameters,
                 isDefault: true
             );
@@ -119,7 +119,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (DefaultParameterSetName != null)
             {
-                return ParameterSetMetadata.NameComparer.Equals(
+                return ParameterSet.NameComparer.Equals(
                     DefaultParameterSetName, 
                     name
                 );
@@ -128,7 +128,7 @@ namespace HarshPoint.Provisioning.Implementation
             return (index == 0);
         }
 
-        private IEnumerable<ParameterMetadata> BuildParameterMetadata()
+        private IEnumerable<Parameter> BuildParameterMetadata()
         {
             return from property in ProcessedType.GetRuntimeProperties()
 
@@ -146,7 +146,7 @@ namespace HarshPoint.Provisioning.Implementation
                    let validation = property.GetCustomAttributes<ParameterValidationAttribute>(inherit: true)
 
                    from attr in paramAttrs
-                   select new ParameterMetadata(
+                   select new Parameter(
                        property,
                        attr,
                        defaultFromContext
@@ -179,7 +179,7 @@ namespace HarshPoint.Provisioning.Implementation
         )
         {
             var nonUniqueParameterSetNames = attributes
-                .GroupBy(p => p.ParameterSetName, ParameterSetMetadata.NameComparer)
+                .GroupBy(p => p.ParameterSetName, ParameterSet.NameComparer)
                 .Where(set => set.Count() > 1)
                 .Select(set => set.Key);
 

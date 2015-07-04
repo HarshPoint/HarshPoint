@@ -4,12 +4,12 @@ using System.Collections.Immutable;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ParameterSetMetadata
+    internal sealed class ParameterSet
     {
         public static readonly String ImplicitParameterSetName = "__DefaultParameterSet";
         public static readonly StringComparer NameComparer = StringComparer.Ordinal;
 
-        public ParameterSetMetadata(String name, IEnumerable<ParameterMetadata> parameters, Boolean isDefault)
+        public ParameterSet(String name, IEnumerable<Parameter> parameters, Boolean isDefault)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -38,7 +38,7 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        public IReadOnlyList<ParameterMetadata> Parameters
+        public IReadOnlyList<Parameter> Parameters
         {
             get;
             private set;

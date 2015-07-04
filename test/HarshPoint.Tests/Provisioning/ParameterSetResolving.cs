@@ -23,7 +23,7 @@ namespace HarshPoint.Tests.Provisioning
             var set = Resolve(new ImplicitEmptyParamSet());
             Assert.NotNull(set);
             Assert.True(set.IsDefault);
-            Assert.Equal(ParameterSetMetadata.ImplicitParameterSetName, set.Name);
+            Assert.Equal(ParameterSet.ImplicitParameterSetName, set.Name);
             Assert.Empty(set.Parameters);
         }
 
@@ -37,7 +37,7 @@ namespace HarshPoint.Tests.Provisioning
             });
             Assert.NotNull(set);
             Assert.True(set.IsDefault);
-            Assert.Equal(ParameterSetMetadata.ImplicitParameterSetName, set.Name);
+            Assert.Equal(ParameterSet.ImplicitParameterSetName, set.Name);
             Assert.Equal(2, set.Parameters.Count);
         }
 
@@ -78,9 +78,9 @@ namespace HarshPoint.Tests.Provisioning
             );
         }
 
-        private ParameterSetMetadata Resolve<T>(T target)
+        private ParameterSet Resolve<T>(T target)
         {
-            var builder = new ParameterSetMetadataBuilder(typeof(T));
+            var builder = new ParameterSetBuilder(typeof(T));
             var resolver = new ParameterSetResolver(target, builder.Build());
             return resolver.Resolve();
         }

@@ -21,7 +21,7 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
-            var parameterSetBuilder = new ParameterSetMetadataBuilder(ObjectType);
+            var parameterSetBuilder = new ParameterSetBuilder(ObjectType);
 
             ParameterSets = parameterSetBuilder.Build().ToImmutableArray();
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
@@ -29,13 +29,13 @@ namespace HarshPoint.Provisioning.Implementation
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
         }
 
-        public ParameterSetMetadata DefaultParameterSet
+        public ParameterSet DefaultParameterSet
         {
             get;
             private set;
         }
 
-        public IReadOnlyList<ParameterSetMetadata> ParameterSets
+        public IReadOnlyList<ParameterSet> ParameterSets
         {
             get;
             private set;
@@ -58,7 +58,7 @@ namespace HarshPoint.Provisioning.Implementation
                     !m.GetParameters().Any()
                 );
 
-            return method
+            var deletesUserData = method
                 .GetRuntimeBaseMethodChain()
                 .Any(
                     m => !m.IsDefined(
@@ -66,8 +66,18 @@ namespace HarshPoint.Provisioning.Implementation
                         inherit: false
                     )
                 );
+
+            Logger.Debug(
+                "{ObjectType}: {Method} DeletesUserData = {DeletesUserData}",
+                ObjectType,
+                methodName,
+                deletesUserData
+            );
+
+            return deletesUserData;
         }
 
         private static readonly TypeInfo HarshProvisionerBaseTypeInfo = typeof(HarshProvisionerBase).GetTypeInfo();
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshProvisionerMetadata>();
     }
 }

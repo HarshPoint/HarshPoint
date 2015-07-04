@@ -8,9 +8,9 @@ using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ParameterMetadata
+    internal sealed class Parameter
     {
-        public ParameterMetadata(
+        public Parameter(
             PropertyInfo propertyInfo,
             ParameterAttribute parameterAttribute,
             DefaultFromContextPropertyInfo defaultFromContext,

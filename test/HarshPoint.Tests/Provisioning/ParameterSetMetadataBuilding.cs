@@ -20,7 +20,7 @@ namespace HarshPoint.Tests.Provisioning
             var sets = Build<OnlyDefaultParameterSet>();
             var set = Assert.Single(sets);
 
-            Assert.Equal(ParameterSetMetadata.ImplicitParameterSetName, set.Name);
+            Assert.Equal(ParameterSet.ImplicitParameterSetName, set.Name);
             Assert.True(set.IsDefault);
             Assert.Equal(2, set.Parameters.Count);
 
@@ -147,9 +147,9 @@ namespace HarshPoint.Tests.Provisioning
             );
         }
 
-        private static ParameterSetMetadata[] Build<T>()
+        private static ParameterSet[] Build<T>()
         {
-            var builder = new ParameterSetMetadataBuilder(typeof(T));
+            var builder = new ParameterSetBuilder(typeof(T));
             return builder.Build().ToArray();
         }
 

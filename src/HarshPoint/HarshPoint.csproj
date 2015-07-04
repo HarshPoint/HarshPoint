@@ -86,9 +86,9 @@
     <Compile Include="Provisioning\Implementation\HarshProvisionerMetadataExceptionLoggerExtension.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerMetadataException.cs" />
     <Compile Include="Provisioning\Implementation\IResolvableIdentifiers.cs" />
-    <Compile Include="Provisioning\Implementation\ParameterMetadata.cs" />
-    <Compile Include="Provisioning\Implementation\ParameterSetMetadata.cs" />
-    <Compile Include="Provisioning\Implementation\ParameterSetMetadataBuilder.cs" />
+    <Compile Include="Provisioning\Implementation\Parameter.cs" />
+    <Compile Include="Provisioning\Implementation\ParameterSet.cs" />
+    <Compile Include="Provisioning\Implementation\ParameterSetBuilder.cs" />
     <Compile Include="Provisioning\Implementation\ParameterSetResolver.cs" />
     <Compile Include="Provisioning\Implementation\ResolvableContextModification`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveContext`1.cs" />

@@ -10,7 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext<ParameterSetResolver>();
 
-        public ParameterSetResolver(Object target, IEnumerable<ParameterSetMetadata> parameterSets)
+        public ParameterSetResolver(Object target, IEnumerable<ParameterSet> parameterSets)
         {
             if (target == null)
             {
@@ -33,12 +33,12 @@ namespace HarshPoint.Provisioning.Implementation
 
             ParameterSets = parameterSets.ToImmutableDictionary(
                 set => set.Name,
-                ParameterSetMetadata.NameComparer
+                ParameterSet.NameComparer
             );
             Target = target;
         }
 
-        public ParameterSetMetadata Resolve()
+        public ParameterSet Resolve()
         {
             if (ParameterSets.Count == 1)
             {
@@ -80,7 +80,7 @@ namespace HarshPoint.Provisioning.Implementation
             throw Logger.Error.InvalidOperation(SR.ParameterSetResolver_Ambiguous);
         }
 
-        public ImmutableDictionary<String, ParameterSetMetadata> ParameterSets
+        public ImmutableDictionary<String, ParameterSet> ParameterSets
         {
             get;
             private set;
@@ -92,18 +92,18 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        private ParameterSetMetadata DefaultParameterSet
+        private ParameterSet DefaultParameterSet
         {
             get;
             set;
         }
 
-        private IEnumerable<ParameterMetadata> Parameters
+        private IEnumerable<Parameter> Parameters
             => ParameterSets.Values.SelectMany(set => set.Parameters);
 
-        private ImmutableDictionary<String, ParameterSetMetadata> RemoveCandidateIfParamDefault(
-            ImmutableDictionary<String, ParameterSetMetadata> candidates,
-            ParameterMetadata parameter
+        private ImmutableDictionary<String, ParameterSet> RemoveCandidateIfParamDefault(
+            ImmutableDictionary<String, ParameterSet> candidates,
+            Parameter parameter
         )
         {
             if (parameter.IsCommonParameter)
