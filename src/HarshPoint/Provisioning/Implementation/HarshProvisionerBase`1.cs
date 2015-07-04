@@ -17,7 +17,7 @@ namespace HarshPoint.Provisioning.Implementation
         where TContext : HarshProvisionerContextBase
     {
         private readonly HarshScopedValue<TContext> _context;
-        private readonly HarshScopedValue<ILogger> _logger;
+        private readonly HarshScopedValue<HarshLogger> _logger;
 
         private ICollection<HarshProvisionerBase> _children;
         private ICollection<Func<Object>> _childrenContextStateModifiers;
@@ -26,8 +26,8 @@ namespace HarshPoint.Provisioning.Implementation
         protected HarshProvisionerBase()
         {
             _context = new HarshScopedValue<TContext>();
-            _logger = new HarshScopedValue<ILogger>(
-                Log.ForContext(GetType())
+            _logger = new HarshScopedValue<HarshLogger>(
+                HarshLog.ForContext(GetType())
             );
         }
 
@@ -37,7 +37,7 @@ namespace HarshPoint.Provisioning.Implementation
         public ICollection<HarshProvisionerBase> Children
             => HarshLazy.Initialize(ref _children, CreateChildrenCollection);
 
-        public ILogger Logger
+        public HarshLogger Logger
             => _logger.Value;
 
         public Boolean MayDeleteUserData

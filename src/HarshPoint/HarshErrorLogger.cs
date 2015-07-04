@@ -47,7 +47,7 @@ namespace HarshPoint
         {
             if (exception == null)
             {
-                throw new ArgumentNullException(nameof(exception));
+                throw Error.ArgumentNull(nameof(exception));
             }
 
             Logger.Write(level, exception, "Exception thrown", new Object[0]);

@@ -1,15 +1,12 @@
 ﻿using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Serilog.Core;
 using Serilog.Events;
 
 namespace HarshPoint
 {
-    internal sealed class HarshLogger : ILogger
+    public sealed class HarshLogger : ILogger
     {
         private readonly ILogger _inner;
         private readonly HarshErrorLogger _error;

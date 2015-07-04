@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace HarshPoint
 {
-    internal static class HarshLog
+    public static class HarshLog
     {
         public static HarshLogger ToHarshLogger(this ILogger logger)
         {
             if (logger == null)
             {
-                throw new ArgumentNullException(nameof(logger));
+                throw Error.ArgumentNull(nameof(logger));
             }
 
             return (logger as HarshLogger) ?? new HarshLogger(logger);
