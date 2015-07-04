@@ -2,6 +2,7 @@
 using Serilog.Core;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace HarshPoint
@@ -24,9 +25,13 @@ namespace HarshPoint
         public static HarshLogger ForContext(IEnumerable<ILogEventEnricher> enrichers)
             => Log.ForContext(enrichers.ToArray()).ToHarshLogger();
 
-        public static HarshLogger ForContext(String propertyName, Object value, Boolean destructureObjects = false)
+        public static HarshLogger ForContext(String propertyName, Object value)
+            => Log.ForContext(propertyName, value, destructureObjects: false).ToHarshLogger();
+
+        public static HarshLogger ForContext(String propertyName, Object value, Boolean destructureObjects)
             => Log.ForContext(propertyName, value, destructureObjects).ToHarshLogger();
 
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public static HarshLogger ForContext<TSource>()
             => Log.ForContext<TSource>().ToHarshLogger();
     }

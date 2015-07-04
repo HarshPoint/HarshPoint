@@ -36,7 +36,13 @@ namespace HarshPoint
         public HarshLogger ForContext(IEnumerable<ILogEventEnricher> enrichers)
             => _inner.ForContext(enrichers).ToHarshLogger();
 
-        public HarshLogger ForContext(String propertyName, Object value, Boolean destructureObjects = false)
+        public HarshLogger ForContext(params ILogEventEnricher[] enrichers)
+            => _inner.ForContext(enrichers).ToHarshLogger();
+
+        public HarshLogger ForContext(String propertyName, Object value)
+            => _inner.ForContext(propertyName, value, destructureObjects: false).ToHarshLogger();
+
+        public HarshLogger ForContext(String propertyName, Object value, Boolean destructureObjects)
             => _inner.ForContext(propertyName, value, destructureObjects).ToHarshLogger();
 
         public HarshLogger ForContext<TSource>()
