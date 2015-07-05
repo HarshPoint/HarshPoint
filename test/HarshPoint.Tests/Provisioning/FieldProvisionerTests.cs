@@ -1,4 +1,5 @@
 ﻿using HarshPoint.Provisioning;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -64,7 +65,14 @@ namespace HarshPoint.Tests.Provisioning
             finally
             {
                 Fixture.Web.Fields.GetById(id).DeleteObject();
-                await Fixture.ClientContext.ExecuteQueryAsync();
+
+                try
+                {
+                    await Fixture.ClientContext.ExecuteQueryAsync();
+                }
+                catch (ServerException)
+                {
+                }
             }
 
         }
