@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HarshPoint.Provisioning.Implementation;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 
@@ -6,45 +8,39 @@ namespace HarshPoint.Provisioning
 {
     public abstract class ParameterValidationAttribute : Attribute
     {
+        private readonly HarshScopedValue<Parameter> _parameter =
+            new HarshScopedValue<Parameter>();
+
+        private HarshLogger _logger;
+
+        protected HarshLogger Logger
+            => HarshLazy.Initialize(
+                ref _logger, 
+                () => HarshLog.ForContext(GetType())
+            );
 
         protected String ParameterName
-        {
-            get;
-            private set;
-        }
+            => Parameter?.Name;
 
         protected Type ParameterType
-        {
-            get;
-            private set;
-        }
+            => Parameter?.PropertyType;
 
         protected TypeInfo ParameterTypeInfo
+           => Parameter?.PropertyTypeInfo;
+
+        internal Parameter Parameter
+            => _parameter.Value;
+
+        internal void Validate(Parameter parameter, Object value)
         {
-            get;
-            private set;
-        }
-                
-        public void Validate(PropertyInfo propertyInfo, Object value)
-        {
-            if (propertyInfo == null)
+            if (parameter == null)
             {
-                throw new ArgumentNullException(nameof(propertyInfo));
+                throw Logger.Error.ArgumentNull(nameof(parameter));
             }
 
-            ParameterName = propertyInfo.Name;
-            ParameterType = propertyInfo.PropertyType;
-            ParameterTypeInfo = ParameterType.GetTypeInfo();
-
-            try
+            using (_parameter.Enter(parameter))
             {
                 Validate(value);
-            }
-            finally
-            {
-                ParameterName = null;
-                ParameterType = null;
-                ParameterTypeInfo = null;
             }
         }
 
@@ -52,16 +48,8 @@ namespace HarshPoint.Provisioning
 
         protected Exception ValidationFailed(String format, params Object[] args)
         {
-            return ValidationFailed(
-                String.Format(CultureInfo.CurrentCulture, format, args)
-            );
-        }
-
-        protected Exception ValidationFailed(String message)
-        {
-            return new ParameterValidationFailedException(
-                ParameterName,
-                message
+            return Logger.Error.ParameterValidationFormat(
+                Parameter, format, args
             );
         }
     }

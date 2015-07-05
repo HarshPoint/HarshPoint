@@ -212,6 +212,9 @@
   <data name="HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace" xml:space="preserve">
     <value>The {0} cannot be null or a whitespace-only string.</value>
   </data>
+  <data name="HarshProvisionerBase_ParameterMandatory" xml:space="preserve">
+    <value>Thr mandatory parameter '{0}' must be set.</value>
+  </data>
   <data name="HarshProvisionerMetadata_DefaultParameterSetNotFound" xml:space="preserve">
     <value>Default parameter set '{0}' could not be found on type '{1}'.</value>
   </data>
@@ -226,6 +229,9 @@ Duplicate parameter sets: {2}</value>
   </data>
   <data name="HarshProvisionerMetadata_NoValueTypeDefaultFromContext" xml:space="preserve">
     <value>DefaultFromContext properties must be reference types. The specified property '{0}.{1}' is of type '{2}'. </value>
+  </data>
+  <data name="HarshProvisionerMetadata_NoValueTypeMandatory" xml:space="preserve">
+    <value>Mandatory parameters must be of reference or nullable type. The specified property '{0}.{1}' is of type '{2}'.</value>
   </data>
   <data name="HarshProvisionerMetadata_ParameterBothCommonAndInSet" xml:space="preserve">
     <value>Parameters can either be shared by all parameter sets by having ParameterSetName equal to null, or belong to one or more named parameter sets.

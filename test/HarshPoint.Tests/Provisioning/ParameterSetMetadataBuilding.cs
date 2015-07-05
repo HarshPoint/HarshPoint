@@ -147,6 +147,14 @@ namespace HarshPoint.Tests.Provisioning
             );
         }
 
+        [Fact]
+        public void Fails_nonnullable_mandatory()
+        {
+            var exc = Assert.Throws<HarshProvisionerMetadataException>(
+                () => Build<NonnullableMandatoryParamType>()
+            );
+        }
+
         private static ParameterSet[] Build<T>()
         {
             var builder = new ParameterSetBuilder(typeof(T));
@@ -257,6 +265,12 @@ namespace HarshPoint.Tests.Provisioning
         [DefaultParameterSet("TestParamSet")]
         private sealed class WithNonexistentDefaultParamSet
         {
+        }
+
+        private sealed class NonnullableMandatoryParamType
+        {
+            [Parameter(Mandatory = true)]
+            public Int32 NotNullableMandatory { get; set; }
         }
     }
 }

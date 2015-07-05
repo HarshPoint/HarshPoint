@@ -143,13 +143,14 @@ namespace HarshPoint.Provisioning.Implementation
                       !IsBothCommonParameterAndInParameterSet(property, paramAttrs)
 
                    let defaultFromContext = DefaultFromContextPropertyInfo.FromPropertyInfo(property)
-                   let validation = property.GetCustomAttributes<ParameterValidationAttribute>(inherit: true)
+                   let validationAttributes = property.GetCustomAttributes<ParameterValidationAttribute>(inherit: true)
 
                    from attr in paramAttrs
                    select new Parameter(
                        property,
                        attr,
-                       defaultFromContext
+                       defaultFromContext,
+                       validationAttributes
                    );
         }
 

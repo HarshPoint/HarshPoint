@@ -14,18 +14,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         private DefaultFromContextPropertyInfo(PropertyInfo property, DefaultFromContextAttribute attribute)
         {
-            var propertyTypeInfo = property.PropertyType.GetTypeInfo();
-
-            if (propertyTypeInfo.IsValueType)
-            {
-                throw Logger.Error.ProvisionerMetadata(
-                    SR.HarshProvisionerMetadata_NoValueTypeDefaultFromContext,
-                    property.DeclaringType,
-                    property.Name,
-                    property.PropertyType
-                );
-            }
-
             ResolvedType = Resolvable.GetResolvedType(property.PropertyType);
             TagType = attribute.TagType;
 

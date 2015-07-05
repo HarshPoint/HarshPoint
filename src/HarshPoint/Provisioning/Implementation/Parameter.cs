@@ -10,30 +10,52 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class Parameter
     {
+        private static readonly HarshLogger Logger = HarshLog.ForContext<Parameter>();
+
         public Parameter(
             PropertyInfo propertyInfo,
             ParameterAttribute parameterAttribute,
             DefaultFromContextPropertyInfo defaultFromContext,
-            IEnumerable<ParameterValidationAttribute> validation = null
+            IEnumerable<ParameterValidationAttribute> validationAttributes
         )
         {
             if (propertyInfo == null)
             {
-                throw Error.ArgumentNull(nameof(propertyInfo));
+                throw Logger.Error.ArgumentNull(nameof(propertyInfo));
             }
 
             if (parameterAttribute == null)
             {
-                throw Error.ArgumentNull(nameof(parameterAttribute));
+                throw Logger.Error.ArgumentNull(nameof(parameterAttribute));
             }
 
             PropertyInfo = propertyInfo;
             ParameterAttribute = parameterAttribute;
             DefaultFromContext = defaultFromContext;
+            ValidationAttributes = validationAttributes.ToImmutableArray();
 
-            ValidationAttributes =
-                validation?.ToImmutableArray() ??
-                ImmutableArray<ParameterValidationAttribute>.Empty;
+            if (!IsNullable(PropertyTypeInfo))
+            {
+                if (IsDefaultFromContext)
+                {
+                    throw Logger.Error.ProvisionerMetadata(
+                        SR.HarshProvisionerMetadata_NoValueTypeDefaultFromContext,
+                        propertyInfo.DeclaringType,
+                        propertyInfo.Name,
+                        propertyInfo.PropertyType
+                    );
+                }
+
+                if (IsMandatory)
+                {
+                    throw Logger.Error.ProvisionerMetadata(
+                        SR.HarshProvisionerMetadata_NoValueTypeMandatory,
+                        propertyInfo.DeclaringType,
+                        propertyInfo.Name,
+                        propertyInfo.PropertyType
+                    );
+                }
+            }
 
             Getter = propertyInfo.MakeGetter<Object, Object>();
             Setter = propertyInfo.MakeSetter<Object, Object>();
@@ -57,6 +79,8 @@ namespace HarshPoint.Provisioning.Implementation
 
         [NotLogged]
         public Boolean IsDefaultFromContext => (DefaultFromContext != null);
+
+        public Boolean IsMandatory => ParameterAttribute.Mandatory;
 
         public String Name => PropertyInfo.Name;
 
@@ -116,5 +140,15 @@ namespace HarshPoint.Provisioning.Implementation
             => ParameterSetName == null ?
                 PropertyInfo.ToString() :
                 PropertyInfo.ToString() + " (" + ParameterSetName + ')';
+
+        private static Boolean IsNullable(TypeInfo typeInfo)
+        {
+            if (typeInfo.IsValueType)
+            {
+                return Nullable.GetUnderlyingType(typeInfo.AsType()) != null;
+            }
+
+            return true;
+        }
     }
 }

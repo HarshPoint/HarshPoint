@@ -2,9 +2,9 @@
 
 namespace HarshPoint.Provisioning
 {
-    public class ParameterValidationFailedException : Exception
+    public class ParameterValidationException : Exception
     {
-        public ParameterValidationFailedException(String parameterName)
+        public ParameterValidationException(String parameterName)
         {
             if (String.IsNullOrWhiteSpace(parameterName))
             {
@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning
             ParameterName = parameterName;
         }
 
-        public ParameterValidationFailedException(String parameterName, String message) 
+        public ParameterValidationException(String parameterName, String message) 
             : base(message)
         {
             if (String.IsNullOrWhiteSpace(parameterName))
@@ -25,7 +25,7 @@ namespace HarshPoint.Provisioning
             ParameterName = parameterName;
         }
 
-        public ParameterValidationFailedException(String parameterName, String message, Exception inner) 
+        public ParameterValidationException(String parameterName, String message, Exception inner) 
             : base(message, inner)
         {
             if (String.IsNullOrWhiteSpace(parameterName))

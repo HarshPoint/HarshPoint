@@ -19,6 +19,7 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private readonly HarshScopedValue<TContext> _context;
         private readonly HarshScopedValue<HarshLogger> _logger;
+        private readonly HarshScopedValue<ParameterSet> _parameterSet;
 
         private ICollection<HarshProvisionerBase> _children;
         private ICollection<Func<Object>> _childrenContextStateModifiers;
@@ -27,6 +28,8 @@ namespace HarshPoint.Provisioning.Implementation
         protected HarshProvisionerBase()
         {
             _context = new HarshScopedValue<TContext>();
+            _parameterSet = new HarshScopedValue<ParameterSet>();
+
             _logger = new HarshScopedValue<HarshLogger>(
                 HarshLog.ForContext(GetType())
             );
@@ -53,10 +56,7 @@ namespace HarshPoint.Provisioning.Implementation
             => (_children != null) && _children.Any();
 
         internal ParameterSet ParameterSet
-        {
-            get;
-            private set;
-        }
+            => _parameterSet.Value;
 
         internal HarshProvisionerMetadata Metadata
             => HarshLazy.Initialize(ref _metadata, () => new HarshProvisionerMetadata(GetType()));
@@ -287,8 +287,30 @@ namespace HarshPoint.Provisioning.Implementation
                 .FirstOrDefault();
         }
 
+        private ParameterSet ResolveParameterSet()
+        {
+            var resolver = new ParameterSetResolver(this, Metadata.ParameterSets);
+            return resolver.Resolve();
+        }
+
         private void ValidateParameters()
         {
+            foreach (var parameter in ParameterSet.Parameters)
+            {
+                if (parameter.IsMandatory && parameter.HasDefaultValue(this))
+                {
+                    throw Logger.Error.ParameterValidationFormat(
+                        parameter,
+                        SR.HarshProvisionerBase_ParameterMandatory,
+                        parameter
+                    );
+                }
+
+                foreach (var attr in parameter.ValidationAttributes)
+                {
+                    attr.Validate(parameter, parameter.Getter(this));
+                }
+            }
         }
 
         private TContext PrepareChildrenContext()
@@ -360,19 +382,27 @@ namespace HarshPoint.Provisioning.Implementation
             Func<Task> action,
             Func<Task> childAction)
         {
-            return RunWithContext(context, async () =>
+            return RunWithContext(context, async delegate
             {
-                try
-                {
-                    InitializeDefaultFromContext();
+                // parameter set resolving depends on values
+                // from context being already set
 
-                    OnValidating();
-                    await InitializeAsync();
-                    await action();
-                }
-                finally
+                InitializeDefaultFromContext();
+
+                using (_parameterSet.Enter(ResolveParameterSet()))
                 {
-                    Complete();
+                    try
+                    {
+                        ValidateParameters();
+                        OnValidating();
+
+                        await InitializeAsync();
+                        await action();
+                    }
+                    finally
+                    {
+                        Complete();
+                    }
                 }
 
                 await childAction();

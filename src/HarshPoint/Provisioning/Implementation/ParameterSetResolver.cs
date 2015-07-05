@@ -35,6 +35,7 @@ namespace HarshPoint.Provisioning.Implementation
                 set => set.Name,
                 ParameterSet.NameComparer
             );
+
             Target = target;
         }
 

@@ -1,4 +1,5 @@
-﻿using HarshPoint.Provisioning.Implementation;
+﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Globalization;
 using System.Reflection;
@@ -56,6 +57,12 @@ namespace HarshPoint
                 shouldHaveBeenAssignable.FullName
             );
         }
+
+        public static ParameterValidationException ParameterValidationFormat(String parameterName, String format, params Object[] args)
+            => new ParameterValidationException(
+                parameterName,
+                Format(format, args)
+            );
 
         public static HarshProvisionerMetadataException ProvisionerMetadataFormat(String format, params Object[] args)
         {

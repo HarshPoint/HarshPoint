@@ -7,6 +7,12 @@ namespace HarshPoint.Provisioning
     {
         private String _parameterSetName;
 
+        public Boolean Mandatory
+        {
+            get;
+            set;
+        }
+
         public String ParameterSetName
         {
             get { return _parameterSetName; }

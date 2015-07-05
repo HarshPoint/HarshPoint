@@ -343,6 +343,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Thr mandatory parameter &apos;{0}&apos; must be set..
+        /// </summary>
+        internal static string HarshProvisionerBase_ParameterMandatory {
+            get {
+                return ResourceManager.GetString("HarshProvisionerBase_ParameterMandatory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default parameter set &apos;{0}&apos; could not be found on type &apos;{1}&apos;..
         /// </summary>
         internal static string HarshProvisionerMetadata_DefaultParameterSetNotFound {
@@ -378,6 +387,15 @@ namespace HarshPoint {
         internal static string HarshProvisionerMetadata_NoValueTypeDefaultFromContext {
             get {
                 return ResourceManager.GetString("HarshProvisionerMetadata_NoValueTypeDefaultFromContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mandatory parameters must be of reference or nullable type. The specified property &apos;{0}.{1}&apos; is of type &apos;{2}&apos;..
+        /// </summary>
+        internal static string HarshProvisionerMetadata_NoValueTypeMandatory {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadata_NoValueTypeMandatory", resourceCulture);
             }
         }
         
