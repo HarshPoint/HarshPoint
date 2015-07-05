@@ -4,6 +4,8 @@ using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Threading.Tasks;
+using System.Net;
+using System.Reflection;
 
 namespace HarshPoint.Tests
 {
@@ -18,16 +20,20 @@ namespace HarshPoint.Tests
 
             if (String.IsNullOrWhiteSpace(url))
             {
-                ClientContext = new ClientContext("http://" + Environment.MachineName);
+                ClientContext = new SeriloggedClientContext("http://" + Environment.MachineName);
             }
             else
             {
-                ClientContext = new ClientContext(url);
+                ClientContext = new SeriloggedClientContext(url);
                 ClientContext.Credentials = new SharePointOnlineCredentials(
                     Environment.GetEnvironmentVariable("HarshPointTestUser"),
                     Environment.GetEnvironmentVariable("HarshPointTestPassword")
                 );
             }
+
+            ClientContext.ExecutingWebRequest += (_, e) =>
+            {
+            };
 
             Context = new HarshProvisionerContext(ClientContext);
         }
@@ -88,5 +94,37 @@ namespace HarshPoint.Tests
 
         public TaxonomySession TaxonomySession
             => Context?.TaxonomySession;
+
+        private sealed class SeriloggedClientContext : ClientContext
+        {
+            private String _pendingRequestBody;
+
+            public SeriloggedClientContext(Uri webFullUrl) : base(webFullUrl)
+            {
+            }
+
+            public SeriloggedClientContext(String webFullUrl) : base(webFullUrl)
+            {
+            }
+
+            public override Task ExecuteQueryAsync()
+            {
+                _pendingRequestBody = PendingRequest.ToDiagnosticString();
+                return base.ExecuteQueryAsync();
+            }
+
+            protected override void OnExecutingWebRequest(WebRequestEventArgs args)
+            {
+                Serilog.Log.Information(
+                    "{Method:l} {Uri}\n{Body:l}",
+                    args.WebRequest.Method,
+                    args.WebRequest.RequestUri,
+                    _pendingRequestBody
+                );
+
+                _pendingRequestBody = null;
+                base.OnExecutingWebRequest(args);
+            }
+        }
     }
 }

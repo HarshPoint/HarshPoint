@@ -1,0 +1,37 @@
+﻿using Microsoft.SharePoint.Client;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Xml.Linq;
+
+namespace HarshPoint.Tests
+{
+    internal static class ClientRequestExtension
+    {
+        public static String ToDiagnosticString(this ClientRequest request)
+        {
+            if (request == null)
+            {
+                throw Error.ArgumentNull(nameof(request));
+            }
+
+            var chunkedSb = BuildQueryMethod.Invoke(request, null);
+
+            using (var sw = new StringWriter())
+            {
+                WriteContentToMethod.Invoke(chunkedSb, new Object[] { sw });
+
+                return XDocument.Parse(sw.ToString()).ToString(SaveOptions.OmitDuplicateNamespaces);
+            }
+        }
+
+        private static readonly MethodInfo BuildQueryMethod = typeof(ClientRequest)
+            .GetTypeInfo()
+            .GetMethod("BuildQuery", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private static readonly MethodInfo WriteContentToMethod = BuildQueryMethod
+            .ReturnType
+            .GetTypeInfo()
+            .GetMethod("WriteContentTo", new[] { typeof(TextWriter) });
+    }
+}

@@ -3,7 +3,10 @@ using Xunit.Abstractions;
 
 namespace HarshPoint.Tests
 {
-    public abstract class SharePointClientTest : SeriloggedTest, IClassFixture<SharePointClientFixture>
+    public abstract class SharePointClientTest :
+        SeriloggedTest, 
+        IClassFixture<SharePointClientFixture>
+     //   IClassFixture<SystemNetLoggingFixture>
     {
         public SharePointClientTest(SharePointClientFixture fixture, ITestOutputHelper output) 
             : base(output)
