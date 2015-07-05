@@ -366,7 +366,7 @@ namespace HarshPoint.Provisioning.Implementation
         private async Task RunWithContext(TContext context, Func<Task> action)
         {
             var contextLogger = Logger.ForContext(
-                new PropertyEnricher("ProvisionerContext", context, destructureObjects: true),
+                new PropertyEnricher("ProvisionerContext", context),
                 new PropertyEnricher("MayDeleteUserData", MayDeleteUserData)
             );
 
