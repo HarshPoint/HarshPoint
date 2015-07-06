@@ -21,12 +21,12 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (propertyInfo == null)
             {
-                throw Logger.Error.ArgumentNull(nameof(propertyInfo));
+                throw Logger.Fatal.ArgumentNull(nameof(propertyInfo));
             }
 
             if (parameterAttribute == null)
             {
-                throw Logger.Error.ArgumentNull(nameof(parameterAttribute));
+                throw Logger.Fatal.ArgumentNull(nameof(parameterAttribute));
             }
 
             PropertyInfo = propertyInfo;
@@ -38,7 +38,7 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 if (IsDefaultFromContext)
                 {
-                    throw Logger.Error.ProvisionerMetadata(
+                    throw Logger.Fatal.ProvisionerMetadata(
                         SR.HarshProvisionerMetadata_NoValueTypeDefaultFromContext,
                         propertyInfo.DeclaringType,
                         propertyInfo.Name,
@@ -48,7 +48,7 @@ namespace HarshPoint.Provisioning.Implementation
 
                 if (IsMandatory)
                 {
-                    throw Logger.Error.ProvisionerMetadata(
+                    throw Logger.Fatal.ProvisionerMetadata(
                         SR.HarshProvisionerMetadata_NoValueTypeMandatory,
                         propertyInfo.DeclaringType,
                         propertyInfo.Name,

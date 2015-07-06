@@ -2,25 +2,45 @@
 using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 
 namespace HarshPoint
 {
+    //[Obsolete("Use Logger.Fatal/Logger.Error")]
     internal static class Error
     {
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(Error));
+
         public static ArgumentNullException ArgumentNull(String paramName)
         {
+            if (paramName == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(paramName));
+            }
+
             return new ArgumentNullException(paramName);
         }
 
         public static ArgumentOutOfRangeException ArgumentOutOfRange(String paramName, String message)
         {
+            if (paramName == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(paramName));
+            }
+
+            if (message == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(message));
+            }
+
             return new ArgumentOutOfRangeException(paramName, message);
         }
 
         public static ArgumentOutOfRangeException ArgumentOutOfRangeFormat(String paramName, String format, params Object[] args)
         {
-            return new ArgumentOutOfRangeException(paramName,
+            return new ArgumentOutOfRangeException(
+                paramName,
                 Format(format, args)
             );
         }
@@ -38,15 +58,6 @@ namespace HarshPoint
             );
         }
 
-        public static ArgumentOutOfRangeException ArgumentOutOfRange_ObjectNotAssignableTo(String paramName, TypeInfo baseType, Object shouldHaveBeenAssignable)
-        {
-            return ArgumentOutOfRangeFormat(
-                paramName,
-                SR.Error_ObjectNotAssignableTo,
-                shouldHaveBeenAssignable,
-                baseType
-            );
-        }
 
         public static ArgumentOutOfRangeException ArgumentOutOfRange_TypeNotAssignableFrom(String paramName, TypeInfo baseType, TypeInfo shouldHaveBeenAssignable)
         {
@@ -85,6 +96,16 @@ namespace HarshPoint
 
         private static String Format(String format, Object[] args)
         {
+            if (format == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(format));
+            }
+
+            if (args == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(args));
+            }
+
             return String.Format(
                 CultureInfo.CurrentUICulture,
                 format,

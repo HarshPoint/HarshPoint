@@ -28,10 +28,5 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             private set;
         }
-
-        protected override Object ToLogObject()
-        {
-            return Identifiers;
-        }
     }
 }

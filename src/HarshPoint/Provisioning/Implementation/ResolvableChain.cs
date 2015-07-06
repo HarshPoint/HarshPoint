@@ -9,6 +9,8 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class ResolvableChain : IHarshCloneable
     {
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolvableChain>();
+
         public virtual ResolvableChain Clone()
         {
             var result = (ResolvableChain)MemberwiseClone();
@@ -23,18 +25,11 @@ namespace HarshPoint.Provisioning.Implementation
 
         Object IHarshCloneable.Clone() => Clone();
 
-        //public override String ToString()
-        //{
-        //    return DapValueLogFormatter.Format(
-        //        Chain.Select(x => x.ToLogObject())
-        //    );
-        //}
-
         protected ResolvableChain And(ResolvableChain other)
         {
             if (other == null)
             {
-                throw Error.ArgumentNull(nameof(other));
+                throw Logger.Fatal.ArgumentNull(nameof(other));
             }
 
             return this.With(c => c.Chain.Last().Next = other.Clone());
@@ -43,16 +38,16 @@ namespace HarshPoint.Provisioning.Implementation
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected async Task<IEnumerable<T>> ResolveChain<T>(IResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             var resultSets = await Chain
                 .Cast<IResolvableChainElement<T>>()
                 .SelectSequentially(e => e.ResolveChainElement(context));
                 
             return resultSets.SelectMany(r => r);
-        }
-    
-        protected virtual Object ToLogObject()
-        {
-            return this;
         }
 
         private IEnumerable<ResolvableChain> Chain
@@ -80,17 +75,17 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             var typedContext = (context as ResolveContext<TContext>);
 
             if (typedContext == null)
             {
-                throw Error.ArgumentOutOfRange_ObjectNotAssignableTo(
+                throw Logger.Fatal.ArgumentNotAssignableTo(
                     nameof(context),
-                    typeof(ResolveContext<TContext>).GetTypeInfo(),
-                    context
+                    context,
+                    typeof(ResolveContext<TContext>)
                 );
             }
 

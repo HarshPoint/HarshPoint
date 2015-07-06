@@ -35,7 +35,7 @@ namespace HarshPoint.Provisioning
         {
             if (parameter == null)
             {
-                throw Logger.Error.ArgumentNull(nameof(parameter));
+                throw Logger.Fatal.ArgumentNull(nameof(parameter));
             }
 
             using (_parameter.Enter(parameter))

@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (type == null)
             {
-                throw Logger.Error.ArgumentNull(nameof(type));
+                throw Logger.Fatal.ArgumentNull(nameof(type));
             }
 
             ProcessedType = type;
@@ -82,7 +82,7 @@ namespace HarshPoint.Provisioning.Implementation
             if ((DefaultParameterSetName != null) &&
                 !parameterSets.Any(set => set.IsDefault))
             {
-                throw Logger.Error.ProvisionerMetadata(
+                throw Logger.Fatal.ProvisionerMetadata(
                     SR.HarshProvisionerMetadata_DefaultParameterSetNotFound,
                     DefaultParameterSetName,
                     ProcessedType
@@ -163,7 +163,7 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 if (attributes.Count() > 1)
                 {
-                    throw Logger.Error.ProvisionerMetadata(
+                    throw Logger.Fatal.ProvisionerMetadata(
                         SR.HarshProvisionerMetadata_ParameterBothCommonAndInSet,
                         property.DeclaringType.FullName,
                         property.Name
@@ -186,7 +186,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (nonUniqueParameterSetNames.Any())
             {
-                throw Logger.Error.ProvisionerMetadata(
+                throw Logger.Fatal.ProvisionerMetadata(
                     SR.HarshProvisionerMetadata_MoreParametersWithSameSet,
                     property.DeclaringType.FullName,
                     property.Name,
@@ -210,7 +210,7 @@ namespace HarshPoint.Provisioning.Implementation
                 !IsPublicInstance(property.SetMethod)
             )
             {
-                throw Logger.Error.ProvisionerMetadata(
+                throw Logger.Fatal.ProvisionerMetadata(
                     SR.HarshProvisionerMetadata_ParameterMustBeReadWriteInstance,
                     property.DeclaringType.FullName,
                     property.Name

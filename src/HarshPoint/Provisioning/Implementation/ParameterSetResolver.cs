@@ -14,17 +14,17 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (target == null)
             {
-                throw Logger.Error.ArgumentNull(nameof(target));
+                throw Logger.Fatal.ArgumentNull(nameof(target));
             }
 
             if (parameterSets == null)
             {
-                throw Logger.Error.ArgumentNull(nameof(parameterSets));
+                throw Logger.Fatal.ArgumentNull(nameof(parameterSets));
             }
 
             if (!parameterSets.Any())
             {
-                throw Logger.Error.ArgumentEmptySequence(nameof(parameterSets));
+                throw Logger.Fatal.ArgumentEmptySequence(nameof(parameterSets));
             }
 
             DefaultParameterSet = parameterSets.Single(
@@ -78,7 +78,7 @@ namespace HarshPoint.Provisioning.Implementation
                 return result;
             }
 
-            throw Logger.Error.InvalidOperation(SR.ParameterSetResolver_Ambiguous);
+            throw Logger.Fatal.InvalidOperation(SR.ParameterSetResolver_Ambiguous);
         }
 
         public ImmutableDictionary<String, ParameterSet> ParameterSets

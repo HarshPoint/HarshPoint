@@ -137,7 +137,10 @@
   <data name="Error_ArgumentNullOrWhitespace" xml:space="preserve">
     <value>Value cannot be null or whitespace-only string.</value>
   </data>
-  <data name="Error_ObjectNotAssignableTo" xml:space="preserve">
+  <data name="Error_ObjectNotAssignableToMany" xml:space="preserve">
+    <value>The specified object '{0}' is not a subtype of any of the following types: {1}.</value>
+  </data>
+  <data name="Error_ObjectNotAssignableToOne" xml:space="preserve">
     <value>The specified object '{0}' is not a subtype of '{1}'.</value>
   </data>
   <data name="Error_SequenceEmpty" xml:space="preserve">

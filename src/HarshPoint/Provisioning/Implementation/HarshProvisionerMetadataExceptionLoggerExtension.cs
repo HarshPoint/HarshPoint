@@ -5,15 +5,16 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal static class HarshProvisionerMetadataExceptionLoggerExtension
     {
-        public static HarshProvisionerMetadataException ProvisionerMetadata(this HarshErrorLogger logger, String format, params Object[] args)
+        private static readonly HarshLogger SelfLog = HarshLog.ForContext(typeof(HarshProvisionerMetadataExceptionLoggerExtension));
+
+        public static HarshProvisionerMetadataException ProvisionerMetadata(this HarshLoggerFatal logger, String format, params Object[] args)
         {
             if (logger == null)
             {
-                throw Error.ArgumentNull(nameof(logger));
+                throw SelfLog.Fatal.ArgumentNull(nameof(logger));
             }
 
             return logger.Write(
-                LogEventLevel.Fatal,
                 Error.ProvisionerMetadataFormat(format, args)
             );
         }

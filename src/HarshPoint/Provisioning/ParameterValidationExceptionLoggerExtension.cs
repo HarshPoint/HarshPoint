@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning
 {
     internal static class ParameterValidationExceptionLoggerExtension
     {
-        public static ParameterValidationException ParameterValidationFormat(this HarshErrorLogger logger, Parameter parameter, String format, params Object[] args)
+        public static ParameterValidationException ParameterValidationFormat(this HarshLoggerError logger, Parameter parameter, String format, params Object[] args)
         {
             if (logger == null)
             {

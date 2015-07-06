@@ -21,7 +21,7 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 if (ResolvedType != null)
                 {
-                    throw Logger.Error.ProvisionerMetadata(
+                    throw Logger.Fatal.ProvisionerMetadata(
                         SR.HarshProvisionerMetadata_NoTagTypesOnResolvers,
                         property.DeclaringType,
                         property.Name
@@ -30,7 +30,7 @@ namespace HarshPoint.Provisioning.Implementation
 
                 if (!IDefaultFromContextTagTypeInfo.IsAssignableFrom(TagType.GetTypeInfo()))
                 {
-                    throw Logger.Error.ProvisionerMetadata(
+                    throw Logger.Fatal.ProvisionerMetadata(
                         SR.HarshProvisionerMetadata_TagTypeNotAssignableFromIDefaultFromContextTag,
                         TagType,
                         property.DeclaringType,

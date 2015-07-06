@@ -54,11 +54,13 @@
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="HarshBuiltInContentTypeIds.cs" />
     <Compile Include="HarshBuiltInFieldId.cs" />
-    <Compile Include="HarshErrorLogger.cs" />
+    <Compile Include="HarshLoggerFatal.cs" />
+    <Compile Include="HarshLoggerError.cs" />
     <Compile Include="HarshExpression.cs" />
     <Compile Include="HarshLazy.cs" />
     <Compile Include="HarshLog.cs" />
     <Compile Include="HarshLogger.cs" />
+    <Compile Include="HarshLoggerWrapper.cs" />
     <Compile Include="HarshScopedValue`1.cs" />
     <Compile Include="HarshSingleElementCollection.cs" />
     <Compile Include="IHarshCloneable.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Provisioning\HarshDateTimeField.cs" />
     <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
+    <Compile Include="Provisioning\Implementation\IAddChild.cs" />
     <Compile Include="Provisioning\ParameterValidationExceptionLoggerExtension.cs" />
     <Compile Include="Provisioning\HarshRemoveContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshFieldTaxonomy.cs" />

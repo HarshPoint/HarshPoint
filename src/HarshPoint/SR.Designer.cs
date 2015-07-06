@@ -118,11 +118,20 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified object &apos;{0}&apos; is not a subtype of any of the following types: {1}..
+        /// </summary>
+        internal static string Error_ObjectNotAssignableToMany {
+            get {
+                return ResourceManager.GetString("Error_ObjectNotAssignableToMany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified object &apos;{0}&apos; is not a subtype of &apos;{1}&apos;..
         /// </summary>
-        internal static string Error_ObjectNotAssignableTo {
+        internal static string Error_ObjectNotAssignableToOne {
             get {
-                return ResourceManager.GetString("Error_ObjectNotAssignableTo", resourceCulture);
+                return ResourceManager.GetString("Error_ObjectNotAssignableToOne", resourceCulture);
             }
         }
         

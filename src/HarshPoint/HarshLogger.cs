@@ -3,13 +3,16 @@ using System;
 using System.Collections.Generic;
 using Serilog.Core;
 using Serilog.Events;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint
 {
     public sealed class HarshLogger : ILogger
     {
         private readonly ILogger _inner;
-        private readonly HarshErrorLogger _error;
+
+        private HarshLoggerError _error;
+        private HarshLoggerFatal _fatal;
 
         public HarshLogger(ILogger inner)
         {
@@ -19,10 +22,13 @@ namespace HarshPoint
             }
 
             _inner = inner;
-            _error = new HarshErrorLogger(this);
         }
 
-        public HarshErrorLogger Error => _error;
+        public HarshLoggerError Error 
+            => HarshLazy.Initialize(ref _error, () => new HarshLoggerError(this));
+
+        public HarshLoggerFatal Fatal
+            => HarshLazy.Initialize(ref _fatal, () => new HarshLoggerFatal(this));
 
         public void Debug(String messageTemplate, params Object[] propertyValues)
             => _inner.Debug(messageTemplate, propertyValues);
@@ -45,6 +51,7 @@ namespace HarshPoint
         public HarshLogger ForContext(String propertyName, Object value, Boolean destructureObjects)
             => _inner.ForContext(propertyName, value, destructureObjects).ToHarshLogger();
 
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public HarshLogger ForContext<TSource>()
             => _inner.ForContext<TSource>().ToHarshLogger();
 
