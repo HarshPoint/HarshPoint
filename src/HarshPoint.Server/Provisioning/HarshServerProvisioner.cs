@@ -1,5 +1,4 @@
-﻿using HarshPoint.Provisioning;
-using HarshPoint.Provisioning.Implementation;
+﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System;

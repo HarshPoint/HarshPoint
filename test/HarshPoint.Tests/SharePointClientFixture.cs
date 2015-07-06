@@ -4,8 +4,6 @@ using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Threading.Tasks;
-using System.Net;
-using System.Reflection;
 
 namespace HarshPoint.Tests
 {

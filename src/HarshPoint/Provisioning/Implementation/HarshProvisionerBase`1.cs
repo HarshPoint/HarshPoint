@@ -1,5 +1,4 @@
-﻿using Serilog;
-using Serilog.Core.Enrichers;
+﻿using Serilog.Core.Enrichers;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;

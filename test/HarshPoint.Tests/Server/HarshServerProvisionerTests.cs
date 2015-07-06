@@ -1,5 +1,4 @@
-﻿using HarshPoint.Provisioning;
-using HarshPoint.Server.Provisioning;
+﻿using HarshPoint.Server.Provisioning;
 using Moq;
 using Moq.Protected;
 using System;

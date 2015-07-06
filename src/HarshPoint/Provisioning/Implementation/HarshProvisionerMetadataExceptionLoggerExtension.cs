@@ -1,5 +1,4 @@
-﻿using Serilog.Events;
-using System;
+﻿using System;
 
 namespace HarshPoint.Provisioning.Implementation
 {
