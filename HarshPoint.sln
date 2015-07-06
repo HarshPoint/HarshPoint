@@ -13,10 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{5E97AE52-0329-4AE0-A047-8E871B26464C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0D529F32-CD30-4F0E-A3C3-089FF5167A51}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plans", "Plans", "{AF33E7F9-28FE-43DF-841E-04C3BFB41D1C}"
 	ProjectSection(SolutionItems) = preProject
 		TODO.md = TODO.md
@@ -49,10 +45,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{5D981A8F-A98E-43F2-A112-2CFD50455447} = {5E97AE52-0329-4AE0-A047-8E871B26464C}
-		{DB0928B3-B2C2-4887-9AFD-B7E693EA41E9} = {5E97AE52-0329-4AE0-A047-8E871B26464C}
-		{1A4B3615-7C9D-4B3A-B44F-3561151802B9} = {0D529F32-CD30-4F0E-A3C3-089FF5167A51}
 	EndGlobalSection
 EndGlobal
