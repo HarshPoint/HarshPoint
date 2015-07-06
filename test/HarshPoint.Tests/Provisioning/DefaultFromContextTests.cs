@@ -23,7 +23,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var param = Assert.Single(
                 metadata.DefaultParameterSet.Parameters
-                    .Where(p => p.DefaultFromContext != null)
+                    .Where(p => p.IsDefaultFromContext)
             );
 
             Assert.Equal(
@@ -33,7 +33,7 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Equal(
                 typeof(String),
-                param.DefaultFromContext.ResolvedType
+                param.ResolvedType
             );
         }
 
@@ -44,7 +44,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var param = Assert.Single(
                 metadata.DefaultParameterSet.Parameters
-                    .Where(p => p.DefaultFromContext != null)
+                    .Where(p => p.IsDefaultFromContext)
             );
 
             Assert.Equal(
@@ -54,7 +54,7 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Equal(
                 typeof(String),
-                param.DefaultFromContext.ResolvedType
+                param.ResolvedType
             );
         }
 

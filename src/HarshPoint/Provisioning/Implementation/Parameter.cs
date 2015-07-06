@@ -12,10 +12,13 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext<Parameter>();
 
+        private static readonly TypeInfo IDefaultFromContextTagTypeInfo =
+            typeof(IDefaultFromContextTag).GetTypeInfo();
+
         public Parameter(
             PropertyInfo propertyInfo,
             ParameterAttribute parameterAttribute,
-            DefaultFromContextParameter defaultFromContext,
+            DefaultFromContextAttribute defaultFromContextAttribute,
             IEnumerable<ParameterValidationAttribute> validationAttributes
         )
         {
@@ -29,43 +32,28 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(parameterAttribute));
             }
 
+            if (validationAttributes == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(validationAttributes));
+            }
+
             PropertyInfo = propertyInfo;
             ParameterAttribute = parameterAttribute;
-            DefaultFromContext = defaultFromContext;
+            DefaultFromContextAttribute = defaultFromContextAttribute;
+
+            ResolvedType = Resolvable.GetResolvedType(PropertyTypeInfo);
             ValidationAttributes = validationAttributes.ToImmutableArray();
 
-            if (!IsNullable(PropertyTypeInfo))
-            {
-                if (IsDefaultFromContext)
-                {
-                    throw Logger.Fatal.ProvisionerMetadata(
-                        SR.HarshProvisionerMetadata_NoValueTypeDefaultFromContext,
-                        propertyInfo.DeclaringType,
-                        propertyInfo.Name,
-                        propertyInfo.PropertyType
-                    );
-                }
-
-                if (IsMandatory)
-                {
-                    throw Logger.Fatal.ProvisionerMetadata(
-                        SR.HarshProvisionerMetadata_NoValueTypeMandatory,
-                        propertyInfo.DeclaringType,
-                        propertyInfo.Name,
-                        propertyInfo.PropertyType
-                    );
-                }
-            }
+            ValidateDefaultFromContextIsNullable();
+            ValidateDefaultFromContextTagTypeIsIDefaultFromContextTag();
+            ValidateDefaultFromContextWithTagNotResolvable();
+            ValidateMandatoryIsNullable();
 
             Getter = propertyInfo.MakeGetter<Object, Object>();
             Setter = propertyInfo.MakeSetter<Object, Object>();
         }
 
-        public DefaultFromContextParameter DefaultFromContext
-        {
-            get;
-            private set;
-        }
+        public Type DefaultFromContextTagType => DefaultFromContextAttribute?.TagType;
 
         [NotLogged]
         public Func<Object, Object> Getter
@@ -77,19 +65,11 @@ namespace HarshPoint.Provisioning.Implementation
         [NotLogged]
         public Boolean IsCommonParameter => (ParameterSetName == null);
 
-        [NotLogged]
-        public Boolean IsDefaultFromContext => (DefaultFromContext != null);
+        public Boolean IsDefaultFromContext => (DefaultFromContextAttribute != null);
 
         public Boolean IsMandatory => ParameterAttribute.Mandatory;
 
         public String Name => PropertyInfo.Name;
-
-        [NotLogged]
-        public ParameterAttribute ParameterAttribute
-        {
-            get;
-            private set;
-        }
 
         public String ParameterSetName => ParameterAttribute.ParameterSetName;
 
@@ -119,6 +99,13 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
+        [LogAsScalar]
+        public Type ResolvedType
+        {
+            get;
+            private set;
+        }
+
         public Boolean HasDefaultValue(Object provisioner)
         {
             var value = Getter(provisioner);
@@ -140,6 +127,74 @@ namespace HarshPoint.Provisioning.Implementation
             => ParameterSetName == null ?
                 PropertyInfo.ToString() :
                 PropertyInfo.ToString() + " (" + ParameterSetName + ')';
+
+        private DefaultFromContextAttribute DefaultFromContextAttribute
+        {
+            get;
+            set;
+        }
+
+        private ParameterAttribute ParameterAttribute
+        {
+            get;
+            set;
+        }
+
+        private void ValidateMandatoryIsNullable()
+        {
+            if (IsMandatory && !IsNullable(PropertyTypeInfo))
+            {
+                throw Logger.Fatal.ProvisionerMetadata(
+                    SR.HarshProvisionerMetadata_NoValueTypeMandatory,
+                    PropertyInfo.DeclaringType,
+                    PropertyInfo.Name,
+                    PropertyInfo.PropertyType
+                );
+            }
+        }
+
+        private void ValidateDefaultFromContextIsNullable()
+        {
+            if (IsDefaultFromContext && !IsNullable(PropertyTypeInfo))
+            {
+                throw Logger.Fatal.ProvisionerMetadata(
+                    SR.HarshProvisionerMetadata_NoValueTypeDefaultFromContext,
+                    PropertyInfo.DeclaringType,
+                    PropertyInfo.Name,
+                    PropertyInfo.PropertyType
+                );
+            }
+        }
+
+        private void ValidateDefaultFromContextWithTagNotResolvable()
+        {
+            if ((DefaultFromContextTagType != null) && (ResolvedType != null))
+            {
+                throw Logger.Fatal.ProvisionerMetadata(
+                    SR.HarshProvisionerMetadata_NoTagTypesOnResolvers,
+                    PropertyInfo.DeclaringType,
+                    PropertyInfo.Name
+                );
+            }
+        }
+
+        private void ValidateDefaultFromContextTagTypeIsIDefaultFromContextTag()
+        {
+            if (DefaultFromContextTagType == null)
+            {
+                return;
+            }
+
+            if (!IDefaultFromContextTagTypeInfo.IsAssignableFrom(DefaultFromContextTagType.GetTypeInfo()))
+            {
+                throw Logger.Fatal.ProvisionerMetadata(
+                    SR.HarshProvisionerMetadata_TagTypeNotAssignableFromIDefaultFromContextTag,
+                    DefaultFromContextTagType,
+                    PropertyInfo.DeclaringType,
+                    PropertyInfo.Name
+                );
+            }
+        }
 
         private static Boolean IsNullable(TypeInfo typeInfo)
         {

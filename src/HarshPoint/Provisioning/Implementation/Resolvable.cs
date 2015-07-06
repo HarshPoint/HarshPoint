@@ -5,22 +5,22 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal static class Resolvable
     {
-        public static Type GetResolvedType(Type interfaceType)
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(Resolvable));
+
+        public static Type GetResolvedType(TypeInfo interfaceType)
         {
             if (interfaceType == null)
             {
-                throw Error.ArgumentNull(nameof(interfaceType));
+                throw Logger.Fatal.ArgumentNull(nameof(interfaceType));
             }
 
-            var info = interfaceType.GetTypeInfo();
-
-            if (info.IsGenericType)
+            if (interfaceType.IsGenericType)
             {
-                var definition = info.GetGenericTypeDefinition();
+                var definition = interfaceType.GetGenericTypeDefinition();
 
                 if (definition == typeof(IResolve<>))
                 {
-                    return info.GenericTypeArguments[0];
+                    return interfaceType.GenericTypeArguments[0];
                 }
             }
 

@@ -77,31 +77,31 @@ namespace HarshPoint.Provisioning.Implementation
 
         private static Object GetValueFromContext(Parameter param, HarshProvisionerContextBase context)
         {
-            if (param.DefaultFromContext.TagType != null)
+            if (param.DefaultFromContextTagType != null)
             {
                 Logger.Debug(
                     "Parameter {Parameter} gets default value form context by the tag type {TagType}",
                     param,
-                    param.DefaultFromContext.TagType
+                    param.DefaultFromContextTagType
                 );
 
                 return context
-                    .GetState(param.DefaultFromContext.TagType)
+                    .GetState(param.DefaultFromContextTagType)
                     .Cast<IDefaultFromContextTag>()
                     .FirstOrDefault()?
                     .Value;
             }
 
-            if (param.DefaultFromContext.ResolvedType != null)
+            if (param.ResolvedType != null)
             {
                 Logger.Debug(
                     "Parameter {Parameter} resolves objects of type {ResolvedType}",
                     param,
-                    param.DefaultFromContext.ResolvedType
+                    param.ResolvedType
                 );
 
                 return ContextStateResolver.Create(
-                    param.DefaultFromContext.ResolvedType
+                    param.ResolvedType
                 );
             }
 
