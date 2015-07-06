@@ -136,6 +136,7 @@
     <Compile Include="Provisioning\ParameterSetMetadataBuilding.cs" />
     <Compile Include="Provisioning\ParameterSetResolving.cs" />
     <Compile Include="Provisioning\PotentiallyDestructiveTests.cs" />
+    <Compile Include="Provisioning\ProvisionerTreeBuilder.cs" />
     <Compile Include="Provisioning\ResolvableChainTests.cs" />
     <Compile Include="Provisioning\ResolvableTests.cs" />
     <Compile Include="Provisioning\Resolvers\CatalogResolving.cs" />

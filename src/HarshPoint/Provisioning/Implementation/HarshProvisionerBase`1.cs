@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning.Implementation
     /// Provides common initialization and completion logic for 
     /// classes provisioning SharePoint artifacts.
     /// </summary>
-    public abstract class HarshProvisionerBase<TContext> : HarshProvisionerBase, IAddChild
+    public abstract class HarshProvisionerBase<TContext> : HarshProvisionerBase
         where TContext : HarshProvisionerContextBase
     {
         private readonly HarshScopedValue<TContext> _context;
@@ -408,37 +408,7 @@ namespace HarshPoint.Provisioning.Implementation
                 await childAction();
             });
         }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        void IAddChild.AddChild(Object child)
-        {
-            if (child == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(child));
-            }
-
-            var provisioner = (child as HarshProvisionerBase);
-            var defaultFromContextTag = (child as IDefaultFromContextTag);
-
-            if (provisioner != null)
-            {
-                Children.Add(provisioner);
-            }
-            else if (defaultFromContextTag != null)
-            {
-                ModifyChildrenContextState(defaultFromContextTag.Value);
-            }
-            else
-            {
-                throw Logger.Fatal.ArgumentNotAssignableTo(
-                    nameof(child),
-                    child,
-                    typeof(HarshProvisionerBase),
-                    typeof(IDefaultFromContextTag)
-                );
-            }
-        }
-
+        
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         protected static readonly ICollection<HarshProvisionerBase> NoChildren =
             ImmutableArray<HarshProvisionerBase>.Empty;

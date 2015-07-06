@@ -1,5 +1,4 @@
-﻿using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -44,13 +43,13 @@ namespace HarshPoint.Provisioning.Implementation
                 ProcessedType
             );
 
-            var parameters = BuildParameterMetadata();
-
             Logger.Debug(
                 "{ProcessedType}: Default parameter set name: {DefaultParameterSetName}",
                 ProcessedType,
                 DefaultParameterSetName
             );
+
+            var parameters = BuildParameterMetadata().ToArray();
 
             Logger.Debug(
                 "{ProcessedType}: All parameters: {@Parameters}", 
@@ -77,7 +76,8 @@ namespace HarshPoint.Provisioning.Implementation
                         set.Concat(commonParameters),
                         IsDefaultParameterSet(set.Key, index)
                     )
-                );
+                )
+                .ToArray();
 
             if ((DefaultParameterSetName != null) &&
                 !parameterSets.Any(set => set.IsDefault))

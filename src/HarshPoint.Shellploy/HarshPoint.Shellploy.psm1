@@ -1,10 +1,11 @@
-﻿[Type]$T_ClientContext           = 'Microsoft.SharePoint.Client.ClientContext'
-[Type]$T_HarshProvisioner        = 'HarshPoint.Provisioning.HarshProvisioner'
-[Type]$T_HarshProvisionerBase    = 'HarshPoint.Provisioning.Implementation.HarshProvisionerBase'
-[Type]$T_HarshProvisionerContext = 'HarshPoint.Provisioning.HarshProvisionerContext'
-[Type]$T_IDefaultFromContextTag  = 'HarshPoint.Provisioning.IDefaultFromContextTag'
-[Type]$T_Resolve                 = 'HarshPoint.Provisioning.Resolve'
-[Type]$T_SPOCredentials          = 'Microsoft.SharePoint.Client.SharePointOnlineCredentials'
+﻿[Type]$T_ClientContext              = 'Microsoft.SharePoint.Client.ClientContext'
+[Type]$T_HarshProvisioner           = 'HarshPoint.Provisioning.HarshProvisioner'
+[Type]$T_HarshProvisionerChildAdder = 'HarshPoint.Provisioning.Implementation.HarshProvisionerChildAdder'
+[Type]$T_HarshProvisionerBase       = 'HarshPoint.Provisioning.Implementation.HarshProvisionerBase'
+[Type]$T_HarshProvisionerContext    = 'HarshPoint.Provisioning.HarshProvisionerContext'
+[Type]$T_IDefaultFromContextTag     = 'HarshPoint.Provisioning.IDefaultFromContextTag'
+[Type]$T_Resolve                    = 'HarshPoint.Provisioning.Resolve'
+[Type]$T_SPOCredentials             = 'Microsoft.SharePoint.Client.SharePointOnlineCredentials'
 
 function New-HarshProvisioner {
 
@@ -23,17 +24,7 @@ function New-HarshProvisioner {
 
     if ($Children) {
         & $Children |% { 
-            if ($_ -is $T_HarshProvisionerBase) {
-                $Result.Children.Add($_) 
-            }
-            elseif ($_ -is $T_IDefaultFromContextTag) {
-                $Result.ModifyChildrenContextState($_)
-            }
-            else {
-                throw "Cannot add the following object to a provisioner.`n" +
-                      "Only other provisioners or IDefaultFromContextTag objects can be added.`n" +
-                      "$_"
-            }
+            $T_HarshProvisionerChildAdder::AddChild($Result, $_)
         }
     }
 
