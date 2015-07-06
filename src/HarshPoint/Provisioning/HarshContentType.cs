@@ -31,18 +31,21 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        [Parameter(Mandatory = true)]
         public HarshContentTypeId Id
         {
             get;
             set;
         }
 
+        [Parameter(Mandatory = true)]
         public String Name
         {
             get;
             set;
         }
 
+        [Parameter]
         public IResolve<ContentType> ParentContentType
         {
             get;

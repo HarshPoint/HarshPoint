@@ -7,26 +7,29 @@ namespace HarshPoint.Provisioning
 {
     public class HarshFieldRef : HarshProvisioner
     {
-        [Parameter]
         [DefaultFromContext]
+        [Parameter(Mandatory = true)]
         public IResolve<ContentType> ContentType
         {
             get;
             set;
         }
 
+        [Parameter(Mandatory = true)]
         public IResolve<Field> Fields
         {
             get;
             set;
         }
 
+        [Parameter]
         public Boolean Hidden
         {
             get;
             set;
         }
 
+        [Parameter]
         public Boolean Required
         {
             get;
@@ -55,8 +58,8 @@ namespace HarshPoint.Provisioning
 
             var links = from field in fields
                         select
-                            existingLinks.FirstOrDefault(fl => fl.Id == field.Id) 
-                            ?? 
+                            existingLinks.FirstOrDefault(fl => fl.Id == field.Id)
+                            ??
                             ResolvedContentType.FieldLinks.Add(
                                 new FieldLinkCreationInformation() { Field = field }
                             );
