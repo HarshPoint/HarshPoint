@@ -1,5 +1,4 @@
-﻿using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
@@ -13,15 +12,15 @@ namespace HarshPoint.Entity.Metadata
         {
             if (repository == null)
             {
-                throw Error.ArgumentNull(nameof(repository));
+                throw Logger.Fatal.ArgumentNull(nameof(repository));
             }
 
             if (!HarshEntityTypeInfo.IsAssignableFrom(ObjectTypeInfo))
             {
-                throw Error.ArgumentOutOfRange_TypeNotAssignableFrom(
+                throw Logger.Fatal.ArgumentTypeNotAssignableTo(
                     nameof(entityTypeInfo),
-                    HarshEntityTypeInfo,
-                    ObjectTypeInfo
+                    entityTypeInfo.AsType(),
+                    HarshEntityTypeInfo.AsType()
                 );
             }
 
@@ -123,7 +122,7 @@ namespace HarshPoint.Entity.Metadata
             throw new NotImplementedException("TODO: more entity types to come :)");
         }
 
-        private static readonly ILogger Logger = Log.ForContext<HarshEntityMetadata>();
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshEntityMetadata>();
         private static readonly TypeInfo HarshEntityTypeInfo = typeof(HarshEntity).GetTypeInfo();
     }
 }

@@ -1,6 +1,7 @@
 
 ## TODO
 - two-pass resolving (& implement IEnumerable on IResolve)
+  also, allow combining reslvers using Or (only first successful is returned)
 - WhatIf
 - Generate ShellPloy from metadata? is that even feasible?
 - prefer parameter sets with parameter values explicitly set
@@ -16,3 +17,13 @@
 3. Parameter sets (just like powershell's)
 4. Parameter validation
 5. HarshProvisionerTreeBuilder for ShellPloy to call
+
+
+two pass resolver lifecycle:
+============================
+
+* InitializeDefaultFromContext
+* ResolveResolvers
+* ResolveParameterSet
+* ValidateParameters
+* Un/Provision

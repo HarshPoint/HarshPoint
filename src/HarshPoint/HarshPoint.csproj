@@ -76,6 +76,7 @@
     <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerTreeBuilder.cs" />
+    <Compile Include="Provisioning\Implementation\DefaultFromContextParameterBinder.cs" />
     <Compile Include="Provisioning\ParameterValidationExceptionLoggerExtension.cs" />
     <Compile Include="Provisioning\HarshRemoveContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshFieldTaxonomy.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="Provisioning\Implementation\ClientObjectResolveContext.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQueryProcessor.cs" />
     <Compile Include="Provisioning\Implementation\ContextStateResolver.cs" />
-    <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyInfo.cs" />
+    <Compile Include="Provisioning\Implementation\DefaultFromContextParameter.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerMetadataExceptionLoggerExtension.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerMetadataException.cs" />

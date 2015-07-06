@@ -57,17 +57,6 @@ namespace HarshPoint
             );
         }
 
-
-        public static ArgumentOutOfRangeException ArgumentOutOfRange_TypeNotAssignableFrom(String paramName, TypeInfo baseType, TypeInfo shouldHaveBeenAssignable)
-        {
-            return ArgumentOutOfRangeFormat(
-                paramName,
-                SR.Error_TypeNotAssignableFrom,
-                baseType.FullName,
-                shouldHaveBeenAssignable.FullName
-            );
-        }
-
         public static ParameterValidationException ParameterValidationFormat(String parameterName, String format, params Object[] args)
             => new ParameterValidationException(
                 parameterName,

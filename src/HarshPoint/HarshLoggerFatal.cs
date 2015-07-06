@@ -81,6 +81,33 @@ namespace HarshPoint
             );
         }
 
+        public ArgumentOutOfRangeException ArgumentTypeNotAssignableTo(String parameterName, Type type, Type expectedBaseType)
+        {
+            if (parameterName == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(parameterName));
+            }
+
+            if (type == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(type));
+            }
+
+            if (expectedBaseType == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(expectedBaseType));
+            }
+
+            return Write(
+                Error.ArgumentOutOfRangeFormat(
+                    parameterName,
+                    SR.Error_TypeNotAssignableFrom,
+                    expectedBaseType.FullName,
+                    type.FullName
+                )
+            );
+        }
+
         public InvalidOperationException InvalidOperation(String message)
         {
             if (message == null)

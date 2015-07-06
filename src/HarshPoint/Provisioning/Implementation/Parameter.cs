@@ -15,7 +15,7 @@ namespace HarshPoint.Provisioning.Implementation
         public Parameter(
             PropertyInfo propertyInfo,
             ParameterAttribute parameterAttribute,
-            DefaultFromContextPropertyInfo defaultFromContext,
+            DefaultFromContextParameter defaultFromContext,
             IEnumerable<ParameterValidationAttribute> validationAttributes
         )
         {
@@ -61,7 +61,7 @@ namespace HarshPoint.Provisioning.Implementation
             Setter = propertyInfo.MakeSetter<Object, Object>();
         }
 
-        public DefaultFromContextPropertyInfo DefaultFromContext
+        public DefaultFromContextParameter DefaultFromContext
         {
             get;
             private set;

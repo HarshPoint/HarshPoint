@@ -204,88 +204,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
 
-        private void InitializeDefaultFromContext()
-        {
-            var parameters = Metadata.Parameters.Where(p => p.IsDefaultFromContext);
-
-            foreach (var param in parameters)
-            {
-                if (!param.HasDefaultValue(this))
-                {
-                    Logger.Debug(
-                        "{Method}: Parameter {Parameter} already has non-default value, skipping",
-                        nameof(InitializeDefaultFromContext),
-                        param
-                    );
-
-                    continue;
-                }
-
-                var value = GetValueFromContext(param);
-
-                if (value != null)
-                {
-                    Logger.Debug(
-                        "{Method}: Setting parameter {Parameter} to {Value}",
-                        nameof(InitializeDefaultFromContext),
-                        param,
-                        value
-                    );
-
-                    param.Setter(this, value);
-                }
-                else
-                {
-                    Logger.Debug(
-                        "{Method}: Got null from context for parameter {Parameter}, skipping",
-                        nameof(InitializeDefaultFromContext),
-                        param
-                    );
-                }
-            }
-        }
-
-        private Object GetValueFromContext(Parameter param)
-        {
-            if (param.DefaultFromContext.TagType != null)
-            {
-                Logger.Debug(
-                    "Parameter {Parameter} gets default value form context by the tag type {TagType}",
-                    param,
-                    param.DefaultFromContext.TagType
-                );
-
-                return Context
-                    .GetState(param.DefaultFromContext.TagType)
-                    .Cast<IDefaultFromContextTag>()
-                    .FirstOrDefault()?
-                    .Value;
-            }
-
-            if (param.DefaultFromContext.ResolvedType != null)
-            {
-                Logger.Debug(
-                    "Parameter {Parameter} resolves objects of type {ResolvedType}",
-                    param,
-                    param.DefaultFromContext.ResolvedType
-                );
-
-                return ContextStateResolver.Create(
-                    param.DefaultFromContext.ResolvedType
-                );
-            }
-
-            Logger.Debug(
-                "Parameter {Parameter} gets default value from context directly by its own type {ParameterType}",
-                param,
-                param.PropertyType
-            );
-
-            return Context
-                .GetState(param.PropertyType)
-                .FirstOrDefault();
-        }
-
         private ParameterSet ResolveParameterSet()
         {
             var resolver = new ParameterSetResolver(this, Metadata.ParameterSets);
@@ -386,7 +304,7 @@ namespace HarshPoint.Provisioning.Implementation
                 // parameter set resolving depends on values
                 // from context being already set
 
-                InitializeDefaultFromContext();
+                Metadata.DefaultFromContextParameterBinder.Bind(this, Context);
 
                 using (_parameterSet.Enter(ResolveParameterSet()))
                 {

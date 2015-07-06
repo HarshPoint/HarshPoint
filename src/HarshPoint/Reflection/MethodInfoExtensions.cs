@@ -7,6 +7,8 @@ namespace HarshPoint.Reflection
 {
     public static class MethodInfoExtensions
     {
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(MethodInfoExtensions));
+
         public static IEnumerable<MethodInfo> GetRuntimeBaseMethodChain(this MethodInfo methodInfo)
         {
             return GetRuntimeBaseMethodChain(methodInfo, null);
@@ -16,7 +18,7 @@ namespace HarshPoint.Reflection
         {
             if (methodInfo == null)
             {
-                throw Error.ArgumentNull(nameof(methodInfo));
+                throw Logger.Fatal.ArgumentNull(nameof(methodInfo));
             }
 
             if (subtype == null)
@@ -29,10 +31,10 @@ namespace HarshPoint.Reflection
 
             if (!typeInfo.IsAssignableFrom(subtypeInfo))
             {
-                throw Error.ArgumentOutOfRange_TypeNotAssignableFrom(
+                throw Logger.Fatal.ArgumentTypeNotAssignableTo(
                     nameof(subtype),
-                    typeInfo,
-                    subtypeInfo
+                    subtype,
+                    methodInfo.DeclaringType
                 );
             }
 

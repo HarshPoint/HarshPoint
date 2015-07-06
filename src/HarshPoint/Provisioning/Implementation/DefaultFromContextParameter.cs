@@ -4,15 +4,15 @@ using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class DefaultFromContextPropertyInfo
+    internal sealed class DefaultFromContextParameter
     {
         private static readonly TypeInfo IDefaultFromContextTagTypeInfo =
             typeof(IDefaultFromContextTag).GetTypeInfo();
 
         private static readonly HarshLogger Logger =
-            HarshLog.ForContext<DefaultFromContextPropertyInfo>();
+            HarshLog.ForContext<DefaultFromContextParameter>();
 
-        private DefaultFromContextPropertyInfo(PropertyInfo property, DefaultFromContextAttribute attribute)
+        private DefaultFromContextParameter(PropertyInfo property, DefaultFromContextAttribute attribute)
         {
             ResolvedType = Resolvable.GetResolvedType(property.PropertyType);
             TagType = attribute.TagType;
@@ -54,13 +54,13 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        public static DefaultFromContextPropertyInfo FromPropertyInfo(PropertyInfo property)
+        public static DefaultFromContextParameter FromPropertyInfo(PropertyInfo property)
         {
             var attr = property.GetCustomAttribute<DefaultFromContextAttribute>(inherit: true);
 
             if (attr != null)
             {
-                return new DefaultFromContextPropertyInfo(property, attr);
+                return new DefaultFromContextParameter(property, attr);
             }
 
             return null;

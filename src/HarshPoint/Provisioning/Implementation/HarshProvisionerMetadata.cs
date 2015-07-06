@@ -14,19 +14,29 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (!HarshProvisionerBaseTypeInfo.IsAssignableFrom(ObjectTypeInfo))
             {
-                throw Error.ArgumentOutOfRange_TypeNotAssignableFrom(
+                throw Logger.Fatal.ArgumentTypeNotAssignableTo(
                     nameof(type),
-                    HarshProvisionerBaseTypeInfo,
-                    ObjectTypeInfo
+                    type,
+                    HarshProvisionerBaseTypeInfo.AsType()
                 );
             }
 
-            var parameterSetBuilder = new ParameterSetBuilder(ObjectType);
+            ParameterSets = new ParameterSetBuilder(ObjectType)
+                .Build()
+                .ToImmutableArray();
 
-            ParameterSets = parameterSetBuilder.Build().ToImmutableArray();
+            DefaultFromContextParameterBinder = 
+                new DefaultFromContextParameterBinder(Parameters);
+
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
+        }
+
+        public DefaultFromContextParameterBinder DefaultFromContextParameterBinder
+        {
+            get;
+            private set;
         }
 
         public ParameterSet DefaultParameterSet
