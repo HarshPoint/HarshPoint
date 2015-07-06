@@ -62,7 +62,6 @@
     <Compile Include="HarshLogger.cs" />
     <Compile Include="HarshLoggerWrapper.cs" />
     <Compile Include="HarshScopedValue`1.cs" />
-    <Compile Include="HarshSingleElementCollection.cs" />
     <Compile Include="IHarshCloneable.cs" />
     <Compile Include="Provisioning\DefaultContentTypeGroup.cs" />
     <Compile Include="Provisioning\DefaultFieldGroup.cs" />

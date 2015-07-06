@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
@@ -18,8 +19,8 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(parent));
             }
 
-            return Task.FromResult(
-                HarshSingleElementCollection.Create(parent.RootFolder)
+            return Task.FromResult<IEnumerable<Folder>>(
+                ImmutableArray.Create(parent.RootFolder)
             );
         }
     }

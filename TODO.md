@@ -5,6 +5,7 @@
 - Generate ShellPloy from metadata? is that even feasible?
 - prefer parameter sets with parameter values explicitly set
   over values from context
+- return to results, this time without dynamic?
 
 ## In Progress
 - Error.xxx on a serilog wrapper to log exceptions where they occur

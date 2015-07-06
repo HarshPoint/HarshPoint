@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client.Taxonomy;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
@@ -14,8 +15,8 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Error.ArgumentNull(nameof(context));
             }
 
-            return Task.FromResult(
-                HarshSingleElementCollection.Create(
+            return Task.FromResult<IEnumerable<TermStore>>(
+                ImmutableArray.Create(
                     context.ProvisionerContext.TaxonomySession.GetDefaultSiteCollectionTermStore()
                 )
             );

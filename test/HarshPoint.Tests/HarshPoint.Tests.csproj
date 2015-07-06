@@ -157,7 +157,6 @@
     <Compile Include="Server\SharePointServerFixture.cs" />
     <Compile Include="SharePointClientFixture.cs" />
     <Compile Include="SharePointClientTest.cs" />
-    <Compile Include="SingleElementCollection.cs" />
     <Compile Include="SeriloggedTest.cs" />
   </ItemGroup>
   <ItemGroup>
