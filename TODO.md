@@ -1,8 +1,7 @@
 
 ## TODO
 - two-pass resolving (& implement IEnumerable on IResolve)
-- IAddChild for ShellPloy to call
--WhatIf
+- WhatIf
 - Generate ShellPloy from metadata? is that even feasible?
 - prefer parameter sets with parameter values explicitly set
   over values from context
@@ -15,3 +14,4 @@
 2. Remove results, leverage Serilog instead
 3. Parameter sets (just like powershell's)
 4. Parameter validation
+5. HarshProvisionerTreeBuilder for ShellPloy to call

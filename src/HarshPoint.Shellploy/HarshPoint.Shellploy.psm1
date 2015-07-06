@@ -1,11 +1,9 @@
-﻿[Type]$T_ClientContext              = 'Microsoft.SharePoint.Client.ClientContext'
-[Type]$T_HarshProvisioner           = 'HarshPoint.Provisioning.HarshProvisioner'
-[Type]$T_HarshProvisionerChildAdder = 'HarshPoint.Provisioning.Implementation.HarshProvisionerChildAdder'
-[Type]$T_HarshProvisionerBase       = 'HarshPoint.Provisioning.Implementation.HarshProvisionerBase'
-[Type]$T_HarshProvisionerContext    = 'HarshPoint.Provisioning.HarshProvisionerContext'
-[Type]$T_IDefaultFromContextTag     = 'HarshPoint.Provisioning.IDefaultFromContextTag'
-[Type]$T_Resolve                    = 'HarshPoint.Provisioning.Resolve'
-[Type]$T_SPOCredentials             = 'Microsoft.SharePoint.Client.SharePointOnlineCredentials'
+﻿[Type]$T_ClientContext               = 'Microsoft.SharePoint.Client.ClientContext'
+[Type]$T_HarshProvisioner            = 'HarshPoint.Provisioning.HarshProvisioner'
+[Type]$T_HarshProvisionerContext     = 'HarshPoint.Provisioning.HarshProvisionerContext'
+[Type]$T_HarshProvisionerTreeBuilder = 'HarshPoint.Provisioning.Implementation.HarshProvisionerTreeBuilder'
+[Type]$T_Resolve                     = 'HarshPoint.Provisioning.Resolve'
+[Type]$T_SPOCredentials              = 'Microsoft.SharePoint.Client.SharePointOnlineCredentials'
 
 function New-HarshProvisioner {
 
@@ -24,7 +22,7 @@ function New-HarshProvisioner {
 
     if ($Children) {
         & $Children |% { 
-            $T_HarshProvisionerChildAdder::AddChild($Result, $_)
+            $T_HarshProvisionerTreeBuilder::AddChild($Result, $_)
         }
     }
 
