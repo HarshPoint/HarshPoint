@@ -317,32 +317,33 @@ function RemoveContentTypeRef {
 }
 
 function Invoke-WithProvisionerContext {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'NoAuth')]
     param (
 
-        [Parameter(Position = 0)]
+        [Parameter(Mandatory, Position = 0)]
         [Uri]
         $Url,
 
-        [Parameter(Position = 1)]
+        [Parameter(Mandatory, Position = 1)]
         [ScriptBlock]
         $ScriptBlock,
 
-        [Parameter()]
+        [Parameter(Mandatory, ParameterSetName = 'SharePointOnline')]
         [String]
         $UserName,
         
-        [Parameter()]
+        [Parameter(Mandatory, ParameterSetName = 'SharePointOnline')]
         [String]
         $Password
     )
 
     try {
-        $Credentials = New-Object $T_SPOCredentials $UserName, $Password
-     
         $ClientContext = New-Object $T_ClientContext $Url
-        $ClientContext.Credentials = $Credentials
-        
+
+        if ($PSCmdlet.ParameterSetName -eq 'SharePointOnline') {
+            $ClientContext.Credentials = New-Object $T_SPOCredentials $UserName, $Password
+        }
+
         $Context = New-Object $T_HarshProvisionerContext $ClientContext
 
         & $ScriptBlock $Context
