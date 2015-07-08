@@ -80,7 +80,6 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        [LogAsScalar]
         public Type PropertyType => PropertyInfo.PropertyType;
 
         [NotLogged]
@@ -99,7 +98,6 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        [LogAsScalar]
         public Type ResolvedType
         {
             get;

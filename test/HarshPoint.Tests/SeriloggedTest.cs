@@ -23,7 +23,7 @@ namespace HarshPoint.Tests
         {
             Log.Logger = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Verbose()
                 .WriteTo.Observers(
                     observable => observable.Subscribe(logEvent => LogEventSubject.OnNext(logEvent))
                 )
