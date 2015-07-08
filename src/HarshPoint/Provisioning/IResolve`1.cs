@@ -1,16 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
+    public interface IResolve2<out T> : IEnumerable<T>, IResolveSingle<T>
+    {
+    }
+
+    [Obsolete]
     public interface IResolve<T>
     {
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         Task<IEnumerable<T>> TryResolveAsync(IResolveContext context);
     }
 
+    [Obsolete]
     public static class ResolveExtensions
     {
         public static async Task<T> TryResolveSingleAsync<T>(this IResolve<T> resolvable, IResolveContext context)

@@ -77,6 +77,9 @@
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerTreeBuilder.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextParameterBinder.cs" />
+    <Compile Include="Provisioning\Implementation\IResolver.cs" />
+    <Compile Include="Provisioning\IResolveSingle`1.cs" />
+    <Compile Include="Provisioning\Implementation\ResolvedParameterBinder.cs" />
     <Compile Include="Provisioning\ParameterValidationExceptionLoggerExtension.cs" />
     <Compile Include="Provisioning\HarshRemoveContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshFieldTaxonomy.cs" />

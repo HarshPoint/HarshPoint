@@ -120,6 +120,22 @@ namespace HarshPoint
             );
         }
 
+        public InvalidOperationException InvalidOperationFormat(String format, params Object[] args)
+        {
+            if (format == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(format));
+            }
+
+            if (args == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(args));
+            }
+
+            return Write(
+                Error.InvalidOperationFormat(format, args)
+            );
+        }
         public TException Write<TException>(TException exception)
             where TException : Exception
         {

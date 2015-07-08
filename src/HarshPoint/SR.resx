@@ -261,4 +261,7 @@ Property: {0}.{1}</value>
   <data name="Resolvable_NoResult" xml:space="preserve">
     <value>The {0} resolved in no results.</value>
   </data>
+  <data name="ResolvedParameterBinder_ResolverResultNotCompatible" xml:space="preserve">
+    <value>The parameter "{0}" resolver "{1}" resulted into "{2}" which isn't compatible with parameter type "{3}".</value>
+  </data>
 </root>

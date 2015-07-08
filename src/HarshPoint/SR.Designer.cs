@@ -474,5 +474,14 @@ namespace HarshPoint {
                 return ResourceManager.GetString("Resolvable_NoResult", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The parameter &quot;{0}&quot; resolver &quot;{1}&quot; resulted into &quot;{2}&quot; which isn&apos;t compatible with parameter type &quot;{3}&quot;..
+        /// </summary>
+        internal static string ResolvedParameterBinder_ResolverResultNotCompatible {
+            get {
+                return ResourceManager.GetString("ResolvedParameterBinder_ResolverResultNotCompatible", resourceCulture);
+            }
+        }
     }
 }

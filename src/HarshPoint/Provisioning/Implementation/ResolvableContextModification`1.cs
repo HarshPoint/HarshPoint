@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
 {
+    [Obsolete]
     internal sealed class ResolvableContextModification<T> : IResolve<T>
     {
         public ResolvableContextModification(IResolve<T> innerResolvable, Action<IResolveContext> contextModifier)
