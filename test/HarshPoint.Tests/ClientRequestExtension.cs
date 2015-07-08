@@ -10,6 +10,11 @@ namespace HarshPoint.Tests
     {
         public static String ToDiagnosticString(this ClientRequest request)
         {
+            return ToDiagnosticXml(request).ToString(SaveOptions.OmitDuplicateNamespaces);
+        }
+
+        public static XDocument ToDiagnosticXml(this ClientRequest request)
+        {
             if (request == null)
             {
                 throw Error.ArgumentNull(nameof(request));
@@ -20,8 +25,7 @@ namespace HarshPoint.Tests
             using (var sw = new StringWriter())
             {
                 WriteContentToMethod.Invoke(chunkedSb, new Object[] { sw });
-
-                return XDocument.Parse(sw.ToString()).ToString(SaveOptions.OmitDuplicateNamespaces);
+                return XDocument.Parse(sw.ToString());
             }
         }
 

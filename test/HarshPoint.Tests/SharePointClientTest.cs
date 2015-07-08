@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Microsoft.SharePoint.Client;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace HarshPoint.Tests
@@ -13,6 +14,10 @@ namespace HarshPoint.Tests
         {
             Fixture = fixture;
         }
+
+        public ClientContext ClientContext => Fixture?.ClientContext;
+        public Site Site => Fixture?.Site;
+        public Web Web => Fixture?.Web;
 
         public SharePointClientFixture Fixture { get; private set; }
     }
