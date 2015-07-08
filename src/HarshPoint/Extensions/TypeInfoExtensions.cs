@@ -15,16 +15,8 @@ namespace HarshPoint
                 throw Error.ArgumentNull(nameof(typeInfo));
             }
 
-            var result = new StringBuilder();
-
-            if (typeInfo.IsNested)
-            {
-                result.Append(typeInfo.DeclaringType.GetTypeInfo().GetCSharpSimpleName());
-                result.Append('.');
-            }
-
             var nameWithoutArgCount = Regex.Replace(typeInfo.Name, "`\\d+$", String.Empty);
-            result.Append(nameWithoutArgCount);
+            var result = new StringBuilder(nameWithoutArgCount);
 
             if (typeInfo.IsGenericTypeDefinition)
             {
