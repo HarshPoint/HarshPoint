@@ -43,6 +43,14 @@ namespace HarshPoint.Provisioning
         {
         }
 
+        internal sealed override async Task OnParametersBound()
+        {
+            if (ClientContext.HasPendingRequest)
+            {
+                await ClientContext.ExecuteQueryAsync();
+            }
+        }
+
         internal sealed override Task ProvisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
         {
             if (provisioner == null)

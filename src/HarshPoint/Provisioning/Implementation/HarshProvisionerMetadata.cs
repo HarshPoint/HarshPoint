@@ -28,6 +28,9 @@ namespace HarshPoint.Provisioning.Implementation
             DefaultFromContextParameterBinder = 
                 new DefaultFromContextParameterBinder(Parameters);
 
+            ResolvedParameterBinder =
+                new ResolvedParameterBinder(Parameters);
+
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
@@ -49,6 +52,12 @@ namespace HarshPoint.Provisioning.Implementation
             => ParameterSets.SelectMany(set => set.Parameters);
 
         public IReadOnlyList<ParameterSet> ParameterSets
+        {
+            get;
+            private set;
+        }
+
+        public ResolvedParameterBinder ResolvedParameterBinder
         {
             get;
             private set;

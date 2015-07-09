@@ -200,6 +200,11 @@ namespace HarshPoint.Provisioning.Implementation
             return new ResolveContext<TContext>();
         }
 
+        internal virtual Task OnParametersBound()
+        {
+            return HarshTask.Completed;
+        }
+
         internal abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
 
         internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
@@ -301,10 +306,20 @@ namespace HarshPoint.Provisioning.Implementation
         {
             return RunWithContext(context, async delegate
             {
+                Metadata.DefaultFromContextParameterBinder.Bind(
+                    this, 
+                    Context
+                );
+
+                Metadata.ResolvedParameterBinder.Bind(
+                    this,
+                    PrepareResolveContext()
+                );
+
+                await OnParametersBound();
+
                 // parameter set resolving depends on values
                 // from context being already set
-
-                Metadata.DefaultFromContextParameterBinder.Bind(this, Context);
 
                 using (_parameterSet.Enter(ResolveParameterSet()))
                 {
@@ -325,7 +340,7 @@ namespace HarshPoint.Provisioning.Implementation
                 await childAction();
             });
         }
-        
+
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         protected static readonly ICollection<HarshProvisionerBase> NoChildren =
             ImmutableArray<HarshProvisionerBase>.Empty;
