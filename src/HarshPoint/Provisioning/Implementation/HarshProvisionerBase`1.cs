@@ -195,7 +195,7 @@ namespace HarshPoint.Provisioning.Implementation
             return new Collection<HarshProvisionerBase>();
         }
 
-        internal virtual ResolveContext<TContext> CreateResolveContext()
+        protected virtual ResolveContext<TContext> CreateResolveContext()
         {
             return new ResolveContext<TContext>();
         }

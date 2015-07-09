@@ -8,10 +8,14 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ClientObjectResolveContext : ResolveContext<HarshProvisionerContext>
     {
-        private IImmutableDictionary<Type, IImmutableList<Expression>> _retrievals =
-            ImmutableDictionary<Type, IImmutableList<Expression>>.Empty;
+        private readonly IImmutableDictionary<Type, IImmutableList<Expression>> _retrievals;
 
-        public void Include<T>(params Expression<Func<T, Object>>[] retrievals)
+        internal ClientObjectResolveContext(IImmutableDictionary<Type, IImmutableList<Expression>> retrievals = null)
+        {
+            _retrievals = retrievals ?? ImmutableDictionary<Type, IImmutableList<Expression>>.Empty;
+        }
+
+        public ClientObjectResolveContext Include<T>(params Expression<Func<T, Object>>[] retrievals)
             where T : ClientObject
         {
             if (retrievals == null)
@@ -19,9 +23,11 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(retrievals));
             }
 
-            _retrievals = _retrievals.SetItem(
-                typeof(T),
-                GetRetrievals(typeof(T)).AddRange(retrievals)
+            return new ClientObjectResolveContext(
+                _retrievals.SetItem(
+                    typeof(T),
+                    GetRetrievals(typeof(T)).AddRange(retrievals)
+                )
             );
         }
 
@@ -42,12 +48,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             return _retrievals.GetValueOrDefault(type, EmptyExpressionList);
         }
-
-        public IImmutableSet<Type> GetRetrievalTypes()
-        {
-            return _retrievals.Keys.ToImmutableHashSet();
-        }
-
+        
         private static readonly IImmutableList<Expression> EmptyExpressionList =
             ImmutableList<Expression>.Empty;
     }

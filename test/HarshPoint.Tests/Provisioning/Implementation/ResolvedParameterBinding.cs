@@ -26,7 +26,9 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var binder = new ResolvedParameterBinder(parameters);
             var target = new SimpleTarget()
             {
-                Param = MockResolver("42")
+                Param = MockResolver<String>(
+                    MockResolverResult("42")
+                )
             };
 
             binder.Bind(target, Mock.Of<IResolveContext>());
@@ -35,9 +37,29 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             Assert.Equal("42", target.Param.Result);
         }
 
-        private IResolve2<String> MockResolverResult(params String[] results)
+        [Fact]
+        public void Incompatible_results_throws_invalid_operation_exception()
         {
-            var mock = new Mock<IResolve2<String>>();
+            var parameters = new ParameterSetBuilder(typeof(SimpleTarget))
+                .Build()
+                .SelectMany(set => set.Parameters);
+
+            var binder = new ResolvedParameterBinder(parameters);
+            var target = new SimpleTarget()
+            {
+                Param = MockResolver<String>(
+                    MockResolverResult<Int32>(42)
+                )
+            };
+
+            Assert.Throws<InvalidOperationException>(
+                () => binder.Bind(target, Mock.Of<IResolveContext>())
+            );
+        }
+
+        private IResolve2<T> MockResolverResult<T>(params T[] results)
+        {
+            var mock = new Mock<IResolve2<T>>();
 
             mock.Setup(x => x.Result)
                 .Returns(() => results.Single());
@@ -48,17 +70,17 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             return mock.Object;
         }
 
-        private IResolve2<String> MockResolver(params String[] results)
+        private IResolve2<T> MockResolver<T>(Object result)
         {
-            var mock = new Mock<IResolve2<String>>();
+            var mock = new Mock<IResolve2<T>>();
 
             mock.As<IResolver>()
                 .Setup(x => x.Resolve(It.IsAny<IResolveContext>()))
-                .Returns(MockResolverResult(results));
+                .Returns(result);
 
             return mock.Object;
         }
-        
+
         private sealed class SimpleTarget
         {
             [Parameter]

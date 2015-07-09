@@ -32,9 +32,15 @@ namespace HarshPoint.Provisioning
             });
         }
 
-        internal sealed override ResolveContext<HarshProvisionerContext> CreateResolveContext()
+        protected sealed override ResolveContext<HarshProvisionerContext> CreateResolveContext()
         {
-            return new ClientObjectResolveContext();
+            var result = new ClientObjectResolveContextBuilder();
+            PrepareResolveContext(result);
+            return result.ToResolveContext();
+        }
+
+        protected virtual void PrepareResolveContext(ClientObjectResolveContextBuilder context)
+        {
         }
 
         internal sealed override Task ProvisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
