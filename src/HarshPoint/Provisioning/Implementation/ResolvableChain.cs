@@ -34,8 +34,9 @@ namespace HarshPoint.Provisioning.Implementation
             return this.With(c => c.Chain.Last().Next = other.Clone());
         }
 
+        [Obsolete]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected async Task<IEnumerable<T>> ResolveChain<T>(IResolveContext context)
+        protected async Task<IEnumerable<T>> ResolveChainOld<T>(IResolveContext context)
         {
             if (context == null)
             {
@@ -43,9 +44,9 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             var resultSets = await Chain
-                .Cast<IResolvableChainElement<T>>()
-                .SelectSequentially(e => e.ResolveChainElement(context));
-                
+                .Cast<IResolvableChainElementOld<T>>()
+                .SelectSequentially(e => e.ResolveChainElementOld(context));
+
             return resultSets.SelectMany(r => r);
         }
 

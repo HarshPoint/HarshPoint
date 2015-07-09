@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-    public interface IResolve2<out T> : IEnumerable<T>, IResolveSingle<T>
+    public interface IResolve<out T> : IEnumerable<T>, IResolveSingle<T>
     {
     }
 
     [Obsolete]
-    public interface IResolve<T>
+    public interface IResolveOld<T>
     {
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         Task<IEnumerable<T>> TryResolveAsync(IResolveContext context);
     }
 
     [Obsolete]
-    public static class ResolveExtensions
+    public static class ResolveOldExtensions
     {
-        public static async Task<T> TryResolveSingleAsync<T>(this IResolve<T> resolvable, IResolveContext context)
+        public static async Task<T> TryResolveSingleAsync<T>(this IResolveOld<T> resolvable, IResolveContext context)
         {
             if (resolvable == null)
             {
@@ -37,7 +37,7 @@ namespace HarshPoint.Provisioning
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static async Task<IEnumerable<T>> ResolveAsync<T>(this IResolve<T> resolvable, IResolveContext context)
+        public static async Task<IEnumerable<T>> ResolveAsync<T>(this IResolveOld<T> resolvable, IResolveContext context)
         {
             if (resolvable == null)
             {
@@ -55,7 +55,7 @@ namespace HarshPoint.Provisioning
             return results;
         }
 
-        public static async Task<T> ResolveSingleAsync<T>(this IResolve<T> resolvable, IResolveContext context)
+        public static async Task<T> ResolveSingleAsync<T>(this IResolveOld<T> resolvable, IResolveContext context)
         {
             if (resolvable == null)
             {

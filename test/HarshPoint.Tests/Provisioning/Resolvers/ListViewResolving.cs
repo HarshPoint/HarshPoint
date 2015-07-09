@@ -21,7 +21,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             var listAndView = await EnsureTestListAndView();
 
-            IResolve<View> resolvable = Resolve
+            IResolveOld<View> resolvable = Resolve
                 .ListByUrl("Lists/" + ListTitle)
                 .ViewByTitle(ViewTitle);
 
@@ -38,7 +38,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             var listAndView = await EnsureTestListAndView();
 
-            IResolve<View> resolvable = Resolve
+            IResolveOld<View> resolvable = Resolve
                 .ListByUrl("Lists/" + ListTitle)
                 .ViewByUrl(ViewTitle + ".aspx");
 

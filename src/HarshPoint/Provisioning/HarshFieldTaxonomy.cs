@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        public IResolve<TermSet> TermSet
+        public IResolveOld<TermSet> TermSet
         {
             get;
             set;

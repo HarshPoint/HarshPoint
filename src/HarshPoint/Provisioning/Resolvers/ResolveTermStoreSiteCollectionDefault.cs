@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveTermStoreSiteCollectionDefault
-        : Implementation.Resolvable<TermStore, HarshProvisionerContext, ResolveTermStoreSiteCollectionDefault>
+        : Implementation.OldResolvable<TermStore, HarshProvisionerContext, ResolveTermStoreSiteCollectionDefault>
     {
-        protected override Task<IEnumerable<TermStore>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
+        protected override Task<IEnumerable<TermStore>> ResolveChainElementOld(ResolveContext<HarshProvisionerContext> context)
         {
             if (context == null)
             {

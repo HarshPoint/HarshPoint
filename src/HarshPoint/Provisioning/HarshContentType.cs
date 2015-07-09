@@ -46,7 +46,7 @@ namespace HarshPoint.Provisioning
         }
 
         [Parameter]
-        public IResolve<ContentType> ParentContentType
+        public IResolveOld<ContentType> ParentContentType
         {
             get;
             set;

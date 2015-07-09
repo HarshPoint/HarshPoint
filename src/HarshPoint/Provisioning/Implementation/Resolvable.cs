@@ -18,8 +18,8 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 var definition = interfaceType.GetGenericTypeDefinition();
 
-                if (definition == typeof(IResolve<>) ||
-                    definition == typeof(IResolve2<>) ||
+                if (definition == typeof(IResolveOld<>) ||
+                    definition == typeof(IResolve<>) ||
                     definition == typeof(IResolveSingle<>))
                 {
                     return interfaceType.GenericTypeArguments[0];

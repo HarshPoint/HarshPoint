@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning
 {
     public static class ResolveTermStoreExtensions
     {
-        public static ResolveTermStoreTermSetById TermSetById(this IResolve<TermStore> termStore, params Guid[] ids)
+        public static ResolveTermStoreTermSetById TermSetById(this IResolveOld<TermStore> termStore, params Guid[] ids)
         {
             if (termStore == null)
             {

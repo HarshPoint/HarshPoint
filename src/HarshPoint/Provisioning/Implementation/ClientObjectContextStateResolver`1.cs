@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ClientObjectContextStateResolver<T> : IResolve<T>
+    internal sealed class ClientObjectContextStateResolver<T> : IResolveOld<T>
         where T : ClientObject
     {
         public async Task<IEnumerable<T>> TryResolveAsync(IResolveContext context)

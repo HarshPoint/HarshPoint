@@ -57,9 +57,9 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             );
         }
 
-        private IResolve2<T> MockResolverResult<T>(params T[] results)
+        private IResolve<T> MockResolverResult<T>(params T[] results)
         {
-            var mock = new Mock<IResolve2<T>>();
+            var mock = new Mock<IResolve<T>>();
 
             mock.Setup(x => x.Result)
                 .Returns(() => results.Single());
@@ -70,12 +70,12 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             return mock.Object;
         }
 
-        private IResolve2<T> MockResolver<T>(Object result)
+        private IResolve<T> MockResolver<T>(Object result)
         {
-            var mock = new Mock<IResolve2<T>>();
+            var mock = new Mock<IResolve<T>>();
 
-            mock.As<IResolver>()
-                .Setup(x => x.Resolve(It.IsAny<IResolveContext>()))
+            mock.As<IIndirectResolver>()
+                .Setup(x => x.Initialize(It.IsAny<IResolveContext>()))
                 .Returns(result);
 
             return mock.Object;
@@ -84,7 +84,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         private sealed class SimpleTarget
         {
             [Parameter]
-            public IResolve2<String> Param { get; set; }
+            public IResolve<String> Param { get; set; }
         }
     }
 }

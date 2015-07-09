@@ -15,7 +15,7 @@ namespace HarshPoint.Provisioning
 
         [Parameter]
         [DefaultFromContext]
-        public IResolve<List> Lists
+        public IResolveOld<List> Lists
         {
             get;
             set;
@@ -42,7 +42,7 @@ namespace HarshPoint.Provisioning
         protected override async Task OnProvisioningAsync()
         {
             var lists = await ResolveAsync(
-                (IResolve<IGrouping<List, View>>)Lists.ViewByUrl(Url)
+                (IResolveOld<IGrouping<List, View>>)Lists.ViewByUrl(Url)
             );
 
             foreach (var grouping in lists)

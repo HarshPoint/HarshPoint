@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveListRootFolder : Implementation.NestedResolvable<List, Folder, HarshProvisionerContext, ResolveListRootFolder>
+    public sealed class ResolveListRootFolder : Implementation.OldNestedResolvable<List, Folder, HarshProvisionerContext, ResolveListRootFolder>
     {
-        public ResolveListRootFolder(IResolve<List> lists)
+        public ResolveListRootFolder(IResolveOld<List> lists)
             : base(lists)
         {
         }

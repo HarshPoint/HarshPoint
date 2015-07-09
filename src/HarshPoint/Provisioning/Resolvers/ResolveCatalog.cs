@@ -15,7 +15,7 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override Task<IEnumerable<List>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
+        protected override Task<IEnumerable<List>> ResolveChainElementOld(ResolveContext<HarshProvisionerContext> context)
         {
             if (context == null)
             {

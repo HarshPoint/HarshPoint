@@ -9,14 +9,14 @@ namespace HarshPoint.Provisioning
     {
         [DefaultFromContext]
         [Parameter(Mandatory = true)]
-        public IResolve<ContentType> ContentType
+        public IResolveOld<ContentType> ContentType
         {
             get;
             set;
         }
 
         [Parameter(Mandatory = true)]
-        public IResolve<Field> Fields
+        public IResolveOld<Field> Fields
         {
             get;
             set;

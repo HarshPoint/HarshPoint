@@ -75,7 +75,7 @@ namespace HarshPoint.Provisioning
             }
         }
 
-        private IResolve<List> ListResolver => Resolve.ListByUrl(Url);
+        private IResolveOld<List> ListResolver => Resolve.ListByUrl(Url);
     }
 
 }

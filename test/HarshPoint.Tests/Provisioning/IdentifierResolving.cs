@@ -51,7 +51,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Equal(expectedFailures, ctx.Failures.Select(fail => fail.Identifier));
         }
 
-        private sealed class IdResolver : IResolve<String>, IResolvableIdentifiers<String>
+        private sealed class IdResolver : IResolveOld<String>, IResolvableIdentifiers<String>
         {
             private readonly IImmutableList<String> _identifiers;
             private readonly IImmutableList<String> _items;

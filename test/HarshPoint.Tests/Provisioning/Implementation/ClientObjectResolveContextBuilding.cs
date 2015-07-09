@@ -19,9 +19,9 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         public void Retrievals_get_recorded_by_the_resolved_type()
         {
             var builder = new ClientObjectResolveContextBuilder();
-            builder.Load(Mock.Of<IResolve2<Field>>(), f => f.Id);
-            builder.Load(Mock.Of<IResolve2<Field>>(), f => f.Title);
-            builder.Load(Mock.Of<IResolve2<List>>(), l => l.Title);
+            builder.Load(Mock.Of<IResolve<Field>>(), f => f.Id);
+            builder.Load(Mock.Of<IResolve<Field>>(), f => f.Title);
+            builder.Load(Mock.Of<IResolve<List>>(), l => l.Title);
 
             var ctx = builder.ToResolveContext();
 

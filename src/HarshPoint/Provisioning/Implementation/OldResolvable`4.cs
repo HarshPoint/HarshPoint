@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint.Provisioning.Implementation
 {
+    [Obsolete]
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
     public abstract class Resolvable<T, TIdentifier, TContext, TSelf> :
-        Resolvable<T, TContext, TSelf>,
+        OldResolvable<T, TContext, TSelf>,
         IResolvableIdentifiers<TIdentifier>
         where T : class
         where TContext : HarshProvisionerContextBase

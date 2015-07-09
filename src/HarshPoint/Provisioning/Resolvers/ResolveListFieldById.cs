@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveListFieldById
-        : Implementation.NestedResolvable<List, Field, Guid, HarshProvisionerContext, ResolveListFieldById>
+        : Implementation.OldNestedResolvable<List, Field, Guid, HarshProvisionerContext, ResolveListFieldById>
     {
-        public ResolveListFieldById(IResolve<List> parent, IEnumerable<Guid> ids)
+        public ResolveListFieldById(IResolveOld<List> parent, IEnumerable<Guid> ids)
             : base(parent, ids)
         {
         }

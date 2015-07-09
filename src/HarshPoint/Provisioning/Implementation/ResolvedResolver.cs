@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public sealed class ResolvedResolver<T> : IResolve<T>
+    public sealed class ResolvedResolver<T> : IResolveOld<T>
     {
         public ResolvedResolver(IEnumerable<T> values)
         {

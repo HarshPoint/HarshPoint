@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveListViewByTitle : 
-        NestedResolvable<List, View, String, HarshProvisionerContext, ResolveListViewByTitle>
+        OldNestedResolvable<List, View, String, HarshProvisionerContext, ResolveListViewByTitle>
     {
-        public ResolveListViewByTitle(IResolve<List> parent, IEnumerable<String> titles) 
+        public ResolveListViewByTitle(IResolveOld<List> parent, IEnumerable<String> titles) 
             : base(parent, titles)
         {
         }

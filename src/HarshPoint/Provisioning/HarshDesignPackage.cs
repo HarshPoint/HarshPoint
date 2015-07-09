@@ -7,7 +7,7 @@ namespace HarshPoint.Provisioning
 {
     public sealed class HarshDesignPackage : HarshProvisioner
     {
-        internal static readonly IResolve<Folder> SolutionCatalogFolder =
+        internal static readonly IResolveOld<Folder> SolutionCatalogFolder =
             Resolve.Catalog(ListTemplateType.SolutionCatalog).RootFolder();
 
         public Guid DesignPackageId

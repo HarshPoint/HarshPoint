@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning
     {
         [Parameter]
         [DefaultFromContext]
-        public IResolve<Field> Fields
+        public IResolveOld<Field> Fields
         {
             get;
             set;

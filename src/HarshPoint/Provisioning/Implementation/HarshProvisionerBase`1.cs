@@ -141,7 +141,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected Task<IEnumerable<T>> TryResolveAsync<T>(IResolve<T> resolver)
+        protected Task<IEnumerable<T>> TryResolveAsync<T>(IResolveOld<T> resolver)
         {
             if (resolver == null)
             {
@@ -153,7 +153,7 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        protected Task<T> TryResolveSingleAsync<T>(IResolve<T> resolver)
+        protected Task<T> TryResolveSingleAsync<T>(IResolveOld<T> resolver)
         {
             if (resolver == null)
             {
@@ -166,7 +166,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected Task<IEnumerable<T>> ResolveAsync<T>(IResolve<T> resolver)
+        protected Task<IEnumerable<T>> ResolveAsync<T>(IResolveOld<T> resolver)
         {
             if (resolver == null)
             {
@@ -178,7 +178,7 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        protected Task<T> ResolveSingleAsync<T>(IResolve<T> resolver)
+        protected Task<T> ResolveSingleAsync<T>(IResolveOld<T> resolver)
         {
             if (resolver == null)
             {

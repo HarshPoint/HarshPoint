@@ -15,7 +15,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         private readonly ClientObjectResolveContext _result = new ClientObjectResolveContext();
 
-        public void Load<T>(IResolve2<T> resolver, params Expression<Func<T, Object>>[] retrievals)
+        public void Load<T>(IResolve<T> resolver, params Expression<Func<T, Object>>[] retrievals)
             where T : ClientObject
         {
             if (resolver == null)

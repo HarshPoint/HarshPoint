@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ContextStateResolver<T> : IResolve<T>
+    internal sealed class ContextStateResolver<T> : IResolveOld<T>
     {
         public Task<IEnumerable<T>> TryResolveAsync(IResolveContext context)
         {

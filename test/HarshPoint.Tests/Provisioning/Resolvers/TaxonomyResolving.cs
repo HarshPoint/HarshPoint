@@ -54,7 +54,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             var expected = await EnsureTestTermSet();
 
-            IResolve<TermSet> resolver = Resolve.TermStoreSiteCollectionDefault().TermSetById(TermSetId);
+            IResolveOld<TermSet> resolver = Resolve.TermStoreSiteCollectionDefault().TermSetById(TermSetId);
             var actual = await resolver.ResolveSingleAsync(Fixture.ResolveContext);
 
             Fixture.ClientContext.Load(actual, ts => ts.Id, ts => ts.Name);

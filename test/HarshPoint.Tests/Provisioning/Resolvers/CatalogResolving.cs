@@ -17,7 +17,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task MasterPage_catalog_gets_resolved()
         {
-            var resolver = (IResolve<List>)Resolve.Catalog(ListTemplateType.MasterPageCatalog);
+            var resolver = (IResolveOld<List>)Resolve.Catalog(ListTemplateType.MasterPageCatalog);
             var catalogs = await resolver.TryResolveAsync(Fixture.ResolveContext);
 
             var catalog = Assert.Single(catalogs);
@@ -30,7 +30,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 
         public async Task MasterPage_RootFolder_gets_resolved()
         {
-            IResolve<Folder> resolver = Resolve
+            IResolveOld<Folder> resolver = Resolve
                 .Catalog(ListTemplateType.MasterPageCatalog)
                 .RootFolder();
 

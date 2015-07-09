@@ -10,6 +10,11 @@ namespace HarshPoint.Server.Tests
 {
     public class HarshServerCompositeProvisionerTests : IClassFixture<SharePointServerFixture>
     {
+        private readonly MockRepository _mockRepo = new MockRepository(MockBehavior.Loose)
+        {
+            CallBase = true
+        };
+
         public HarshServerCompositeProvisionerTests(SharePointServerFixture data)
         {
             ServerOM = data;
@@ -26,8 +31,8 @@ namespace HarshPoint.Server.Tests
         {
             var seq = String.Empty;
 
-            var p1 = new Mock<HarshServerProvisioner>();
-            var p2 = new Mock<HarshServerProvisioner>();
+            var p1 = _mockRepo.Create<HarshServerProvisioner>();
+            var p2 = _mockRepo.Create<HarshServerProvisioner>();
 
             p1.Protected()
                 .Setup<Task>("OnProvisioningAsync")
@@ -54,8 +59,8 @@ namespace HarshPoint.Server.Tests
         {
             var seq = String.Empty;
 
-            var p1 = new Mock<HarshServerProvisioner>();
-            var p2 = new Mock<HarshServerProvisioner>();
+            var p1 = _mockRepo.Create<HarshServerProvisioner>();
+            var p2 = _mockRepo.Create<HarshServerProvisioner>();
 
             p1.Protected()
                 .Setup<Task>("OnUnprovisioningAsync")
@@ -81,7 +86,7 @@ namespace HarshPoint.Server.Tests
         [Fact]
         public async Task Adapts_client_provisioner_into_server()
         {
-            var p = new Mock<HarshProvisioner>();
+            var p = _mockRepo.Create<HarshProvisioner>();
 
             p.Protected()
                 .Setup<Task>("OnProvisioningAsync")

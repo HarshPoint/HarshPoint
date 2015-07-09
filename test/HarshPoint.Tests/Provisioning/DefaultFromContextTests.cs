@@ -157,7 +157,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             [Parameter]
             [DefaultFromContext]
-            public IResolve<String> SingleResolver
+            public IResolveOld<String> SingleResolver
             {
                 get;
                 set;
@@ -168,7 +168,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             [Parameter]
             [DefaultFromContext]
-            public IResolve<String> Resolver
+            public IResolveOld<String> Resolver
             {
                 get;
                 set;
@@ -179,7 +179,7 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        private class DummyResolver : IResolve<String>
+        private class DummyResolver : IResolveOld<String>
         {
             public Task<IEnumerable<string>> TryResolveAsync(IResolveContext context)
             {

@@ -476,6 +476,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The resolver &apos;{0}&apos; must be resolved via the IResolver interface to retrieve results..
+        /// </summary>
+        internal static string Resolvable_ResultsNotAvailableNotResolved {
+            get {
+                return ResourceManager.GetString("Resolvable_ResultsNotAvailableNotResolved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The parameter &quot;{0}&quot; resolver &quot;{1}&quot; resulted into &quot;{2}&quot; which isn&apos;t compatible with parameter type &quot;{3}&quot;..
         /// </summary>
         internal static string ResolvedParameterBinder_ResolverResultNotCompatible {

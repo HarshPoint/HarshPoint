@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override async Task<IEnumerable<List>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
+        protected override async Task<IEnumerable<List>> ResolveChainElementOld(ResolveContext<HarshProvisionerContext> context)
         {
             return await this.ResolveQuery(
                 ClientObjectResolveQuery.ListByUrl,

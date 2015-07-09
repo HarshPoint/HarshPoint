@@ -8,7 +8,7 @@ namespace HarshPoint.Provisioning
     public class HarshLookupField : HarshFieldProvisioner<FieldLookup>
     {
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public IResolve<Tuple<List, Field>> LookupTarget
+        public IResolveOld<Tuple<List, Field>> LookupTarget
         {
             get;
             set;

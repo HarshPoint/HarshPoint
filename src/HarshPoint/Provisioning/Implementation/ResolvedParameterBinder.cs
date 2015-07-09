@@ -48,7 +48,7 @@ namespace HarshPoint.Provisioning.Implementation
                     continue;
                 }
 
-                var resolver = value as IResolver;
+                var resolver = value as IIndirectResolver;
 
                 if (resolver == null)
                 {
@@ -61,7 +61,7 @@ namespace HarshPoint.Provisioning.Implementation
                     continue;
                 }
 
-                var result = resolver.Resolve(context);
+                var result = resolver.Initialize(context);
 
                 if (result == null)
                 {
@@ -102,7 +102,7 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        private static InvalidOperationException ResolveResultNotCompatible(Parameter parameter, IResolver resolver, Object result)
+        private static InvalidOperationException ResolveResultNotCompatible(Parameter parameter, IIndirectResolver resolver, Object result)
         {
             if (parameter == null)
             {

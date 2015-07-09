@@ -20,7 +20,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [InlineData("0x0120")]
         public async Task Valid_id_gets_resolved(String id)
         {
-            IResolve<ContentType> resolver = Resolve.ContentTypeById(id);
+            IResolveOld<ContentType> resolver = Resolve.ContentTypeById(id);
             var ct = Assert.Single(await resolver.TryResolveAsync(Fixture.ResolveContext));
 
             Assert.False(ct.IsNull());

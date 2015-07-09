@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 namespace HarshPoint.Provisioning.Implementation
 {
     [Obsolete]
-    internal sealed class ResolvableContextModification<T> : IResolve<T>
+    internal sealed class ResolvableContextModification<T> : IResolveOld<T>
     {
-        public ResolvableContextModification(IResolve<T> innerResolvable, Action<IResolveContext> contextModifier)
+        public ResolvableContextModification(IResolveOld<T> innerResolvable, Action<IResolveContext> contextModifier)
         {
             if (innerResolvable == null)
             {
@@ -32,7 +32,7 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        private IResolve<T> InnerResolvable
+        private IResolveOld<T> InnerResolvable
         {
             get;
             set;

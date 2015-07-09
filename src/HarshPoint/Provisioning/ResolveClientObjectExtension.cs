@@ -9,47 +9,47 @@ namespace HarshPoint.Provisioning
 {
     public static class ResolveClientObjectExtension
     {
-        public static IResolve<T> Include<T>(
-            this IResolve<T> resolvable,
+        public static IResolveOld<T> Include<T>(
+            this IResolveOld<T> resolvable,
             params Expression<Func<T, Object>>[] retrievals
         )
             where T : ClientObject
         => CreateModifier(resolvable, retrievals);
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static IResolve<IGrouping<T1, T2>> Include<T1, T2>(
-            this IResolve<IGrouping<T1, T2>> resolvable,
+        public static IResolveOld<IGrouping<T1, T2>> Include<T1, T2>(
+            this IResolveOld<IGrouping<T1, T2>> resolvable,
             params Expression<Func<T2, Object>>[] retrievals
         )
             where T2 : ClientObject
         => CreateModifier(resolvable, retrievals);
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static IResolve<Tuple<T1, T2>> Include<T1, T2>(
-            this IResolve<Tuple<T1, T2>> resolvable,
+        public static IResolveOld<Tuple<T1, T2>> Include<T1, T2>(
+            this IResolveOld<Tuple<T1, T2>> resolvable,
             params Expression<Func<T2, Object>>[] retrievals
         )
             where T2 : ClientObject
         => CreateModifier(resolvable, retrievals);
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static IResolve<IGrouping<T1, T2>> IncludeOnParent<T1, T2>(
-            this IResolve<IGrouping<T1, T2>> resolvable,
+        public static IResolveOld<IGrouping<T1, T2>> IncludeOnParent<T1, T2>(
+            this IResolveOld<IGrouping<T1, T2>> resolvable,
             params Expression<Func<T1, Object>>[] retrievals
         )
             where T1 : ClientObject
         => CreateModifier(resolvable, retrievals);
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static IResolve<Tuple<T1, T2>> IncludeOnParent<T1, T2>(
-            this IResolve<Tuple<T1, T2>> resolvable,
+        public static IResolveOld<Tuple<T1, T2>> IncludeOnParent<T1, T2>(
+            this IResolveOld<Tuple<T1, T2>> resolvable,
             params Expression<Func<T1, Object>>[] retrievals
         )
             where T1 : ClientObject
         => CreateModifier(resolvable, retrievals);
 
-        private static IResolve<TResolved> CreateModifier<TResolved, TClientObject>(
-            IResolve<TResolved> resolvable,
+        private static IResolveOld<TResolved> CreateModifier<TResolved, TClientObject>(
+            IResolveOld<TResolved> resolvable,
             Expression<Func<TClientObject, Object>>[] retrievals
         )
             where TClientObject : ClientObject

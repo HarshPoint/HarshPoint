@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning
 {
     public sealed class HarshContentTypeRef : HarshProvisioner
     {
-        public IResolve<ContentType> ContentTypes
+        public IResolveOld<ContentType> ContentTypes
         {
             get;
             set;
@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning
 
         [Parameter]
         [DefaultFromContext]
-        public IResolve<List> Lists
+        public IResolveOld<List> Lists
         {
             get;
             set;
