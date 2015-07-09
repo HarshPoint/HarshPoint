@@ -13,7 +13,7 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext<ClientObjectResolveContextBuilder>();
 
-        private ClientObjectResolveContext _result = new ClientObjectResolveContext();
+        private readonly ClientObjectResolveContext _result = new ClientObjectResolveContext();
 
         public void Load<T>(IResolve2<T> resolver, params Expression<Func<T, Object>>[] retrievals)
             where T : ClientObject
@@ -33,7 +33,7 @@ namespace HarshPoint.Provisioning.Implementation
                 return;
             }
 
-            _result = _result.Include(retrievals);
+            _result.Include(retrievals);
         }
 
         internal ClientObjectResolveContext ToResolveContext()

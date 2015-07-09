@@ -171,7 +171,6 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Equal("Lists", listsAccess.Member.Name);
         }
 
-
         private static Expression GetExpression(Expression<Func<Web, Object>> expr)
         {
             return expr;

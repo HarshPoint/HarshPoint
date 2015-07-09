@@ -9,7 +9,7 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class ClientObjectContextStateResolving : SharePointClientTest
     {
-        public ClientObjectContextStateResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
+        public ClientObjectContextStateResolving(SharePointClientFixture fixture, ITestOutputHelper output)
             : base(fixture, output)
         {
         }
@@ -55,7 +55,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.False(resolvedWeb.Lists.ServerObjectIsNull.Value);
             Assert.NotEmpty(resolvedWeb.Lists);
 
-            Assert.All(resolvedWeb.Lists, 
+            Assert.All(resolvedWeb.Lists,
                 list => Assert.True(
                     list.IsPropertyAvailable(l => l.ItemCount)
                 )

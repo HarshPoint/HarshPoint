@@ -64,11 +64,10 @@ namespace HarshPoint.Provisioning
                 throw Error.ArgumentNull(nameof(retrievals));
             }
 
-            return new ResolvableContextModification<TResolved>(resolvable, ctx =>
-            {
-                var clientCtx = (ClientObjectResolveContext)(ctx);
-                clientCtx.Include(retrievals);
-            });
+            return new ResolvableContextModification<TResolved>(
+                resolvable, 
+                ctx => ((ClientObjectResolveContext)(ctx)).Include(retrievals)
+            );
         }
     }
 }

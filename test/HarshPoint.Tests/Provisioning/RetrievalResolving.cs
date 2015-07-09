@@ -35,7 +35,7 @@ namespace HarshPoint.Tests.Provisioning
             );
 
             var field = await Resolve.FieldById(HarshBuiltInFieldId.Title).ResolveSingleAsync(
-                ctx                
+                ctx
             );
 
             Assert.NotNull(field);

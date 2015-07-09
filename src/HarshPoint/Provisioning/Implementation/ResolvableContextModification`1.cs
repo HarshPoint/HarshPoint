@@ -27,7 +27,9 @@ namespace HarshPoint.Provisioning.Implementation
         {
             ContextModifier(context);
 
-            return InnerResolvable.TryResolveAsync(context);
+            return InnerResolvable.TryResolveAsync(
+                context
+            );
         }
 
         private IResolve<T> InnerResolvable
