@@ -81,6 +81,45 @@ namespace HarshPoint
             );
         }
 
+        public ArgumentOutOfRangeException ArgumentOutOfRange(String parameterName, String message)
+        {
+            if (parameterName == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(parameterName));
+            }
+
+            if (message == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(message));
+            }
+
+            return Write(
+                Error.ArgumentOutOfRange(parameterName, message)
+            );
+        }
+
+        public ArgumentOutOfRangeException ArgumentOutOfRangeFormat(String parameterName, String format, params Object[] args)
+        {
+            if (parameterName == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(parameterName));
+            }
+
+            if (format == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(format));
+            }
+
+            if (args == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(args));
+            }
+
+            return Write(
+                Error.ArgumentOutOfRangeFormat(parameterName, format, args)
+            );
+        }
+
         public ArgumentOutOfRangeException ArgumentTypeNotAssignableTo(String parameterName, Type type, Type expectedBaseType)
         {
             if (parameterName == null)
@@ -136,11 +175,11 @@ namespace HarshPoint
                 Error.InvalidOperationFormat(format, args)
             );
         }
+
         public TException Write<TException>(TException exception)
             where TException : Exception
         {
             return Write(LogEventLevel.Fatal, exception);
         }
-
     }
 }
