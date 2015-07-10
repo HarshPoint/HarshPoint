@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
+    [Obsolete]
     internal sealed class ClientObjectResolveContext : ResolveContext<HarshProvisionerContext>
     {
         private ImmutableDictionary<Type, ImmutableList<Expression>> _retrievals =

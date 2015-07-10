@@ -195,6 +195,7 @@ namespace HarshPoint.Provisioning.Implementation
             return new Collection<HarshProvisionerBase>();
         }
 
+        [Obsolete]
         protected virtual ResolveContext<TContext> CreateResolveContext()
         {
             return new ResolveContext<TContext>();

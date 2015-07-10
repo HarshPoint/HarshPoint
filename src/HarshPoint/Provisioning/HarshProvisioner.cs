@@ -32,17 +32,12 @@ namespace HarshPoint.Provisioning
             });
         }
 
+        [Obsolete]
         protected sealed override ResolveContext<HarshProvisionerContext> CreateResolveContext()
         {
-            var result = new ClientObjectResolveContextBuilder();
-            PrepareResolveContext(result);
-            return result.ToResolveContext();
+            return new ClientObjectResolveContext();
         }
-
-        protected virtual void PrepareResolveContext(ClientObjectResolveContextBuilder context)
-        {
-        }
-
+        
         internal sealed override async Task OnParametersBound()
         {
             if (ClientContext.HasPendingRequest)
