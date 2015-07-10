@@ -22,7 +22,7 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 throw Logger.Fatal.ArgumentOutOfRange(
                     nameof(other),
-                    SR.Chain_ArgumentWouldCreateCycle
+                    SR.Chain_ElementAlreadyContained
                 );
             }
 
