@@ -9,8 +9,8 @@ namespace HarshPoint.Provisioning.Implementation
     [Obsolete]
     internal sealed class ClientObjectResolveContext : ResolveContext<HarshProvisionerContext>
     {
-        private ImmutableDictionary<Type, ImmutableList<Expression>> _retrievals =
-            ImmutableDictionary<Type, ImmutableList<Expression>>.Empty;
+        private ImmutableDictionary<Type, IImmutableList<Expression>> _retrievals =
+            ImmutableDictionary<Type, IImmutableList<Expression>>.Empty;
 
         public void Include<T>(params Expression<Func<T, Object>>[] retrievals)
             where T : ClientObject
@@ -34,7 +34,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToArray();
         }
 
-        public ImmutableList<Expression> GetRetrievals(Type type)
+        public IImmutableList<Expression> GetRetrievals(Type type)
         {
             if (type == null)
             {
@@ -44,6 +44,9 @@ namespace HarshPoint.Provisioning.Implementation
             return _retrievals.GetValueOrDefault(type, EmptyExpressionList);
         }
         
+        public IImmutableDictionary<Type, IImmutableList<Expression>> Retrievals
+            => _retrievals;
+
         private static readonly ImmutableList<Expression> EmptyExpressionList =
             ImmutableList<Expression>.Empty;
     }

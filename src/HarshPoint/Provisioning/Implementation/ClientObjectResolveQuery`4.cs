@@ -63,7 +63,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (clientObjectResolveContext != null)
             {
-                var transformer = new ClientObjectResolveQueryProcessor(clientObjectResolveContext);
+                var transformer = new ClientObjectResolveQueryProcessor(clientObjectResolveContext.Retrievals);
                 var withAddedRetrievals = transformer.AddContextRetrievals(query.Expression);
 
                 query = query.Provider.CreateQuery<TIntermediate>(withAddedRetrievals);

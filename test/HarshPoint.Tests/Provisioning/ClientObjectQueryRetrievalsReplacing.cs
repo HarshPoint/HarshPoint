@@ -19,7 +19,7 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>(l => l.Title);
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = new ClientObjectResolveQueryProcessor(ctx.Retrievals);
             var expression = GetExpression(w => w.Lists);
 
             var actual = visitor.AddContextRetrievals(expression);
@@ -34,7 +34,7 @@ namespace HarshPoint.Tests.Provisioning
             ctx.Include<List>(l => l.Title);
             ctx.Include<Field>(f => f.InternalName);
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = new ClientObjectResolveQueryProcessor(ctx.Retrievals);
             var expression = GetExpression(
                 w => w.Lists.Include(
                     l => l.Fields.Include()
@@ -59,7 +59,7 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>(l => l.Title);
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = new ClientObjectResolveQueryProcessor(ctx.Retrievals);
             var expression = GetExpression(
                 w => w.Lists.Include()
             );
@@ -90,7 +90,7 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>(l => l.Title);
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = new ClientObjectResolveQueryProcessor(ctx.Retrievals);
 
             var expression = GetExpression(
                 w => w.Lists.Include(l => l.Description)
@@ -122,7 +122,7 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>(l => l.Title);
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = new ClientObjectResolveQueryProcessor(ctx.Retrievals);
 
             var expression = GetExpression(
                 w => w.Lists.IncludeWithDefaultProperties()
@@ -154,7 +154,7 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>();
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = new ClientObjectResolveQueryProcessor(ctx.Retrievals);
 
             var expression = GetExpression(
                 w => w.Lists.Include()

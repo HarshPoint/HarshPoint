@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,16 +9,16 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ClientObjectResolveQueryProcessor
     {
-        private readonly ClientObjectResolveContext _context;
+        private readonly IImmutableDictionary<Type, IImmutableList<Expression>> _retrievals;
 
-        public ClientObjectResolveQueryProcessor(ClientObjectResolveContext context)
+        public ClientObjectResolveQueryProcessor(IImmutableDictionary<Type, IImmutableList<Expression>> retrievals)
         {
-            if (context == null)
+            if (retrievals == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Error.ArgumentNull(nameof(retrievals));
             }
 
-            _context = context;
+            _retrievals = retrievals;
         }
 
         public Expression AddContextRetrievals(Expression expression)
@@ -27,19 +28,19 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Error.ArgumentNull(nameof(expression));
             }
 
-            var visitor = new Visitor(_context);
+            var visitor = new Visitor(_retrievals);
             var result = visitor.Visit(expression);
             return result;
         }
 
         private sealed class Visitor : ExpressionVisitor
         {
-            public Visitor(ClientObjectResolveContext resolveContext)
+            public Visitor(IImmutableDictionary<Type, IImmutableList<Expression>> retrievals)
             {
-                ResolveContext = resolveContext;
+                Retrievals = retrievals;
             }
 
-            public ClientObjectResolveContext ResolveContext
+            public IImmutableDictionary<Type, IImmutableList<Expression>> Retrievals
             {
                 get;
                 private set;
@@ -71,7 +72,12 @@ namespace HarshPoint.Provisioning.Implementation
 
                 var retrievalsCombined = new ReadOnlyCollection<Expression>(
                     retrievals.Expressions
-                    .Concat(ResolveContext.GetRetrievals(retrievedType))
+                    .Concat(
+                        Retrievals.GetValueOrDefault(
+                            retrievedType, 
+                            ImmutableArray<Expression>.Empty
+                        )
+                    )
                     .ToArray()
                 );
 
