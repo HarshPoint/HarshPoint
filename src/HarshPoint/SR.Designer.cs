@@ -62,6 +62,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified argument contains elements already contained in this chain..
+        /// </summary>
+        internal static string Chain_ElementAlreadyContained {
+            get {
+                return ResourceManager.GetString("Chain_ElementAlreadyContained", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified object hasn&apos;t been loaded yet, cannot determine if it is null..
         /// </summary>
         internal static string ClientObject_IsNullNotLoaded {

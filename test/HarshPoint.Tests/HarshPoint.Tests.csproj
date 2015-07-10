@@ -165,6 +165,7 @@
     <Compile Include="Provisioning\FieldProvisionerTests.cs" />
     <Compile Include="Provisioning\FieldSchemaXmlBuilderTests.cs" />
     <Compile Include="Provisioning\IdentifierResolving.cs" />
+    <Compile Include="Provisioning\Implementation\ChainTests.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedParameterBinding.cs" />
     <Compile Include="Provisioning\ListProvisioning.cs" />
     <Compile Include="Provisioning\LookupProvisioning.cs" />
