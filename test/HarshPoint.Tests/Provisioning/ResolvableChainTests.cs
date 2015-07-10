@@ -9,6 +9,7 @@ using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
+    [Obsolete]
     public class ResolvableChainTests : SharePointClientTest
     {
         public ResolvableChainTests(SharePointClientFixture fixture, ITestOutputHelper output)
