@@ -270,4 +270,10 @@ Property: {0}.{1}</value>
   <data name="ResolvedParameterBinder_ResolverResultNotCompatible" xml:space="preserve">
     <value>The parameter "{0}" resolver "{1}" resulted into "{2}" which isn't compatible with parameter type "{3}".</value>
   </data>
+  <data name="ResolveResultConverter_PropertyTypeNotGeneric" xml:space="preserve">
+    <value>The specified property type "{0}" is not a generic type.</value>
+  </data>
+  <data name="ResolveResultConverter_PropertyTypeUnknownInterface" xml:space="preserve">
+    <value>The specified property type generic definition "{0}" is not one of the known interface types: {1}.</value>
+  </data>
 </root>

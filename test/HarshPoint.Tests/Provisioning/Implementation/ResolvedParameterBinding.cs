@@ -1,12 +1,10 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Implementation;
+using Moq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
-using System.Collections;
-using HarshPoint.Provisioning.Implementation;
-using Moq;
 
 namespace HarshPoint.Tests.Provisioning.Implementation
 {
@@ -34,7 +32,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             binder.Bind(target, Mock.Of<IResolveContext>());
 
             Assert.NotNull(target.Param);
-            Assert.Equal("42", target.Param.Result);
+            Assert.Equal("42", target.Param.First());
         }
 
         [Fact]
@@ -60,9 +58,6 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         private IResolve<T> MockResolverResult<T>(params T[] results)
         {
             var mock = new Mock<IResolve<T>>();
-
-            mock.Setup(x => x.Result)
-                .Returns(() => results.Single());
 
             mock.Setup(x => x.GetEnumerator())
                 .Returns(() => results.AsEnumerable().GetEnumerator());

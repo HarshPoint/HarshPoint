@@ -501,5 +501,23 @@ namespace HarshPoint {
                 return ResourceManager.GetString("ResolvedParameterBinder_ResolverResultNotCompatible", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified property type &quot;{0}&quot; is not a generic type..
+        /// </summary>
+        internal static string ResolveResultConverter_PropertyTypeNotGeneric {
+            get {
+                return ResourceManager.GetString("ResolveResultConverter_PropertyTypeNotGeneric", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified property type generic definition &quot;{0}&quot; is not one of the known interface types: {1}..
+        /// </summary>
+        internal static string ResolveResultConverter_PropertyTypeUnknownInterface {
+            get {
+                return ResourceManager.GetString("ResolveResultConverter_PropertyTypeUnknownInterface", resourceCulture);
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace HarshPoint.Provisioning
 {
-    public interface IResolveSingle<out T>
+    public interface IResolveSingleOrDefault<out T>
     {
         T Value { get; }
     }
