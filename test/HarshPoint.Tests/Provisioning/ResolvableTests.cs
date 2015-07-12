@@ -9,6 +9,7 @@ using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
+    [Obsolete]
     public class ResolvableTests : SharePointClientTest
     {
         public ResolvableTests(SharePointClientFixture fixture, ITestOutputHelper output)
@@ -179,6 +180,7 @@ namespace HarshPoint.Tests.Provisioning
             );
         }
 
+        [Obsolete]
         public class TestResolvable<T> : OldResolvable<T, HarshProvisionerContext, TestResolvable<T>>
         {
             public TestResolvable(params T[] results)
@@ -194,6 +196,7 @@ namespace HarshPoint.Tests.Provisioning
             }
         }
 
+        [Obsolete]
         public class NestedTestResolvable<T1, T2> : OldNestedResolvable<T1, T2, HarshProvisionerContext, NestedTestResolvable<T1, T2>>
         {
             public NestedTestResolvable(IResolveOld<T1> parent, Int32 count)
