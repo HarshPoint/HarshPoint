@@ -1,14 +1,13 @@
 ﻿using Microsoft.SharePoint.Client;
 using System.Linq;
 using System.Collections;
-using System;
 using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class ClientObjectResolver<T, TSelf> :
-        Chain<IClientObjectResolverElement>,
-        IClientObjectResolverElement,
+        Chain<IClientObjectResolveBuilderElement<T>>,
+        IClientObjectResolveBuilderElement<T>,
         IResolveBuilder<HarshProvisionerContext>
         where T : ClientObject
         where TSelf : ClientObjectResolver<T, TSelf>
@@ -18,6 +17,6 @@ namespace HarshPoint.Provisioning.Implementation
             return Elements.SelectMany(e => e.ToEnumerable(context));
         }
 
-        public abstract IEnumerable<Object> ToEnumerable(HarshProvisionerContext context);
+        public abstract IEnumerable<T> ToEnumerable(HarshProvisionerContext context);
     }
 }
