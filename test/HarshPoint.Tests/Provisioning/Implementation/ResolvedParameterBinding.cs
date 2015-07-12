@@ -2,15 +2,16 @@
 using HarshPoint.Provisioning.Implementation;
 using Moq;
 using System;
+using System.Collections;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning.Implementation
 {
-    public class ResolvedParameterBinding : SeriloggedTest
+    public class ResolvedParameterBinding : SharePointClientTest
     {
-        public ResolvedParameterBinding(ITestOutputHelper output) : base(output)
+        public ResolvedParameterBinding(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
         }
 
@@ -25,11 +26,11 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var target = new SimpleTarget()
             {
                 Param = MockResolver<String>(
-                    MockResolverResult("42")
+                    new[] { "42" }
                 )
             };
 
-            binder.Bind(target, Mock.Of<IResolveContext>());
+            binder.Bind(target, Fixture.Context);
 
             Assert.NotNull(target.Param);
             Assert.Equal("42", target.Param.First());
@@ -46,31 +47,22 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var target = new SimpleTarget()
             {
                 Param = MockResolver<String>(
-                    MockResolverResult<Int32>(42)
+                    new[] { 42 }
                 )
             };
 
-            Assert.Throws<InvalidOperationException>(
-                () => binder.Bind(target, Mock.Of<IResolveContext>())
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => binder.Bind(target, Fixture.Context)
             );
         }
+        
 
-        private IResolve<T> MockResolverResult<T>(params T[] results)
+        private IResolve<T> MockResolver<T>(IEnumerable result)
         {
             var mock = new Mock<IResolve<T>>();
 
-            mock.Setup(x => x.GetEnumerator())
-                .Returns(() => results.AsEnumerable().GetEnumerator());
-
-            return mock.Object;
-        }
-
-        private IResolve<T> MockResolver<T>(Object result)
-        {
-            var mock = new Mock<IResolve<T>>();
-
-            mock.As<IIndirectResolver>()
-                .Setup(x => x.Initialize(It.IsAny<IResolveContext>()))
+            mock.As<IResolveBuilder>()
+                .Setup(x => x.ToEnumerable(It.IsAny<HarshProvisionerContextBase>()))
                 .Returns(result);
 
             return mock.Object;

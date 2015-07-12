@@ -314,7 +314,7 @@ namespace HarshPoint.Provisioning.Implementation
 
                 Metadata.ResolvedParameterBinder.Bind(
                     this,
-                    PrepareResolveContext()
+                    Context
                 );
 
                 await OnParametersBound();

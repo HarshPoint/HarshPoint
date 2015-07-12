@@ -22,7 +22,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToImmutableArray();
         }
 
-        public void Bind(Object target, IResolveContext context)
+        public void Bind(Object target, HarshProvisionerContextBase context)
         {
             if (target == null)
             {
@@ -48,12 +48,12 @@ namespace HarshPoint.Provisioning.Implementation
                     continue;
                 }
 
-                var resolver = value as IIndirectResolver;
+                var resolveBuilder = value as IResolveBuilder;
 
-                if (resolver == null)
+                if (resolveBuilder == null)
                 {
                     Logger.Debug(
-                        "Parameter {$Parameter} value {$Value} is not an IResolver, skipping.",
+                        "Parameter {$Parameter} value {$Value} is not an IResolveBuilder, skipping.",
                         parameter,
                         value
                     );
@@ -61,34 +61,37 @@ namespace HarshPoint.Provisioning.Implementation
                     continue;
                 }
 
-                var result = resolver.Initialize(context);
+                var resultSource = resolveBuilder.ToEnumerable(context);
 
-                if (result == null)
+                if (resultSource == null)
                 {
                     Logger.Warning(
                         "Parameter {$Parameter} resolver {$Resolver} resolved into null value.",
                         parameter,
-                        resolver
+                        resolveBuilder
                     );
 
                     parameter.Setter(target, null);
-
                     continue;
                 }
 
-                if (!parameter.PropertyTypeInfo.IsAssignableFrom(result.GetType().GetTypeInfo()))
-                {
-                    throw ResolveResultNotCompatible(
-                        parameter,
-                        resolver,
-                        result
-                    );
-                }
+                Logger.Debug(
+                    "Parameter {$Parameter} resolver {$Resolver} resolved into value {$Value}.",
+                    parameter,
+                    resolveBuilder,
+                    resultSource
+                );
+
+                var result = ResolveResultFactory.CreateResult(
+                    parameter.PropertyTypeInfo, 
+                    resultSource,
+                    resolveBuilder
+                );
 
                 Logger.Debug(
-                    "Parameter {$Parameter} resolver {$Resolver} resolved into value {$Value}, assigning.",
+                    "Parameter {$Parameter} resolver {$Resolver} result adapted into {$Value}, assigning.",
                     parameter,
-                    resolver,
+                    resolveBuilder,
                     result
                 );
 
@@ -102,30 +105,5 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        private static InvalidOperationException ResolveResultNotCompatible(Parameter parameter, IIndirectResolver resolver, Object result)
-        {
-            if (parameter == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(parameter));
-            }
-
-            if (resolver == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(resolver));
-            }
-
-            if (result == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(result));
-            }
-
-            return Logger.Fatal.InvalidOperationFormat(
-                SR.ResolvedParameterBinder_ResolverResultNotCompatible,
-                parameter.Name,
-                resolver,
-                result,
-                parameter.PropertyType
-            );
-        }
     }
 }

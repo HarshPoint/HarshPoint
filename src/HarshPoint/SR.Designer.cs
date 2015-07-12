@@ -494,29 +494,29 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The parameter &quot;{0}&quot; resolver &quot;{1}&quot; resulted into &quot;{2}&quot; which isn&apos;t compatible with parameter type &quot;{3}&quot;..
+        ///   Looks up a localized string similar to The specified object &quot;{0}&quot; cannot be converted to &quot;{1}&quot;..
         /// </summary>
-        internal static string ResolvedParameterBinder_ResolverResultNotCompatible {
+        internal static string ResolveResultFactory_ObjectNotConvertable {
             get {
-                return ResourceManager.GetString("ResolvedParameterBinder_ResolverResultNotCompatible", resourceCulture);
+                return ResourceManager.GetString("ResolveResultFactory_ObjectNotConvertable", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The specified property type &quot;{0}&quot; is not a generic type..
         /// </summary>
-        internal static string ResolveResultConverter_PropertyTypeNotGeneric {
+        internal static string ResolveResultFactory_PropertyTypeNotGeneric {
             get {
-                return ResourceManager.GetString("ResolveResultConverter_PropertyTypeNotGeneric", resourceCulture);
+                return ResourceManager.GetString("ResolveResultFactory_PropertyTypeNotGeneric", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The specified property type generic definition &quot;{0}&quot; is not one of the known interface types: {1}..
         /// </summary>
-        internal static string ResolveResultConverter_PropertyTypeUnknownInterface {
+        internal static string ResolveResultFactory_PropertyTypeUnknownInterface {
             get {
-                return ResourceManager.GetString("ResolveResultConverter_PropertyTypeUnknownInterface", resourceCulture);
+                return ResourceManager.GetString("ResolveResultFactory_PropertyTypeUnknownInterface", resourceCulture);
             }
         }
     }
