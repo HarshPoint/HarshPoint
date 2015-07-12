@@ -4,6 +4,11 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public interface IResolveBuilder
     {
-        IEnumerable ToEnumerable(HarshProvisionerContextBase context);
+    }
+
+    public interface IResolveBuilder<in TContext> : IResolveBuilder
+        where TContext : HarshProvisionerContextBase
+    {
+        IEnumerable ToEnumerable(TContext context);
     }
 }

@@ -61,7 +61,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         {
             var mock = new Mock<IResolve<T>>();
 
-            mock.As<IResolveBuilder>()
+            mock.As<IResolveBuilder<HarshProvisionerContextBase>>()
                 .Setup(x => x.ToEnumerable(It.IsAny<HarshProvisionerContextBase>()))
                 .Returns(result);
 

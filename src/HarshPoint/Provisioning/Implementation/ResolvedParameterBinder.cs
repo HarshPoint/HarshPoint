@@ -22,7 +22,8 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToImmutableArray();
         }
 
-        public void Bind(Object target, HarshProvisionerContextBase context)
+        public void Bind<TContext>(Object target, TContext context)
+            where TContext : HarshProvisionerContextBase
         {
             if (target == null)
             {
@@ -48,7 +49,7 @@ namespace HarshPoint.Provisioning.Implementation
                     continue;
                 }
 
-                var resolveBuilder = value as IResolveBuilder;
+                var resolveBuilder = value as IResolveBuilder<TContext>;
 
                 if (resolveBuilder == null)
                 {
