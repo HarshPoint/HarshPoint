@@ -1,13 +1,14 @@
 ﻿using Microsoft.SharePoint.Client;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class ClientObjectResolveBuilder<TResult, TQueryResult, TIdentifier, TSelf> :
         ClientObjectResolveBuilder<TResult, TQueryResult, TSelf>
+        where TResult : ClientObject
         where TQueryResult : ClientObject
         where TSelf : ClientObjectResolveBuilder<TResult, TQueryResult, TIdentifier, TSelf>
     {

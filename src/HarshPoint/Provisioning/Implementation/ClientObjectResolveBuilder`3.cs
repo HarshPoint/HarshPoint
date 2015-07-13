@@ -12,6 +12,7 @@ namespace HarshPoint.Provisioning.Implementation
         Chain<IClientObjectResolveBuilderElement<TResult>>,
         IClientObjectResolveBuilderElement<TResult>,
         IClientObjectResolveBuilder<TResult>
+        where TResult : ClientObject
         where TQueryResult : ClientObject
         where TSelf : ClientObjectResolveBuilder<TResult, TQueryResult, TSelf>
     {

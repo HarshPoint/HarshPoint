@@ -1,4 +1,5 @@
 ﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         }
 
         protected async Task<IEnumerable<T>> ResolveAsync<T>(IClientObjectResolveBuilder<T> builder)
+            where T : ClientObject
         {
             var state = builder.Initialize(Fixture.ResolveContext);
             await ClientContext.ExecuteQueryAsync();
