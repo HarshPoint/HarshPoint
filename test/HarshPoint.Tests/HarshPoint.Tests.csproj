@@ -166,6 +166,7 @@
     <Compile Include="Provisioning\FieldSchemaXmlBuilderTests.cs" />
     <Compile Include="Provisioning\IdentifierResolving.cs" />
     <Compile Include="Provisioning\Implementation\ChainTests.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilding.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedParameterBinding.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultCreating.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultTests.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="Provisioning\Resolvers\FieldResolving.cs" />
     <Compile Include="Provisioning\Resolvers\ListResolving.cs" />
     <Compile Include="Provisioning\Resolvers\ListViewResolving.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolverTestBase.cs" />
     <Compile Include="Provisioning\Resolvers\TaxonomyResolving.cs" />
     <Compile Include="Provisioning\RetrievalResolving.cs" />
     <Compile Include="Provisioning\TestFieldBase.cs" />

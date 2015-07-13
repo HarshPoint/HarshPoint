@@ -69,7 +69,7 @@ namespace HarshPoint
                 Format(format, args)
             );
         }
-
+        
         public static InvalidOperationException InvalidOperation(String message)
         {
             return new InvalidOperationException(message);

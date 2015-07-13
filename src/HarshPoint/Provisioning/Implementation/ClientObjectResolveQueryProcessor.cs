@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,22 +16,51 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (retrievals == null)
             {
-                throw Error.ArgumentNull(nameof(retrievals));
+                throw Logger.Fatal.ArgumentNull(nameof(retrievals));
             }
 
             _retrievals = retrievals;
+        }
+
+        public ClientObjectResolveQueryProcessor(Type type, IEnumerable<Expression> retrievals)
+        {
+            if (type == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(type));
+            }
+
+            if (retrievals == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(retrievals));
+            }
+
+            _retrievals = ImmutableDictionary<Type, IImmutableList<Expression>>.Empty.Add(
+                type, retrievals.ToImmutableArray()
+            );
         }
 
         public Expression AddContextRetrievals(Expression expression)
         {
             if (expression == null)
             {
-                throw Error.ArgumentNull(nameof(expression));
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
             var visitor = new Visitor(_retrievals);
             var result = visitor.Visit(expression);
             return result;
+        }
+
+        public IQueryable<T> AddRetrievals<T>(IQueryable<T> query)
+        {
+            if (query == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(query));
+            }
+
+            return query.Provider.CreateQuery<T>(
+                AddContextRetrievals(query.Expression)
+            );
         }
 
         private sealed class Visitor : ExpressionVisitor
@@ -140,5 +170,7 @@ namespace HarshPoint.Provisioning.Implementation
                 return true;
             }
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ClientObjectResolveQueryProcessor>();
     }
 }

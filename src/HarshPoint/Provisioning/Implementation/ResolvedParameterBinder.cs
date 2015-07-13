@@ -62,7 +62,18 @@ namespace HarshPoint.Provisioning.Implementation
                     continue;
                 }
 
-                var resultSource = resolveBuilder.ToEnumerable(context);
+                var resolveContext = new ResolveContext<TContext>(context);
+
+                Logger.Debug(
+                    "Parameter {$Parameter} resolver {$Resolver} initializing.",
+                    parameter,
+                    resolveBuilder
+                );
+
+                var resultSource = resolveBuilder.ToEnumerable(
+                    resolveBuilder.Initialize(resolveContext),
+                    resolveContext
+                );
 
                 if (resultSource == null)
                 {
@@ -105,6 +116,5 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             private set;
         }
-
     }
 }

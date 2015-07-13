@@ -76,11 +76,13 @@
     <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`4.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`3.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerTreeBuilder.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextParameterBinder.cs" />
-    <Compile Include="Provisioning\Implementation\IClientObjectResolveBuilderElement.cs" />
+    <Compile Include="Provisioning\Implementation\IClientObjectResolveBuilderElement`1.cs" />
+    <Compile Include="Provisioning\Implementation\IClientObjectResolveBuilder`1.cs" />
+    <Compile Include="Provisioning\Implementation\IClientObjectResolveQuery.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultSingleOrDefault`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResult`1.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery`4.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByTitle.cs" />
@@ -154,7 +157,7 @@
     <Compile Include="Provisioning\IResolve`1.cs" />
     <Compile Include="Provisioning\Resolve.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentTypeById.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
+    <Compile Include="Provisioning\Resolvers\OldResolveListByUrl.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveCatalog.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListRootFolder.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />

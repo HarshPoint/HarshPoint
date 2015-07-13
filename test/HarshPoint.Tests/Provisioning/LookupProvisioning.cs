@@ -24,7 +24,7 @@ namespace HarshPoint.Tests.Provisioning
             var lookupField = new HarshLookupField()
             {
                 LookupTarget = Resolve
-                .ListByUrl(TargetListUrl)
+                .ListByUrlOld(TargetListUrl)
                 .FieldById(HarshBuiltInFieldId.Title)
             };
 

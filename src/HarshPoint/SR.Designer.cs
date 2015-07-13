@@ -80,6 +80,27 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The array of state objects must have the same length as the number of this resolver&apos;s elements.
+        ///
+        ///Number of state objects: {0}
+        ///Number of resolver elements {1}.
+        /// </summary>
+        internal static string ClientObjectResolveBuilder_StateCountNotEqualToElementCount {
+            get {
+                return ResourceManager.GetString("ClientObjectResolveBuilder_StateCountNotEqualToElementCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &quot;{0}&quot; implementation of ToQueryable resulted in a null value..
+        /// </summary>
+        internal static string ClientObjectResolveBuilder_ToQueryableReturnedNull {
+            get {
+                return ResourceManager.GetString("ClientObjectResolveBuilder_ToQueryableReturnedNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified sub-expression doesn&apos;t pass a new array expression as the second argument to the Include call:
         ///
         ///{0}.

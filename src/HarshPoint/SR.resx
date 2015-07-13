@@ -120,6 +120,15 @@
   <data name="Chain_ElementAlreadyContained" xml:space="preserve">
     <value>The specified argument contains elements already contained in this chain.</value>
   </data>
+  <data name="ClientObjectResolveBuilder_StateCountNotEqualToElementCount" xml:space="preserve">
+    <value>The array of state objects must have the same length as the number of this resolver's elements.
+
+Number of state objects: {0}
+Number of resolver elements {1}</value>
+  </data>
+  <data name="ClientObjectResolveBuilder_ToQueryableReturnedNull" xml:space="preserve">
+    <value>The "{0}" implementation of ToQueryable resulted in a null value.</value>
+  </data>
   <data name="ClientObjectResolveQueryProcessor_IncludeArgNotArray" xml:space="preserve">
     <value>The specified sub-expression doesn't pass a new array expression as the second argument to the Include call:
 

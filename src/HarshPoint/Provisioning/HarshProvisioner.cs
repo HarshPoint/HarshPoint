@@ -1,6 +1,7 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
@@ -37,7 +38,7 @@ namespace HarshPoint.Provisioning
         {
             return new ClientObjectResolveContext();
         }
-        
+
         internal sealed override async Task OnParametersBound()
         {
             if (ClientContext.HasPendingRequest)

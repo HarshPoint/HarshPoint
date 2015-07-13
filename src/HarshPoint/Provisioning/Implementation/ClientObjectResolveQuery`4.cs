@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 namespace HarshPoint.Provisioning.Implementation
 {
     internal class ClientObjectResolveQuery<T, TIntermediate, TParent, TIdentifier>
+        : IClientObjectResolveQuery<TIntermediate, TIdentifier>
         where TIntermediate : ClientObject
     {
         public ClientObjectResolveQuery(
@@ -51,6 +52,12 @@ namespace HarshPoint.Provisioning.Implementation
             QueryBuilder = queryBuilder;
         }
 
+        public IQueryable<TIntermediate> CreateQuery(TParent parent)
+        {
+            return CreateQuery(parent, null);
+        }
+
+        [Obsolete]
         public IQueryable<TIntermediate> CreateQuery(TParent parent, ResolveContext<HarshProvisionerContext> resolveContext)
         {
             if (parent == null)
@@ -59,8 +66,9 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             var query = QueryBuilder(parent);
-            var clientObjectResolveContext = (resolveContext as ClientObjectResolveContext);
 
+#if true // [Obsolete]
+            var clientObjectResolveContext = (resolveContext as ClientObjectResolveContext);
             if (clientObjectResolveContext != null)
             {
                 var transformer = new ClientObjectResolveQueryProcessor(clientObjectResolveContext.Retrievals);
@@ -68,6 +76,7 @@ namespace HarshPoint.Provisioning.Implementation
 
                 query = query.Provider.CreateQuery<TIntermediate>(withAddedRetrievals);
             }
+#endif
 
             return query;
         }

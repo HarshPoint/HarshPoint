@@ -62,13 +62,18 @@ namespace HarshPoint.Provisioning
 
         public static ResolveListByUrl ListByUrl(params String[] urls)
         {
+            return new ResolveListByUrl(urls);
+        }
+
+        [Obsolete]
+        public static OldResolveListByUrl ListByUrlOld(params String[] urls)
+        {
             if (urls == null)
             {
                 throw Error.ArgumentNull(nameof(urls));
             }
 
-
-            return new ResolveListByUrl(urls);
+            return new OldResolveListByUrl(urls);
         }
 
         public static ResolveTermStoreKeywordsDefault TermStoreKeywordsDefault()

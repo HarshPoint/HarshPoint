@@ -2,24 +2,33 @@
 using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveListByUrl : 
-        Resolvable<List, String, HarshProvisionerContext, ResolveListByUrl>
+    public sealed class ResolveListByUrl :
+        ClientObjectResolveBuilder<List, List, String, ResolveListByUrl>
     {
+        private readonly ClientObjectResolveQuery<List, List, Web, String> Query =
+            ClientObjectResolveQuery.ListByUrl;
+
         public ResolveListByUrl(IEnumerable<String> urls)
             : base(urls)
         {
         }
 
-        protected override async Task<IEnumerable<List>> ResolveChainElementOld(ResolveContext<HarshProvisionerContext> context)
+        protected override IQueryable<List> CreateQuery(ResolveContext<HarshProvisionerContext> context)
         {
-            return await this.ResolveQuery(
-                ClientObjectResolveQuery.ListByUrl,
+            return Query.CreateQuery(context.ProvisionerContext.Web);
+        }
+        
+        protected override IEnumerable<List> TransformQueryResults(IEnumerable<List> queryResults, ResolveContext<HarshProvisionerContext> context)
+        {
+            return ResolveIdentifiers(
+                queryResults, 
                 context,
-                context.ProvisionerContext.Web
+                list => Query.IdentifierSelector(context.ProvisionerContext.Web, list), 
+                Query.IdentifierComparer
             );
         }
     }

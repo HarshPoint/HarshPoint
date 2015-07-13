@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -6,9 +7,11 @@ namespace HarshPoint.Provisioning.Implementation
     {
     }
 
-    public interface IResolveBuilder<in TContext> : IResolveBuilder
+    public interface IResolveBuilder<TContext> : IResolveBuilder
         where TContext : HarshProvisionerContextBase
     {
-        IEnumerable ToEnumerable(TContext context);
+        Object Initialize(ResolveContext<TContext> context);
+
+        IEnumerable ToEnumerable(Object state, ResolveContext<TContext> context);
     }
 }

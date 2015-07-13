@@ -19,7 +19,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             await Fixture.EnsureTestList();
 
             IResolveOld<Field> resolver = Resolve
-                .ListByUrl(SharePointClientFixture.TestListUrl)
+                .ListByUrlOld(SharePointClientFixture.TestListUrl)
                 .FieldById(HarshBuiltInFieldId.Title);
 
             var field = Assert.Single(
