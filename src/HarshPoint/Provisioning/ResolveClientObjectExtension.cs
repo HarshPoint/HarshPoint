@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning
 {
+    [Obsolete]
     public static class ResolveClientObjectExtension
     {
         public static IResolveOld<T> Include<T>(
