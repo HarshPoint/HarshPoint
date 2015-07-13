@@ -1,141 +1,58 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public abstract class ClientObjectResolveBuilder<TResult, TQueryResult, TSelf> :
-        Chain<IClientObjectResolveBuilderElement<TResult>>,
-        IClientObjectResolveBuilderElement<TResult>,
-        IClientObjectResolveBuilder<TResult>
+    public abstract class ClientObjectResolveBuilder<TResult, TQueryResult, TIdentifier> :
+        ClientObjectResolveBuilder<TResult, TQueryResult>
         where TResult : ClientObject
         where TQueryResult : ClientObject
-        where TSelf : ClientObjectResolveBuilder<TResult, TQueryResult, TSelf>
     {
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectResolveBuilder<,,,>));
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectResolveBuilder<,,>));
 
-        private ImmutableList<Expression<Func<TResult, Object>>> _retrievals =
-            ImmutableList<Expression<Func<TResult, Object>>>.Empty;
-
-        Object IResolveBuilder<HarshProvisionerContext>.Initialize(ResolveContext<HarshProvisionerContext> context)
+        protected ClientObjectResolveBuilder(IEnumerable<TIdentifier> identifiers)
         {
-            if (context == null)
+            if (identifiers == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(identifiers));
             }
 
-            return Elements.Select(e => e.LoadQuery(context)).ToArray();
-        }
-
-        IEnumerable IResolveBuilder<HarshProvisionerContext>.ToEnumerable(Object state, ResolveContext<HarshProvisionerContext> context)
-        {
-            if (state == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(state));
-            }
-
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
-            var elementStates = (state as Object[]);
-
-            if (elementStates == null)
-            {
-                throw Logger.Fatal.ArgumentNotAssignableTo(nameof(state), state, typeof(Object[]));
-            }
-
-            var elementCount = Elements.Count();
-
-            if (elementStates.Length != elementCount)
-            {
-                throw Logger.Fatal.ArgumentOutOfRangeFormat(
-                    nameof(state),
-                    SR.ClientObjectResolveBuilder_StateCountNotEqualToElementCount,
-                    elementStates.Length,
-                    elementCount
-                );
-            }
-
-            return Elements.SelectMany(
-                (e, i) => e.TransformQueryResults(elementStates[i], context)
+            Identifiers = new Collection<TIdentifier>(
+                identifiers.ToList()
             );
         }
 
-        Object IClientObjectResolveBuilderElement<TResult>.LoadQuery(ResolveContext<HarshProvisionerContext> context)
+        public Collection<TIdentifier> Identifiers { get; private set; }
+
+        protected IEnumerable<TResult> ResolveIdentifiers(
+            IEnumerable<TResult> items,
+            ResolveContext<HarshProvisionerContext> context,
+            Func<TResult, TIdentifier> identifierSelector,
+            IEqualityComparer<TIdentifier> identifierComparer
+        )
         {
-            var query = CreateQuery(context);
+            var byId = items.ToImmutableDictionaryFirstWins(
+                item => identifierSelector(item),
+                item => item,
+                identifierComparer
+            );
 
-            if (query == null)
+            foreach (var id in Identifiers)
             {
-                throw Logger.Fatal.InvalidOperationFormat(
-                    SR.ClientObjectResolveBuilder_ToQueryableReturnedNull,
-                    GetType()
-                );
+                TResult value;
+
+                if (byId.TryGetValue(id, out value))
+                {
+                    yield return value;
+                }
+                else
+                {
+                    context.AddFailure(this, id);
+                }
             }
-
-            if (_retrievals.Any())
-            {
-                var queryProcessor = new ClientObjectResolveQueryProcessor(
-                    typeof(TResult),
-                    _retrievals
-                );
-
-                query = queryProcessor.AddRetrievals(query);
-            }
-
-            return context.ProvisionerContext.ClientContext.LoadQuery(query);
-        }
-
-        public TSelf And(Chain<IClientObjectResolveBuilderElement<TResult>> other)
-        {
-            Append(other);
-            return (TSelf)(this);
-        }
-
-        public void Include(params Expression<Func<TResult, Object>>[] retrievals)
-        {
-            if (retrievals == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(retrievals));
-            }
-
-            _retrievals = _retrievals.AddRange(retrievals);
-        }
-
-        protected abstract IQueryable<TQueryResult> CreateQuery(ResolveContext<HarshProvisionerContext> context);
-
-        protected abstract IEnumerable<TResult> TransformQueryResults(IEnumerable<TQueryResult> queryResults, ResolveContext<HarshProvisionerContext> context);
-
-        IEnumerable<TResult> IClientObjectResolveBuilderElement<TResult>.TransformQueryResults(Object state, ResolveContext<HarshProvisionerContext> context)
-        {
-            if (state == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(state));
-            }
-
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
-            var queryResults = (state as IEnumerable<TQueryResult>);
-
-            if (queryResults == null)
-            {
-                throw Logger.Fatal.ArgumentNotAssignableTo(
-                    nameof(state), 
-                    state, 
-                    typeof(IEnumerable<TQueryResult>)
-                );
-            }
-
-            return TransformQueryResults(queryResults, context);
         }
     }
 }

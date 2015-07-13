@@ -7,7 +7,7 @@ using System.Linq;
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveListByUrl :
-        ClientObjectResolveBuilder<List, List, String, ResolveListByUrl>
+        ClientObjectResolveBuilder<List, List, String>
     {
         private readonly ClientObjectResolveQuery<List, List, Web, String> Query =
             ClientObjectResolveQuery.ListByUrl;
