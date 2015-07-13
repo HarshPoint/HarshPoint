@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveListFieldById
-        : Implementation.OldNestedResolvable<List, Field, Guid, HarshProvisionerContext, ResolveListFieldById>
+    public sealed class OldResolveListFieldById
+        : Implementation.OldNestedResolvable<List, Field, Guid, HarshProvisionerContext, OldResolveListFieldById>
     {
-        public ResolveListFieldById(IResolveOld<List> parent, IEnumerable<Guid> ids)
+        public OldResolveListFieldById(IResolveOld<List> parent, IEnumerable<Guid> ids)
             : base(parent, ids)
         {
         }
