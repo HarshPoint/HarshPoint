@@ -83,6 +83,7 @@
     <Compile Include="Provisioning\Implementation\IClientObjectResolveBuilderElement`1.cs" />
     <Compile Include="Provisioning\Implementation\IClientObjectResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\IClientObjectResolveQuery.cs" />
+    <Compile Include="Provisioning\Implementation\IResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultSingleOrDefault`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResult`1.cs" />
