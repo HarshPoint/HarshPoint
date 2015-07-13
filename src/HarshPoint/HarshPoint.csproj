@@ -76,6 +76,7 @@
     <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`3.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerTreeBuilder.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextParameterBinder.cs" />
