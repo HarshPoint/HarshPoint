@@ -276,6 +276,9 @@ Property: {0}.{1}</value>
   <data name="Resolvable_ResultsNotAvailableNotResolved" xml:space="preserve">
     <value>The resolver '{0}' must be resolved via the IResolver interface to retrieve results.</value>
   </data>
+  <data name="ResolveBuilder_CannotCallThisMethod" xml:space="preserve">
+    <value>This method cannot be called on ResolveBuilders.</value>
+  </data>
   <data name="ResolveResultFactory_ObjectNotConvertable" xml:space="preserve">
     <value>The specified object "{0}" cannot be converted to "{1}".</value>
   </data>

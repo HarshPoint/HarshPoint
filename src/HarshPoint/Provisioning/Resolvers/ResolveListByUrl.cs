@@ -8,9 +8,9 @@ namespace HarshPoint.Provisioning.Implementation
     {
         public ResolveListByUrl(
             IResolveBuilder<List, ClientObjectResolveContext> parent,
-            IEnumerable<String> identifiers
+            IEnumerable<String> urls
         )
-            : base(parent, identifiers)
+            : base(parent, urls, StringComparer.OrdinalIgnoreCase)
         {
         }
 

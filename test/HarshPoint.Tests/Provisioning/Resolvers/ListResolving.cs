@@ -36,8 +36,8 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             await Fixture.EnsureTestList();
 
-            var resolver = (IResolveOld<Folder>)Resolve.ListByUrlOld(SharePointClientFixture.TestListUrl).RootFolder();
-            var folder = Assert.Single(await resolver.TryResolveAsync(Fixture.ResolveContext));
+            var resolver = Resolve.List.ByUrl(SharePointClientFixture.TestListUrl).RootFolder();
+            var folder = Assert.Single(await ResolveAsync(resolver));
 
             Assert.NotNull(folder);
             Assert.EndsWith(

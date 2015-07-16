@@ -1,4 +1,5 @@
-﻿using HarshPoint.Provisioning.Resolvers;
+﻿using HarshPoint.Provisioning.Implementation;
+using HarshPoint.Provisioning.Resolvers;
 using Microsoft.SharePoint.Client;
 using System;
 
@@ -16,7 +17,7 @@ namespace HarshPoint.Provisioning
             return new ResolveListFieldByInternalName(list, names);
         }
 
-        public static ResolveListRootFolder RootFolder(this IResolveOld<List> list)
+        public static ResolveListRootFolder RootFolder(this IResolveBuilder<List, ClientObjectResolveContext> list)
         {
             return new ResolveListRootFolder(list);
         }

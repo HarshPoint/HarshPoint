@@ -108,6 +108,20 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
+        public void Internal_writable_can_be_set_using_parameter()
+        {
+            var sets = Build<InternalWritableParam>();
+            var set = Assert.Single(sets);
+
+            var param = Assert.Single(set.Parameters);
+            Assert.Equal("InternalWritable", param.Name);
+
+            var target = new InternalWritableParam();
+            param.Setter(target, "42");
+            Assert.Equal("42", target.InternalWritable);
+        }
+
+        [Fact]
         public void Fails_when_default_set_doesnt_exist()
         {
             Assert.Throws<HarshProvisionerMetadataException>(
@@ -136,14 +150,6 @@ namespace HarshPoint.Tests.Provisioning
         {
             Assert.Throws<HarshProvisionerMetadataException>(
                 () => Build<NonReadableParam>()
-            );
-        }
-
-        [Fact]
-        public void Fails_internal_writable_param()
-        {
-            Assert.Throws<HarshProvisionerMetadataException>(
-                () => Build<InternalWritableParam>()
             );
         }
 
@@ -257,8 +263,8 @@ namespace HarshPoint.Tests.Provisioning
             [Parameter]
             public String InternalWritable
             {
-                get { return null; }
-                internal set { }
+                get;
+                internal set;
             }
         }
 

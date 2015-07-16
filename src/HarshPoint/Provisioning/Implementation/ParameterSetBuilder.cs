@@ -52,7 +52,7 @@ namespace HarshPoint.Provisioning.Implementation
             var parameters = BuildParameterMetadata().ToArray();
 
             Logger.Debug(
-                "{ProcessedType}: All parameters: {@Parameters}", 
+                "{ProcessedType}: All parameters: {@Parameters}",
                 ProcessedType,
                 parameters
             );
@@ -62,7 +62,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToArray();
 
             Logger.Debug(
-                "{ProcessedType}: Common parameters: {@CommonParameters}", 
+                "{ProcessedType}: Common parameters: {@CommonParameters}",
                 ProcessedType,
                 commonParameters
             );
@@ -92,7 +92,7 @@ namespace HarshPoint.Provisioning.Implementation
             if (parameterSets.Any())
             {
                 Logger.Debug(
-                    "{ProcessedType}: Parameter sets: {@ParameterSets}", 
+                    "{ProcessedType}: Parameter sets: {@ParameterSets}",
                     ProcessedType,
                     parameterSets
                 );
@@ -107,7 +107,7 @@ namespace HarshPoint.Provisioning.Implementation
             );
 
             Logger.Debug(
-                "{ProcessedType}: Implicit parameter set: {@ImplicitParameterSet}", 
+                "{ProcessedType}: Implicit parameter set: {@ImplicitParameterSet}",
                 ProcessedType,
                 implicitParameterSet
             );
@@ -120,7 +120,7 @@ namespace HarshPoint.Provisioning.Implementation
             if (DefaultParameterSetName != null)
             {
                 return ParameterSet.NameComparer.Equals(
-                    DefaultParameterSetName, 
+                    DefaultParameterSetName,
                     name
                 );
             }
@@ -129,30 +129,28 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         private IEnumerable<Parameter> BuildParameterMetadata()
-        {
-            return from property in ProcessedType.GetRuntimeProperties()
+            => from property in ProcessedType.GetRuntimeProperties()
 
-                   let paramAttrs = property
-                      .GetCustomAttributes<ParameterAttribute>(inherit: true)
-                      .ToArray()
+               let paramAttrs = property
+                  .GetCustomAttributes<ParameterAttribute>(inherit: true)
+                  .ToArray()
 
-                   where
-                      paramAttrs.Any() &&
-                      IsReadableAndWritable(property) &&
-                      !HasNonUniqueParameterSetNames(property, paramAttrs) &&
-                      !IsBothCommonParameterAndInParameterSet(property, paramAttrs)
+               where
+                  paramAttrs.Any() &&
+                  IsReadableAndWritable(property) &&
+                  !HasNonUniqueParameterSetNames(property, paramAttrs) &&
+                  !IsBothCommonParameterAndInParameterSet(property, paramAttrs)
 
-                   let defaultFromContext = property.GetCustomAttribute<DefaultFromContextAttribute>(inherit: true)
-                   let validationAttributes = property.GetCustomAttributes<ParameterValidationAttribute>(inherit: true)
+               let defaultFromContext = property.GetCustomAttribute<DefaultFromContextAttribute>(inherit: true)
+               let validationAttributes = property.GetCustomAttributes<ParameterValidationAttribute>(inherit: true)
 
-                   from attr in paramAttrs
-                   select new Parameter(
-                       property,
-                       attr,
-                       defaultFromContext,
-                       validationAttributes
-                   );
-        }
+               from attr in paramAttrs
+               select new Parameter(
+                   property,
+                   attr,
+                   defaultFromContext,
+                   validationAttributes
+               );
 
         private static Boolean IsBothCommonParameterAndInParameterSet(
             PropertyInfo property,
@@ -204,10 +202,10 @@ namespace HarshPoint.Provisioning.Implementation
 
         private static Boolean IsReadableAndWritable(PropertyInfo property)
         {
-            if (!property.CanRead || 
+            if (!property.CanRead ||
                 !property.CanWrite ||
-                !IsPublicInstance(property.GetMethod) ||
-                !IsPublicInstance(property.SetMethod)
+                !IsInstance(property.GetMethod) ||
+                !IsInstance(property.SetMethod)
             )
             {
                 throw Logger.Fatal.ProvisionerMetadata(
@@ -220,9 +218,7 @@ namespace HarshPoint.Provisioning.Implementation
             return true;
         }
 
-        private static Boolean IsPublicInstance(MethodBase method)
-        {
-            return method.IsPublic && !method.IsStatic;
-        }
+        private static Boolean IsInstance(MethodBase method)
+            => !method.IsStatic;
     }
 }

@@ -1,27 +1,22 @@
 ﻿using Microsoft.SharePoint.Client;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Threading.Tasks;
+using HarshPoint.Provisioning.Implementation;
+using System;
+using System.Linq;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveListRootFolder : Implementation.OldNestedResolvable<List, Folder, HarshProvisionerContext, ResolveListRootFolder>
+    public sealed class ResolveListRootFolder : NestedResolveBuilder<Folder, List, ClientObjectResolveContext>
     {
-        public ResolveListRootFolder(IResolveOld<List> lists)
-            : base(lists)
+        public ResolveListRootFolder(IResolveBuilder<List, ClientObjectResolveContext> parent)
+            : base(parent)
         {
         }
 
-        protected override Task<IEnumerable<Folder>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context, List parent)
+        protected override IEnumerable<Folder> ToEnumerable(Object state, ClientObjectResolveContext context)
         {
-            if (parent == null)
-            {
-                throw Error.ArgumentNull(nameof(parent));
-            }
-
-            return Task.FromResult<IEnumerable<Folder>>(
-                ImmutableArray.Create(parent.RootFolder)
-            );
+            return from list in Parent.ToEnumerable(state, context)
+                   select list.RootFolder;
         }
     }
 }

@@ -3,28 +3,36 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveCatalog : 
-        Resolvable<List, ListTemplateType, HarshProvisionerContext, ResolveCatalog>
+    public sealed class ResolveCatalog : ClientObjectResolveBuilder<List>
     {
         public ResolveCatalog(IEnumerable<ListTemplateType> identifiers)
-            : base(identifiers)
         {
+            Identifiers = new HashSet<ListTemplateType>(identifiers);
         }
 
-        protected override Task<IEnumerable<List>> ResolveChainElementOld(ResolveContext<HarshProvisionerContext> context)
+        public HashSet<ListTemplateType> Identifiers { get; private set; }
+
+        protected override Object Initialize(ClientObjectResolveContext context)
         {
-            if (context == null)
+            var lists = Identifiers
+                .Cast<Int32>()
+                .Select(context.ProvisionerContext.Web.GetCatalog)
+                .ToArray();
+
+            foreach (var list in lists)
             {
-                throw Error.ArgumentNull(nameof(context));
+                context.Load(list);
             }
 
-            return Task.FromResult(
-                Identifiers.Cast<Int32>().Select(id => context.ProvisionerContext.Web.GetCatalog(id))
-            );
+            return lists;
+        }
+
+        protected override IEnumerable<List> ToEnumerable(Object state, ClientObjectResolveContext context)
+        {
+            return (IEnumerable<List>)(state);
         }
     }
 }

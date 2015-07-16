@@ -515,6 +515,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This method cannot be called on ResolveBuilders..
+        /// </summary>
+        internal static string ResolveBuilder_CannotCallThisMethod {
+            get {
+                return ResourceManager.GetString("ResolveBuilder_CannotCallThisMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified object &quot;{0}&quot; cannot be converted to &quot;{1}&quot;..
         /// </summary>
         internal static string ResolveResultFactory_ObjectNotConvertable {

@@ -7,9 +7,9 @@ using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning.Resolvers
 {
-    public class CatalogResolving : SharePointClientTest
+    public class CatalogResolving : ResolverTestBase
     {
-        public CatalogResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
+        public CatalogResolving(SharePointClientFixture fixture, ITestOutputHelper output)
             : base(fixture, output)
         {
         }
@@ -17,8 +17,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task MasterPage_catalog_gets_resolved()
         {
-            var resolver = (IResolveOld<List>)Resolve.Catalog(ListTemplateType.MasterPageCatalog);
-            var catalogs = await resolver.TryResolveAsync(Fixture.ResolveContext);
+            var catalogs = await ResolveAsync(Resolve.Catalog(ListTemplateType.MasterPageCatalog));
 
             var catalog = Assert.Single(catalogs);
 
@@ -28,13 +27,14 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             );
         }
 
+        [Fact]
         public async Task MasterPage_RootFolder_gets_resolved()
         {
-            IResolveOld<Folder> resolver = Resolve
+            var resolver = Resolve
                 .Catalog(ListTemplateType.MasterPageCatalog)
                 .RootFolder();
 
-            var folder = Assert.Single(await resolver.TryResolveAsync(Fixture.ResolveContext));
+            var folder = Assert.Single(await ResolveAsync(resolver));
 
             Assert.Contains(
                 "/_catalogs/masterpage",

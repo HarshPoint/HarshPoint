@@ -36,6 +36,15 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
+        public void Load<T>(T clientObject)
+            where T : ClientObject
+        {
+            ProvisionerContext.ClientContext.Load(
+                clientObject,
+                _queryProcessor.GetRetrievals<T>()
+            );
+        }
+
         [Obsolete]
         internal Expression<Func<T, Object>>[] GetRetrievals<T>()
         {

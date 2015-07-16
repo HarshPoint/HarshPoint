@@ -1,9 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -18,6 +15,15 @@ namespace HarshPoint.Provisioning.Implementation
             IResolveBuilder<TResult, TContext> parent,
             IEnumerable<TIdentifier> identifiers
         )
+            : this(parent, identifiers, null)
+        {
+        }
+
+        protected IdentifierResolveBuilder(
+            IResolveBuilder<TResult, TContext> parent,
+            IEnumerable<TIdentifier> identifiers,
+            IEqualityComparer<TIdentifier> identifierComparer
+        )
             : base(parent)
         {
             if (identifiers == null)
@@ -25,16 +31,19 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(identifiers));
             }
 
-            Identifiers = new Collection<TIdentifier>(
-                identifiers.ToList()
-            );
+            if (identifierComparer == null)
+            {
+                identifierComparer = EqualityComparer<TIdentifier>.Default;
+            }
 
-            IdentifierComparer = EqualityComparer<TIdentifier>.Default;
+            Identifiers = new HashSet<TIdentifier>(
+                identifiers, identifierComparer
+            );
         }
 
-        public Collection<TIdentifier> Identifiers { get; private set; }
+        public HashSet<TIdentifier> Identifiers { get; private set; }
 
-        public EqualityComparer<TIdentifier> IdentifierComparer { get; protected set; }
+        public IEqualityComparer<TIdentifier> IdentifierComparer => Identifiers.Comparer;
 
         protected abstract TIdentifier GetIdentifier(TResult result);
 
