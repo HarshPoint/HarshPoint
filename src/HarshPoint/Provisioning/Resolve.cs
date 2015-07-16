@@ -8,6 +8,8 @@ namespace HarshPoint.Provisioning
 {
     public static class Resolve
     {
+        public static ResolveList List => new ResolveList();
+
         public static ResolveCatalog Catalog(params ListTemplateType[] templateTypes)
         {
             if (templateTypes == null)
@@ -58,11 +60,6 @@ namespace HarshPoint.Provisioning
             }
 
             return new ResolveFieldByInternalName(names);
-        }
-
-        public static ResolveListByUrl ListByUrl(params String[] urls)
-        {
-            return new ResolveListByUrl(urls);
         }
 
         [Obsolete]

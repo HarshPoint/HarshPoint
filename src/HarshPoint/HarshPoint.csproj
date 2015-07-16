@@ -39,6 +39,7 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="Extensions\ClientContextExtensions.cs" />
     <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="Entity\ContentTypeAttribute.cs" />
     <Compile Include="Entity\HarshEntity.cs" />
@@ -76,15 +77,20 @@
     <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`3.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`2.cs" />
+    <Compile Include="Provisioning\Implementation\IResolveBuilder`1.cs" />
+    <Compile Include="Provisioning\Implementation\IResolveBuilderElement.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResolveBuilder.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveBuilder`2.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveBuilder`2_Element.cs" />
+    <Compile Include="Provisioning\Implementation\IdentifierResolveBuilder`3.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerTreeBuilder.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextParameterBinder.cs" />
-    <Compile Include="Provisioning\Implementation\IClientObjectResolveBuilderElement`1.cs" />
-    <Compile Include="Provisioning\Implementation\IClientObjectResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\IClientObjectResolveQuery.cs" />
-    <Compile Include="Provisioning\Implementation\IResolveBuilder`1.cs" />
+    <Compile Include="Provisioning\Implementation\IResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultSingleOrDefault`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResult`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultBase.cs" />
@@ -123,9 +129,10 @@
     <Compile Include="Provisioning\ResolveListExtensions.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery`4.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveListField.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveList.cs" />
     <Compile Include="Provisioning\Resolvers\OldResolveListFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByTitle.cs" />

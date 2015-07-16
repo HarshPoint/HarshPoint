@@ -15,15 +15,21 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
         }
 
-        protected async Task<IEnumerable<T>> ResolveAsync<T>(IClientObjectResolveBuilder<T> builder)
+        protected async Task<IEnumerable<T>> ResolveAsync<T>(IResolveBuilder<T, ClientObjectResolveContext> builder)
             where T : ClientObject
         {
-            var state = builder.Initialize(Fixture.ResolveContext);
+            var ctx = Fixture.CreateResolveContext();
+            builder.InitializeContext(ctx);
+
+            var state = builder.Initialize(ctx);
+
             await ClientContext.ExecuteQueryAsync();
-            var results = builder.ToEnumerable(state, Fixture.ResolveContext)
-                .Cast<Object>()
+
+            var results = builder
+                .ToEnumerable(state, ctx)
                 .ToArray();
-            return results.Cast<T>();
+
+            return results;
         }
     }
 }

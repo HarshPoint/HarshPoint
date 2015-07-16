@@ -81,6 +81,11 @@ namespace HarshPoint
             );
         }
 
+        public NotImplementedException NotImplemented()
+        {
+            return Write(new NotImplementedException());
+        }
+
         public ArgumentOutOfRangeException ArgumentOutOfRange(String parameterName, String message)
         {
             if (parameterName == null)

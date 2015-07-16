@@ -8,7 +8,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ResolvedParameterBinder
     {
-        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolvedParameterBinder>();
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolvedParameterBinder));
 
         public ResolvedParameterBinder(IEnumerable<Parameter> parameters)
         {
@@ -22,17 +22,16 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToImmutableArray();
         }
 
-        public void Bind<TContext>(Object target, TContext context)
-            where TContext : HarshProvisionerContextBase
+        public void Bind(Object target, Func<IResolveContext> contextFactory)
         {
             if (target == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(target));
             }
 
-            if (context == null)
+            if (contextFactory == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(contextFactory));
             }
 
             foreach (var parameter in Parameters)
@@ -49,7 +48,7 @@ namespace HarshPoint.Provisioning.Implementation
                     continue;
                 }
 
-                var resolveBuilder = value as IResolveBuilder<TContext>;
+                var resolveBuilder = value as IResolveBuilder;
 
                 if (resolveBuilder == null)
                 {
@@ -62,7 +61,15 @@ namespace HarshPoint.Provisioning.Implementation
                     continue;
                 }
 
-                var resolveContext = new ResolveContext<TContext>(context);
+                var resolveContext = contextFactory();
+
+                Logger.Debug(
+                    "Parameter {$Parameter} resolver {$Resolver} initializing context.",
+                    parameter,
+                    resolveBuilder
+                );
+
+                resolveBuilder.InitializeContext(resolveContext);
 
                 Logger.Debug(
                     "Parameter {$Parameter} resolver {$Resolver} initializing.",
@@ -95,7 +102,7 @@ namespace HarshPoint.Provisioning.Implementation
                 );
 
                 var result = ResolveResultFactory.CreateResult(
-                    parameter.PropertyTypeInfo, 
+                    parameter.PropertyTypeInfo,
                     resultSource,
                     resolveBuilder
                 );

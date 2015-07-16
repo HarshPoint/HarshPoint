@@ -30,14 +30,14 @@ namespace HarshPoint.Tests.Provisioning.Implementation
                 )
             };
 
-            binder.Bind(target, Fixture.Context);
+            binder.Bind(target, Fixture.CreateResolveContext);
 
             Assert.NotNull(target.Param);
             Assert.Equal("42", target.Param.First());
         }
 
         [Fact]
-        public void Incompatible_results_throws_invalid_operation_exception()
+        public void Incompatible_results_throws_exception()
         {
             var parameters = new ParameterSetBuilder(typeof(SimpleTarget))
                 .Build()
@@ -52,17 +52,16 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             };
 
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => binder.Bind(target, Fixture.Context)
+                () => binder.Bind(target, Fixture.CreateResolveContext)
             );
         }
-        
 
         private IResolve<T> MockResolver<T>(IEnumerable result)
         {
             var mock = new Mock<IResolve<T>>();
 
-            mock.As<IResolveBuilder<HarshProvisionerContext>>()
-                .Setup(x => x.ToEnumerable(It.IsAny<Object>(), It.IsAny<ResolveContext<HarshProvisionerContext>>()))
+            mock.As<IResolveBuilder>()
+                .Setup(x => x.ToEnumerable(It.IsAny<Object>(), It.IsAny<IResolveContext>()))
                 .Returns(result);
 
             return mock.Object;

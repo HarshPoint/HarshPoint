@@ -19,7 +19,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             await Fixture.EnsureTestList();
 
             var results = await ResolveAsync<List>(
-                Resolve.ListByUrl(SharePointClientFixture.TestListUrl)
+                Resolve.List.ByUrl(SharePointClientFixture.TestListUrl)
             );
 
             var list = Assert.Single(results);

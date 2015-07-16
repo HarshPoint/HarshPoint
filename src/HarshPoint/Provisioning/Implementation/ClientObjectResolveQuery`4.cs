@@ -52,12 +52,6 @@ namespace HarshPoint.Provisioning.Implementation
             QueryBuilder = queryBuilder;
         }
 
-        public IQueryable<TIntermediate> CreateQuery(TParent parent)
-        {
-            return CreateQuery(parent, null);
-        }
-
-        [Obsolete]
         public IQueryable<TIntermediate> CreateQuery(TParent parent, ResolveContext<HarshProvisionerContext> resolveContext)
         {
             if (parent == null)
@@ -71,8 +65,8 @@ namespace HarshPoint.Provisioning.Implementation
             var clientObjectResolveContext = (resolveContext as ClientObjectResolveContext);
             if (clientObjectResolveContext != null)
             {
-                var transformer = new ClientObjectResolveQueryProcessor(clientObjectResolveContext.Retrievals);
-                var withAddedRetrievals = transformer.AddContextRetrievals(query.Expression);
+                var transformer = clientObjectResolveContext.QueryProcessor;
+                var withAddedRetrievals = transformer.Process(query.Expression);
 
                 query = query.Provider.CreateQuery<TIntermediate>(withAddedRetrievals);
             }

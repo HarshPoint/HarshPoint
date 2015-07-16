@@ -1,72 +1,16 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class ClientObjectResolveBuilder<TResult, TQueryResult> :
-        Chain<IClientObjectResolveBuilderElement<TResult>>,
-        IClientObjectResolveBuilderElement<TResult>,
-        IClientObjectResolveBuilder<TResult>
+        ResolveBuilder<TResult, ClientObjectResolveContext>
         where TResult : ClientObject
         where TQueryResult : ClientObject
     {
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectResolveBuilder<,>));
-
-        private ImmutableList<Expression<Func<TResult, Object>>> _retrievals =
-            ImmutableList<Expression<Func<TResult, Object>>>.Empty;
-
-        Object IResolveBuilder<HarshProvisionerContext>.Initialize(ResolveContext<HarshProvisionerContext> context)
-        {
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
-            return Elements.Select(e => e.LoadQuery(context)).ToArray();
-        }
-
-        IEnumerable IResolveBuilder<HarshProvisionerContext>.ToEnumerable(Object state, ResolveContext<HarshProvisionerContext> context)
-        {
-            if (state == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(state));
-            }
-
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
-            var elementStates = (state as Object[]);
-
-            if (elementStates == null)
-            {
-                throw Logger.Fatal.ArgumentNotAssignableTo(nameof(state), state, typeof(Object[]));
-            }
-
-            var elementCount = Elements.Count();
-
-            if (elementStates.Length != elementCount)
-            {
-                throw Logger.Fatal.ArgumentOutOfRangeFormat(
-                    nameof(state),
-                    SR.ClientObjectResolveBuilder_StateCountNotEqualToElementCount,
-                    elementStates.Length,
-                    elementCount
-                );
-            }
-
-            return Elements.SelectMany(
-                (e, i) => e.TransformQueryResults(elementStates[i], context)
-            );
-        }
-
-        Object IClientObjectResolveBuilderElement<TResult>.LoadQuery(ResolveContext<HarshProvisionerContext> context)
+        protected override Object Initialize(ClientObjectResolveContext context)
         {
             var query = CreateQuery(context);
 
@@ -78,40 +22,12 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
-            if (_retrievals.Any())
-            {
-                var queryProcessor = new ClientObjectResolveQueryProcessor(
-                    typeof(TResult),
-                    _retrievals
-                );
-
-                query = queryProcessor.AddRetrievals(query);
-            }
-
-            return context.ProvisionerContext.ClientContext.LoadQuery(query);
+            return context.LoadQuery(
+                query
+            );
         }
 
-        public ClientObjectResolveBuilder<TResult, TQueryResult> And(Chain<IClientObjectResolveBuilderElement<TResult>> other)
-        {
-            Append(other);
-            return this;
-        }
-
-        public void Include(params Expression<Func<TResult, Object>>[] retrievals)
-        {
-            if (retrievals == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(retrievals));
-            }
-
-            _retrievals = _retrievals.AddRange(retrievals);
-        }
-
-        protected abstract IQueryable<TQueryResult> CreateQuery(ResolveContext<HarshProvisionerContext> context);
-
-        protected abstract IEnumerable<TResult> TransformQueryResults(IEnumerable<TQueryResult> queryResults, ResolveContext<HarshProvisionerContext> context);
-
-        IEnumerable<TResult> IClientObjectResolveBuilderElement<TResult>.TransformQueryResults(Object state, ResolveContext<HarshProvisionerContext> context)
+        protected override IEnumerable<TResult> ToEnumerable(Object state, ClientObjectResolveContext context)
         {
             if (state == null)
             {
@@ -123,18 +39,35 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            var queryResults = (state as IEnumerable<TQueryResult>);
+            var enumerable = (state as IEnumerable<TQueryResult>);
 
-            if (queryResults == null)
+            if (enumerable == null)
             {
                 throw Logger.Fatal.ArgumentNotAssignableTo(
-                    nameof(state), 
-                    state, 
+                    nameof(state),
+                    state,
                     typeof(IEnumerable<TQueryResult>)
                 );
             }
 
-            return TransformQueryResults(queryResults, context);
+            return TransformQueryResults(enumerable, context);
         }
+
+        protected virtual IQueryable<TQueryResult> CreateQuery(
+            ClientObjectResolveContext context
+        )
+        {
+            throw Logger.Fatal.NotImplemented();
+        }
+
+        protected virtual IEnumerable<TResult> TransformQueryResults(
+            IEnumerable<TQueryResult> results,
+            ClientObjectResolveContext context
+        )
+        {
+            throw Logger.Fatal.NotImplemented();
+        }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectResolveBuilder<,>));
     }
 }

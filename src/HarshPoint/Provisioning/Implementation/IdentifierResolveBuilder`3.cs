@@ -3,17 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public abstract class ClientObjectResolveBuilder<TResult, TQueryResult, TIdentifier> :
-        ClientObjectResolveBuilder<TResult, TQueryResult>
+    public abstract class IdentifierResolveBuilder<TResult, TContext, TIdentifier> :
+        NestedResolveBuilder<TResult, TResult, TContext>
         where TResult : ClientObject
-        where TQueryResult : ClientObject
+        where TContext : class, IResolveContext
     {
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectResolveBuilder<,,>));
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IdentifierResolveBuilder<,,>));
 
-        protected ClientObjectResolveBuilder(IEnumerable<TIdentifier> identifiers)
+        protected IdentifierResolveBuilder(
+            IResolveBuilder<TResult, TContext> parent,
+            IEnumerable<TIdentifier> identifiers
+        )
+            : base(parent)
         {
             if (identifiers == null)
             {
@@ -23,21 +28,24 @@ namespace HarshPoint.Provisioning.Implementation
             Identifiers = new Collection<TIdentifier>(
                 identifiers.ToList()
             );
+
+            IdentifierComparer = EqualityComparer<TIdentifier>.Default;
         }
 
         public Collection<TIdentifier> Identifiers { get; private set; }
 
-        protected IEnumerable<TResult> ResolveIdentifiers(
-            IEnumerable<TResult> items,
-            ResolveContext<HarshProvisionerContext> context,
-            Func<TResult, TIdentifier> identifierSelector,
-            IEqualityComparer<TIdentifier> identifierComparer
-        )
+        public EqualityComparer<TIdentifier> IdentifierComparer { get; protected set; }
+
+        protected abstract TIdentifier GetIdentifier(TResult result);
+
+        protected override IEnumerable<TResult> ToEnumerable(Object state, TContext context)
         {
+            var items = Parent.ToEnumerable(state, context);
+
             var byId = items.ToImmutableDictionaryFirstWins(
-                item => identifierSelector(item),
+                item => GetIdentifier(item),
                 item => item,
-                identifierComparer
+                IdentifierComparer
             );
 
             foreach (var id in Identifiers)

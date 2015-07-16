@@ -1,35 +1,28 @@
-﻿using HarshPoint.Provisioning.Implementation;
-using Microsoft.SharePoint.Client;
+﻿using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace HarshPoint.Provisioning.Resolvers
+namespace HarshPoint.Provisioning.Implementation
 {
-    public sealed class ResolveListByUrl :
-        ClientObjectResolveBuilder<List, List, String>
+    public class ResolveListByUrl : IdentifierResolveBuilder<List, ClientObjectResolveContext, String>
     {
-        private readonly ClientObjectResolveQuery<List, List, Web, String> Query =
-            ClientObjectResolveQuery.ListByUrl;
-
-        public ResolveListByUrl(IEnumerable<String> urls)
-            : base(urls)
+        public ResolveListByUrl(
+            IResolveBuilder<List, ClientObjectResolveContext> parent,
+            IEnumerable<String> identifiers
+        )
+            : base(parent, identifiers)
         {
         }
 
-        protected override IQueryable<List> CreateQuery(ResolveContext<HarshProvisionerContext> context)
+        protected override void InitializeContext(ClientObjectResolveContext context)
         {
-            return Query.CreateQuery(context.ProvisionerContext.Web);
-        }
-        
-        protected override IEnumerable<List> TransformQueryResults(IEnumerable<List> queryResults, ResolveContext<HarshProvisionerContext> context)
-        {
-            return ResolveIdentifiers(
-                queryResults, 
-                context,
-                list => Query.IdentifierSelector(context.ProvisionerContext.Web, list), 
-                Query.IdentifierComparer
+            context.Include<List>(
+                list => list.ParentWebUrl,
+                list => list.RootFolder.ServerRelativeUrl
             );
         }
+
+        protected override String GetIdentifier(List result)
+            => HarshUrl.GetRelativeTo(result.RootFolder.ServerRelativeUrl, result.ParentWebUrl);
     }
 }

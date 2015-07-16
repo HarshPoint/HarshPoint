@@ -1,53 +1,49 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    [Obsolete]
-    internal sealed class ClientObjectResolveContext : ResolveContext<HarshProvisionerContext>
+    public sealed class ClientObjectResolveContext : ResolveContext<HarshProvisionerContext>
     {
-        private ImmutableDictionary<Type, IImmutableList<Expression>> _retrievals =
-            ImmutableDictionary<Type, IImmutableList<Expression>>.Empty;
+        private readonly ClientObjectResolveQueryProcessor _queryProcessor = new ClientObjectResolveQueryProcessor();
 
         public void Include<T>(params Expression<Func<T, Object>>[] retrievals)
             where T : ClientObject
         {
             if (retrievals == null)
             {
-                throw Error.ArgumentNull(nameof(retrievals));
+                throw Logger.Fatal.ArgumentNull(nameof(retrievals));
             }
 
-            _retrievals = _retrievals.SetItem(
-                typeof(T),
-                GetRetrievals(typeof(T)).AddRange(retrievals)
+            _queryProcessor.Include(retrievals);
+        }
+
+        public IEnumerable<T> LoadQuery<T>(IQueryable<T> query)
+            where T : ClientObject
+        {
+            if (query == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(query));
+            }
+
+            query = _queryProcessor.Process(query);
+
+            return ProvisionerContext.ClientContext.LoadQuery(
+                query
             );
         }
 
-        public Expression<Func<T, Object>>[] GetRetrievals<T>()
-            where T : ClientObject
+        [Obsolete]
+        internal Expression<Func<T, Object>>[] GetRetrievals<T>()
         {
-            return GetRetrievals(typeof(T))
-                .Cast<Expression<Func<T, Object>>>()
-                .ToArray();
+            return _queryProcessor.GetRetrievals<T>();
         }
 
-        public IImmutableList<Expression> GetRetrievals(Type type)
-        {
-            if (type == null)
-            {
-                throw Error.ArgumentNull(nameof(type));
-            }
+        internal ClientObjectResolveQueryProcessor QueryProcessor => _queryProcessor;
 
-            return _retrievals.GetValueOrDefault(type, EmptyExpressionList);
-        }
-        
-        public IImmutableDictionary<Type, IImmutableList<Expression>> Retrievals
-            => _retrievals;
-
-        private static readonly ImmutableList<Expression> EmptyExpressionList =
-            ImmutableList<Expression>.Empty;
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ClientObjectResolveContext>();
     }
 }
