@@ -49,8 +49,18 @@ namespace HarshPoint.Provisioning.Implementation
             ValidateDefaultFromContextWithTagNotResolvable();
             ValidateMandatoryIsNullable();
 
-            Getter = propertyInfo.MakeGetter<Object, Object>();
-            Setter = propertyInfo.MakeSetter<Object, Object>();
+            Getter = propertyInfo.MakeGetter();
+            Setter = propertyInfo.MakeSetter();
+
+            if (ResolvedType != null)
+            {
+                ResolveRunnerDefinition = new ResolveRunnerDefinition(
+                    Name,
+                    PropertyTypeInfo,
+                    Getter,
+                    Setter
+                );
+            }
         }
 
         public Type DefaultFromContextTagType => DefaultFromContextAttribute?.TagType;
@@ -99,6 +109,12 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         public Type ResolvedType
+        {
+            get;
+            private set;
+        }
+
+        public ResolveRunnerDefinition ResolveRunnerDefinition
         {
             get;
             private set;

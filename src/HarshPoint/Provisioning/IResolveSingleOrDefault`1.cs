@@ -1,6 +1,8 @@
-﻿namespace HarshPoint.Provisioning
+﻿using HarshPoint.Provisioning.Implementation;
+
+namespace HarshPoint.Provisioning
 {
-    public interface IResolveSingleOrDefault<out T>
+    public interface IResolveSingleOrDefault<out T> : IResolveBuilder
     {
         T Value { get; }
     }

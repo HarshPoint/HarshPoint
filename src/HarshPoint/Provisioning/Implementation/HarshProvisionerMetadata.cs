@@ -25,11 +25,8 @@ namespace HarshPoint.Provisioning.Implementation
                 .Build()
                 .ToImmutableArray();
 
-            DefaultFromContextParameterBinder = 
+            DefaultFromContextParameterBinder =
                 new DefaultFromContextParameterBinder(Parameters);
-
-            ResolvedParameterBinder =
-                new ResolvedParameterBinder(Parameters);
 
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
 
@@ -57,11 +54,10 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        public ResolvedParameterBinder ResolvedParameterBinder
-        {
-            get;
-            private set;
-        }
+        public IEnumerable<ResolveRunnerDefinition> ResolveRunnerDefinitions
+            => Parameters
+                .Select(p => p.ResolveRunnerDefinition)
+                .Where(rrd => rrd != null);
 
         public Boolean UnprovisionDeletesUserData
         {

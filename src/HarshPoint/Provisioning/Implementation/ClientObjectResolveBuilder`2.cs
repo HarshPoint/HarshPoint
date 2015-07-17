@@ -12,9 +12,9 @@ namespace HarshPoint.Provisioning.Implementation
     {
         protected override Object Initialize(ClientObjectResolveContext context)
         {
-            var query = CreateQuery(context);
+            var queries = CreateQueries(context);
 
-            if (query == null)
+            if (queries == null)
             {
                 throw Logger.Fatal.InvalidOperationFormat(
                     SR.ClientObjectResolveBuilder_ToQueryableReturnedNull,
@@ -22,9 +22,9 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
-            return context.LoadQuery(
-                query
-            );
+            return queries
+                .Select(context.LoadQuery)
+                .ToArray();
         }
 
         protected override IEnumerable<TResult> ToEnumerable(Object state, ClientObjectResolveContext context)
@@ -39,18 +39,20 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            var enumerable = (state as IEnumerable<TQueryResult>);
+            var enumerables = (state as IEnumerable<TQueryResult>[]);
 
-            if (enumerable == null)
+            if (enumerables == null)
             {
                 throw Logger.Fatal.ArgumentNotAssignableTo(
                     nameof(state),
                     state,
-                    typeof(IEnumerable<TQueryResult>)
+                    typeof(IEnumerable<TQueryResult>[])
                 );
             }
 
-            return TransformQueryResults(enumerable, context);
+            return enumerables.SelectMany(
+                enumerable => TransformQueryResults(enumerable, context)
+            );
         }
 
         protected virtual IQueryable<TQueryResult> CreateQuery(
@@ -58,6 +60,13 @@ namespace HarshPoint.Provisioning.Implementation
         )
         {
             throw Logger.Fatal.NotImplemented();
+        }
+
+        protected virtual IQueryable<TQueryResult>[] CreateQueries(
+            ClientObjectResolveContext context
+        )
+        {
+            return new[] { CreateQuery(context) };
         }
 
         protected virtual IEnumerable<TResult> TransformQueryResults(

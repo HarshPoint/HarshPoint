@@ -155,6 +155,9 @@ Number of resolver elements {1}</value>
   <data name="Error_ObjectNotAssignableToOne" xml:space="preserve">
     <value>The specified object '{0}' is not a subtype of '{1}'.</value>
   </data>
+  <data name="Error_PropertyNull" xml:space="preserve">
+    <value>The property {0} cannot be null.</value>
+  </data>
   <data name="Error_SequenceEmpty" xml:space="preserve">
     <value>Value cannot be an empty sequence.</value>
   </data>
@@ -278,6 +281,9 @@ Property: {0}.{1}</value>
   </data>
   <data name="ResolveBuilder_CannotCallThisMethod" xml:space="preserve">
     <value>This method cannot be called on ResolveBuilders.</value>
+  </data>
+  <data name="ResolveRegistrar_ContextFactoryReturnedNull" xml:space="preserve">
+    <value>Resolve context factory returned null.</value>
   </data>
   <data name="ResolveResultFactory_ObjectNotConvertable" xml:space="preserve">
     <value>The specified object "{0}" cannot be converted to "{1}".</value>

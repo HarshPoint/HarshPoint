@@ -18,7 +18,7 @@ namespace HarshPoint.Reflection
             var lambda = Expression.Lambda<Func<TTarget, TProperty>>(
                 Expression.Convert(
                     Expression.Call(
-                        Expression.Convert(target, property.DeclaringType), 
+                        Expression.Convert(target, property.DeclaringType),
                         property.GetMethod
                     ),
                     typeof(TProperty)
@@ -29,6 +29,9 @@ namespace HarshPoint.Reflection
             return lambda.Compile();
         }
 
+        public static Func<Object, Object> MakeGetter(this PropertyInfo property)
+            => MakeGetter<Object, Object>(property);
+    
         public static Action<TTarget, TProperty> MakeSetter<TTarget, TProperty>(this PropertyInfo property)
         {
             if (property == null)
@@ -42,7 +45,7 @@ namespace HarshPoint.Reflection
             var lambda = Expression.Lambda<Action<TTarget, TProperty>>(
                 Expression.Call(
                     Expression.Convert(target, property.DeclaringType),
-                    property.SetMethod, 
+                    property.SetMethod,
                     Expression.Convert(value, property.PropertyType)
                 ),
                 target,
@@ -51,5 +54,8 @@ namespace HarshPoint.Reflection
 
             return lambda.Compile();
         }
+
+        public static Action<Object, Object> MakeSetter(this PropertyInfo property)
+            => MakeSetter<Object, Object>(property);
     }
 }

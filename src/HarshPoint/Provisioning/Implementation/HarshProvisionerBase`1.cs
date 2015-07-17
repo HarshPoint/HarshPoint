@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -23,6 +24,7 @@ namespace HarshPoint.Provisioning.Implementation
         private ICollection<HarshProvisionerBase> _children;
         private ICollection<Func<Object>> _childrenContextStateModifiers;
         private HarshProvisionerMetadata _metadata;
+        private ResolveRunnerDefinitionCollection _resolves;
 
         protected HarshProvisionerBase()
         {
@@ -59,6 +61,9 @@ namespace HarshPoint.Provisioning.Implementation
 
         internal HarshProvisionerMetadata Metadata
             => HarshLazy.Initialize(ref _metadata, () => new HarshProvisionerMetadata(GetType()));
+
+        private ResolveRunnerDefinitionCollection Resolves
+            => HarshLazy.Initialize(ref _resolves);
 
         public void ModifyChildrenContextState(Func<Object> modifier)
         {
@@ -114,6 +119,30 @@ namespace HarshPoint.Provisioning.Implementation
                     UnprovisionChildrenAsync
                 );
             }
+        }
+
+        protected void RegisterResolve<TResult>(
+            Expression<Func<IResolve<TResult>>> propertyExpression,
+            Func<IResolve<TResult>> factory
+        )
+        {
+            Resolves.Add(propertyExpression, factory);
+        }
+
+        protected void RegisterResolve<TResult>(
+            Expression<Func<IResolveSingle<TResult>>> propertyExpression,
+            Func<IResolveSingle<TResult>> factory
+        )
+        {
+            Resolves.Add(propertyExpression, factory);
+        }
+
+        protected void RegisterResolve<TResult>(
+            Expression<Func<IResolveSingleOrDefault<TResult>>> propertyExpression,
+            Func<IResolveSingleOrDefault<TResult>> factory
+        )
+        {
+            Resolves.Add(propertyExpression, factory);
         }
 
         protected virtual Task InitializeAsync()
@@ -195,13 +224,12 @@ namespace HarshPoint.Provisioning.Implementation
             return new Collection<HarshProvisionerBase>();
         }
 
-        [Obsolete]
         protected virtual ResolveContext<TContext> CreateResolveContext()
         {
             return new ResolveContext<TContext>();
         }
 
-        internal virtual Task OnParametersBound()
+        internal virtual Task OnResolvedParametersBound()
         {
             return HarshTask.Completed;
         }
@@ -308,16 +336,13 @@ namespace HarshPoint.Provisioning.Implementation
             return RunWithContext(context, async delegate
             {
                 Metadata.DefaultFromContextParameterBinder.Bind(
-                    this, 
+                    this,
                     Context
                 );
 
-                Metadata.ResolvedParameterBinder.Bind(
-                    this,
-                    PrepareResolveContext
-                );
+                RunResolveRunners();
 
-                await OnParametersBound();
+                await OnResolvedParametersBound();
 
                 // parameter set resolving depends on values
                 // from context being already set
@@ -340,6 +365,25 @@ namespace HarshPoint.Provisioning.Implementation
 
                 await childAction();
             });
+        }
+
+        private void RunResolveRunners()
+        {
+            var definitions = Metadata.ResolveRunnerDefinitions;
+
+            if (_resolves != null)
+            {
+                definitions = definitions.Concat(_resolves);
+            }
+
+            var runners = definitions.Select(
+                rrd => new ResolveRunner(rrd, CreateResolveContext)
+            );
+
+            foreach (var runner in runners)
+            {
+                runner.Resolve(this);
+            }
         }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]

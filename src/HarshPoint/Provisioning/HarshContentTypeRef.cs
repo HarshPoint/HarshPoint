@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -6,39 +7,40 @@ namespace HarshPoint.Provisioning
 {
     public sealed class HarshContentTypeRef : HarshProvisioner
     {
-        public IResolveOld<ContentType> ContentTypes
+        public HarshContentTypeRef()
+        {
+        }
+
+        [Parameter(Mandatory = true)]
+        public IResolve<ContentType> ContentTypes
         {
             get;
             set;
         }
 
-        [Parameter]
         [DefaultFromContext]
-        public IResolveOld<List> Lists
+        [Parameter(Mandatory = true)]
+        public IResolve<List> Lists
         {
             get;
             set;
+        }
+
+        protected override void InitializeResolveContext(ClientObjectResolveContext context)
+        {
+            context.Include<ContentType>(
+                ct => ct.Name,
+                ct => ct.StringId
+            );
+
+            context.Include<List>(
+                list => list.ContentTypes
+            );
         }
 
         protected override async Task OnProvisioningAsync()
         {
-            var contentTypes = await ResolveAsync(
-                ContentTypes.Include(
-                    ct => ct.Name,
-                    ct => ct.StringId
-                )
-            );
-
-            var lists = await ResolveAsync(
-                Lists.Include(
-                    list => list.ContentTypes.Include(
-                        ct => ct.Name,
-                        ct => ct.StringId
-                    )
-                )
-            );
-
-            foreach (var list in lists)
+            foreach (var list in Lists)
             {
                 list.ContentTypesEnabled = true;
                 list.Update();
@@ -47,7 +49,7 @@ namespace HarshPoint.Provisioning
                     ct => HarshContentTypeId.Parse(ct.StringId)
                 );
 
-                var toAdd = from ct in contentTypes
+                var toAdd = from ct in ContentTypes
                             let id = HarshContentTypeId.Parse(ct.StringId)
                             where !existingCtIds.Any(existing => existing.IsDirectChildOf(id))
                             select ct;

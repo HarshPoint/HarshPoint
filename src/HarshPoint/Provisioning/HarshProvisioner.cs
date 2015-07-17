@@ -1,7 +1,6 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
@@ -33,13 +32,18 @@ namespace HarshPoint.Provisioning
             });
         }
 
-        [Obsolete]
-        protected sealed override ResolveContext<HarshProvisionerContext> CreateResolveContext()
+        protected virtual void InitializeResolveContext(ClientObjectResolveContext context)
         {
-            return new ClientObjectResolveContext();
         }
 
-        internal sealed override async Task OnParametersBound()
+        protected sealed override ResolveContext<HarshProvisionerContext> CreateResolveContext()
+        {
+            var ctx = new ClientObjectResolveContext();
+            InitializeResolveContext(ctx);
+            return ctx;
+        }
+
+        internal sealed override async Task OnResolvedParametersBound()
         {
             if (ClientContext.HasPendingRequest)
             {

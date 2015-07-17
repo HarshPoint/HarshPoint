@@ -8,6 +8,8 @@ namespace HarshPoint.Provisioning
 {
     public static class Resolve
     {
+        public static ResolveContentType ContentType => new ResolveContentType();
+
         public static ResolveList List => new ResolveList();
 
         public static ResolveCatalog Catalog(params ListTemplateType[] templateTypes)
@@ -18,28 +20,6 @@ namespace HarshPoint.Provisioning
             }
 
             return new ResolveCatalog(templateTypes);
-        }
-
-        public static ResolveContentTypeById ContentTypeById(params String[] ids)
-        {
-            if (ids == null)
-            {
-                throw Error.ArgumentNull(nameof(ids));
-            }
-
-            return new ResolveContentTypeById(
-                ids.Select(HarshContentTypeId.Parse)
-            );
-        }
-
-        public static ResolveContentTypeById ContentTypeById(params HarshContentTypeId[] ids)
-        {
-            if (ids == null)
-            {
-                throw Error.ArgumentNull(nameof(ids));
-            }
-
-            return new ResolveContentTypeById(ids);
         }
 
         public static ResolveFieldById FieldById(params Guid[] ids)

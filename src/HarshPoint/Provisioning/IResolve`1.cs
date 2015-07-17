@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.Provisioning.Implementation;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-    public interface IResolve<out T> : IEnumerable<T>
+    public interface IResolve<out T> : IEnumerable<T>, IResolveBuilder
     {
     }
 

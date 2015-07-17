@@ -2,7 +2,7 @@
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ResolveResultSingleOrDefault<T> : ResolveResultBase, IResolveSingle<T>
+    internal sealed class ResolveResultSingleOrDefault<T> : ResolveResultBase, IResolveSingleOrDefault<T>
     {
         public T Value
         {

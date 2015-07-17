@@ -81,11 +81,6 @@ namespace HarshPoint
             );
         }
 
-        public NotImplementedException NotImplemented()
-        {
-            return Write(new NotImplementedException());
-        }
-
         public ArgumentOutOfRangeException ArgumentOutOfRange(String parameterName, String message)
         {
             if (parameterName == null)
@@ -179,6 +174,16 @@ namespace HarshPoint
             return Write(
                 Error.InvalidOperationFormat(format, args)
             );
+        }
+
+        public NotImplementedException NotImplemented()
+        {
+            return Write(new NotImplementedException());
+        }
+
+        public InvalidOperationException PropertyNull(String propertyName)
+        {
+            return InvalidOperationFormat(SR.Error_PropertyNull, propertyName);
         }
 
         public TException Write<TException>(TException exception)

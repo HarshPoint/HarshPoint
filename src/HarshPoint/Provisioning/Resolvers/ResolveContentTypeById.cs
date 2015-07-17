@@ -1,31 +1,30 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveContentTypeById :
-        Resolvable<ContentType, HarshContentTypeId, HarshProvisionerContext, ResolveContentTypeById>
+        IdentifierResolveBuilder<ContentType, ClientObjectResolveContext, HarshContentTypeId>
     {
-        public ResolveContentTypeById(IEnumerable<HarshContentTypeId> identifiers)
-            : base(identifiers)
+        public ResolveContentTypeById(
+            IResolveBuilder<ContentType, ClientObjectResolveContext> parent,
+            IEnumerable<HarshContentTypeId> ids
+        )
+            : base(parent, ids)
         {
         }
 
-        protected override Task<IEnumerable<ContentType>> ResolveChainElementOld(ResolveContext<HarshProvisionerContext> context)
+        protected override void InitializeContext(ClientObjectResolveContext context)
         {
-            if (context == null)
-            {
-                throw Error.ArgumentNull(nameof(context));
-            }
-
-            return this.ResolveQuery(
-                ClientObjectResolveQuery.ContentTypeById,
-                context,
-                context.ProvisionerContext.Web.ContentTypes,
-                context.ProvisionerContext.Web.AvailableContentTypes
+            context.Include<ContentType>(
+                ct => ct.StringId
             );
+
+            base.InitializeContext(context);
         }
+
+        protected override HarshContentTypeId GetIdentifier(ContentType result)
+            => HarshContentTypeId.Parse(result.StringId);
     }
 }
