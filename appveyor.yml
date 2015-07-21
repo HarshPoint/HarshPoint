@@ -1,0 +1,10 @@
+version: 1.0.{build}
+os: SharePoint 2013
+assembly_info:
+  patch: true
+  file: src\AssemblyInfo.Shared.cs
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+build:
+  verbosity: minimal
