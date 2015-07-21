@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Destructurama.Attributed</name>
+    </assembly>
+    <members>
+        <member name="T:Destructurama.Attributed.LogAsScalarAttribute">
+            <summary>
+            Specified that the type or property it is applied to should never be
+            destructured; instead it should be logged as an atomic value.
+            </summary>
+        </member>
+        <member name="M:Destructurama.Attributed.LogAsScalarAttribute.#ctor(System.Boolean)">
+            <summary>
+            Construct a <see cref="T:Destructurama.Attributed.LogAsScalarAttribute"/>.
+            </summary>
+            <param name="isMutable">Whether the scalar value should be converted into a string before
+            being passed down the (asynchronous) logging pipeline. For mutable types, specify 
+            <code>true</code>, otherwise leave as false.</param>
+        </member>
+        <member name="P:Destructurama.Attributed.LogAsScalarAttribute.IsMutable">
+            <summary>
+            Whether the scalar value should be converted into a string before being passed to the pipeline.
+            </summary>
+        </member>
+        <member name="T:Destructurama.Attributed.NotLoggedAttribute">
+            <summary>
+            Specified that a property should not be included when destructuring an object for logging.
+            </summary>
+        </member>
+        <member name="T:Destructurama.LoggerConfigurationAppSettingsExtensions">
+            <summary>
+            Adds the Destructure.UsingAttributes() extension to <see cref="T:Serilog.LoggerConfiguration"/>.
+            </summary>
+        </member>
+        <member name="M:Destructurama.LoggerConfigurationAppSettingsExtensions.UsingAttributes(Serilog.Configuration.LoggerDestructuringConfiguration)">
+            <summary>
+            </summary>
+            <param name="configuration">The logger configuration to apply configuration to.</param>
+            <returns>An object allowing configuration to continue.</returns>
+        </member>
+    </members>
+</doc>
