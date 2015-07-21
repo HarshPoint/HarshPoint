@@ -3,6 +3,7 @@ using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Tests
@@ -14,7 +15,7 @@ namespace HarshPoint.Tests
 
         public SharePointClientFixture()
         {
-            var url = ""; //Environment.GetEnvironmentVariable("HarshPointTestUrl");
+            var url = Environment.GetEnvironmentVariable("HarshPointTestUrl");
 
             if (String.IsNullOrWhiteSpace(url))
             {
@@ -23,10 +24,25 @@ namespace HarshPoint.Tests
             else
             {
                 ClientContext = new SeriloggedClientContext(url);
-                ClientContext.Credentials = new SharePointOnlineCredentials(
-                    Environment.GetEnvironmentVariable("HarshPointTestUser"),
-                    Environment.GetEnvironmentVariable("HarshPointTestPassword")
-                );
+                
+                var username = Environment.GetEnvironmentVariable("HarshPointTestUser");
+                var password = Environment.GetEnvironmentVariable("HarshPointTestPassword");
+                var authType = Environment.GetEnvironmentVariable("HarshPointTestAuth");
+
+                if (StringComparer.OrdinalIgnoreCase.Equals(authType, "Windows"))
+                {
+                    ClientContext.Credentials = new NetworkCredential(
+                        username,
+                        password
+                    );
+                }
+                else if (StringComparer.OrdinalIgnoreCase.Equals(authType, "SharePointOnline"))
+                {
+                    ClientContext.Credentials = new SharePointOnlineCredentials(
+                        username,
+                        password
+                    );
+                }
             }
 
             ClientContext.ExecutingWebRequest += (_, e) =>
