@@ -194,18 +194,6 @@
       <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.Runtime.Portable.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.SharePoint.Client.Runtime.Windows, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\Microsoft.SharePoint.Client.Runtime.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.SharePoint.Client.Runtime.WindowsPhone, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\Microsoft.SharePoint.Client.Runtime.WindowsPhone.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.SharePoint.Client.Runtime.WindowsStore, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\Microsoft.SharePoint.Client.Runtime.WindowsStore.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Search.Applications.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.Search.Applications.Portable.dll</HintPath>
       <Private>True</Private>
