@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329A8-9B0A-428D-B5C7-C9F1BCF82E50}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
 		AssemblyInfo.Shared.cs = AssemblyInfo.Shared.cs
 		CodeAnalysisDictionary.xml = CodeAnalysisDictionary.xml
 		LICENSE = LICENSE
