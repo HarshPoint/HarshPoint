@@ -8,8 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
-		AssemblyInfo.Shared.cs = AssemblyInfo.Shared.cs
-		CodeAnalysisDictionary.xml = CodeAnalysisDictionary.xml
+		src\AssemblyInfo.Shared.cs = src\AssemblyInfo.Shared.cs
+		src\CodeAnalysisDictionary.xml = src\CodeAnalysisDictionary.xml
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
