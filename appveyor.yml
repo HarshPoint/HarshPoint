@@ -9,7 +9,6 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 before_build:
-- cmd /c rd /q /s packages
-- nuget restore -NonInteractive -NoCache HarshPoint.sln
+- nuget restore -NonInteractive HarshPoint.sln
 build:
   verbosity: minimal
