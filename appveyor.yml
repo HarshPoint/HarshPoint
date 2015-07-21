@@ -8,5 +8,9 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+cache:
+- packages -> **\packages.config
+before_build:
+- nuget restore
 build:
   verbosity: minimal
