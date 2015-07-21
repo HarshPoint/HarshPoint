@@ -36,7 +36,7 @@ namespace HarshPoint.Tests
                         password
                     );
                 }
-                else
+                else if (StringComparer.OrdinalIgnoreCase.Equals(authType, "SharePointOnline"))
                 {
                     ClientContext.Credentials = new SharePointOnlineCredentials(
                         username,
