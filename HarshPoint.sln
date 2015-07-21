@@ -14,11 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plans", "Plans", "{AF33E7F9-28FE-43DF-841E-04C3BFB41D1C}"
-	ProjectSection(SolutionItems) = preProject
-		TODO.md = TODO.md
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint", "src\HarshPoint\HarshPoint.csproj", "{5D981A8F-A98E-43F2-A112-2CFD50455447}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Server", "src\HarshPoint.Server\HarshPoint.Server.csproj", "{DB0928B3-B2C2-4887-9AFD-B7E693EA41E9}"
