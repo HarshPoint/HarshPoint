@@ -48,8 +48,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Common Files\microsoft shared\Web Server Extensions\15\ISAPI\Microsoft.SharePoint.dll</HintPath>
+      <HintPath>..\..\packages\JulieKoubova.SharePoint.15.0.4649.1000\lib\net45\Microsoft.SharePoint.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.DocumentManagement.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.DocumentManagement.Portable.dll</HintPath>
