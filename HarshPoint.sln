@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Server", "src\Ha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Tests", "test\HarshPoint.Tests\HarshPoint.Tests.csproj", "{1A4B3615-7C9D-4B3A-B44F-3561151802B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Server.Tests", "test\HarshPoint.Server.Tests\HarshPoint.Server.Tests.csproj", "{982BD98C-2FAF-48A3-B327-EBBB2E179F4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{1A4B3615-7C9D-4B3A-B44F-3561151802B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A4B3615-7C9D-4B3A-B44F-3561151802B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A4B3615-7C9D-4B3A-B44F-3561151802B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{982BD98C-2FAF-48A3-B327-EBBB2E179F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{982BD98C-2FAF-48A3-B327-EBBB2E179F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{982BD98C-2FAF-48A3-B327-EBBB2E179F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{982BD98C-2FAF-48A3-B327-EBBB2E179F4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
