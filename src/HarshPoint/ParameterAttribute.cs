@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HarshPoint.Provisioning
+namespace HarshPoint
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
     public sealed class ParameterAttribute : Attribute

@@ -58,10 +58,12 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
+#if false
         public IEnumerable<ResolveRunnerDefinition> ResolveRunnerDefinitions
             => Parameters
                 .Select(p => p.ResolveRunnerDefinition)
                 .Where(rrd => rrd != null);
+#endif
 
         public Boolean UnprovisionDeletesUserData
         {

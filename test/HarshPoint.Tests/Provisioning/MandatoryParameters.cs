@@ -1,4 +1,5 @@
-﻿using HarshPoint.Provisioning;
+﻿using HarshPoint.ObjectModel;
+using HarshPoint.Provisioning;
 using System;
 using System.Threading.Tasks;
 using Xunit;

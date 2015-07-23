@@ -1,5 +1,4 @@
-﻿using HarshPoint.Provisioning;
-using HarshPoint.Provisioning.Implementation;
+﻿using HarshPoint.ObjectModel;
 using System;
 using Xunit;
 using Xunit.Abstractions;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace HarshPoint.Provisioning.Implementation
+namespace HarshPoint.ObjectModel
 {
     internal sealed class ParameterSet
     {

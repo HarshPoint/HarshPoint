@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HarshPoint.Provisioning
+namespace HarshPoint.ObjectModel
 {
     public class ParameterValidationException : Exception
     {

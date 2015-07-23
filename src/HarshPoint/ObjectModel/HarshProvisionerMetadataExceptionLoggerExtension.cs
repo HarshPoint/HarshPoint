@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HarshPoint.Provisioning.Implementation
+namespace HarshPoint.ObjectModel
 {
     internal static class HarshProvisionerMetadataExceptionLoggerExtension
     {

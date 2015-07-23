@@ -1,8 +1,7 @@
-﻿using HarshPoint.Provisioning.Implementation;
-using Serilog.Events;
+﻿using Serilog.Events;
 using System;
 
-namespace HarshPoint.Provisioning
+namespace HarshPoint.ObjectModel
 {
     internal static class ParameterValidationExceptionLoggerExtension
     {

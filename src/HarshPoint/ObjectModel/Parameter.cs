@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
 
-namespace HarshPoint.Provisioning.Implementation
+namespace HarshPoint.ObjectModel
 {
     internal sealed class Parameter
     {
@@ -36,7 +36,6 @@ namespace HarshPoint.Provisioning.Implementation
             PropertyInfo = propertyInfo;
             ParameterAttribute = parameterAttribute;
 
-            ResolvedType = Resolvable.GetResolvedType(PropertyTypeInfo);
             ValidationAttributes = validationAttributes.ToImmutableArray();
 
             ValidateMandatoryIsNullable();
@@ -44,6 +43,8 @@ namespace HarshPoint.Provisioning.Implementation
             Getter = propertyInfo.MakeGetter();
             Setter = propertyInfo.MakeSetter();
 
+#if false
+            ResolvedType = Resolvable.GetResolvedType(PropertyTypeInfo);
             if (ResolvedType != null)
             {
                 ResolveRunnerDefinition = new ResolveRunnerDefinition(
@@ -53,6 +54,7 @@ namespace HarshPoint.Provisioning.Implementation
                     Setter
                 );
             }
+#endif
         }
 
         [NotLogged]
@@ -102,11 +104,13 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
+#if false
         public ResolveRunnerDefinition ResolveRunnerDefinition
         {
             get;
             private set;
         }
+#endif
 
         public Boolean HasDefaultValue(Object provisioner)
         {

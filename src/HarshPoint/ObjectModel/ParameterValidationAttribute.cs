@@ -1,8 +1,7 @@
-﻿using HarshPoint.Provisioning.Implementation;
-using System;
+﻿using System;
 using System.Reflection;
 
-namespace HarshPoint.Provisioning
+namespace HarshPoint.ObjectModel
 {
     public abstract class ParameterValidationAttribute : Attribute
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HarshPoint.Provisioning.Implementation
+namespace HarshPoint.ObjectModel
 {
     public sealed class HarshProvisionerMetadataException : Exception
     {

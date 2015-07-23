@@ -1,4 +1,5 @@
-﻿using Serilog.Core.Enrichers;
+﻿using HarshPoint.ObjectModel;
+using Serilog.Core.Enrichers;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -369,6 +370,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         private void RunResolveRunners()
         {
+#if false
             var definitions = Metadata.ResolveRunnerDefinitions;
 
             if (_resolves != null)
@@ -384,6 +386,7 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 runner.Resolve(this);
             }
+#endif
         }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
