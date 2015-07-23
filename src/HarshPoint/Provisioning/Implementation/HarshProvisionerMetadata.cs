@@ -34,6 +34,12 @@ namespace HarshPoint.Provisioning.Implementation
                 )
             );
 
+            ResolvedPropertyBinder = new ResolvedPropertyBinder(
+                ReadableWritableInstanceProperties.Where(
+                    p => Resolvable.GetResolvedType(p.PropertyTypeInfo) != null
+                )
+            );
+
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
         }
 
@@ -58,12 +64,11 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-#if false
-        public IEnumerable<ResolveRunnerDefinition> ResolveRunnerDefinitions
-            => Parameters
-                .Select(p => p.ResolveRunnerDefinition)
-                .Where(rrd => rrd != null);
-#endif
+        public ResolvedPropertyBinder ResolvedPropertyBinder
+        {
+            get;
+            private set;
+        }
 
         public Boolean UnprovisionDeletesUserData
         {

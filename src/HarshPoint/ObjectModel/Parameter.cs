@@ -42,19 +42,6 @@ namespace HarshPoint.ObjectModel
 
             Getter = propertyInfo.MakeGetter();
             Setter = propertyInfo.MakeSetter();
-
-#if false
-            ResolvedType = Resolvable.GetResolvedType(PropertyTypeInfo);
-            if (ResolvedType != null)
-            {
-                ResolveRunnerDefinition = new ResolveRunnerDefinition(
-                    Name,
-                    PropertyTypeInfo,
-                    Getter,
-                    Setter
-                );
-            }
-#endif
         }
 
         [NotLogged]
@@ -103,14 +90,6 @@ namespace HarshPoint.ObjectModel
             get;
             private set;
         }
-
-#if false
-        public ResolveRunnerDefinition ResolveRunnerDefinition
-        {
-            get;
-            private set;
-        }
-#endif
 
         public Boolean HasDefaultValue(Object provisioner)
         {

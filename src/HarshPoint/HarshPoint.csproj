@@ -85,7 +85,6 @@
     <Compile Include="Provisioning\Implementation\IResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilderElement.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveBuilder.cs" />
-    <Compile Include="Provisioning\Implementation\ResolveRunnerDefinitionCollection.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2_Element.cs" />
     <Compile Include="Provisioning\Implementation\IdentifierResolveBuilder`3.cs" />
@@ -95,7 +94,6 @@
     <Compile Include="Provisioning\Implementation\IResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedPropertyBinder.cs" />
-    <Compile Include="Provisioning\Implementation\ResolvedProperty.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentType.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentTypeById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />

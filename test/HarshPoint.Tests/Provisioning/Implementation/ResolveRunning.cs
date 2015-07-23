@@ -1,4 +1,5 @@
-﻿using HarshPoint.Provisioning;
+﻿using HarshPoint.ObjectModel;
+using HarshPoint.Provisioning;
 using HarshPoint.Provisioning.Implementation;
 using Moq;
 using System;
@@ -15,85 +16,54 @@ namespace HarshPoint.Tests.Provisioning.Implementation
     {
         public ResolveRunning(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
+            Binder = new ResolvedPropertyBinder(
+                new HarshObjectMetadata(GetType())
+                .ReadableWritableInstanceProperties
+                .Where(
+                    p => Resolvable.GetResolvedType(p.PropertyTypeInfo) != null
+                )
+            );
         }
 
         [Fact]
         public void Resolve_existing_value()
         {
-            var collection = new ResolveRunnerDefinitionCollection();
-            collection.Add(() => SimpleResolve);
-
             SimpleResolve = MockResolve();
-
-            Run(collection);
-
-            Assert.NotNull(SimpleResolve);
-            Assert.Equal(ExpectedArray, SimpleResolve);
-        }
-
-        [Fact]
-        public void Resolve_factory()
-        {
-            var collection = new ResolveRunnerDefinitionCollection();
-
-            collection.Add(
-                () => SimpleResolve,
-                () => MockResolve()
-            );
-
-            Run(collection);
+            BindResolves();
 
             Assert.NotNull(SimpleResolve);
             Assert.Equal(ExpectedArray, SimpleResolve);
         }
 
         [Fact]
-        public void ResolveSingle_factory()
+        public void ResolveSingle()
         {
-            var collection = new ResolveRunnerDefinitionCollection();
-
-            collection.Add(
-                () => SingleResolve,
-                () => MockSingleResolve()
-            );
-
-            Run(collection);
+            SingleResolve = MockSingleResolve();
+            BindResolves();
 
             Assert.NotNull(SingleResolve);
             Assert.Equal("42", SingleResolve.Value);
         }
 
         [Fact]
-        public void ResolveSingleOrDefault_factory()
+        public void ResolveSingleOrDefault()
         {
-            var collection = new ResolveRunnerDefinitionCollection();
-
-            collection.Add(
-                () => SingleOrDefaultResolve,
-                () => MockSingleOrDefaultResolve()
-            );
-
-            Run(collection);
+            SingleOrDefaultResolve = MockSingleOrDefaultResolve();
+            BindResolves();
 
             Assert.NotNull(SingleOrDefaultResolve);
             Assert.Equal(42, SingleOrDefaultResolve.Value);
         }
 
-        private void Run(ResolveRunnerDefinitionCollection collection)
+        private void BindResolves()
         {
-            var runners = collection.Select(
-                rrd => new ResolvedPropertyBinder(rrd, () => Mock.Of<IResolveContext>())
-            );
-
-            foreach (var runner in runners)
-            {
-                runner.Resolve(this);
-            }
+            Binder.Bind(this, () => Mock.Of<IResolveContext>());
         }
+
+        private ResolvedPropertyBinder Binder { get; set; }
 
         private IResolveSingleOrDefault<Int32> MockSingleOrDefaultResolve()
             => MockResolveBuilder(new[] { 42 }).As<IResolveSingleOrDefault<Int32>>().Object;
-
 
         private IResolveSingle<String> MockSingleResolve()
             => MockResolveBuilder(new[] { "42" }).As<IResolveSingle<String>>().Object;

@@ -60,18 +60,6 @@ namespace HarshPoint.ObjectModel
                 .Where(t => t.Item2 != null);
         }
 
-        [Obsolete]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected IEnumerable<Tuple<PropertyInfo, TAttribute>> GetPropertiesWith<TAttribute>(Boolean inherit)
-            where TAttribute : Attribute
-        {
-            return ObjectType
-                .GetRuntimeProperties()
-                .Where(p => p.CanRead && p.CanWrite && !p.GetMethod.IsStatic && !p.SetMethod.IsStatic)
-                .Select(p => Tuple.Create(p, p.GetCustomAttribute<TAttribute>(inherit)))
-                .Where(t => t.Item2 != null);
-        }
-
         private void InitReadableWritableInstanceProperties()
         {
             ReadableWritableInstanceProperties = ObjectType

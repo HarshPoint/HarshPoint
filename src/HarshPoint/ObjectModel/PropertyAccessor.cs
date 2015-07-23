@@ -21,6 +21,9 @@ namespace HarshPoint.ObjectModel
         public PropertyInfo PropertyInfo { get; private set; }
         public Action<Object, Object> Setter { get; private set; }
         public Func<Object, Object> Getter { get; private set; }
+        public String Name => PropertyInfo.Name;
+        public Type PropertyType => PropertyInfo.PropertyType;
+        public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<PropertyAccessor>();
     }

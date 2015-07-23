@@ -1,17 +1,30 @@
-﻿using System;
+﻿using HarshPoint.ObjectModel;
+using System;
 using System.Collections;
-using System.Linq.Expressions;
-using System.Reflection;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ResolvedPropertyBinder
     {
-        public ResolvedPropertyBinder(ResolvedProperty definition, Func<IResolveContext> resolveContextFactory)
+        public IReadOnlyCollection<PropertyAccessor> Properties { get; private set; }
+
+        public ResolvedPropertyBinder(IEnumerable<PropertyAccessor> properties)
         {
-            if (definition == null)
+            if (properties == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(definition));
+                throw Logger.Fatal.ArgumentNull(nameof(properties));
+            }
+
+            Properties = properties.ToImmutableArray();
+        }
+
+        public void Bind(Object target, Func<IResolveContext> resolveContextFactory)
+        {
+            if (target == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(target));
             }
 
             if (resolveContextFactory == null)
@@ -19,167 +32,133 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(resolveContextFactory));
             }
 
-            Definition = definition;
-            ResolveContextFactory = resolveContextFactory;
-        }
-
-        public void Resolve(Object target)
-        {
-            if (target == null)
+            foreach (var property in Properties)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(target));
-            }
-
-            Target = target;
-
-            if (!EnsureValue()) return;
-            if (!EnsureResolveBuilder()) return;
-
-            CreateResolveContext();
-            InitializeResolveContext();
-
-            if (CreateResultSource())
-            {
-                AssignResult();
+                ResolveProperty(target, property, resolveContextFactory);
             }
         }
 
-        private ResolvedProperty Definition { get; set; }
-
-        private Func<IResolveContext> ResolveContextFactory { get; set; }
-
-        private String Name => Definition.Name;
-
-        private Boolean EnsureValue()
+        private void ResolveProperty(Object target, PropertyAccessor property, Func<IResolveContext> resolveContextFactory)
         {
-            Value = Definition.Getter(Target);
+            var value = GetValue(target, property);
 
-            if ((Value == null) && (Definition.ResolveBuilderFactory != null))
+            if (value == null)
+            {
+                return;
+            }
+
+            var resolveBuilder = value as IResolveBuilder;
+
+            if (resolveBuilder == null)
             {
                 Logger.Debug(
-                    "Resolve {ResolveName} is null, invoking factory method.",
-                    Name
+                    "Property {PropertyName} value {$Value} is not an IResolveBuilder, skipping.",
+                    property.Name,
+                    value
                 );
 
-                Value = Definition.ResolveBuilderFactory();
+                return;
             }
 
-            if (Value == null)
-            {
-                Logger.Debug(
-                    "Resolve {ResolveName} is null, skipping.",
-                    Name
-                );
+            var resolveContext = resolveContextFactory();
 
-                return false;
-            }
-
-            return true;
-        }
-
-        private Boolean EnsureResolveBuilder()
-        {
-            ResolveBuilder = Value as IResolveBuilder;
-
-            if (ResolveBuilder == null)
-            {
-                Logger.Debug(
-                    "Resolve {ResolveName} value {$Value} is not an IResolveBuilder, skipping.",
-                    Name,
-                    Value
-                );
-
-                return false;
-            }
-
-            return true;
-        }
-
-        private void CreateResolveContext()
-        {
-            ResolveContext = ResolveContextFactory();
-
-            if (ResolveContext == null)
+            if (resolveContext == null)
             {
                 throw Logger.Fatal.InvalidOperation(
                     SR.ResolveRegistrar_ContextFactoryReturnedNull
                 );
             }
-        }
 
-        private void InitializeResolveContext()
-        {
             Logger.Debug(
-                "Resolve {ResolveName} resolver {$Resolver} initializing context.",
-                Name,
-                ResolveBuilder
+                "Property {PropertyName} resolver {$Resolver} initializing context.",
+                property.Name,
+                resolveBuilder
             );
 
-            ResolveBuilder.InitializeContext(ResolveContext);
-        }
+            resolveBuilder.InitializeContext(resolveContext);
 
-        private Boolean CreateResultSource()
-        {
-            Logger.Debug(
-                "Resolve {ResolveName} resolver {$Resolver} initializing.",
-                Name,
-                ResolveBuilder
+            var resultSource = CreateResultSource(
+                property,
+                resolveBuilder,
+                resolveContext
             );
 
-            ResultSource = ResolveBuilder.ToEnumerable(
-                ResolveBuilder.Initialize(ResolveContext),
-                ResolveContext
-            );
-
-            if (ResultSource == null)
+            if (resultSource == null)
             {
                 Logger.Warning(
-                    "Resolve {ResolveName} resolver {$Resolver} resolved into null value.",
-                    Name,
-                    ResolveBuilder
+                    "Property {PropertyName} resolver {$Resolver} resolved into null value.",
+                    property.Name,
+                    resolveBuilder
                 );
 
-                Definition.Setter(Target, null);
-                return false;
+                property.Setter(target, null);
+                return;
             }
 
-            Logger.Debug(
-                "Resolve {ResolveName} resolver {$Resolver} resolved into value {$Value}.",
-                Name,
-                ResolveBuilder,
-                ResultSource
+            var result = CreateResult(
+                property,
+                resultSource,
+                resolveBuilder
             );
 
-            return true;
+            property.Setter(target, result);
         }
 
-        private void AssignResult()
+        private Object GetValue(Object target, PropertyAccessor property)
         {
-            var result = ResolveResultFactory.CreateResult(
-                Definition.PropertyTypeInfo,
-                ResultSource,
-                ResolveBuilder
+            var value = property.Getter(target);
+
+            if (value == null)
+            {
+                Logger.Debug(
+                    "Property {PropertyName} is null, skipping.",
+                    property.Name
+                );
+            }
+
+            return value;
+        }
+
+        private IEnumerable CreateResultSource(PropertyAccessor property, IResolveBuilder resolveBuilder, IResolveContext resolveContext)
+        {
+            Logger.Debug(
+                "Property {PropertyName} resolver {$Resolver} initializing.",
+                property.Name,
+                resolveBuilder
+            );
+
+            var resultSource = resolveBuilder.ToEnumerable(
+                resolveBuilder.Initialize(resolveContext),
+                resolveContext
             );
 
             Logger.Debug(
-                "Resolve {ResolveName} resolver {$Resolver} result adapted into {$Value}, assigning.",
-                Name,
-                ResolveBuilder,
+                "Property {PropertyName} resolver {$Resolver} resolved into {$Value}.",
+                property.Name,
+                resolveBuilder,
+                resultSource
+            );
+
+            return resultSource;
+        }
+
+        private Object CreateResult(PropertyAccessor property, IEnumerable resultSource, IResolveBuilder resolveBuilder)
+        {
+            var result = ResolveResultFactory.CreateResult(
+                property.PropertyTypeInfo,
+                resultSource,
+                resolveBuilder
+            );
+
+            Logger.Debug(
+                "Property {PropertyName} resolver {$Resolver} result adapted into {$Value}, assigning.",
+                property.Name,
+                resolveBuilder,
                 result
             );
 
-            Definition.Setter(Target, result);
+            return result;
         }
-
-        private Object Value { get; set; }
-
-        private Object Target { get; set; }
-
-        private IResolveBuilder ResolveBuilder { get; set; }
-
-        private IResolveContext ResolveContext { get; set; }
-
-        private IEnumerable ResultSource { get; set; }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolvedPropertyBinder>();
     }

@@ -20,7 +20,8 @@ namespace HarshPoint.Provisioning.Implementation
 
                 if (definition == typeof(IResolveOld<>) ||
                     definition == typeof(IResolve<>) ||
-                    definition == typeof(IResolveSingle<>))
+                    definition == typeof(IResolveSingle<>) ||
+                    definition == typeof(IResolveSingleOrDefault<>))
                 {
                     return interfaceType.GenericTypeArguments[0];
                 }
