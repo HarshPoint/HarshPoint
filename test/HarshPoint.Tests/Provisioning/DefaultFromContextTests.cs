@@ -125,7 +125,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_if_TagType_doesnt_implement_IDefaultFromContextTag()
         {
-            Assert.Throws<HarshProvisionerMetadataException>(
+            Assert.Throws<HarshObjectMetadataException>(
                 () => new HarshProvisionerMetadata(typeof(WrongTagType))
             );
         }

@@ -1,5 +1,4 @@
 ﻿using HarshPoint.ObjectModel;
-using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Globalization;
 
@@ -62,9 +61,9 @@ namespace HarshPoint
                 Format(format, args)
             );
 
-        public static HarshProvisionerMetadataException ProvisionerMetadataFormat(String format, params Object[] args)
+        public static HarshObjectMetadataException ObjectMetadataFormat(String format, params Object[] args)
         {
-            return new HarshProvisionerMetadataException(
+            return new HarshObjectMetadataException(
                 Format(format, args)
             );
         }

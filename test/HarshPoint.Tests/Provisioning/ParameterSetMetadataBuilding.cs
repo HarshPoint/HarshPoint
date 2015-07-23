@@ -125,7 +125,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_when_default_set_doesnt_exist()
         {
-            Assert.Throws<HarshProvisionerMetadataException>(
+            Assert.Throws<HarshObjectMetadataException>(
                 () => Build<WithNonexistentDefaultParamSet>()
             );
         }
@@ -133,7 +133,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_Parameter_both_common_and_in_set()
         {
-            Assert.Throws<HarshProvisionerMetadataException>(
+            Assert.Throws<HarshObjectMetadataException>(
                 () => Build<ParameterBothCommonAndInSet>()
             );
         }
@@ -141,7 +141,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_Parameter_twice_in_one_set()
         {
-            Assert.Throws<HarshProvisionerMetadataException>(
+            Assert.Throws<HarshObjectMetadataException>(
                 () => Build<ParameterInOneSetTwice>()
             );
         }
@@ -149,7 +149,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_non_readable_param()
         {
-            Assert.Throws<HarshProvisionerMetadataException>(
+            Assert.Throws<HarshObjectMetadataException>(
                 () => Build<NonReadableParam>()
             );
         }
@@ -157,7 +157,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_nonnullable_mandatory()
         {
-            var exc = Assert.Throws<HarshProvisionerMetadataException>(
+            var exc = Assert.Throws<HarshObjectMetadataException>(
                 () => Build<NonnullableMandatoryParamType>()
             );
         }

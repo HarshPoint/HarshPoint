@@ -82,7 +82,7 @@ namespace HarshPoint.ObjectModel
             if ((DefaultParameterSetName != null) &&
                 !parameterSets.Any(set => set.IsDefault))
             {
-                throw Logger.Fatal.ProvisionerMetadata(
+                throw Logger.Fatal.ObjectMetadata(
                     SR.HarshProvisionerMetadata_DefaultParameterSetNotFound,
                     DefaultParameterSetName,
                     ProcessedType
@@ -159,7 +159,7 @@ namespace HarshPoint.ObjectModel
             {
                 if (attributes.Count() > 1)
                 {
-                    throw Logger.Fatal.ProvisionerMetadata(
+                    throw Logger.Fatal.ObjectMetadata(
                         SR.HarshProvisionerMetadata_ParameterBothCommonAndInSet,
                         property.DeclaringType.FullName,
                         property.Name
@@ -182,7 +182,7 @@ namespace HarshPoint.ObjectModel
 
             if (nonUniqueParameterSetNames.Any())
             {
-                throw Logger.Fatal.ProvisionerMetadata(
+                throw Logger.Fatal.ObjectMetadata(
                     SR.HarshProvisionerMetadata_MoreParametersWithSameSet,
                     property.DeclaringType.FullName,
                     property.Name,
@@ -206,7 +206,7 @@ namespace HarshPoint.ObjectModel
                 !IsInstance(property.SetMethod)
             )
             {
-                throw Logger.Fatal.ProvisionerMetadata(
+                throw Logger.Fatal.ObjectMetadata(
                     SR.HarshProvisionerMetadata_ParameterMustBeReadWriteInstance,
                     property.DeclaringType.FullName,
                     property.Name

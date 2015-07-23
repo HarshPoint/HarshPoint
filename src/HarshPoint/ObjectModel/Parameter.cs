@@ -144,7 +144,7 @@ namespace HarshPoint.ObjectModel
         {
             if (IsMandatory && !PropertyTypeInfo.IsNullable())
             {
-                throw Logger.Fatal.ProvisionerMetadata(
+                throw Logger.Fatal.ObjectMetadata(
                     SR.HarshProvisionerMetadata_NoValueTypeMandatory,
                     PropertyInfo.DeclaringType,
                     PropertyInfo.Name,

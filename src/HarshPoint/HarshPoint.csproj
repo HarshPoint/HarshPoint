@@ -115,8 +115,8 @@
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQueryProcessor.cs" />
     <Compile Include="Provisioning\Implementation\ContextStateResolver.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
-    <Compile Include="ObjectModel\HarshProvisionerMetadataExceptionLoggerExtension.cs" />
-    <Compile Include="ObjectModel\HarshProvisionerMetadataException.cs" />
+    <Compile Include="ObjectModel\HarshObjectMetadataExceptionLoggerExtension.cs" />
+    <Compile Include="ObjectModel\HarshObjectMetadataException.cs" />
     <Compile Include="Provisioning\Implementation\IResolvableIdentifiers.cs" />
     <Compile Include="ObjectModel\Parameter.cs" />
     <Compile Include="ObjectModel\ParameterSet.cs" />
