@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -17,6 +18,8 @@ namespace HarshPoint.ObjectModel
 
             ObjectType = type;
             ObjectTypeInfo = type.GetTypeInfo();
+
+            InitReadableWritableInstanceProperties();
         }
 
         public HarshObjectMetadata(TypeInfo typeInfo)
@@ -28,8 +31,9 @@ namespace HarshPoint.ObjectModel
 
             ObjectType = typeInfo.AsType();
             ObjectTypeInfo = typeInfo;
-        }
 
+            InitReadableWritableInstanceProperties();
+        }
 
         public Type ObjectType
         {
@@ -43,13 +47,20 @@ namespace HarshPoint.ObjectModel
             private set;
         }
 
-        protected IEnumerable<PropertyInfo> GetPropertiesWith(Type attributeType, Boolean inherit)
+        public IReadOnlyCollection<PropertyAccessor> ReadableWritableInstanceProperties
         {
-            return ObjectType
-                .GetRuntimeProperties()
-                .Where(p => p.IsDefined(attributeType, inherit));
+            get; private set;
         }
 
+        public IEnumerable<Tuple<PropertyAccessor, TAttribute>> ReadableWritableInstancePropertiesWith<TAttribute>(Boolean inherit)
+            where TAttribute : Attribute
+        {
+            return ReadableWritableInstanceProperties
+                .Select(p => Tuple.Create(p, p.PropertyInfo.GetCustomAttribute<TAttribute>(inherit)))
+                .Where(t => t.Item2 != null);
+        }
+
+        [Obsolete]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected IEnumerable<Tuple<PropertyInfo, TAttribute>> GetPropertiesWith<TAttribute>(Boolean inherit)
             where TAttribute : Attribute
@@ -59,6 +70,15 @@ namespace HarshPoint.ObjectModel
                 .Where(p => p.CanRead && p.CanWrite && !p.GetMethod.IsStatic && !p.SetMethod.IsStatic)
                 .Select(p => Tuple.Create(p, p.GetCustomAttribute<TAttribute>(inherit)))
                 .Where(t => t.Item2 != null);
+        }
+
+        private void InitReadableWritableInstanceProperties()
+        {
+            ReadableWritableInstanceProperties = ObjectType
+                .GetRuntimeProperties()
+                .Where(p => p.CanRead && p.CanWrite && !p.GetMethod.IsStatic && !p.SetMethod.IsStatic)
+                .Select(p => new PropertyAccessor(p))
+                .ToImmutableArray();
         }
     }
 }

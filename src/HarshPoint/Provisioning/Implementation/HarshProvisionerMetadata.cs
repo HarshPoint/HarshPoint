@@ -29,7 +29,7 @@ namespace HarshPoint.Provisioning.Implementation
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
 
             DefaultFromContextPropertyBinder = new DefaultFromContextPropertyBinder(
-                GetPropertiesWith<DefaultFromContextAttribute>(inherit: true).Select(
+                ReadableWritableInstancePropertiesWith<DefaultFromContextAttribute>(inherit: true).Select(
                     t => new DefaultFromContextProperty(t.Item1, t.Item2)
                 )
             );

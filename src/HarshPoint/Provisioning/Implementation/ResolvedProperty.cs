@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ResolveRunnerDefinition
+    internal sealed class ResolvedProperty
     {
         public String Name { get; private set; }
 
@@ -16,7 +16,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         public Func<IResolveBuilder> ResolveBuilderFactory { get; private set; }
 
-        public ResolveRunnerDefinition(
+        public ResolvedProperty(
             String name,
             TypeInfo propertyTypeInfo,
             Func<Object, Object> getter,
@@ -50,7 +50,7 @@ namespace HarshPoint.Provisioning.Implementation
             ResolveBuilderFactory = resolveBuilderFactory;
         }
 
-        public ResolveRunnerDefinition(
+        public ResolvedProperty(
             PropertyInfo property, 
             Func<IResolveBuilder> resolveBuilderFactory = null
         )
@@ -67,6 +67,6 @@ namespace HarshPoint.Provisioning.Implementation
             ResolveBuilderFactory = resolveBuilderFactory;
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveRunnerDefinition>();
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolvedProperty>();
     }
 }

@@ -82,7 +82,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         private void Run(ResolveRunnerDefinitionCollection collection)
         {
             var runners = collection.Select(
-                rrd => new ResolveRunner(rrd, () => Mock.Of<IResolveContext>())
+                rrd => new ResolvedPropertyBinder(rrd, () => Mock.Of<IResolveContext>())
             );
 
             foreach (var runner in runners)

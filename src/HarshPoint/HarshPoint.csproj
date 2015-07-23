@@ -94,8 +94,8 @@
     <Compile Include="Provisioning\Implementation\IClientObjectResolveQuery.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder.cs" />
-    <Compile Include="Provisioning\Implementation\ResolveRunner.cs" />
-    <Compile Include="Provisioning\Implementation\ResolveRunnerDefinition.cs" />
+    <Compile Include="Provisioning\Implementation\ResolvedPropertyBinder.cs" />
+    <Compile Include="Provisioning\Implementation\ResolvedProperty.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentType.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentTypeById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />

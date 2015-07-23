@@ -8,13 +8,13 @@ namespace HarshPoint.Provisioning.Implementation
     internal sealed class DefaultFromContextProperty
     {
         public DefaultFromContextProperty(
-            PropertyInfo propertyInfo,
+            PropertyAccessor accessor,
             DefaultFromContextAttribute attribute
         )
         {
-            if (propertyInfo == null)
+            if (accessor == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(propertyInfo));
+                throw Logger.Fatal.ArgumentNull(nameof(accessor));
             }
 
             if (attribute == null)
@@ -22,9 +22,8 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(attribute));
             }
 
-            PropertyInfo = propertyInfo;
+            Accessor = accessor;
             Attribute = attribute;
-            Accessor = new PropertyAccessor(propertyInfo);
             ResolvedType = Resolvable.GetResolvedType(PropertyTypeInfo);
 
             ValidateIsNullable();
@@ -35,7 +34,7 @@ namespace HarshPoint.Provisioning.Implementation
         public PropertyAccessor Accessor { get; private set; }
         public DefaultFromContextAttribute Attribute { get; private set; }
         public String Name => PropertyInfo.Name;
-        public PropertyInfo PropertyInfo { get; private set; }
+        public PropertyInfo PropertyInfo => Accessor.PropertyInfo;
         public Type PropertyType => PropertyInfo.PropertyType;
         public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
         public Type ResolvedType { get; private set; }

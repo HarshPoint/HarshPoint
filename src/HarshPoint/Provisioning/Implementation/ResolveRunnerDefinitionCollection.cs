@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ResolveRunnerDefinitionCollection : Collection<ResolveRunnerDefinition>
+    internal sealed class ResolveRunnerDefinitionCollection : Collection<ResolvedProperty>
     {
         public void Add<TResult>(
             Expression<Func<IResolve<TResult>>> propertyExpression,
@@ -36,7 +36,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             var property = propertyExpression.ExtractSinglePropertyAccess();
 
-            Add(new ResolveRunnerDefinition(property, factory));
+            Add(new ResolvedProperty(property, factory));
         }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveRunnerDefinitionCollection>();
