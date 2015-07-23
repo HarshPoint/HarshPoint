@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="FixNugetConfig" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <NugetConfigFile>$(MSBuildProjectDirectory)\..\..\nuget.config</NugetConfigFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <NugetConfigUpdates Include="FixAbsolutePath">
+      <XPath>/configuration/packageSources/add[@key='packages-local']/@value</XPath>
+      <NewValue>packages-local</NewValue>
+    </NugetConfigUpdates>
+  </ItemGroup>
+  <Target Name="FixNugetConfig">
+    <Message Text="Fixing nuget.config at $(DestXmlFiles)" />
+    <XmlPoke XmlInputPath="$(NugetConfigFile)"
+             Query="%(NugetConfigUpdates.XPath)"
+             Value="%(NugetConfigUpdates.NewValue)"/>
+  </Target>
+</Project>
