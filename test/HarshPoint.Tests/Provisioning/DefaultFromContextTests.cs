@@ -1,6 +1,7 @@
 ﻿using HarshPoint.ObjectModel;
 using HarshPoint.Provisioning;
 using HarshPoint.Provisioning.Implementation;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -57,45 +58,54 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task Resolve_property_gets_assigned()
+        public void Resolve_property_gets_assigned()
         {
             var prov = new ResolverProvisioner();
 
             Assert.Null(prov.Resolver);
 
-            await prov.ProvisionAsync(Fixture.Context);
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(
+                prov,
+                Fixture.Context
+            );
 
             Assert.NotNull(prov.Resolver);
             Assert.IsType<ContextStateResolver<String>>(prov.Resolver);
         }
 
         [Fact]
-        public async Task ResolveSingle_property_gets_assigned()
+        public void ResolveSingle_property_gets_assigned()
         {
             var prov = new SingleResolverProvisioner();
 
             Assert.Null(prov.SingleResolver);
 
-            await prov.ProvisionAsync(Fixture.Context);
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(
+                prov,
+                Fixture.Context
+            );
 
             Assert.NotNull(prov.SingleResolver);
             Assert.IsType<ContextStateResolver<String>>(prov.SingleResolver);
         }
 
         [Fact]
-        public async Task String_property_gets_assigned()
+        public void String_property_gets_assigned()
         {
             var prov = new StringProvisioner();
 
             Assert.Null(prov.StringProperty);
 
-            await prov.ProvisionAsync(Fixture.Context.PushState("42"));
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(
+                prov,
+                Fixture.Context.PushState("42")
+            );
 
             Assert.Equal("42", prov.StringProperty);
         }
 
         [Fact]
-        public async Task Tagged_property_gets_assigned()
+        public void Tagged_property_gets_assigned()
         {
             var prov = new TaggedProvisioner();
             Assert.Null(prov.TaggedStringProperty);
@@ -104,19 +114,25 @@ namespace HarshPoint.Tests.Provisioning
                 .PushState("red herring")
                 .PushState(new DummyTag() { Value = "424242" });
 
-            await prov.ProvisionAsync(state);
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(
+                prov,
+                state
+            );
 
             Assert.Equal("424242", prov.TaggedStringProperty);
         }
 
         [Fact]
-        public async Task Assigned_property_doesnt_get_overwritten()
+        public void Assigned_property_doesnt_get_overwritten()
         {
             var prov = new ResolverProvisioner();
-            var resolver = new DummyResolver();
+            var resolver = Mock.Of<IResolve<String>>();
             prov.Resolver = resolver;
 
-            await prov.ProvisionAsync(Fixture.Context);
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(
+                prov,
+                Fixture.Context
+            );
 
             Assert.Same(resolver, prov.Resolver);
         }
@@ -155,7 +171,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             [Parameter]
             [DefaultFromContext]
-            public IResolveOld<String> SingleResolver
+            public IResolve<String> SingleResolver
             {
                 get;
                 set;
@@ -166,7 +182,7 @@ namespace HarshPoint.Tests.Provisioning
         {
             [Parameter]
             [DefaultFromContext]
-            public IResolveOld<String> Resolver
+            public IResolve<String> Resolver
             {
                 get;
                 set;
@@ -175,14 +191,6 @@ namespace HarshPoint.Tests.Provisioning
 
         private class DummyTag : DefaultFromContextTag<String>
         {
-        }
-
-        private class DummyResolver : IResolveOld<String>
-        {
-            public Task<IEnumerable<string>> TryResolveAsync(IResolveContext context)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         private sealed class WrongTagType : HarshProvisioner

@@ -50,7 +50,7 @@ namespace HarshPoint.Provisioning.Implementation
                 if (value != null)
                 {
                     Logger.Debug(
-                        "Setting property {PropertyName} to {Value}",
+                        "Setting property {PropertyName} to {$Value}",
                         prop.Name,
                         value
                     );

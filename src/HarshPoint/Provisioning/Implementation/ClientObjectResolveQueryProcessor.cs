@@ -89,12 +89,13 @@ namespace HarshPoint.Provisioning.Implementation
             var includeInjecting = new IncludeInjectingVisitor();
             var retrievalAppending = new RetrievalAppendingVisitor(_retrievals);
 
-            var result = retrievalAppending.Visit(
-                includeInjecting.Visit(
-                    expression
-                )
-            );
+            Logger.Debug("Expression processing: {Expression}", expression);
+            var includesInjected = includeInjecting.Visit(expression);
 
+            Logger.Debug("Includes injected: {Expression}", includesInjected);
+            var result = retrievalAppending.Visit(includesInjected);
+
+            Logger.Debug("Retrievals appended: {Expression}", result);
             return result;
         }
 
