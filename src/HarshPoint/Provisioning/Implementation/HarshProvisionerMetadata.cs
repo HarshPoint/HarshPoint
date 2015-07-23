@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using HarshPoint.ObjectModel;
 
 namespace HarshPoint.Provisioning.Implementation
 {
