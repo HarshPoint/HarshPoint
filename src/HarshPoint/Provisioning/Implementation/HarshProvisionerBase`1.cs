@@ -335,7 +335,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             return RunWithContext(context, async delegate
             {
-                Metadata.DefaultFromContextParameterBinder.Bind(
+                Metadata.DefaultFromContextPropertyBinder.Bind(
                     this,
                     Context
                 );

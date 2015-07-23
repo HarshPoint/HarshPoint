@@ -26,15 +26,18 @@ namespace HarshPoint.Provisioning.Implementation
                 .Build()
                 .ToImmutableArray();
 
-            DefaultFromContextParameterBinder =
-                new DefaultFromContextParameterBinder(Parameters);
-
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
+
+            DefaultFromContextPropertyBinder = new DefaultFromContextPropertyBinder(
+                GetPropertiesWith<DefaultFromContextAttribute>(inherit: true).Select(
+                    t => new DefaultFromContextProperty(t.Item1, t.Item2)
+                )
+            );
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
         }
 
-        public DefaultFromContextParameterBinder DefaultFromContextParameterBinder
+        public DefaultFromContextPropertyBinder DefaultFromContextPropertyBinder
         {
             get;
             private set;

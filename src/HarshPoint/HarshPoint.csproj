@@ -81,6 +81,7 @@
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`2.cs" />
+    <Compile Include="Provisioning\Implementation\DefaultFromContextProperty.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilderElement.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveBuilder.cs" />
@@ -89,7 +90,7 @@
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2_Element.cs" />
     <Compile Include="Provisioning\Implementation\IdentifierResolveBuilder`3.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerTreeBuilder.cs" />
-    <Compile Include="Provisioning\Implementation\DefaultFromContextParameterBinder.cs" />
+    <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyBinder.cs" />
     <Compile Include="Provisioning\Implementation\IClientObjectResolveQuery.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder.cs" />

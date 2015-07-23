@@ -22,8 +22,7 @@ namespace HarshPoint.Tests.Provisioning
             var metadata = new HarshProvisionerMetadata(typeof(SingleResolverProvisioner));
 
             var param = Assert.Single(
-                metadata.DefaultParameterSet.Parameters
-                    .Where(p => p.IsDefaultFromContext)
+                metadata.DefaultFromContextPropertyBinder.Properties
             );
 
             Assert.Equal(
@@ -43,8 +42,7 @@ namespace HarshPoint.Tests.Provisioning
             var metadata = new HarshProvisionerMetadata(typeof(ResolverProvisioner));
 
             var param = Assert.Single(
-                metadata.DefaultParameterSet.Parameters
-                    .Where(p => p.IsDefaultFromContext)
+                metadata.DefaultFromContextPropertyBinder.Properties
             );
 
             Assert.Equal(
@@ -127,7 +125,7 @@ namespace HarshPoint.Tests.Provisioning
         public void Fails_if_TagType_doesnt_implement_IDefaultFromContextTag()
         {
             Assert.Throws<HarshProvisionerMetadataException>(
-                () => new ParameterSetBuilder(typeof(WrongTagType)).Build()
+                () => new HarshProvisionerMetadata(typeof(WrongTagType))
             );
         }
 

@@ -141,14 +141,12 @@ namespace HarshPoint.Provisioning.Implementation
                   !HasNonUniqueParameterSetNames(property, paramAttrs) &&
                   !IsBothCommonParameterAndInParameterSet(property, paramAttrs)
 
-               let defaultFromContext = property.GetCustomAttribute<DefaultFromContextAttribute>(inherit: true)
                let validationAttributes = property.GetCustomAttributes<ParameterValidationAttribute>(inherit: true)
 
                from attr in paramAttrs
                select new Parameter(
                    property,
                    attr,
-                   defaultFromContext,
                    validationAttributes
                );
 

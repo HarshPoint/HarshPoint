@@ -23,5 +23,20 @@ namespace HarshPoint.Reflection
                 typeInfo = typeInfo.BaseType?.GetTypeInfo();
             }
         }
+
+        public static Boolean IsNullable(this TypeInfo typeInfo)
+        {
+            if (typeInfo == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(typeInfo));
+            }
+
+            if (typeInfo.IsValueType)
+            {
+                return Nullable.GetUnderlyingType(typeInfo.AsType()) != null;
+            }
+
+            return true;
+        }
     }
 }

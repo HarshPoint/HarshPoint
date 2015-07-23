@@ -56,6 +56,7 @@ namespace HarshPoint.ObjectModel
         {
             return ObjectType
                 .GetRuntimeProperties()
+                .Where(p => p.CanRead && p.CanWrite && !p.GetMethod.IsStatic && !p.SetMethod.IsStatic)
                 .Select(p => Tuple.Create(p, p.GetCustomAttribute<TAttribute>(inherit)))
                 .Where(t => t.Item2 != null);
         }
