@@ -65,6 +65,7 @@
     <Compile Include="HarshScopedValue`1.cs" />
     <Compile Include="IHarshCloneable.cs" />
     <Compile Include="ObjectModel\HarshObjectMetadata.cs" />
+    <Compile Include="ObjectModel\PropertyAccessor.cs" />
     <Compile Include="Provisioning\DefaultContentTypeGroup.cs" />
     <Compile Include="Provisioning\DefaultFieldGroup.cs" />
     <Compile Include="Provisioning\DefaultFromContextTag`1.cs" />
