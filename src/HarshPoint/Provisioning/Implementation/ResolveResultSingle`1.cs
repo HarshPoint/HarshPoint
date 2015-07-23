@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace HarshPoint.Provisioning.Implementation
+﻿namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ResolveResultSingle<T> : ResolveResultBase, IResolveSingle<T>
     {

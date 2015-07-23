@@ -2,7 +2,6 @@
 using HarshPoint.Provisioning.Resolvers;
 using Microsoft.SharePoint.Client;
 using System;
-using System.Linq;
 
 namespace HarshPoint.Provisioning
 {
