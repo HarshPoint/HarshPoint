@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Implementation
 {
+    /// <remarks>Does not inherit from <see cref="ResolveBuilder{TResult, TContext}" />
+    /// because that one inherits from <see cref="Chain{TElement}"/> and we don't want
+    /// that functionality here.</remarks>
     internal sealed class DeferredResolveBuilder<TResult, TContext> : IResolveBuilder<TResult, TContext>
         where TContext : class, IResolveContext
     {
@@ -23,22 +26,22 @@ namespace HarshPoint.Provisioning.Implementation
        
         TResult IResolveSingleOrDefault<TResult>.Value
         {
-            get { throw ResolveBuilder<TResult, TContext>.CannotCallThisMethod(); }
+            get { throw CannotCallThisMethod(); }
         }
 
         TResult IResolveSingle<TResult>.Value
         {
-            get { throw ResolveBuilder<TResult, TContext>.CannotCallThisMethod(); }
+            get { throw CannotCallThisMethod(); }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw ResolveBuilder<TResult, TContext>.CannotCallThisMethod();
+            throw CannotCallThisMethod();
         }
 
         IEnumerator<TResult> IEnumerable<TResult>.GetEnumerator()
         {
-            throw ResolveBuilder<TResult, TContext>.CannotCallThisMethod();
+            throw CannotCallThisMethod();
         }
 
         Object IResolveBuilder.Initialize(IResolveContext context)
@@ -95,6 +98,13 @@ namespace HarshPoint.Provisioning.Implementation
 
                 return _inner;
             }
+        }
+
+        private static Exception CannotCallThisMethod()
+        {
+            return Logger.Fatal.InvalidOperation(
+                SR.ResolveBuilder_CannotCallThisMethod
+            );
         }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(DeferredResolveBuilder<,>));
