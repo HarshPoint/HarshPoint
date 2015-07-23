@@ -139,6 +139,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The DeferredResolveBuilder is not initialized. You must first call InitializeContext method..
+        /// </summary>
+        internal static string DeferredResolveBuilder_InnerNotInitialized {
+            get {
+                return ResourceManager.GetString("DeferredResolveBuilder_InnerNotInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value cannot be null or whitespace-only string..
         /// </summary>
         internal static string Error_ArgumentNullOrWhitespace {

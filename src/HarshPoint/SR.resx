@@ -146,6 +146,9 @@ Number of resolver elements {1}</value>
   <data name="ContentTypeIdBuilder_NoContentTypeAttributeBaseClass" xml:space="preserve">
     <value>The content type ID cannot be determined because the type '{0}', from which the specified type '{1}' inherits, has no ContentTypeAttribute.</value>
   </data>
+  <data name="DeferredResolveBuilder_InnerNotInitialized" xml:space="preserve">
+    <value>The DeferredResolveBuilder is not initialized. You must first call InitializeContext method.</value>
+  </data>
   <data name="Error_ArgumentNullOrWhitespace" xml:space="preserve">
     <value>Value cannot be null or whitespace-only string.</value>
   </data>

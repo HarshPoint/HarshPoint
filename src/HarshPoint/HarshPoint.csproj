@@ -70,6 +70,7 @@
     <Compile Include="Provisioning\DefaultFieldGroup.cs" />
     <Compile Include="Provisioning\DefaultFromContextTag`1.cs" />
     <Compile Include="DefaultParameterSetAttribute.cs" />
+    <Compile Include="Provisioning\DeferredResolveBuilder.cs" />
     <Compile Include="Provisioning\HarshContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshFieldProvisioner.cs" />
     <Compile Include="Provisioning\HarshFieldRef.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextProperty.cs" />
+    <Compile Include="Provisioning\Implementation\DeferredResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilderElement.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveBuilder.cs" />

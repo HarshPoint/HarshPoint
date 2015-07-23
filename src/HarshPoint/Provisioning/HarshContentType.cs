@@ -12,12 +12,9 @@ namespace HarshPoint.Provisioning
                 () => ContentType
             );
 
-#if false
-            RegisterResolve(
-                () => ExistingContentType,
+            ExistingContentType = DeferredResolveBuilder.Create(
                 () => Resolve.ContentType.ById(Id)
             );
-#endif
         }
 
         public ContentType ContentType

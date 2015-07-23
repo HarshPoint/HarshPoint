@@ -155,7 +155,7 @@ namespace HarshPoint.Provisioning.Implementation
             return typed;
         }
 
-        private static Exception CannotCallThisMethod()
+        internal static Exception CannotCallThisMethod()
         {
             return Logger.Fatal.InvalidOperation(
                 SR.ResolveBuilder_CannotCallThisMethod
