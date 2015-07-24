@@ -65,6 +65,12 @@ namespace HarshPoint.Provisioning.Implementation
                                       ResolveContext = resolveContext,
                                   };
 
+            // save into array, otherwise we will create everything (especially ResolveContexts)
+            // a-new when enumerating few lines down the road. and we certainly don't want to
+            // have fresh uninitialized resolve contexts there.
+
+            resolveBuilders = resolveBuilders.ToArray();
+
             foreach (var x in resolveBuilders)
             {
                 Logger.Debug(
@@ -89,9 +95,9 @@ namespace HarshPoint.Provisioning.Implementation
                                     ResultSource = resultSource
                                 };
 
-            // force enumeration, so that all result sources are created
-            // before any properties are overwritten, because some of the 
-            // resolve builders may depend on others, and would fail if they
+            // save into array to force enumeration, so that all result sources 
+            // are created before any properties are overwritten, because some of the 
+            // resolve builders may depend on others, and they'd fail if they
             // found the ResolveResult instead.
 
             resultSources = resultSources.ToArray();

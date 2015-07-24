@@ -18,9 +18,11 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             await Fixture.EnsureTestList();
 
-            var results = await ResolveAsync<List>(
-                Resolve.List.ByUrl(SharePointClientFixture.TestListUrl)
+            var results = ManualResolver.Resolve(
+                Resolve.List().ByUrl(SharePointClientFixture.TestListUrl)
             );
+
+            await ClientContext.ExecuteQueryAsync();
 
             var list = Assert.Single(results);
 
@@ -36,7 +38,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             await Fixture.EnsureTestList();
 
-            var resolver = Resolve.List.ByUrl(SharePointClientFixture.TestListUrl).RootFolder();
+            var resolver = Resolve.List().ByUrl(SharePointClientFixture.TestListUrl).RootFolder();
             var folder = Assert.Single(await ResolveAsync(resolver));
 
             Assert.NotNull(folder);

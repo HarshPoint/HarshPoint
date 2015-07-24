@@ -52,7 +52,10 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         protected ManualResolver ManualResolver
-            => HarshLazy.Initialize(ref _manualResolver, () => new ManualResolver(PrepareResolveContext));
+            => HarshLazy.Initialize(
+                ref _manualResolver, 
+                () => CreateManualResolver(PrepareResolveContext)
+            );
 
         protected String ParameterSetName => ParameterSet?.Name;
 
@@ -201,9 +204,10 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         protected virtual ResolveContext<TContext> CreateResolveContext()
-        {
-            return new ResolveContext<TContext>();
-        }
+            => new ResolveContext<TContext>();
+
+        internal virtual ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
+            => new ManualResolver(resolveContextFactory);
 
         internal virtual Task OnResolvedParametersBound()
         {
@@ -213,6 +217,13 @@ namespace HarshPoint.Provisioning.Implementation
         internal abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
 
         internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
+
+        private ResolveContext<TContext> PrepareResolveContext()
+        {
+            var resolveContext = CreateResolveContext();
+            resolveContext.ProvisionerContext = Context;
+            return resolveContext;
+        }
 
         private ParameterSet ResolveParameterSet()
         {
@@ -253,13 +264,6 @@ namespace HarshPoint.Provisioning.Implementation
                 .Aggregate(
                     Context, (ctx, state) => (TContext)ctx.PushState(state)
                 );
-        }
-
-        private ResolveContext<TContext> PrepareResolveContext()
-        {
-            var resolveContext = CreateResolveContext();
-            resolveContext.ProvisionerContext = Context;
-            return resolveContext;
         }
 
         private Task ProvisionChildrenAsync()

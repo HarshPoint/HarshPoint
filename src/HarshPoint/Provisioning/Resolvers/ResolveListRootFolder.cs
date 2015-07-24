@@ -14,9 +14,6 @@ namespace HarshPoint.Provisioning.Resolvers
         }
 
         protected override IEnumerable<Folder> ToEnumerable(Object state, ClientObjectResolveContext context)
-        {
-            return from list in Parent.ToEnumerable(state, context)
-                   select list.RootFolder;
-        }
+            => Parent.ToEnumerable(state, context).Select(list => list.RootFolder);
     }
 }

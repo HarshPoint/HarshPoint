@@ -42,14 +42,16 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(existingSchemaXml));
             }
 
+            // do not modify the original
+
             return RunSchemaXmlTransformers(
-                existingSchemaXml,
+                new XElement(existingSchemaXml),
                 Transformers.Where(t => !t.OnlyOnCreate)
             );
         }
 
         private static XElement RunSchemaXmlTransformers(
-            XElement schemaXml, 
+            XElement schemaXml,
             IEnumerable<HarshFieldSchemaXmlTransformer> transformers
         )
             => transformers.Aggregate(

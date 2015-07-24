@@ -1,4 +1,5 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,15 +19,15 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             await Fixture.EnsureTestList();
 
-            IResolveOld<Field> resolver = Resolve
-                .ListByUrlOld(SharePointClientFixture.TestListUrl)
-                .FieldById(HarshBuiltInFieldId.Title);
-
-            var field = Assert.Single(
-                await resolver.TryResolveAsync(
-                    Fixture.ResolveContext
-                )
+            var resolver = ManualResolver.ResolveSingleOrDefault(
+                Resolve
+                .List().ByUrl(SharePointClientFixture.TestListUrl)
+                .Field().ById(HarshBuiltInFieldId.Title)
             );
+
+            await ClientContext.ExecuteQueryAsync();
+
+            var field = resolver.Value;
 
             Assert.NotNull(field);
             Assert.Equal("Title", await field.EnsurePropertyAvailable(f => f.InternalName));

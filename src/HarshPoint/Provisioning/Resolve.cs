@@ -7,20 +7,29 @@ namespace HarshPoint.Provisioning
 {
     public static class Resolve
     {
-        public static ResolveContentType ContentType => new ResolveContentType();
-        public static ResolveField Field = new ResolveField();
-        public static ResolveList List => new ResolveList();
+        public static ResolveFieldById ById(this IResolveBuilder<Field, ClientObjectResolveContext> parent, params Guid[] ids)
+            => new ResolveFieldById(parent, ids);
+
+        public static ResolveListByUrl ByUrl(this IResolveBuilder<List, ClientObjectResolveContext> parent, params String[] urls)
+            => new ResolveListByUrl(parent, urls);
 
         public static ResolveCatalog Catalog(params ListTemplateType[] templateTypes)
-        {
-            if (templateTypes == null)
-            {
-                throw Error.ArgumentNull(nameof(templateTypes));
-            }
+            => new ResolveCatalog(templateTypes);
 
-            return new ResolveCatalog(templateTypes);
-        }
-        
+        public static ResolveContentType ContentType()
+            => new ResolveContentType();
+
+        public static ResolveField Field()
+            => new ResolveField();
+
+        public static ResolveListField Field(this IResolveBuilder<List, ClientObjectResolveContext> list)
+            => new ResolveListField(list);
+
+        public static ResolveList List()
+            => new ResolveList();
+
+        public static ResolveListRootFolder RootFolder(this IResolveBuilder<List, ClientObjectResolveContext> list)
+            => new ResolveListRootFolder(list);
 
         [Obsolete]
         public static OldResolveListByUrl ListByUrlOld(params String[] urls)

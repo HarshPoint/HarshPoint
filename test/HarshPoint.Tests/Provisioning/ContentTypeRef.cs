@@ -34,7 +34,7 @@ namespace HarshPoint.Tests.Provisioning
                 {
                     new HarshContentTypeRef()
                     {
-                        ContentTypes = Resolve.ContentType.ById(ctid)
+                        ContentTypes = Resolve.ContentType().ById(ctid)
                     }
                 }
             };

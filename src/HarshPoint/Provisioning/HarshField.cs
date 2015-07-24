@@ -22,7 +22,7 @@ namespace HarshPoint.Provisioning
             ModifyChildrenContextState(() => ExistingField.Value);
 
             ExistingField = DeferredResolveBuilder.Create(
-                () => Resolve.Field.ById(Id)
+                () => Resolve.Field().ById(Id)
             );
 
             Type = FieldType.Text;
@@ -130,7 +130,7 @@ namespace HarshPoint.Provisioning
         /// <value>
         /// The field identifier. Must not be an empty <see cref="Guid"/>.
         /// </value>
-        [Parameter(Mandatory = true)]
+        //[Parameter(Mandatory = true)]
         public Guid Id { get; set; }
 
         /// <summary>
@@ -149,13 +149,6 @@ namespace HarshPoint.Provisioning
         /// </summary>
         [Parameter]
         public String StaticName { get; set; }
-
-        /// <summary>
-        /// Gets the collection of schema XML transformers run when
-        /// creating and/or updating a field.
-        /// </summary>
-        public IReadOnlyCollection<HarshFieldSchemaXmlTransformer> SchemaXmlTransformers
-            => SchemaXmlBuilder.Transformers; 
 
         protected override async Task InitializeAsync()
         {
@@ -194,7 +187,7 @@ namespace HarshPoint.Provisioning
                 // subtype.
 
                 var reResolvedField = ManualResolver.ResolveSingle(
-                    Resolve.Field.ById(Id)
+                    Resolve.Field().ById(Id)
                 );
 
                 await ClientContext.ExecuteQueryAsync();

@@ -166,12 +166,14 @@
     <Compile Include="Provisioning\FieldSchemaXmlBuilderTests.cs" />
     <Compile Include="Provisioning\IdentifierResolving.cs" />
     <Compile Include="Provisioning\Implementation\ChainTests.cs" />
+    <Compile Include="Provisioning\Implementation\ManualResolving.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedPropertyBinding.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultCreating.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultTests.cs" />
     <Compile Include="Provisioning\ListProvisioning.cs" />
     <Compile Include="Provisioning\LookupProvisioning.cs" />
     <Compile Include="Provisioning\MandatoryParameters.cs" />
+    <Compile Include="Provisioning\MockResolve.cs" />
     <Compile Include="Provisioning\ParameterSetMetadataBuilding.cs" />
     <Compile Include="Provisioning\ParameterSetResolving.cs" />
     <Compile Include="Provisioning\PotentiallyDestructiveTests.cs" />

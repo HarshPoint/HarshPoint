@@ -13,7 +13,7 @@ namespace HarshPoint.Provisioning
             );
 
             ExistingContentType = DeferredResolveBuilder.Create(
-                () => Resolve.ContentType.ById(Id)
+                () => Resolve.ContentType().ById(Id)
             );
         }
 

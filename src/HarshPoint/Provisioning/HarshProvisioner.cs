@@ -17,6 +17,9 @@ namespace HarshPoint.Provisioning
 
         public Web Web => Context?.Web;
 
+        protected new ClientObjectManualResolver ManualResolver
+            => (ClientObjectManualResolver)base.ManualResolver;
+
         public void ModifyChildrenContextState(Func<ClientObject> modifier)
         {
             ModifyChildrenContextState(() =>
@@ -35,6 +38,11 @@ namespace HarshPoint.Provisioning
         protected virtual void InitializeResolveContext(ClientObjectResolveContext context)
         {
         }
+
+        internal sealed override ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
+            => new ClientObjectManualResolver(
+                () => (ClientObjectResolveContext)resolveContextFactory()
+            );
 
         protected sealed override ResolveContext<HarshProvisionerContext> CreateResolveContext()
         {

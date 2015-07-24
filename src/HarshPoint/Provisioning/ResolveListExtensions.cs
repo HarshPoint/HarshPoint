@@ -5,6 +5,7 @@ using System;
 
 namespace HarshPoint.Provisioning
 {
+    [Obsolete]
     public static class ResolveListExtensions
     {
         public static OldResolveListFieldById FieldById(this IResolveOld<List> list, params Guid[] ids)
@@ -15,11 +16,6 @@ namespace HarshPoint.Provisioning
         public static OldResolveListFieldByInternalName FieldByInternalName(this IResolveOld<List> list, params String[] names)
         {
             return new OldResolveListFieldByInternalName(list, names);
-        }
-
-        public static ResolveListRootFolder RootFolder(this IResolveBuilder<List, ClientObjectResolveContext> list)
-        {
-            return new ResolveListRootFolder(list);
         }
 
         public static ResolveListViewByTitle ViewByTitle(this IResolveOld<List> list, params String[] titles)
