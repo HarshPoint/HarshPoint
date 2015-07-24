@@ -58,13 +58,14 @@ namespace HarshPoint.Provisioning
                 fl => fl.Name
             );
         }
+
         protected override async Task OnProvisioningAsync()
         {
             var links = from field in Fields
                         select
                             ExistingFieldLinks.FirstOrDefault(fl => fl.Id == field.Id)
                             ??
-                            ResolvedContentType.FieldLinks.Add(
+                            ContentType.Value.FieldLinks.Add(
                                 new FieldLinkCreationInformation() { Field = field }
                             );
 
@@ -76,12 +77,6 @@ namespace HarshPoint.Provisioning
 
             ContentType.Value.Update(updateChildren: true);
             await ClientContext.ExecuteQueryAsync();
-        }
-
-        private ContentType ResolvedContentType
-        {
-            get;
-            set;
         }
 
         private IResolve<FieldLink> ExistingFieldLinks

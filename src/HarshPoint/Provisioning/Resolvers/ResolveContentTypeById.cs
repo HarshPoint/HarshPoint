@@ -15,13 +15,11 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override void InitializeContext(ClientObjectResolveContext context)
+        protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
             context.Include<ContentType>(
                 ct => ct.StringId
             );
-
-            base.InitializeContext(context);
         }
 
         protected override HarshContentTypeId GetIdentifier(ContentType result)

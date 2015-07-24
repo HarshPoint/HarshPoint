@@ -15,10 +15,8 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override void InitializeContext(ClientObjectResolveContext context)
+        protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
-            base.InitializeContext(context);
-
             context.Include<Field>(
                 f => f.Id
             );

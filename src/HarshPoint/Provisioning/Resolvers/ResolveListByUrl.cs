@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
         }
 
-        protected override void InitializeContext(ClientObjectResolveContext context)
+        protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
             context.Include<List>(
                 list => list.ParentWebUrl,

@@ -15,10 +15,8 @@ namespace HarshPoint.Provisioning.Resolvers
 
         public ResolveFieldById ById(params Guid[] ids) => new ResolveFieldById(this, ids);
 
-        protected override void InitializeContext(ClientObjectResolveContext context)
+        protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
-            base.InitializeContext(context);
-
             context.Include<List>(
                 list => list.Fields
             );
