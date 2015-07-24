@@ -2,21 +2,30 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using HarshPoint.Provisioning.Implementation;
+using HarshPoint.Provisioning.Resolvers;
 
 namespace HarshPoint.Provisioning
 {
     public class HarshFieldRef : HarshProvisioner
     {
+        public HarshFieldRef()
+        {
+            ExistingFieldLinks = DeferredResolveBuilder.Create(
+                () => new ResolveContentTypeFieldLink(ContentType.AsClientObjectResolveBuilder())
+            );
+        }
+
         [DefaultFromContext]
         [Parameter(Mandatory = true)]
-        public IResolveOld<ContentType> ContentType
+        public IResolveSingle<ContentType> ContentType
         {
             get;
             set;
         }
 
         [Parameter(Mandatory = true)]
-        public IResolveOld<Field> Fields
+        public IResolve<Field> Fields
         {
             get;
             set;
@@ -36,29 +45,24 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task InitializeAsync()
+        protected override void InitializeResolveContext(ClientObjectResolveContext context)
         {
-            ResolvedContentType = await ResolveSingleAsync(ContentType);
-        }
+            base.InitializeResolveContext(context);
 
+            context.Include<Field>(
+                f => f.Id
+            );
+
+            context.Include<FieldLink>(
+                fl => fl.Id,
+                fl => fl.Name
+            );
+        }
         protected override async Task OnProvisioningAsync()
         {
-            var existingLinks = ClientContext.LoadQuery(
-                ResolvedContentType.FieldLinks.Include(
-                    fl => fl.Id,
-                    fl => fl.Name
-                )
-            );
-
-            await ClientContext.ExecuteQueryAsync();
-
-            var fields = await ResolveAsync(
-                Fields.Include(f => f.Id)
-            );
-
-            var links = from field in fields
+            var links = from field in Fields
                         select
-                            existingLinks.FirstOrDefault(fl => fl.Id == field.Id)
+                            ExistingFieldLinks.FirstOrDefault(fl => fl.Id == field.Id)
                             ??
                             ResolvedContentType.FieldLinks.Add(
                                 new FieldLinkCreationInformation() { Field = field }
@@ -70,7 +74,7 @@ namespace HarshPoint.Provisioning
                 link.Required = Required;
             }
 
-            ResolvedContentType.Update(updateChildren: true);
+            ContentType.Value.Update(updateChildren: true);
             await ClientContext.ExecuteQueryAsync();
         }
 
@@ -78,6 +82,11 @@ namespace HarshPoint.Provisioning
         {
             get;
             set;
+        }
+
+        private IResolve<FieldLink> ExistingFieldLinks
+        {
+            get; set;
         }
     }
 }

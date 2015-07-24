@@ -87,6 +87,7 @@
     <Compile Include="Provisioning\Implementation\IResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilderElement.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveBuilder.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveBuilderExtensions.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2_Element.cs" />
     <Compile Include="Provisioning\Implementation\IdentifierResolveBuilder`3.cs" />
@@ -98,6 +99,9 @@
     <Compile Include="Provisioning\Implementation\ResolvedPropertyBinder.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentType.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentTypeById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveContentTypeFieldLink.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveField.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultSingleOrDefault`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResult`1.cs" />
@@ -137,11 +141,11 @@
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery`4.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListField.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
+    <Compile Include="Provisioning\Resolvers\OldResolveFieldById.cs" />
+    <Compile Include="Provisioning\Resolvers\OldResolveFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveList.cs" />
     <Compile Include="Provisioning\Resolvers\OldResolveListFieldById.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveListFieldByInternalName.cs" />
+    <Compile Include="Provisioning\Resolvers\OldResolveListFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByTitle.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByUrl.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreTermSetById.cs" />
@@ -268,8 +272,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <Import Project="..\FixNugetConfig.targets"/>
-
+  <Import Project="..\FixNugetConfig.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetDir)*.dll" "$(SolutionDir)src\HarshPoint.Shellploy\" || exit 1
 copy "$(TargetDir)*.pdb" "$(SolutionDir)src\HarshPoint.Shellploy\" || exit 1</PostBuildEvent>

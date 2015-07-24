@@ -12,9 +12,9 @@ namespace HarshPoint.Provisioning
             return new OldResolveListFieldById(list, ids);
         }
 
-        public static ResolveListFieldByInternalName FieldByInternalName(this IResolveOld<List> list, params String[] names)
+        public static OldResolveListFieldByInternalName FieldByInternalName(this IResolveOld<List> list, params String[] names)
         {
-            return new ResolveListFieldByInternalName(list, names);
+            return new OldResolveListFieldByInternalName(list, names);
         }
 
         public static ResolveListRootFolder RootFolder(this IResolveBuilder<List, ClientObjectResolveContext> list)

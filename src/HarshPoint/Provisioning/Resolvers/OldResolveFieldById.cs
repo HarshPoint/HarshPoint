@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveFieldByInternalName :
-        Resolvable<Field, String, HarshProvisionerContext, ResolveFieldByInternalName>
+    public sealed class OldResolveFieldById
+        : Resolvable<Field, Guid, HarshProvisionerContext, OldResolveFieldById>
     {
-        public ResolveFieldByInternalName(IEnumerable<String> names)
-            : base(names)
+        public OldResolveFieldById(IEnumerable<Guid> ids)
+            : base(ids)
         {
         }
 
@@ -22,7 +22,7 @@ namespace HarshPoint.Provisioning.Resolvers
             }
 
             return this.ResolveQuery(
-                ClientObjectResolveQuery.FieldByInternalName,
+                ClientObjectResolveQuery.FieldById,
                 context,
                 context.ProvisionerContext.Web.Fields,
                 context.ProvisionerContext.Web.AvailableFields

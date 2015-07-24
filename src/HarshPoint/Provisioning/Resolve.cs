@@ -8,7 +8,7 @@ namespace HarshPoint.Provisioning
     public static class Resolve
     {
         public static ResolveContentType ContentType => new ResolveContentType();
-
+        public static ResolveField Field = new ResolveField();
         public static ResolveList List => new ResolveList();
 
         public static ResolveCatalog Catalog(params ListTemplateType[] templateTypes)
@@ -21,24 +21,24 @@ namespace HarshPoint.Provisioning
             return new ResolveCatalog(templateTypes);
         }
 
-        public static ResolveFieldById FieldById(params Guid[] ids)
+        public static OldResolveFieldById FieldById(params Guid[] ids)
         {
             if (ids == null)
             {
                 throw Error.ArgumentNull(nameof(ids));
             }
 
-            return new ResolveFieldById(ids);
+            return new OldResolveFieldById(ids);
         }
 
-        public static ResolveFieldByInternalName FieldByInternalName(params String[] names)
+        public static OldResolveFieldByInternalName FieldByInternalName(params String[] names)
         {
             if (names == null)
             {
                 throw Error.ArgumentNull(nameof(names));
             }
 
-            return new ResolveFieldByInternalName(names);
+            return new OldResolveFieldByInternalName(names);
         }
 
         [Obsolete]

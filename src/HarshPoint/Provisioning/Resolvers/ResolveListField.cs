@@ -6,12 +6,14 @@ using System.Linq;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public class ResolveListField : NestedResolveBuilder<Field, List, ClientObjectResolveContext>
+    public sealed class ResolveListField : NestedResolveBuilder<Field, List, ClientObjectResolveContext>
     {
         public ResolveListField(IResolveBuilder<List, ClientObjectResolveContext> parent)
             : base(parent)
         {
         }
+
+        public ResolveFieldById ById(params Guid[] ids) => new ResolveFieldById(this, ids);
 
         protected override void InitializeContext(ClientObjectResolveContext context)
         {
