@@ -20,26 +20,7 @@ namespace HarshPoint.Provisioning
 
             return new ResolveCatalog(templateTypes);
         }
-
-        public static OldResolveFieldById FieldById(params Guid[] ids)
-        {
-            if (ids == null)
-            {
-                throw Error.ArgumentNull(nameof(ids));
-            }
-
-            return new OldResolveFieldById(ids);
-        }
-
-        public static OldResolveFieldByInternalName FieldByInternalName(params String[] names)
-        {
-            if (names == null)
-            {
-                throw Error.ArgumentNull(nameof(names));
-            }
-
-            return new OldResolveFieldByInternalName(names);
-        }
+        
 
         [Obsolete]
         public static OldResolveListByUrl ListByUrlOld(params String[] urls)
