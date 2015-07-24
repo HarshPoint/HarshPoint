@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -32,21 +33,69 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(resolveContextFactory));
             }
 
-            foreach (var property in Properties)
+            var resolveBuilders = from property in Properties
+
+                                  let value = GetValue(property, target)
+                                  where value != null
+
+                                  let resolveBuilder = GetResolveBuilder(property, value)
+                                  where resolveBuilder != null
+
+                                  let resolveContext = resolveContextFactory()
+                                  where ValidateResolveContext(resolveContext)
+
+                                  select new
+                                  {
+                                      Property = property,
+                                      ResolveBuilder = resolveBuilder,
+                                      ResolveContext = resolveContext,
+                                  };
+
+            foreach (var x in resolveBuilders)
             {
-                ResolveProperty(target, property, resolveContextFactory);
+                Logger.Debug(
+                    "Property {PropertyName} resolver {$Resolver} initializing context.",
+                    x.Property.Name,
+                    x.ResolveBuilder
+                );
+
+                x.ResolveBuilder.InitializeContext(x.ResolveContext);
+            }
+
+            var resultSources = from x in resolveBuilders
+                                let resultSource = CreateResultSource(
+                                    x.Property.Name,
+                                    x.ResolveBuilder,
+                                    x.ResolveContext
+                                )
+                                select new
+                                {
+                                    x.Property,
+                                    x.ResolveBuilder,
+                                    ResultSource = resultSource
+                                };
+
+            // force enumeration, so that all result sources are created
+            // before any properties are overwritten, because some of the 
+            // resolve builders may depend on others, and would fail if they
+            // found the ResolveResult instead.
+
+            resultSources = resultSources.ToArray();
+            
+            foreach (var x in resultSources)
+            {
+                var result = CreateResult(
+                    x.Property,
+                    x.ResolveBuilder,
+                    x.ResultSource
+                );
+
+                x.Property.Setter(target, result);
             }
         }
 
-        private void ResolveProperty(Object target, PropertyAccessor property, Func<IResolveContext> resolveContextFactory)
+        private static IResolveBuilder GetResolveBuilder(PropertyAccessor property, Object value)
         {
-            var value = GetValue(target, property);
-
-            if (value == null)
-            {
-                return;
-            }
-
             var resolveBuilder = value as IResolveBuilder;
 
             if (resolveBuilder == null)
@@ -56,55 +105,12 @@ namespace HarshPoint.Provisioning.Implementation
                     property.Name,
                     value
                 );
-
-                return;
             }
 
-            var resolveContext = resolveContextFactory();
-
-            if (resolveContext == null)
-            {
-                throw Logger.Fatal.InvalidOperation(
-                    SR.ResolveRegistrar_ContextFactoryReturnedNull
-                );
-            }
-
-            Logger.Debug(
-                "Property {PropertyName} resolver {$Resolver} initializing context.",
-                property.Name,
-                resolveBuilder
-            );
-
-            resolveBuilder.InitializeContext(resolveContext);
-
-            var resultSource = CreateResultSource(
-                property,
-                resolveBuilder,
-                resolveContext
-            );
-
-            if (resultSource == null)
-            {
-                Logger.Warning(
-                    "Property {PropertyName} resolver {$Resolver} resolved into null value.",
-                    property.Name,
-                    resolveBuilder
-                );
-
-                property.Setter(target, null);
-                return;
-            }
-
-            var result = CreateResult(
-                property,
-                resultSource,
-                resolveBuilder
-            );
-
-            property.Setter(target, result);
+            return resolveBuilder;
         }
 
-        private Object GetValue(Object target, PropertyAccessor property)
+        private static Object GetValue(PropertyAccessor property, Object target)
         {
             var value = property.Getter(target);
 
@@ -119,11 +125,23 @@ namespace HarshPoint.Provisioning.Implementation
             return value;
         }
 
-        private IEnumerable CreateResultSource(PropertyAccessor property, IResolveBuilder resolveBuilder, IResolveContext resolveContext)
+        private static Boolean ValidateResolveContext(IResolveContext resolveContext)
+        {
+            if (resolveContext == null)
+            {
+                throw Logger.Fatal.InvalidOperation(
+                    SR.ResolveRegistrar_ContextFactoryReturnedNull
+                );
+            }
+
+            return true;
+        }
+
+        private static IEnumerable CreateResultSource(String propertyName, IResolveBuilder resolveBuilder, IResolveContext resolveContext)
         {
             Logger.Debug(
                 "Property {PropertyName} resolver {$Resolver} initializing.",
-                property.Name,
+                propertyName,
                 resolveBuilder
             );
 
@@ -134,7 +152,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             Logger.Debug(
                 "Property {PropertyName} resolver {$Resolver} resolved into {$Value}.",
-                property.Name,
+                propertyName,
                 resolveBuilder,
                 resultSource
             );
@@ -142,8 +160,19 @@ namespace HarshPoint.Provisioning.Implementation
             return resultSource;
         }
 
-        private Object CreateResult(PropertyAccessor property, IEnumerable resultSource, IResolveBuilder resolveBuilder)
+        private static Object CreateResult(PropertyAccessor property, IResolveBuilder resolveBuilder, IEnumerable resultSource)
         {
+            if (resultSource == null)
+            {
+                Logger.Warning(
+                    "Property {PropertyName} resolver {$Resolver} resolved into null value.",
+                    property.Name,
+                    resolveBuilder
+                );
+
+                return null;
+            }
+
             var result = ResolveResultFactory.CreateResult(
                 property.PropertyTypeInfo,
                 resultSource,
