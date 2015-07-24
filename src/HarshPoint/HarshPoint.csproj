@@ -146,7 +146,6 @@
     <Compile Include="Provisioning\Resolvers\ResolveListField.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveList.cs" />
     <Compile Include="Provisioning\Resolvers\OldResolveListFieldById.cs" />
-    <Compile Include="Provisioning\Resolvers\OldResolveListFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByTitle.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByUrl.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreTermSetById.cs" />

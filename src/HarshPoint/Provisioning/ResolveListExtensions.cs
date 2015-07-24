@@ -13,11 +13,6 @@ namespace HarshPoint.Provisioning
             return new OldResolveListFieldById(list, ids);
         }
 
-        public static OldResolveListFieldByInternalName FieldByInternalName(this IResolveOld<List> list, params String[] names)
-        {
-            return new OldResolveListFieldByInternalName(list, names);
-        }
-
         public static ResolveListViewByTitle ViewByTitle(this IResolveOld<List> list, params String[] titles)
         {
             return new ResolveListViewByTitle(list, titles);
