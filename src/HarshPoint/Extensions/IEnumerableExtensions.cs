@@ -55,7 +55,6 @@ namespace HarshPoint
             );
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static async Task<IEnumerable<TResult>> SelectSequentially<TSource, TResult>(
             this IEnumerable<TSource> sequence,
             Func<TSource, Task<TResult>> selector)

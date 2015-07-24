@@ -16,6 +16,11 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             context.Include<List>(
                 list => list.ParentWebUrl,
                 list => list.RootFolder.ServerRelativeUrl
@@ -24,5 +29,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected override String GetIdentifier(List result)
             => HarshUrl.GetRelativeTo(result.RootFolder.ServerRelativeUrl, result.ParentWebUrl);
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveListByUrl>();
     }
 }

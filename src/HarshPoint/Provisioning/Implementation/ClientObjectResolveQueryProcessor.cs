@@ -122,7 +122,7 @@ namespace HarshPoint.Provisioning.Implementation
             protected override Expression VisitMethodCall(MethodCallExpression node)
                 => WrapWithIncludeCall(node);
 
-            private Expression WrapWithIncludeCall(Expression expression)
+            private static Expression WrapWithIncludeCall(Expression expression)
             {
                 var elementType = ExtractQueryResultTypes(expression.Type).FirstOrDefault();
 

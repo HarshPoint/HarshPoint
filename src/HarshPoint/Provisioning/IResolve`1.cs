@@ -14,7 +14,6 @@ namespace HarshPoint.Provisioning
     [Obsolete]
     public interface IResolveOld<T>
     {
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         Task<IEnumerable<T>> TryResolveAsync(IResolveContext context);
     }
 
@@ -37,7 +36,6 @@ namespace HarshPoint.Provisioning
             return results.FirstOrDefault();
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static async Task<IEnumerable<T>> ResolveAsync<T>(this IResolveOld<T> resolvable, IResolveContext context)
         {
             if (resolvable == null)

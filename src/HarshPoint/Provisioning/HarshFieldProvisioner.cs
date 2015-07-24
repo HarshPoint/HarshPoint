@@ -37,7 +37,6 @@ namespace HarshPoint.Provisioning
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected void SetPropertyIfHasValue<T>(TField field, Nullable<T> value, Expression<Func<TField, T>> property)
             where T : struct
         {

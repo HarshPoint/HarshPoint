@@ -6,21 +6,18 @@ namespace HarshPoint.Provisioning
 {
     public sealed class HarshApplyTheme : HarshProvisioner
     {
-        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
         public String BackgroundImageUrl
         {
             get;
             set;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
         public String ColorPaletteUrl
         {
             get;
             set;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
         public String FontSchemeUrl
         {
             get;

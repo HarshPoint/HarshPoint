@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="HarshPoint Rules" Description=" " ToolsVersion="10.0">
+  <Include Path="AllRules.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+
+    <!-- AvoidExcessiveParametersOnGenericTypes -->
+    <Rule Id="CA1005" Action="None" />
+
+    <!-- DoNotNestGenericTypesInMemberSignatures -->
+    <Rule Id="CA1006" Action="None" />
+
+    <!-- AvoidNamespacesWithFewTypes -->
+    <Rule Id="CA1020" Action="None" />
+
+    <!-- InterfaceMethodsShouldBeCallableByChildTypes -->
+    <Rule Id="CA1033" Action="None" />
+
+    <!-- UriPropertiesShouldNotBeStrings-->
+    <Rule Id="CA1056" Action="None" />
+
+    <!-- IdentifiersShouldHaveCorrectSuffix -->
+    <Rule Id="CA1710" Action="None" />
+
+  </Rules>
+</RuleSet>

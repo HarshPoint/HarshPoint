@@ -38,7 +38,6 @@ namespace HarshPoint.Provisioning.Implementation
             private set;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public TSelf And(IResolvableChainElementOld<IGrouping<T1, T2>> other)
         {
             if (other == null)
@@ -49,7 +48,6 @@ namespace HarshPoint.Provisioning.Implementation
             return (TSelf)And((ResolvableChain)(other));
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public TSelf And(IResolvableChainElementOld<Tuple<T1, T2>> other)
         {
             if (other == null)
@@ -70,34 +68,27 @@ namespace HarshPoint.Provisioning.Implementation
             return (TSelf)And((ResolvableChain)(other));
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected abstract Task<IEnumerable<T2>> ResolveChainElement(ResolveContext<TContext> context, T1 parent);
 
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Task<IEnumerable<IGrouping<T1, T2>>> IResolvableChainElementOld<IGrouping<T1, T2>>.ResolveChainElementOld(IResolveContext context)
             => ResolveChainElement(context);
 
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         async Task<IEnumerable<Tuple<T1, T2>>> IResolvableChainElementOld<Tuple<T1, T2>>.ResolveChainElementOld(IResolveContext context)
             => from grouping in (await ResolveChainElement(context))
                from item in grouping
                select Tuple.Create(grouping.Key, item);
 
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         async Task<IEnumerable<T2>> IResolvableChainElementOld<T2>.ResolveChainElementOld(IResolveContext context)
             => from grouping in (await ResolveChainElement(context))
                from item in grouping
                select item;
 
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Task<IEnumerable<IGrouping<T1, T2>>> IResolveOld<IGrouping<T1, T2>>.TryResolveAsync(IResolveContext context)
             => ResolveChainOld<IGrouping<T1, T2>>(context);
 
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Task<IEnumerable<Tuple<T1, T2>>> IResolveOld<Tuple<T1, T2>>.TryResolveAsync(IResolveContext context)
             => ResolveChainOld<Tuple<T1, T2>>(context);
 
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Task<IEnumerable<T2>> IResolveOld<T2>.TryResolveAsync(IResolveContext context)
             => ResolveChainOld<T2>(context);
 

@@ -29,7 +29,6 @@ namespace HarshPoint
             return clone;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static T With<T, TValue>(this T cloneable, Expression<Func<T, TValue>> expression, TValue value)
             where T : IHarshCloneable
         {

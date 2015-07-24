@@ -35,7 +35,6 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         [Obsolete]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected async Task<IEnumerable<T>> ResolveChainOld<T>(IResolveContext context)
         {
             if (context == null)
