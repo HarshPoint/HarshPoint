@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning
 
         protected override async Task OnProvisioningAsync()
         {
-            foreach (var field in FieldsResolved)
+            foreach (var field in Fields)
             {
                 if (DisplayFormat.HasValue)
                 {

@@ -31,7 +31,7 @@ namespace HarshPoint.Provisioning
                 TermSet.Include(ts => ts.TermStore.Id)
             );
 
-            foreach (var field in FieldsResolved)
+            foreach (var field in Fields)
             {
                 field.SspId = termSet.TermStore.Id;
                 field.TermSetId = termSet.Id;

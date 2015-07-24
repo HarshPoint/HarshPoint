@@ -25,7 +25,7 @@ namespace HarshPoint.Provisioning
                 .IncludeOnParent(list => list.Id)
             );
             
-            foreach (var field in FieldsResolved)
+            foreach (var field in Fields)
             {
                 field.LookupList = lookupField.Item1.Id.ToString("B");
                 field.LookupField = lookupField.Item2.InternalName;

@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning
     {
         [Parameter]
         [DefaultFromContext]
-        public IResolveOld<Field> Fields
+        public IResolve<TField> Fields
         {
             get;
             set;
@@ -24,19 +24,6 @@ namespace HarshPoint.Provisioning
         {
             get;
             set;
-        }
-
-        protected override async Task InitializeAsync()
-        {
-            FieldsResolved = (await TryResolveAsync(Fields)).Cast<TField>();
-
-            await base.InitializeAsync();
-        }
-
-        protected IEnumerable<TField> FieldsResolved
-        {
-            get;
-            private set;
         }
 
         protected void UpdateField(TField field)
