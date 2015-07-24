@@ -86,6 +86,7 @@
     <Compile Include="Provisioning\Implementation\DeferredResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilderElement.cs" />
+    <Compile Include="Provisioning\Implementation\ManualResolver.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveBuilder.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilderExtensions.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2.cs" />

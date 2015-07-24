@@ -1,9 +1,6 @@
-﻿using Microsoft.SharePoint.Client;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -13,71 +10,53 @@ namespace HarshPoint.Provisioning.Implementation
     /// </summary>
     internal sealed class HarshFieldSchemaXmlBuilder
     {
-        public HarshFieldSchemaXmlBuilder()
+        public HarshFieldSchemaXmlBuilder(params HarshFieldSchemaXmlTransformer[] transformers)
         {
-            Transformers = new Collection<HarshFieldSchemaXmlTransformer>();
+            if (transformers == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(transformers));
+            }
+
+            Transformers = transformers.ToImmutableArray();
         }
 
         /// <summary>
         /// Gets the collection of transformers to be run on
         /// the field schema XML.
         /// </summary>
-        public Collection<HarshFieldSchemaXmlTransformer> Transformers
+        public IReadOnlyCollection<HarshFieldSchemaXmlTransformer> Transformers
         {
-            get;
-            private set;
+            get; private set;
         }
 
-        /// <summary>
-        /// Gets the existing field schema XML, if any, or an empty
-        /// Field element.
-        /// </summary>
-        /// <param name="field">The field, may be <c>null</c>.</param>
-        /// <returns></returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public async Task<XElement> GetExistingSchemaXml(Field field)
+        public XElement Create()
+            => RunSchemaXmlTransformers(
+                new XElement("Field"),
+                Transformers
+            );
+
+        public XElement Update(XElement existingSchemaXml)
         {
-            if (field.IsNull())
+            if (existingSchemaXml == null)
             {
-                return new XElement("Field");
-            }
-
-            if (!field.IsPropertyAvailable(f => f.SchemaXmlWithResourceTokens))
-            {
-                field.Context.Load(field, f => f.SchemaXmlWithResourceTokens);
-                await field.Context.ExecuteQueryAsync();
-            }
-
-            return XElement.Parse(field.SchemaXmlWithResourceTokens);
-        }
-
-        /// <summary>
-        /// Updates the specified field schema using the specified <see cref="Transformers"/>.
-        /// </summary>
-        /// <param name="field">The field, may be <c>null</c> if creating a new field.</param>
-        /// <param name="schemaXml">The schema XML, if <c>null</c>, existing field schema XML will be modifed.</param>
-        /// <returns></returns>
-        public async Task<XElement> Update(Field field, XElement schemaXml)
-        {
-            if (schemaXml == null)
-            {
-                schemaXml = await GetExistingSchemaXml(field);
-            }
-
-            if (field.IsNull())
-            {
-                return RunSchemaXmlTransformers(schemaXml, Transformers);
+                throw Logger.Fatal.ArgumentNull(nameof(existingSchemaXml));
             }
 
             return RunSchemaXmlTransformers(
-                schemaXml,
-                Transformers.Where(t => !t.SkipWhenModifying)
+                existingSchemaXml,
+                Transformers.Where(t => !t.OnlyOnCreate)
             );
         }
 
-        private static XElement RunSchemaXmlTransformers(XElement schemaXml, IEnumerable<HarshFieldSchemaXmlTransformer> transformers)
-        {
-            return transformers.Aggregate(schemaXml, (xml, trans) => trans.Transform(xml));
-        }
+        private static XElement RunSchemaXmlTransformers(
+            XElement schemaXml, 
+            IEnumerable<HarshFieldSchemaXmlTransformer> transformers
+        )
+            => transformers.Aggregate(
+                schemaXml,
+                (xml, trans) => trans.Transform(xml)
+            );
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshFieldSchemaXmlBuilder>();
     }
 }

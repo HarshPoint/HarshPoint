@@ -12,17 +12,11 @@ using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning.Implementation
 {
-    public class ResolveRunning : SharePointClientTest
+    public class ResolvedPropertyBinding : SharePointClientTest
     {
-        public ResolveRunning(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public ResolvedPropertyBinding(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
-            Binder = new ResolvedPropertyBinder(
-                new HarshObjectMetadata(GetType())
-                .ReadableWritableInstanceProperties
-                .Where(
-                    p => Resolvable.GetResolvedType(p.PropertyTypeInfo) != null
-                )
-            );
+            Binder = new ResolvedPropertyBinder(GetType());
         }
 
         [Fact]

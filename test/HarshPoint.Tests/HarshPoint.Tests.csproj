@@ -166,8 +166,7 @@
     <Compile Include="Provisioning\FieldSchemaXmlBuilderTests.cs" />
     <Compile Include="Provisioning\IdentifierResolving.cs" />
     <Compile Include="Provisioning\Implementation\ChainTests.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilding.cs" />
-    <Compile Include="Provisioning\Implementation\ResolveRunning.cs" />
+    <Compile Include="Provisioning\Implementation\ResolvedPropertyBinding.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultCreating.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultTests.cs" />
     <Compile Include="Provisioning\ListProvisioning.cs" />

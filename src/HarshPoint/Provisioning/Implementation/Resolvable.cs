@@ -7,6 +7,11 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(Resolvable));
 
+        public static Boolean IsResolveType(TypeInfo interfaceType)
+        {
+            return GetResolvedType(interfaceType) != null;
+        }
+
         public static Type GetResolvedType(TypeInfo interfaceType)
         {
             if (interfaceType == null)

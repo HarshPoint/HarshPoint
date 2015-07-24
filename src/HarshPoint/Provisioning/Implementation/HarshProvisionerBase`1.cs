@@ -23,6 +23,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         private ICollection<HarshProvisionerBase> _children;
         private ICollection<Func<Object>> _childrenContextStateModifiers;
+        private ManualResolver _manualResolver;
         private HarshProvisionerMetadata _metadata;
 
         protected HarshProvisionerBase()
@@ -49,6 +50,9 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             set;
         }
+
+        protected ManualResolver ManualResolver
+            => HarshLazy.Initialize(ref _manualResolver, () => new ManualResolver(PrepareResolveContext));
 
         protected String ParameterSetName => ParameterSet?.Name;
 

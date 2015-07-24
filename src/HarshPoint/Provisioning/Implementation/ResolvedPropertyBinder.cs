@@ -21,6 +21,20 @@ namespace HarshPoint.Provisioning.Implementation
             Properties = properties.ToImmutableArray();
         }
 
+        /// <remarks>Mainly for unit tests.</remarks>
+        public ResolvedPropertyBinder(Type type)
+        {
+            if (type == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(type));
+            }
+
+            Properties = new HarshObjectMetadata(type)
+                .ReadableWritableInstanceProperties
+                .Where(p => Resolvable.IsResolveType(p.PropertyTypeInfo))
+                .ToImmutableArray();
+        }
+
         public void Bind(Object target, Func<IResolveContext> resolveContextFactory)
         {
             if (target == null)

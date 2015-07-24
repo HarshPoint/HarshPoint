@@ -12,6 +12,7 @@ namespace HarshPoint.Tests.Provisioning
         public RetrievalResolving(SharePointClientFixture fixture, ITestOutputHelper output)
             : base(fixture, output)
         {
+            Binder = new ResolvedPropertyBinder(GetType());
         }
 
         [Fact]
@@ -34,14 +35,21 @@ namespace HarshPoint.Tests.Provisioning
                 f => f.Description
             );
 
-            var field = await Resolve.FieldById(HarshBuiltInFieldId.Title).ResolveSingleAsync(
-                ctx
-            );
+            Field = Resolve.Field.ById(HarshBuiltInFieldId.Title);
+
+            Binder.Bind(this, () => ctx);
+
+            await ctx.ProvisionerContext.ClientContext.ExecuteQueryAsync();
+
+            var field = Field.Value;
 
             Assert.NotNull(field);
             Assert.True(field.IsPropertyAvailable(f => f.Description));
             Assert.True(field.IsPropertyAvailable(f => f.InternalName));
             Assert.Equal("Title", field.InternalName);
         }
+
+        public IResolveSingle<Field> Field { get; set; }
+        private ResolvedPropertyBinder Binder { get; set; }
     }
 }

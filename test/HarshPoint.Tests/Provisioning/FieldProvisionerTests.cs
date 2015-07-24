@@ -85,7 +85,7 @@ namespace HarshPoint.Tests.Provisioning
                 InternalName = "DummyField"
             };
 
-            Assert.ThrowsAsync<InvalidOperationException>(async () => await prov.SchemaXmlBuilder.Update(null, null));
+            Assert.Throws<InvalidOperationException>(() => prov.SchemaXmlBuilder.Create());
         }
 
         [Fact]
@@ -97,11 +97,11 @@ namespace HarshPoint.Tests.Provisioning
                 DisplayName = "Dummy",
             };
 
-            Assert.ThrowsAsync<InvalidOperationException>(async () => await prov.SchemaXmlBuilder.Update(null, null));
+            Assert.Throws<InvalidOperationException>(() => prov.SchemaXmlBuilder.Create());
         }
 
         [Fact]
-        public async Task Field_id_is_generated_into_schema()
+        public void Field_id_is_generated_into_schema()
         {
             var fieldId = Guid.NewGuid();
             var prov = new HarshField()
@@ -111,7 +111,7 @@ namespace HarshPoint.Tests.Provisioning
                 DisplayName = "Dummy",
             };
 
-            var schema = await prov.SchemaXmlBuilder.Update(null, null);
+            var schema = prov.SchemaXmlBuilder.Create();
 
             Assert.NotNull(schema);
             Assert.Equal("Field", schema.Name);
@@ -119,7 +119,7 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task Field_DisplayName_is_generated_into_schema()
+        public void Field_DisplayName_is_generated_into_schema()
         {
             var prov = new HarshField()
             {
@@ -128,7 +128,7 @@ namespace HarshPoint.Tests.Provisioning
                 DisplayName = "Dummy",
             };
 
-            var schema = await prov.SchemaXmlBuilder.Update(null, null);
+            var schema = prov.SchemaXmlBuilder.Create();
 
             Assert.NotNull(schema);
             Assert.Equal("Field", schema.Name);
@@ -136,7 +136,7 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task Field_InternalName_is_generated_into_schema()
+        public void Field_InternalName_is_generated_into_schema()
         {
             var prov = new HarshField()
             {
@@ -145,7 +145,7 @@ namespace HarshPoint.Tests.Provisioning
                 DisplayName = "Dummy",
             };
 
-            var schema = await prov.SchemaXmlBuilder.Update(null, null);
+            var schema = prov.SchemaXmlBuilder.Create();
 
             Assert.NotNull(schema);
             Assert.Equal("Field", schema.Name);
@@ -153,7 +153,7 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task Field_no_StaticName_is_generated_into_schema()
+        public void Field_implicit_StaticName_is_generated_into_schema()
         {
             var prov = new HarshField()
             {
@@ -162,7 +162,7 @@ namespace HarshPoint.Tests.Provisioning
                 DisplayName = "Dummy",
             };
 
-            var schema = await prov.SchemaXmlBuilder.Update(null, null);
+            var schema = prov.SchemaXmlBuilder.Create();
 
             Assert.NotNull(schema);
             Assert.Equal("Field", schema.Name);
@@ -170,7 +170,7 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task Field_explicit_StaticName_is_generated_into_schema()
+        public void Field_explicit_StaticName_is_generated_into_schema()
         {
             var fieldId = Guid.NewGuid();
             var prov = new HarshField()
@@ -181,14 +181,14 @@ namespace HarshPoint.Tests.Provisioning
                 StaticName = "WhomDoYouCallDummy"
             };
 
-            var schema = await prov.SchemaXmlBuilder.Update(null, null);
+            var schema = prov.SchemaXmlBuilder.Create();
 
             Assert.NotNull(schema);
             Assert.Equal("WhomDoYouCallDummy", schema.Attribute("StaticName").Value);
         }
 
         [Fact]
-        public async Task Field_group_is_generated_into_schema()
+        public void Field_group_is_generated_into_schema()
         {
             var fieldId = Guid.NewGuid();
             var prov = new HarshField()
@@ -199,7 +199,7 @@ namespace HarshPoint.Tests.Provisioning
                 Group = "GROO GROO GROO"
             };
 
-            var schema = await prov.SchemaXmlBuilder.Update(null, null);
+            var schema = prov.SchemaXmlBuilder.Create();
 
             Assert.NotNull(schema);
             Assert.Equal("GROO GROO GROO", schema.Attribute("Group").Value);

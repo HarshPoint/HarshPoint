@@ -21,54 +21,56 @@ namespace HarshPoint.Tests.Provisioning
             var addOnlyTransformer = GetNopTransformer();
             var addOrUpdateTransformer = GetNopTransformer();
 
-            addOnlyTransformer.Object.SkipWhenModifying = true;
-            addOrUpdateTransformer.Object.SkipWhenModifying = false;
+            addOnlyTransformer.Object.OnlyOnCreate = true;
+            addOrUpdateTransformer.Object.OnlyOnCreate = false;
 
-            var builder = new HarshFieldSchemaXmlBuilder()
-            {
-                Transformers = { addOnlyTransformer.Object, addOrUpdateTransformer.Object }
-            };
+            var builder = new HarshFieldSchemaXmlBuilder(
+                addOnlyTransformer.Object, addOrUpdateTransformer.Object
+            );
 
             var titleField = await GetTitleField();
-            await builder.Update(titleField, schemaXml: null);
+
+            builder.Update(
+               XElement.Parse(titleField.SchemaXmlWithResourceTokens)
+           );
 
             addOnlyTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Never());
             addOrUpdateTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Once());
         }
 
         [Fact]
-        public async Task Update_a_new_field_calls_add_and_update_transforms()
+        public void Update_a_new_field_calls_add_and_update_transforms()
         {
             var addOnlyTransformer = GetNopTransformer();
             var addOrUpdateTransformer = GetNopTransformer();
 
-            addOnlyTransformer.Object.SkipWhenModifying = true;
-            addOrUpdateTransformer.Object.SkipWhenModifying = false;
+            addOnlyTransformer.Object.OnlyOnCreate = true;
+            addOrUpdateTransformer.Object.OnlyOnCreate = false;
 
-            var builder = new HarshFieldSchemaXmlBuilder()
-            {
-                Transformers = { addOnlyTransformer.Object, addOrUpdateTransformer.Object }
-            };
-            await builder.Update(field: null, schemaXml: null);
+            var builder = new HarshFieldSchemaXmlBuilder(
+                addOnlyTransformer.Object, addOrUpdateTransformer.Object
+            );
+
+            builder.Create();
 
             addOnlyTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Once());
             addOrUpdateTransformer.Verify(t => t.Transform(It.IsAny<XElement>()), Times.Once());
         }
 
         [Fact]
-        public async Task GetExistingSchemaXml_returns_empty_element_for_a_null_Field()
+        public void Create_returns_empty_element()
         {
             var expected = new XElement("Field");
-            var actual = await new HarshFieldSchemaXmlBuilder().GetExistingSchemaXml(null);
+            var actual = new HarshFieldSchemaXmlBuilder().Create();
             Assert.Equal(expected, actual, new XNodeEqualityComparer());
         }
 
         [Fact]
-        public async Task GetExistingSchemaXml_returns_schema_for_Title_Field()
+        public async Task Update_does_not_modify_schema_for_Title_Field()
         {
             var field = await GetTitleField();
             var expected = XElement.Parse(field.SchemaXmlWithResourceTokens);
-            var actual = await new HarshFieldSchemaXmlBuilder().GetExistingSchemaXml(field);
+            var actual = new HarshFieldSchemaXmlBuilder().Update(expected);
 
             Assert.Equal(expected, actual, new XNodeEqualityComparer());
         }
@@ -84,7 +86,7 @@ namespace HarshPoint.Tests.Provisioning
         private Mock<HarshFieldSchemaXmlTransformer> GetNopTransformer()
         {
             var mock = new Mock<HarshFieldSchemaXmlTransformer>();
-            
+
             mock
                 .Setup(x => x.Transform(It.IsAny<XElement>()))
                 .Returns<XElement>(xe => xe);
