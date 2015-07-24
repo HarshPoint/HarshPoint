@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning
         /// </summary>
         public HarshField()
         {
-            ModifyChildrenContextState(() => ExistingField.Value);
+            ModifyChildrenContextState(() => Field);
 
             ExistingField = DeferredResolveBuilder.Create(
                 () => Resolve.Field().ById(Id)
