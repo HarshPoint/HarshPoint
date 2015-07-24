@@ -85,12 +85,6 @@ namespace HarshPoint.ObjectModel
             private set;
         }
 
-        public Type ResolvedType
-        {
-            get;
-            private set;
-        }
-
         public Boolean HasDefaultValue(Object provisioner)
         {
             var value = Getter(provisioner);

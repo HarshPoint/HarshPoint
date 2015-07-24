@@ -47,6 +47,11 @@ namespace HarshPoint.Provisioning
 
         protected override void InitializeResolveContext(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             base.InitializeResolveContext(context);
 
             context.Include<Field>(

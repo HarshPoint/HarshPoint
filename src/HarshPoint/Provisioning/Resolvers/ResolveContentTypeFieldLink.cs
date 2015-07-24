@@ -16,6 +16,11 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             context.Include<ContentType>(
                 ct => ct.FieldLinks
             );
@@ -25,5 +30,7 @@ namespace HarshPoint.Provisioning.Resolvers
         {
             return Parent.ToEnumerable(state, context).SelectMany(ct => ct.FieldLinks);
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveContentTypeFieldLink>();
     }
 }

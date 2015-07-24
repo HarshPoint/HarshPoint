@@ -17,6 +17,11 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override Object Initialize(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             var lists = Identifiers
                 .Cast<Int32>()
                 .Select(context.ProvisionerContext.Web.GetCatalog)
@@ -34,5 +39,7 @@ namespace HarshPoint.Provisioning.Resolvers
         {
             return (IEnumerable<List>)(state);
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveCatalog>();
     }
 }

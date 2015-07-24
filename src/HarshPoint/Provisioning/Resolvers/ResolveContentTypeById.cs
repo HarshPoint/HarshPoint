@@ -14,9 +14,14 @@ namespace HarshPoint.Provisioning.Resolvers
             : base(parent, ids)
         {
         }
-
+        
         protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             context.Include<ContentType>(
                 ct => ct.StringId
             );
@@ -24,5 +29,7 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override HarshContentTypeId GetIdentifier(ContentType result)
             => HarshContentTypeId.Parse(result.StringId);
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveContentTypeById>();
     }
 }

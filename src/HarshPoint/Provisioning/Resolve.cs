@@ -7,6 +7,9 @@ namespace HarshPoint.Provisioning
 {
     public static class Resolve
     {
+        public static ResolveContentTypeById ById(this IResolveBuilder<ContentType, ClientObjectResolveContext> parent, params HarshContentTypeId[] ids)
+            => new ResolveContentTypeById(parent, ids);
+
         public static ResolveFieldById ById(this IResolveBuilder<Field, ClientObjectResolveContext> parent, params Guid[] ids)
             => new ResolveFieldById(parent, ids);
 

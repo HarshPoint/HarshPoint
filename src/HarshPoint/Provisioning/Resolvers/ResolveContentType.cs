@@ -9,6 +9,11 @@ namespace HarshPoint.Provisioning.Resolvers
     {
         protected override IQueryable<ContentType>[] CreateQueries(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             return new[]
             {
                 context.ProvisionerContext.Web.ContentTypes,
@@ -16,14 +21,6 @@ namespace HarshPoint.Provisioning.Resolvers
             };
         }
 
-        public ResolveContentTypeById ById(params HarshContentTypeId[] ids)
-        {
-            return new ResolveContentTypeById(this, ids);
-        }
-
-        public ResolveContentTypeById ById(params String[] ids)
-        {
-            return new ResolveContentTypeById(this, ids.Select(HarshContentTypeId.Parse));
-        }
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveContentType>();
     }
 }

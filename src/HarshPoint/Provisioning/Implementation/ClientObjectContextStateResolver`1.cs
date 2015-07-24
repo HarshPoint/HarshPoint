@@ -1,7 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
 using System;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -11,7 +10,10 @@ namespace HarshPoint.Provisioning.Implementation
     {
         protected override void InitializeContext(ClientObjectResolveContext context)
         {
-            base.InitializeContext(context);
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
 
             var state = context.ProvisionerContext.GetState<T>();
 
@@ -19,10 +21,17 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 context.Load(item);
             }
+
+            base.InitializeContext(context);
         }
 
         protected override Object Initialize(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             return context.ProvisionerContext.GetState<T>();
         }
 
@@ -58,5 +67,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             return state;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectContextStateResolver<>));
     }
 }

@@ -10,6 +10,11 @@ namespace HarshPoint.Provisioning.Resolvers
     {
         protected override IQueryable<Field>[] CreateQueries(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             return new[]
             {
                 context.ProvisionerContext.Web.Fields,
@@ -17,6 +22,6 @@ namespace HarshPoint.Provisioning.Resolvers
             };
         }
 
-        public ResolveFieldById ById(params Guid[] ids) => new ResolveFieldById(this, ids);
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveField>();
     }
 }
