@@ -13,7 +13,7 @@ namespace HarshPoint.Provisioning.Resolvers
         {
         }
 
-        protected override IEnumerable<Folder> ToEnumerable(Object state, ClientObjectResolveContext context)
-            => Parent.ToEnumerable(state, context).Select(list => list.RootFolder);
+        protected override IEnumerable<Folder> SelectChildren(List parent)
+            => new[] { parent.RootFolder };
     }
 }

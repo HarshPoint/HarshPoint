@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,15 +11,23 @@ namespace HarshPoint.Provisioning.Implementation
 
         public ResolveResultConverter(IEnumerable source)
         {
+            if (source == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(source));
+            }
+
             _source = source;
         }
 
         public IEnumerator<T> GetEnumerator()
-        {
-            return _source.Cast<T>().GetEnumerator();
-        }
+            => _source
+                .Cast<Object>()
+                .Select(NestedResolveResult.Unpack<T>)
+                .GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveResultConverter<>));
     }
 }

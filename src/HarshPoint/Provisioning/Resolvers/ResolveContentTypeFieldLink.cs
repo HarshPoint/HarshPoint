@@ -26,10 +26,8 @@ namespace HarshPoint.Provisioning.Resolvers
             );
         }
 
-        protected override IEnumerable<FieldLink> ToEnumerable(Object state, ClientObjectResolveContext context)
-        {
-            return Parent.ToEnumerable(state, context).SelectMany(ct => ct.FieldLinks);
-        }
+        protected override IEnumerable<FieldLink> SelectChildren(ContentType parent)
+            => parent.FieldLinks;
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveContentTypeFieldLink>();
     }

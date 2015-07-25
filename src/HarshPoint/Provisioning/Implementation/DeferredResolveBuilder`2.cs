@@ -74,11 +74,6 @@ namespace HarshPoint.Provisioning.Implementation
             return Inner.ToEnumerable(state, context);
         }
 
-        IEnumerable<TResult> IResolveBuilder<TResult, TContext>.ToEnumerable(Object state, TContext context)
-        {
-            return Inner.ToEnumerable(state, context);
-        }
-
         private void InitializeInner(IResolveContext context)
         {
             _inner = _factory();

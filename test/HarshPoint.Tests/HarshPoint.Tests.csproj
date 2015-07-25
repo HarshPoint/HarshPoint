@@ -169,7 +169,9 @@
     <Compile Include="Provisioning\IdentifierResolving.cs" />
     <Compile Include="Provisioning\Implementation\ChainTests.cs" />
     <Compile Include="Provisioning\Implementation\ManualResolving.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResolveResultPacking.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedPropertyBinding.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultConverting.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultCreating.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultTests.cs" />
     <Compile Include="Provisioning\ListProvisioning.cs" />

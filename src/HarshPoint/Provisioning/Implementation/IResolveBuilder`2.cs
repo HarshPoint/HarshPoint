@@ -10,6 +10,5 @@ namespace HarshPoint.Provisioning.Implementation
         IResolveSingleOrDefault<TResult>
         where TContext : IResolveContext
     {
-        new IEnumerable<TResult> ToEnumerable(Object state, TContext context);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,7 +28,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToArray();
         }
 
-        protected override IEnumerable<TResult> ToEnumerable(Object state, ClientObjectResolveContext context)
+        protected override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
         {
             if (state == null)
             {

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -28,10 +31,18 @@ namespace HarshPoint.Provisioning.Implementation
         {
         }
 
+        protected abstract IEnumerable<TResult> SelectChildren(TParent parent);
+
         protected override Object Initialize(TContext context)
-        {
-            return Parent.Initialize(context);
-        }
+            => Parent.Initialize(context);
+
+        protected override IEnumerable ToEnumerable(Object state, TContext context)
+            => from parent in Parent.ToEnumerable(state, context).Cast<Object>()
+               let unpacked = NestedResolveResult.Unpack<TParent>(parent)
+
+               from child in SelectChildren(unpacked)
+               select NestedResolveResult.Pack(child, parent);
+
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(NestedResolveBuilder<,,>));
     }

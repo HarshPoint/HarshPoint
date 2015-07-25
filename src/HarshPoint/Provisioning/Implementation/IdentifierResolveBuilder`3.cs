@@ -1,12 +1,12 @@
-﻿using Microsoft.SharePoint.Client;
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class IdentifierResolveBuilder<TResult, TContext, TIdentifier> :
-        NestedResolveBuilder<TResult, TResult, TContext>
-        where TResult : ClientObject
+        ResolveBuilder<TResult, TContext>
         where TContext : class, IResolveContext
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IdentifierResolveBuilder<,,>));
@@ -24,8 +24,12 @@ namespace HarshPoint.Provisioning.Implementation
             IEnumerable<TIdentifier> identifiers,
             IEqualityComparer<TIdentifier> identifierComparer
         )
-            : base(parent)
         {
+            if (parent == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(parent));
+            }
+
             if (identifiers == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(identifiers));
@@ -36,30 +40,48 @@ namespace HarshPoint.Provisioning.Implementation
                 identifierComparer = EqualityComparer<TIdentifier>.Default;
             }
 
+            Parent = parent;
+
             Identifiers = new HashSet<TIdentifier>(
                 identifiers, identifierComparer
             );
         }
 
+        public IResolveBuilder<TResult, TContext> Parent { get; private set; }
+
         public HashSet<TIdentifier> Identifiers { get; private set; }
 
         public IEqualityComparer<TIdentifier> IdentifierComparer => Identifiers.Comparer;
 
+
+        protected sealed override void InitializeContext(TContext context)
+        {
+            InitializeContextBeforeParent(context);
+            Parent.InitializeContext(context);
+        }
+
+        protected virtual void InitializeContextBeforeParent(TContext context)
+        {
+        }
+
+        protected override Object Initialize(TContext context)
+            => Parent.Initialize(context);
+
         protected abstract TIdentifier GetIdentifier(TResult result);
 
-        protected override IEnumerable<TResult> ToEnumerable(Object state, TContext context)
+        protected override IEnumerable ToEnumerable(Object state, TContext context)
         {
-            var items = Parent.ToEnumerable(state, context);
+            var items = Parent.ToEnumerable(state, context).Cast<Object>();
 
             var byId = items.ToImmutableDictionaryFirstWins(
-                item => GetIdentifier(item),
+                item => GetIdentifier(NestedResolveResult.Unpack<TResult>(item)),
                 item => item,
                 IdentifierComparer
             );
 
             foreach (var id in Identifiers)
             {
-                TResult value;
+                Object value;
 
                 if (byId.TryGetValue(id, out value))
                 {

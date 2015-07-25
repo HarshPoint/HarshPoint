@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,7 +25,7 @@ namespace HarshPoint.Provisioning.Implementation
             return null;
         }
 
-        protected override IEnumerable<TResult> ToEnumerable(Object state, IResolveContext context)
+        protected override IEnumerable ToEnumerable(Object state, IResolveContext context)
         {
             if (context == null)
             {

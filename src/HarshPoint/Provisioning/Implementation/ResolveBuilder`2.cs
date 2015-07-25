@@ -6,8 +6,8 @@ using System.Linq;
 namespace HarshPoint.Provisioning.Implementation
 {
     public abstract partial class ResolveBuilder<TResult, TContext> :
-        Chain<IResolveBuilderElement<TResult, TContext>>,
-        IResolveBuilderElement<TResult, TContext>,
+        Chain<IResolveBuilderElement<TContext>>,
+        IResolveBuilderElement<TContext>,
         IResolveBuilder<TResult, TContext>
         where TContext : class, IResolveContext
     {
@@ -42,7 +42,7 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            return Elements.Select(e => e.Initialize(context)).ToArray();
+            return Elements.Select(e => e.ElementInitialize(context)).ToArray();
         }
 
         void IResolveBuilder<TContext>.InitializeContext(TContext context)
@@ -54,16 +54,11 @@ namespace HarshPoint.Provisioning.Implementation
 
             foreach (var element in Elements)
             {
-                element.InitializeContext(context);
+                element.ElementInitializeContext(context);
             }
         }
 
         IEnumerable IResolveBuilder<TContext>.ToEnumerable(Object state, TContext context)
-        {
-            return ThisAsResolveBuilderOfTResultTContext.ToEnumerable(state, context);
-        }
-
-        IEnumerable<TResult> IResolveBuilder<TResult, TContext>.ToEnumerable(Object state, TContext context)
         {
             if (state == null)
             {
@@ -95,7 +90,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return Elements.SelectMany(
-                (e, i) => e.ToEnumerable(elementStates[i], context)
+                (e, i) => e.ElementToEnumerable(elementStates[i], context).Cast<Object>()
             );
         }
 
@@ -119,17 +114,14 @@ namespace HarshPoint.Provisioning.Implementation
             get { throw CannotCallThisMethod(); }
         }
 
-        public ResolveBuilder<TResult, TContext> And(Chain<IResolveBuilderElement<TResult, TContext>> other)
+        public ResolveBuilder<TResult, TContext> And(Chain<IResolveBuilderElement<TContext>> other)
         {
             Append(other);
             return this;
         }
 
         private IResolveBuilder<TContext> ThisAsResolveBuilderOfTContext
-            => (IResolveBuilder<TContext>)(this);
-
-        private IResolveBuilder<TResult, TContext> ThisAsResolveBuilderOfTResultTContext
-            => (IResolveBuilder<TResult, TContext>)(this);
+            => (this);
 
         private static TContext ValidateContext(IResolveContext context)
         {

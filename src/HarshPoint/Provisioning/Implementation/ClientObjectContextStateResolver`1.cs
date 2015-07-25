@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using System.Collections;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -35,9 +36,9 @@ namespace HarshPoint.Provisioning.Implementation
             return context.ProvisionerContext.GetState<T>();
         }
 
-        protected override IEnumerable<T> ToEnumerable(Object state, ClientObjectResolveContext context)
+        protected override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
         {
-            return (IEnumerable<T>)(state);
+            return (IEnumerable)(state);
         }
 
         [Obsolete]

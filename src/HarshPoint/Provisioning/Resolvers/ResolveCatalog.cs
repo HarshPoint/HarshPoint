@@ -1,6 +1,7 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,10 +36,8 @@ namespace HarshPoint.Provisioning.Resolvers
             return lists;
         }
 
-        protected override IEnumerable<List> ToEnumerable(Object state, ClientObjectResolveContext context)
-        {
-            return (IEnumerable<List>)(state);
-        }
+        protected override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
+            => (IEnumerable)(state);
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveCatalog>();
     }

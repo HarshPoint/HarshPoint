@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     partial class ResolveBuilder<TResult, TContext>
     {
-        void IResolveBuilderElement<TResult, TContext>.InitializeContext(TContext context)
+        void IResolveBuilderElement<TContext>.ElementInitializeContext(TContext context)
         {
             if (context == null)
             {
@@ -15,7 +16,7 @@ namespace HarshPoint.Provisioning.Implementation
             InitializeContext(context);
         }
 
-        Object IResolveBuilderElement<TResult, TContext>.Initialize(TContext context)
+        Object IResolveBuilderElement<TContext>.ElementInitialize(TContext context)
         {
             if (context == null)
             {
@@ -25,7 +26,7 @@ namespace HarshPoint.Provisioning.Implementation
             return Initialize(context);
         }
 
-        IEnumerable<TResult> IResolveBuilderElement<TResult, TContext>.ToEnumerable(Object state, TContext context)
+        IEnumerable IResolveBuilderElement<TContext>.ElementToEnumerable(Object state, TContext context)
         {
             if (state == null)
             {
@@ -46,6 +47,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected abstract Object Initialize(TContext context);
 
-        protected abstract IEnumerable<TResult> ToEnumerable(Object state, TContext context);
+        protected abstract IEnumerable ToEnumerable(Object state, TContext context);
     }
 }
