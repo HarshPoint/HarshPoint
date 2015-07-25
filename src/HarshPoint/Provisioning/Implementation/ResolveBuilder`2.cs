@@ -52,7 +52,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        IEnumerable IResolveBuilder<TContext>.ToEnumerable(Object state, TContext context)
+        IEnumerable<Object> IResolveBuilder<TContext>.ToEnumerable(Object state, TContext context)
         {
             if (state == null)
             {

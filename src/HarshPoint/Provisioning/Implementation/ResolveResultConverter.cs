@@ -7,9 +7,9 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ResolveResultConverter<T> : IEnumerable<T>
     {
-        private readonly IEnumerable _source;
+        private readonly IEnumerable<Object> _source;
 
-        public ResolveResultConverter(IEnumerable source)
+        public ResolveResultConverter(IEnumerable<Object> source)
         {
             if (source == null)
             {
@@ -21,7 +21,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         public IEnumerator<T> GetEnumerator()
             => _source
-                .Cast<Object>()
                 .Select(NestedResolveResult.Unpack<T>)
                 .GetEnumerator();
 

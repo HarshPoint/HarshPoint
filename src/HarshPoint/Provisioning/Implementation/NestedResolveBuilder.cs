@@ -37,7 +37,7 @@ namespace HarshPoint.Provisioning.Implementation
             => Parent.Initialize(context);
 
         protected override IEnumerable ToEnumerable(Object state, TContext context)
-            => from parent in Parent.ToEnumerable(state, context).Cast<Object>()
+            => from parent in Parent.ToEnumerable(state, context)
                let unpacked = NestedResolveResult.Unpack<TParent>(parent)
 
                from child in SelectChildren(unpacked)

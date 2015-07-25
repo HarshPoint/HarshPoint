@@ -69,7 +69,7 @@ namespace HarshPoint.Provisioning.Implementation
             return Inner.ToEnumerable(state, context);
         }
 
-        IEnumerable IResolveBuilder<TContext>.ToEnumerable(Object state, TContext context)
+        IEnumerable<Object> IResolveBuilder<TContext>.ToEnumerable(Object state, TContext context)
         {
             return Inner.ToEnumerable(state, context);
         }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -10,6 +10,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         Object Initialize(TContext context);
 
-        IEnumerable ToEnumerable(Object state, TContext context);
+        IEnumerable<Object> ToEnumerable(Object state, TContext context);
     }
 }

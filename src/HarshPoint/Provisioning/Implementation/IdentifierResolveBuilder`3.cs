@@ -71,7 +71,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected override IEnumerable ToEnumerable(Object state, TContext context)
         {
-            var items = Parent.ToEnumerable(state, context).Cast<Object>();
+            var items = Parent.ToEnumerable(state, context);
 
             var byId = items.ToImmutableDictionaryFirstWins(
                 item => GetIdentifier(NestedResolveResult.Unpack<TResult>(item)),
