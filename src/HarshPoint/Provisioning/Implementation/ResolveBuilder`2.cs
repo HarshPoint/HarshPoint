@@ -14,26 +14,20 @@ namespace HarshPoint.Provisioning.Implementation
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveBuilder<,>));
 
         Object IResolveBuilder.Initialize(IResolveContext context)
-        {
-            return ThisAsResolveBuilderOfTContext.Initialize(
+            => ThisAsResolveBuilderOfTContext.Initialize(
                 ValidateContext(context)
             );
-        }
 
         void IResolveBuilder.InitializeContext(IResolveContext context)
-        {
-            ThisAsResolveBuilderOfTContext.InitializeContext(
+            => ThisAsResolveBuilderOfTContext.InitializeContext(
                 ValidateContext(context)
             );
-        }
 
         IEnumerable IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
-        {
-            return ThisAsResolveBuilderOfTContext.ToEnumerable(
+            => ThisAsResolveBuilderOfTContext.ToEnumerable(
                 state,
                 ValidateContext(context)
             );
-        }
 
         Object IResolveBuilder<TContext>.Initialize(TContext context)
         {
@@ -121,7 +115,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         private IResolveBuilder<TContext> ThisAsResolveBuilderOfTContext
-            => (this);
+            => this;
 
         private static TContext ValidateContext(IResolveContext context)
         {
@@ -145,10 +139,8 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         private static Exception CannotCallThisMethod()
-        {
-            return Logger.Fatal.InvalidOperation(
+            => Logger.Fatal.InvalidOperation(
                 SR.ResolveBuilder_CannotCallThisMethod
             );
-        }
     }
 }
