@@ -6,8 +6,6 @@ namespace HarshPoint.Provisioning.Implementation
         ResolveBuilder<TResult, TContext>
         where TContext : class, IResolveContext
     {
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(NestedResolveBuilder<,,>));
-
         protected NestedResolveBuilder(IResolveBuilder<TParent, TContext> parent)
         {
             if (parent == null)
@@ -34,5 +32,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             return Parent.Initialize(context);
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(NestedResolveBuilder<,,>));
     }
 }
