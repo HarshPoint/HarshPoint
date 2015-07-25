@@ -27,6 +27,23 @@ namespace HarshPoint
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> sequence, params T[] elements)
             => sequence.Concat((IEnumerable<T>)(elements));
 
+        public static IEnumerable<TSource> DistinctBy<TSource, TResult>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TResult> selector
+        )
+        {
+            return source.DistinctBy(selector, null);
+        }
+
+        public static IEnumerable<TSource> DistinctBy<TSource, TResult>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TResult> selector,
+            IEqualityComparer<TResult> equalityComparer
+        )
+        {
+            return source.Distinct(new HarshEqualityComparer<TSource, TResult>(selector, equalityComparer));
+        }
+
         public static TElement FirstOrDefaultByProperty<TElement, TProperty>(
             this IEnumerable<TElement> sequence,
             Func<TElement, TProperty> projection,
