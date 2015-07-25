@@ -35,27 +35,28 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(builder));
             }
 
-            var parsed = ResolvedPropertyTypeInfo.Parse(propertyTypeInfo);
+            var property = ResolvedPropertyTypeInfo.Parse(propertyTypeInfo);
 
-            var enumerableTypes = 
+            var enumerableTypes =
                 GetEnumerableTypes(enumerable.GetType())
-                .ToImmutableHashSet();
+                .ToArray();
 
-            if (!enumerableTypes.Contains(parsed.ResolvedType))
+            if (!enumerableTypes.Contains(property.ResolvedType))
             {
-                throw Logger.Fatal.ArgumentOutOfRangeFormat(
-                    nameof(enumerable),
-                    SR.ResolveResultFactory_ObjectNotConvertable,
-                    enumerable,
-                    typeof(IEnumerable<>).MakeGenericType(parsed.ResolvedType)
-                );
+                enumerable = CreateConverter(enumerable, property.ResolvedType);
             }
 
-            var result = CreateResult(parsed);
+            var result = CreateResult(property);
             result.ResolveBuilder = builder;
             result.Results = enumerable;
             return result;
         }
+
+        private static IEnumerable CreateConverter(IEnumerable source, Type resolvedType)
+            => (IEnumerable)Activator.CreateInstance(
+                typeof(ResolveResultConverter<>).MakeGenericType(resolvedType),
+                source
+            );
 
         private static ResolveResultBase CreateResult(ResolvedPropertyTypeInfo propertyTypeInfo)
         {
@@ -83,82 +84,27 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
-            throw Logger.Fatal.ArgumentOutOfRangeFormat(
+            // not reached
+            throw ResolvedPropertyTypeInfo.InvalidInterfaceType(
                 nameof(propertyTypeInfo),
-                SR.ResolveResultFactory_PropertyTypeUnknownInterface,
-                propertyTypeInfo.InterfaceType,
-                String.Join(", ", KnownPropertyTypeDefinitions.Select(t => t.Name))
+                propertyTypeInfo.InterfaceType
             );
         }
 
         private static ResolveResultBase CreateResult(Type resultTypeDefinition, Type resolvedType)
-        {
-            return (ResolveResultBase)Activator.CreateInstance(
+            => (ResolveResultBase)Activator.CreateInstance(
                 resultTypeDefinition.MakeGenericType(resolvedType)
             );
-        }
 
         private static IEnumerable<Type> GetEnumerableTypes(Type enumerableType)
-        {
-            return from type in enumerableType.GetRuntimeBaseTypeChain()
+            => from type in enumerableType.GetRuntimeBaseTypeChain()
 
-                   from interfaceType in type.ImplementedInterfaces
-                   where interfaceType.IsConstructedGenericType
+               from interfaceType in type.ImplementedInterfaces
+               where interfaceType.IsConstructedGenericType
 
-                   let interfaceTypeDefinition = interfaceType.GetGenericTypeDefinition()
-                   where interfaceTypeDefinition == typeof(IEnumerable<>)
+               let interfaceTypeDefinition = interfaceType.GetGenericTypeDefinition()
+               where interfaceTypeDefinition == typeof(IEnumerable<>)
 
-                   select interfaceType.GenericTypeArguments[0];
-        }
-
-        private struct ResolvedPropertyTypeInfo
-        {
-            public Type InterfaceType
-            {
-                get;
-                private set;
-            }
-
-            public Type ResolvedType
-            {
-                get;
-                private set;
-            }
-            
-            public static ResolvedPropertyTypeInfo Parse(TypeInfo propertyTypeInfo)
-            {
-                if (propertyTypeInfo == null)
-                {
-                    throw Logger.Fatal.ArgumentNull(nameof(propertyTypeInfo));
-                }
-
-                if (!propertyTypeInfo.IsGenericType)
-                {
-                    throw Logger.Fatal.ArgumentOutOfRangeFormat(
-                        nameof(propertyTypeInfo),
-                        SR.ResolveResultFactory_PropertyTypeNotGeneric,
-                        propertyTypeInfo
-                    );
-                }
-
-                var interfaceType = propertyTypeInfo.GetGenericTypeDefinition();
-
-                if (!KnownPropertyTypeDefinitions.Contains(interfaceType))
-                {
-                    throw Logger.Fatal.ArgumentOutOfRangeFormat(
-                        nameof(propertyTypeInfo),
-                        SR.ResolveResultFactory_PropertyTypeUnknownInterface,
-                        propertyTypeInfo,
-                        String.Join(", ", KnownPropertyTypeDefinitions.Select(t => t.Name))
-                    );
-                }
-
-                return new ResolvedPropertyTypeInfo()
-                {
-                    InterfaceType = interfaceType,
-                    ResolvedType = propertyTypeInfo.GenericTypeArguments.First(),
-                };
-            }
-        }
+               select interfaceType.GenericTypeArguments[0];
     }
 }

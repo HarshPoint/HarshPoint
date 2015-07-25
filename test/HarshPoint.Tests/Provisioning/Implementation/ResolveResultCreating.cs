@@ -2,6 +2,7 @@
 using HarshPoint.Provisioning.Implementation;
 using Moq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Xunit;
@@ -28,8 +29,23 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             );
             Assert.IsType(resultType, result);
         }
-        
 
+        [Fact]
+        public void Casts_to_derived_type()
+        {
+            var expected = new DerivedClass();
+
+            var result = (IEnumerable)ResolveResultFactory.CreateResult(
+                typeof(IResolve<DerivedClass>).GetTypeInfo(),
+                new BaseClass[] { expected },
+                Mock.Of<IResolveBuilder>()
+            );
+
+            Assert.IsType(typeof(ResolveResult<DerivedClass>), result);
+
+            var actual = Assert.Single(result);
+            Assert.Same(expected, actual);
+        }
 
         [Theory]
         [InlineData(typeof(String))]
@@ -48,13 +64,18 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         [Fact]
         public void Fails_incompatible_IEnumerable()
         {
-            var exc = Assert.Throws<ArgumentOutOfRangeException>(
-                () => ResolveResultFactory.CreateResult(
-                    typeof(IResolveSingle<Int32>).GetTypeInfo(),
-                    new[] { "42" },
-                    Mock.Of<IResolveBuilder>()
-                )
+            var result = (ResolveResultSingle<Int32>)ResolveResultFactory.CreateResult(
+                typeof(IResolveSingle<Int32>).GetTypeInfo(),
+                new[] { "42" },
+                Mock.Of<IResolveBuilder>()
+            );
+
+            Assert.Throws<InvalidCastException>(
+                () => result.Value
             );
         }
+
+        private class BaseClass { }
+        private class DerivedClass : BaseClass { }
     }
 }
