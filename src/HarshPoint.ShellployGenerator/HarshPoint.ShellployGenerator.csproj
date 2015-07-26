@@ -71,6 +71,7 @@
     <Compile Include="ShellployCommandProperty.cs" />
     <Compile Include="ShellployCommandPropertyParameterAttribute.cs" />
     <Compile Include="ShellployMetadata.cs" />
+    <Compile Include="SourceFileWriter.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

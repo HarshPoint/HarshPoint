@@ -95,5 +95,23 @@ namespace HarshPoint.ShellployGenerator {
                 return ResourceManager.GetString("CodeDomExtensions_PropertySetterNotEmpty", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code compile unit does not contain any type declarations..
+        /// </summary>
+        internal static string SourceFileWriter_NoTypeDefined {
+            get {
+                return ResourceManager.GetString("SourceFileWriter_NoTypeDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The output directory is a file..
+        /// </summary>
+        internal static string SourceFileWriter_OutputDirectoryIsFile {
+            get {
+                return ResourceManager.GetString("SourceFileWriter_OutputDirectoryIsFile", resourceCulture);
+            }
+        }
     }
 }

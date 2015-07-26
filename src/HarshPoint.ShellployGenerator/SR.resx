@@ -129,4 +129,10 @@
   <data name="CodeDomExtensions_PropertySetterNotEmpty" xml:space="preserve">
     <value>Property setter is not empty.</value>
   </data>
+  <data name="SourceFileWriter_NoTypeDefined" xml:space="preserve">
+    <value>Code compile unit does not contain any type declarations.</value>
+  </data>
+  <data name="SourceFileWriter_OutputDirectoryIsFile" xml:space="preserve">
+    <value>The output directory is a file.</value>
+  </data>
 </root>

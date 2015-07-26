@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CSharp;
+using System.Diagnostics;
 
 namespace HarshPoint.ShellployGenerator
 {
@@ -16,22 +17,21 @@ namespace HarshPoint.ShellployGenerator
     {
         static void Main(string[] args)
         {
-            var provider = new CSharpCodeProvider();
+            if (!args.Any())
+            {
+                Console.Write($"Usage: {Process.GetCurrentProcess().ProcessName} outputDirectory");
+                return;
+            }
+
             var generator = new CommandCodeGenerator();
+
+            var writer = new SourceFileWriter(args[0]);
 
             foreach (var command in new ShellployMetadata().GetCommands())
             {
                 var targetUnit = generator.GenerateCompileUnit(command);
-
-                using (var sourceWriter = new StreamWriter($"{ command.ClassName}.cs"))
-                {
-                    provider.GenerateCodeFromCompileUnit(targetUnit, sourceWriter, new CodeGeneratorOptions()
-                    {
-                        BracingStyle = "C",
-                    });
-                }
+                writer.Write(targetUnit);
             }
         }
     }
 }
-
