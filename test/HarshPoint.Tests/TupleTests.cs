@@ -18,7 +18,7 @@ namespace HarshPoint.Tests
         [InlineData(typeof(IEnumerable<Int32>))]
         public void GetComponentTypes_fails_for_non_tuple(Type t)
         {
-            Assert.Throws<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentException>(
                 () => HarshTuple.GetComponentTypes(t)
             );
         }
@@ -34,7 +34,7 @@ namespace HarshPoint.Tests
         [InlineData(typeof(Tuple<,,,,,,,>))]
         public void GetComponentTypes_fails_for_unconstructed_tuple(Type t)
         {
-            Assert.Throws<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentException>(
                 () => HarshTuple.GetComponentTypes(t)
             );
         }
@@ -107,7 +107,7 @@ namespace HarshPoint.Tests
         [Fact]
         public void MakeTupleType_fails_empty()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentException>(
                 () => HarshTuple.MakeTupleType()
             );
         }

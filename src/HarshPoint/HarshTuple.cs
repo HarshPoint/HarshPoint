@@ -16,7 +16,7 @@ namespace HarshPoint
 
             if (!tupleType.IsConstructedGenericType)
             {
-                throw Logger.Fatal.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     nameof(tupleType),
                     SR.HarshTuple_TypeIsNotAConstructedGenericType,
                     tupleType
@@ -25,7 +25,7 @@ namespace HarshPoint
 
             if (!IsTupleType(tupleType))
             {
-                throw Logger.Fatal.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     nameof(tupleType),
                     SR.HarshTuple_TypeIsNotATuple,
                     tupleType

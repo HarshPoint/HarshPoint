@@ -98,7 +98,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         {
             var vinaDelMar = CreateVinaDelMar();
 
-            Assert.Throws<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentException>(
                 () => vinaDelMar.ExtractComponents(typeof(Continent))
             );
         }

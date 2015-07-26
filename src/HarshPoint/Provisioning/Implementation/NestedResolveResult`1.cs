@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
@@ -53,7 +52,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (!componentTypes.Last().IsAssignableFrom(typeof(T).GetTypeInfo()))
             {
-                throw Logger.Fatal.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     nameof(componentTypes),
                     SR.NestedResoveResult_LastComponentTypeMustBeAssignableFromT,
                     componentTypes.Last(),
