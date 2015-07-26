@@ -497,11 +497,29 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The maximum number of components in a tuple {0}..
+        /// </summary>
+        internal static string HarshTuple_TooManyComponents {
+            get {
+                return ResourceManager.GetString("HarshTuple_TooManyComponents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified url &apos;{0}&apos; is not relative to &apos;{1}&apos;..
         /// </summary>
         internal static string HarshUrl_UrlNotRelativeTo {
             get {
                 return ResourceManager.GetString("HarshUrl_UrlNotRelativeTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The last specified component type &apos;{0}&apos; must be assignable from &apos;{1}&apos;..
+        /// </summary>
+        internal static string NestedResoveResult_LastComponentTypeMustBeAssignableFromT {
+            get {
+                return ResourceManager.GetString("NestedResoveResult_LastComponentTypeMustBeAssignableFromT", resourceCulture);
             }
         }
         

@@ -169,7 +169,8 @@
     <Compile Include="Provisioning\IdentifierResolving.cs" />
     <Compile Include="Provisioning\Implementation\ChainTests.cs" />
     <Compile Include="Provisioning\Implementation\ManualResolving.cs" />
-    <Compile Include="Provisioning\Implementation\NestedResolveResultPacking.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResolveResults.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResultsProofOfConcept.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedPropertyBinding.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultConverting.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultCreating.cs" />
@@ -200,6 +201,8 @@
     <Compile Include="SharePointClientFixture.cs" />
     <Compile Include="SharePointClientTest.cs" />
     <Compile Include="SeriloggedTest.cs" />
+    <Compile Include="TupleTests.cs" />
+    <Compile Include="Universe.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -63,6 +63,7 @@
     <Compile Include="HarshLogger.cs" />
     <Compile Include="HarshLoggerWrapper.cs" />
     <Compile Include="HarshScopedValue`1.cs" />
+    <Compile Include="HarshTuple.cs" />
     <Compile Include="IHarshCloneable.cs" />
     <Compile Include="ObjectModel\HarshObjectMetadata.cs" />
     <Compile Include="ObjectModel\PropertyAccessor.cs" />

@@ -270,8 +270,14 @@ Property: {0}.{1}</value>
   <data name="HarshProvisionerMetadata_TagTypeNotAssignableFromIDefaultFromContextTag" xml:space="preserve">
     <value>The specified property '{1}.{2}' has DefaultFromContext TagType of '{0}' that does not implement the IDefaultFromContextTag interface.</value>
   </data>
+  <data name="HarshTuple_TooManyComponents" xml:space="preserve">
+    <value>The maximum number of components in a tuple {0}.</value>
+  </data>
   <data name="HarshUrl_UrlNotRelativeTo" xml:space="preserve">
     <value>The specified url '{0}' is not relative to '{1}'.</value>
+  </data>
+  <data name="NestedResoveResult_LastComponentTypeMustBeAssignableFromT" xml:space="preserve">
+    <value>The last specified component type '{0}' must be assignable from '{1}'.</value>
   </data>
   <data name="ParameterSetResolver_Ambiguous" xml:space="preserve">
     <value>Parameter set cannot be resolved using the specified parameters.</value>

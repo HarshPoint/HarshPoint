@@ -33,7 +33,7 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        public static T Unpack<T>(Object obj)
+        public static Object Unpack(Object obj)
         {
             if (obj == null)
             {
@@ -44,11 +44,14 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (nested != null)
             {
-                return (T)nested.Value;
+                return nested.Value;
             }
 
-            return (T)obj;
+            return obj;
         }
+
+        public static T Unpack<T>(Object obj)
+            => (T)Unpack(obj);
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(NestedResolveResult));
     }
