@@ -52,7 +52,7 @@ namespace HarshPoint
             => Argument(parameterName, SR.Error_ArgumentNullOrWhitespace);
 
         public ArgumentException ArgumentEmptySequence(String parameterName)
-            =>Argument(parameterName, SR.Error_SequenceEmpty);
+            => Argument(parameterName, SR.Error_SequenceEmpty);
 
         public ArgumentException ArgumentNotAssignableTo(String parameterName, Object value, params Type[] expectedBaseTypes)
         {
