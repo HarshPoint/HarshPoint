@@ -13,7 +13,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (resolvable == null)
             {
-                throw Error.ArgumentNull(nameof(resolvable));
+                throw Logger.Fatal.ArgumentNull(nameof(resolvable));
             }
 
             Resolvable = resolvable;
@@ -40,5 +40,7 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             private set;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveFailure>();
     }
 }

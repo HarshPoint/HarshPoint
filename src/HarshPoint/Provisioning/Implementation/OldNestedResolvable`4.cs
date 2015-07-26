@@ -26,7 +26,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (parent == null)
             {
-                throw Error.ArgumentNull(nameof(parent));
+                throw Logger.Fatal.ArgumentNull(nameof(parent));
             }
 
             Parents = parent;
@@ -42,7 +42,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (other == null)
             {
-                throw Error.ArgumentNull(nameof(other));
+                throw Logger.Fatal.ArgumentNull(nameof(other));
             }
 
             return (TSelf)And((ResolvableChain)(other));
@@ -52,7 +52,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (other == null)
             {
-                throw Error.ArgumentNull(nameof(other));
+                throw Logger.Fatal.ArgumentNull(nameof(other));
             }
 
             return (TSelf)And((ResolvableChain)(other));
@@ -62,7 +62,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (other == null)
             {
-                throw Error.ArgumentNull(nameof(other));
+                throw Logger.Fatal.ArgumentNull(nameof(other));
             }
 
             return (TSelf)And((ResolvableChain)(other));
@@ -104,5 +104,7 @@ namespace HarshPoint.Provisioning.Implementation
                 )
             );
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(OldNestedResolvable<,,,>));
     }
 }

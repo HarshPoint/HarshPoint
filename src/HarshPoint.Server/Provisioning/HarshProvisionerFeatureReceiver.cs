@@ -48,7 +48,7 @@ namespace HarshPoint.Server.Provisioning
             {
                 if (provisioner == null)
                 {
-                    throw Error.ArgumentNull(nameof(provisioner));
+                    throw Logger.Fatal.ArgumentNull(nameof(provisioner));
                 }
 
                 if (UpgradeAction == null)
@@ -62,5 +62,7 @@ namespace HarshPoint.Server.Provisioning
                 return runOnUpgradeActions.Contains(UpgradeAction);
             }
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshProvisionerFeatureReceiver>();
     }
 }

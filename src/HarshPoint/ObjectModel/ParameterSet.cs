@@ -13,12 +13,12 @@ namespace HarshPoint.ObjectModel
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(name));
+                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(name));
             }
 
             if (parameters == null)
             {
-                throw Error.ArgumentNull(nameof(parameters));
+                throw Logger.Fatal.ArgumentNull(nameof(parameters));
             }
 
             Name = name;
@@ -43,5 +43,7 @@ namespace HarshPoint.ObjectModel
             get;
             private set;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ParameterSet>();
     }
 }

@@ -32,17 +32,17 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (identifierSelector == null)
             {
-                throw Error.ArgumentNull(nameof(identifierSelector));
+                throw Logger.Fatal.ArgumentNull(nameof(identifierSelector));
             }
 
             if (queryBuilder == null)
             {
-                throw Error.ArgumentNull(nameof(queryBuilder));
+                throw Logger.Fatal.ArgumentNull(nameof(queryBuilder));
             }
 
             if (postQueryTransform == null)
             {
-                throw Error.ArgumentNull(nameof(postQueryTransform));
+                throw Logger.Fatal.ArgumentNull(nameof(postQueryTransform));
             }
 
             ParentIncludes = ImmutableList<Expression<Func<TParent, Object>>>.Empty;
@@ -56,7 +56,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (parent == null)
             {
-                throw Error.ArgumentNull(nameof(parent));
+                throw Logger.Fatal.ArgumentNull(nameof(parent));
             }
 
             var query = QueryBuilder(parent);
@@ -85,7 +85,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (retrievals == null)
             {
-                throw Error.ArgumentNull(nameof(retrievals));
+                throw Logger.Fatal.ArgumentNull(nameof(retrievals));
             }
 
             ParentIncludes = ParentIncludes.AddRange(retrievals);
@@ -121,6 +121,8 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             set;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectResolveQuery<,,,>));
     }
 
     internal class ClientObjectResolveQuery<T, TParent, TIdentifier> :

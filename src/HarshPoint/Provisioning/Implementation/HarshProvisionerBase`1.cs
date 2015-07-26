@@ -72,7 +72,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (modifier == null)
             {
-                throw Error.ArgumentNull(nameof(modifier));
+                throw Logger.Fatal.ArgumentNull(nameof(modifier));
             }
 
             if (_childrenContextStateModifiers == null)
@@ -87,7 +87,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (state == null)
             {
-                throw Error.ArgumentNull(nameof(state));
+                throw Logger.Fatal.ArgumentNull(nameof(state));
             }
 
             ModifyChildrenContextState(() => state);
@@ -97,7 +97,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             return RunSelfAndChildren(
@@ -111,7 +111,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             if (MayDeleteUserData || context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
@@ -152,7 +152,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (resolver == null)
             {
-                throw Error.ArgumentNull(nameof(resolver));
+                throw Logger.Fatal.ArgumentNull(nameof(resolver));
             }
 
             return resolver.TryResolveAsync(
@@ -164,7 +164,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (resolver == null)
             {
-                throw Error.ArgumentNull(nameof(resolver));
+                throw Logger.Fatal.ArgumentNull(nameof(resolver));
             }
 
             return resolver.TryResolveSingleAsync(
@@ -176,7 +176,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (resolver == null)
             {
-                throw Error.ArgumentNull(nameof(resolver));
+                throw Logger.Fatal.ArgumentNull(nameof(resolver));
             }
 
             return resolver.ResolveAsync(
@@ -188,7 +188,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (resolver == null)
             {
-                throw Error.ArgumentNull(nameof(resolver));
+                throw Logger.Fatal.ArgumentNull(nameof(resolver));
             }
 
             return resolver.ResolveSingleAsync(

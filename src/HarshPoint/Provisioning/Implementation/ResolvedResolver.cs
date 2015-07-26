@@ -10,7 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (values == null)
             {
-                throw Error.ArgumentNull(nameof(values));
+                throw Logger.Fatal.ArgumentNull(nameof(values));
             }
 
             Values = values.ToImmutableList();
@@ -26,5 +26,7 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             set;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolvedResolver<>));
     }
 }

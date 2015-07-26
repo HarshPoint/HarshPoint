@@ -12,7 +12,7 @@ namespace HarshPoint.Provisioning
         {
             if (clientContext == null)
             {
-                throw Error.ArgumentNull(nameof(clientContext));
+                throw Logger.Fatal.ArgumentNull(nameof(clientContext));
             }
 
             ClientContext = clientContext;
@@ -33,5 +33,7 @@ namespace HarshPoint.Provisioning
             );
 
         public Web Web => ClientContext.Web;
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshProvisionerContext>();
     }
 }

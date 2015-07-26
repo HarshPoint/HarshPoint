@@ -1,5 +1,6 @@
 ﻿using Serilog.Events;
 using System;
+using System.Globalization;
 
 namespace HarshPoint
 {
@@ -39,5 +40,24 @@ namespace HarshPoint
         }
 
         public HarshLogger InnerLogger { get; private set; }
+
+        internal static String FormatCurrentCulture(String format, Object[] args)
+        {
+            if (format == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(format));
+            }
+
+            if (args == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(args));
+            }
+
+            return String.Format(
+                CultureInfo.CurrentUICulture,
+                format,
+                args
+            );
+        }
     }
 }

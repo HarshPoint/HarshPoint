@@ -16,12 +16,12 @@ namespace HarshPoint
         {
             if (cloneable == null)
             {
-                throw Error.ArgumentNull(nameof(cloneable));
+                throw Logger.Fatal.ArgumentNull(nameof(cloneable));
             }
 
             if (modifier == null)
             {
-                throw Error.ArgumentNull(nameof(modifier));
+                throw Logger.Fatal.ArgumentNull(nameof(modifier));
             }
 
             var clone = (T)cloneable.Clone();
@@ -34,12 +34,12 @@ namespace HarshPoint
         {
             if (cloneable == null)
             {
-                throw Error.ArgumentNull(nameof(cloneable));
+                throw Logger.Fatal.ArgumentNull(nameof(cloneable));
             }
 
             if (expression == null)
             {
-                throw Error.ArgumentNull(nameof(expression));
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
             var oldValue = expression.Compile()(cloneable);
@@ -67,11 +67,13 @@ namespace HarshPoint
                 );
             }
 
-            throw Error.ArgumentOutOfRangeFormat(
+            throw Logger.Fatal.ArgumentFormat(
                 nameof(expression),
                 SR.HarshCloneable_ExpressionNotFieldOrProperty,
                 expression
             );
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshCloneable));
     }
 }

@@ -12,7 +12,7 @@ namespace HarshPoint
         {
             if (typeInfo == null)
             {
-                throw Error.ArgumentNull(nameof(typeInfo));
+                throw Logger.Fatal.ArgumentNull(nameof(typeInfo));
             }
 
             var nameWithoutArgCount = Regex.Replace(typeInfo.Name, "`\\d+$", String.Empty);
@@ -57,5 +57,7 @@ namespace HarshPoint
             result.Length -= Delimiter.Length;
             result.Append('>');
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(TypeInfoExtensions));
     }
 }

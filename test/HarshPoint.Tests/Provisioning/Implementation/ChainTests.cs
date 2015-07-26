@@ -43,7 +43,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         {
             var x = new TestChain("1");
 
-            Assert.Throws<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentException>(
                 () => x.And(x)
             );
         }
@@ -56,7 +56,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
 
             var zero = new TestChain("0").And(one).And(two);
 
-            Assert.Throws<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentException>(
                 () => zero.And(two)
             );
         }

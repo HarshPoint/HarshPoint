@@ -12,7 +12,7 @@ namespace HarshPoint.Provisioning.Resolvers
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             return Task.FromResult<IEnumerable<TermStore>>(
@@ -21,6 +21,7 @@ namespace HarshPoint.Provisioning.Resolvers
                 )
             );
         }
-    }
 
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveTermStoreSiteCollectionDefault>();
+    }
 }

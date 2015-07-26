@@ -11,12 +11,12 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (innerResolvable == null)
             {
-                throw Error.ArgumentNull(nameof(innerResolvable));
+                throw Logger.Fatal.ArgumentNull(nameof(innerResolvable));
             }
 
             if (contextModifier == null)
             {
-                throw Error.ArgumentNull(nameof(contextModifier));
+                throw Logger.Fatal.ArgumentNull(nameof(contextModifier));
             }
 
             ContextModifier = contextModifier;
@@ -43,5 +43,7 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             set;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolvableContextModification<>));
     }
 }

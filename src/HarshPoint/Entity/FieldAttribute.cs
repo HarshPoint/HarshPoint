@@ -11,19 +11,19 @@ namespace HarshPoint.Entity
         {
             if (fieldId == null)
             {
-                throw Error.ArgumentNull("fieldId");
+                throw Logger.Fatal.ArgumentNull("fieldId");
             }
 
             var guid = Guid.Empty;
 
             if (!Guid.TryParse(fieldId, out guid))
             {
-                throw Error.ArgumentOutOfRange("fieldId", SR.FieldAttribute_InvalidGuid);
+                throw Logger.Fatal.Argument("fieldId", SR.FieldAttribute_InvalidGuid);
             }
 
             if (guid == Guid.Empty)
             {
-                throw Error.ArgumentOutOfRange("fieldId", SR.FieldAttribute_EmptyGuid);
+                throw Logger.Fatal.Argument("fieldId", SR.FieldAttribute_EmptyGuid);
             }
 
             FieldId = guid;
@@ -34,5 +34,7 @@ namespace HarshPoint.Entity
             get;
             private set;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<FieldAttribute>();
     }
 }

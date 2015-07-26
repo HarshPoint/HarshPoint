@@ -81,7 +81,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (elementStates.Length != elementCount)
             {
-                throw Logger.Fatal.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     nameof(state),
                     SR.ClientObjectResolveBuilder_StateCountNotEqualToElementCount,
                     elementStates.Length,

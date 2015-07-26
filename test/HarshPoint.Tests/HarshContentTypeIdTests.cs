@@ -7,18 +7,18 @@ namespace HarshPoint.Tests
     {
         [Theory]
         [InlineData(null, typeof(ArgumentNullException))]
-        [InlineData("", typeof(ArgumentOutOfRangeException))]
-        [InlineData("zz", typeof(ArgumentOutOfRangeException))]
-        [InlineData("0xzz", typeof(ArgumentOutOfRangeException))]
-        [InlineData("aaa", typeof(ArgumentOutOfRangeException))]
-        [InlineData("0xaaa", typeof(ArgumentOutOfRangeException))]
-        [InlineData("00", typeof(ArgumentOutOfRangeException))]
-        [InlineData("001234", typeof(ArgumentOutOfRangeException))]
-        [InlineData("123456789abcdef", typeof(ArgumentOutOfRangeException))]
-        [InlineData("0x00", typeof(ArgumentOutOfRangeException))]
-        [InlineData("0x0300", typeof(ArgumentOutOfRangeException))]
-        [InlineData("0x0000", typeof(ArgumentOutOfRangeException))]
-        [InlineData("0x000123456789abcde", typeof(ArgumentOutOfRangeException))]
+        [InlineData("", typeof(ArgumentException))]
+        [InlineData("zz", typeof(ArgumentException))]
+        [InlineData("0xzz", typeof(ArgumentException))]
+        [InlineData("aaa", typeof(ArgumentException))]
+        [InlineData("0xaaa", typeof(ArgumentException))]
+        [InlineData("00", typeof(ArgumentException))]
+        [InlineData("001234", typeof(ArgumentException))]
+        [InlineData("123456789abcdef", typeof(ArgumentException))]
+        [InlineData("0x00", typeof(ArgumentException))]
+        [InlineData("0x0300", typeof(ArgumentException))]
+        [InlineData("0x0000", typeof(ArgumentException))]
+        [InlineData("0x000123456789abcde", typeof(ArgumentException))]
         public void Throws_for_invalid_ids(String invalidId, Type exceptionType)
         {
             Assert.Throws(exceptionType, () => HarshContentTypeId.Parse(invalidId));
@@ -60,7 +60,7 @@ namespace HarshPoint.Tests
             var ctid1 = HarshContentTypeId.Parse("0x01");
             var ctid2 = HarshContentTypeId.Parse("0x01");
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => ctid1.Append(ctid2));
+            Assert.Throws<ArgumentException>(() => ctid1.Append(ctid2));
         }
 
         [Theory]
@@ -95,7 +95,7 @@ namespace HarshPoint.Tests
         }
 
         [Theory]
-        [InlineData(typeof(ArgumentOutOfRangeException), "0x01", "01")]
+        [InlineData(typeof(ArgumentException), "0x01", "01")]
         [InlineData(typeof(InvalidOperationException), "01", "0x01")]
         public void IsChildOf_fails(Type exceptionType, String ctidStr, String parentStr)
         {

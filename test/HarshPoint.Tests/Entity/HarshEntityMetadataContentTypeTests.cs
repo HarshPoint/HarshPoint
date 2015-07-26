@@ -14,7 +14,7 @@ namespace HarshPoint.Tests.Entity
         [Fact]
         public void Fails_without_a_ContentTypeAttribute()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentException>(
                 () => CreateMetadata(typeof(NotAContentType))
             );
         }
@@ -22,7 +22,7 @@ namespace HarshPoint.Tests.Entity
         [Fact]
         public void Fails_when_not_inherited_form_HarshEntity()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentException>(
                 () => CreateMetadata(typeof(NotAnEntity))
             );
         }

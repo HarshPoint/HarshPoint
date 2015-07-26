@@ -39,7 +39,7 @@ namespace HarshPoint.Provisioning
         {
             if (urls == null)
             {
-                throw Error.ArgumentNull(nameof(urls));
+                throw Logger.Fatal.ArgumentNull(nameof(urls));
             }
 
             return new OldResolveListByUrl(urls);
@@ -59,5 +59,7 @@ namespace HarshPoint.Provisioning
         {
             return new ResolvedResolver<T>(values);
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(Resolve));
     }
 }

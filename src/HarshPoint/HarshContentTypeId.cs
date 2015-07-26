@@ -58,12 +58,12 @@ namespace HarshPoint
         {
             if (parent == null)
             {
-                throw Error.ArgumentNull(nameof(parent));
+                throw Logger.Fatal.ArgumentNull(nameof(parent));
             }
 
             if (!parent.IsAbsolute)
             {
-                throw Error.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     nameof(parent),
                     SR.HarshContentTypeId_CannotIsChildOfRelative,
                     parent
@@ -72,7 +72,7 @@ namespace HarshPoint
 
             if (!IsAbsolute)
             {
-                throw Error.InvalidOperationFormat(
+                throw Logger.Fatal.InvalidOperationFormat(
                     SR.HarshContentTypeId_CannotIsChildOfRelative,
                     this
                 );
@@ -108,12 +108,12 @@ namespace HarshPoint
         {
             if (contentTypeId == null)
             {
-                throw Error.ArgumentNull("contentTypeId");
+                throw Logger.Fatal.ArgumentNull("contentTypeId");
             }
 
             if (contentTypeId.IsAbsolute)
             {
-                throw Error.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     "contentTypeId",
                     SR.HarshContentTypeId_CannotAppendAbsoluteCTId,
                     contentTypeId,
@@ -140,12 +140,12 @@ namespace HarshPoint
         {
             if (contentTypeId == null)
             {
-                throw Error.ArgumentNull("contentTypeId");
+                throw Logger.Fatal.ArgumentNull("contentTypeId");
             }
 
             if (!IsEven(contentTypeId.Length))
             {
-                throw Error.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     "contentTypeId",
                     SR.HarshContentTypeId_NotEven,
                     contentTypeId
@@ -156,7 +156,7 @@ namespace HarshPoint
 
             if (!match.Success)
             {
-                throw Error.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     "contentTypeId",
                     SR.HarshContentTypeId_IllegalCharacters,
                     contentTypeId
@@ -182,7 +182,7 @@ namespace HarshPoint
 
                 if (i > contentTypeId.Length)
                 {
-                    throw Error.ArgumentOutOfRangeFormat(
+                    throw Logger.Fatal.ArgumentFormat(
                         "contentTypeId",
                         SR.HarshContentTypeId_Expected_32chars_ID_after_00,
                         contentTypeId
@@ -200,16 +200,16 @@ namespace HarshPoint
         {
             if (contentTypeId.Length != 2 && contentTypeId.Length != 32)
             {
-                throw Error.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     "contentTypeId",
-                    SR.HarshContentTypeId_RelCTId_OutOfRange,
+                    SR.HarshContentTypeId_RelCTId_Invalid,
                     contentTypeId
                 );
             }
 
             if (StringComparer.Ordinal.Equals(contentTypeId, "00"))
             {
-                throw Error.ArgumentOutOfRange("contentTypeId", SR.HarshContentTypeId_RelCTId_00_OutOfRange);
+                throw Logger.Fatal.Argument("contentTypeId", SR.HarshContentTypeId_RelCTId_00_Invalid);
             }
 
             return new HarshContentTypeId(contentTypeId);
@@ -219,5 +219,7 @@ namespace HarshPoint
         {
             return (value % 2) == 0;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshContentTypeId>();
     }
 }

@@ -14,7 +14,9 @@ namespace HarshPoint.ObjectModel
             }
 
             return logger.Write(
-                Error.ObjectMetadataFormat(format, args)
+                new HarshObjectMetadataException(
+                    HarshLoggerWrapper.FormatCurrentCulture(format, args)
+                )
             );
         }
     }

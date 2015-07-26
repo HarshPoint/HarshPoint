@@ -9,18 +9,23 @@ namespace HarshPoint.ObjectModel
         {
             if (logger == null)
             {
-                throw Error.ArgumentNull(nameof(logger));
+                throw Logger.Fatal.ArgumentNull(nameof(logger));
             }
 
             if (parameter == null)
             {
-                throw Error.ArgumentNull(nameof(parameter));
+                throw Logger.Fatal.ArgumentNull(nameof(parameter));
             }
 
             return logger.Write(
                 LogEventLevel.Error,
-                Error.ParameterValidationFormat(parameter.Name, format, args)
+                new ParameterValidationException(
+                    parameter.Name,
+                    HarshLoggerWrapper.FormatCurrentCulture(format, args)
+                )
             );
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ParameterValidationExceptionLoggerExtension));
     }
 }

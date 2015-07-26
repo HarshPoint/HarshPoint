@@ -46,7 +46,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             var state = context.ProvisionerContext.GetState<T>();

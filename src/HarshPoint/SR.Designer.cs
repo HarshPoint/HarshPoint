@@ -148,6 +148,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null or empty string..
+        /// </summary>
+        internal static string Error_ArgumentNullOrEmpty {
+            get {
+                return ResourceManager.GetString("Error_ArgumentNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value cannot be null or whitespace-only string..
         /// </summary>
         internal static string Error_ArgumentNullOrWhitespace {
@@ -312,18 +321,18 @@ namespace HarshPoint {
         /// <summary>
         ///   Looks up a localized string similar to The specified string &quot;00&quot; is used to separate content type ID parts and therefore cannot be used as a valid relative content type ID..
         /// </summary>
-        internal static string HarshContentTypeId_RelCTId_00_OutOfRange {
+        internal static string HarshContentTypeId_RelCTId_00_Invalid {
             get {
-                return ResourceManager.GetString("HarshContentTypeId_RelCTId_00_OutOfRange", resourceCulture);
+                return ResourceManager.GetString("HarshContentTypeId_RelCTId_00_Invalid", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The specified relative content type ID &apos;{0}&apos; is invalid. A relative content type ID is either a 2 or 32 character long hexadecimal string..
         /// </summary>
-        internal static string HarshContentTypeId_RelCTId_OutOfRange {
+        internal static string HarshContentTypeId_RelCTId_Invalid {
             get {
-                return ResourceManager.GetString("HarshContentTypeId_RelCTId_OutOfRange", resourceCulture);
+                return ResourceManager.GetString("HarshContentTypeId_RelCTId_Invalid", resourceCulture);
             }
         }
         

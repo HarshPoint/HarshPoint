@@ -50,7 +50,6 @@
     <Compile Include="Entity\Metadata\HarshEntityMetadataContentType.cs" />
     <Compile Include="Entity\Metadata\HarshEntityMetadataRepository.cs" />
     <Compile Include="Entity\Metadata\HarshFieldMetadata.cs" />
-    <Compile Include="Error.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />

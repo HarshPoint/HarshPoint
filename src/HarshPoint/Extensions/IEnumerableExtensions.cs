@@ -14,7 +14,7 @@ namespace HarshPoint
         {
             if (sequence == null)
             {
-                throw Error.ArgumentNull(nameof(sequence));
+                throw Logger.Fatal.ArgumentNull(nameof(sequence));
             }
 
             var enumerator = sequence.GetEnumerator();
@@ -34,12 +34,12 @@ namespace HarshPoint
         {
             if (sequence == null)
             {
-                throw Error.ArgumentNull(nameof(sequence));
+                throw Logger.Fatal.ArgumentNull(nameof(sequence));
             }
 
             if (projection == null)
             {
-                throw Error.ArgumentNull(nameof(projection));
+                throw Logger.Fatal.ArgumentNull(nameof(projection));
             }
 
             if (equalityComparer == null)
@@ -61,12 +61,12 @@ namespace HarshPoint
         {
             if (sequence == null)
             {
-                throw Error.ArgumentNull(nameof(sequence));
+                throw Logger.Fatal.ArgumentNull(nameof(sequence));
             }
 
             if (selector == null)
             {
-                throw Error.ArgumentNull(nameof(selector));
+                throw Logger.Fatal.ArgumentNull(nameof(selector));
             }
 
             var source = sequence.ToArray();
@@ -89,17 +89,17 @@ namespace HarshPoint
         {
             if (sequence == null)
             {
-                throw Error.ArgumentNull(nameof(sequence));
+                throw Logger.Fatal.ArgumentNull(nameof(sequence));
             }
 
             if (keySelector == null)
             {
-                throw Error.ArgumentNull(nameof(keySelector));
+                throw Logger.Fatal.ArgumentNull(nameof(keySelector));
             }
 
             if (elementSelector == null)
             {
-                throw Error.ArgumentNull(nameof(elementSelector));
+                throw Logger.Fatal.ArgumentNull(nameof(elementSelector));
             }
 
             var builder = ImmutableDictionary<TKey, TElement>.Empty
@@ -122,5 +122,6 @@ namespace HarshPoint
             return builder.ToImmutable();
         }
 
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IEnumerableExtensions));
     }
 }

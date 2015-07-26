@@ -14,9 +14,11 @@ namespace HarshPoint.Provisioning.Implementation
                 {
                     case 1: return array[0];
                     case 0: return default(T);
-                    default: throw Error.InvalidOperationFormat(SR.Resolvable_ManyResults, ResolveBuilder);
+                    default: throw Logger.Fatal.InvalidOperationFormat(SR.Resolvable_ManyResults, ResolveBuilder);
                 }
             }
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveResultSingle<>));
     }
 }

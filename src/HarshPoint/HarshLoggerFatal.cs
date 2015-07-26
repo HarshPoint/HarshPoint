@@ -13,6 +13,26 @@ namespace HarshPoint
         {
         }
 
+        public ArgumentException Argument(String parameterName, String message)
+        {
+            if (parameterName == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(parameterName));
+            }
+
+            if (message == null)
+            {
+                throw SelfLogger.Fatal.ArgumentNull(nameof(message));
+            }
+
+            return Write(
+                new ArgumentException(message, parameterName)
+            );
+        }
+
+        public ArgumentException ArgumentFormat(String parameterName, String format, params Object[] args)
+            => Argument(parameterName, FormatCurrentCulture(format, args));
+
         public ArgumentNullException ArgumentNull(String parameterName)
         {
             if (parameterName == null)
@@ -21,29 +41,21 @@ namespace HarshPoint
             }
 
             return Write(
-                Error.ArgumentNull(parameterName)
+                new ArgumentNullException(parameterName)
             );
         }
 
-        public ArgumentOutOfRangeException ArgumentEmptySequence(String parameterName)
+        public ArgumentException ArgumentNullOrEmpty(String parameterName)
+            => Argument(parameterName, SR.Error_ArgumentNullOrEmpty);
+
+        public ArgumentException ArgumentNullOrWhitespace(String parameterName)
+            => Argument(parameterName, SR.Error_ArgumentNullOrWhitespace);
+
+        public ArgumentException ArgumentEmptySequence(String parameterName)
+            =>Argument(parameterName, SR.Error_SequenceEmpty);
+
+        public ArgumentException ArgumentNotAssignableTo(String parameterName, Object value, params Type[] expectedBaseTypes)
         {
-            if (parameterName == null)
-            {
-                throw SelfLogger.Fatal.ArgumentNull(nameof(parameterName));
-            }
-
-            return Write(
-                Error.ArgumentOutOfRange_EmptySequence(parameterName)
-            );
-        }
-
-        public ArgumentOutOfRangeException ArgumentNotAssignableTo(String parameterName, Object value, params Type[] expectedBaseTypes)
-        {
-            if (parameterName == null)
-            {
-                throw SelfLogger.Fatal.ArgumentNull(nameof(parameterName));
-            }
-
             if (value == null)
             {
                 throw SelfLogger.Fatal.ArgumentNull(nameof(value));
@@ -61,23 +73,19 @@ namespace HarshPoint
 
             if (expectedBaseTypes.Length == 1)
             {
-                return Write(
-                    Error.ArgumentOutOfRangeFormat(
-                        parameterName,
-                        SR.Error_ObjectNotAssignableToOne,
-                        value,
-                        expectedBaseTypes
-                    )
+                return ArgumentFormat(
+                    parameterName,
+                    SR.Error_ObjectNotAssignableToOne,
+                    value,
+                    expectedBaseTypes
                 );
             }
 
-            return Write(
-                Error.ArgumentOutOfRangeFormat(
-                    parameterName,
-                    SR.Error_ObjectNotAssignableToMany,
-                    value,
-                    String.Join(", ", expectedBaseTypes.Select(t => t.FullName))
-                )
+            return ArgumentFormat(
+                parameterName,
+                SR.Error_ObjectNotAssignableToMany,
+                value,
+                String.Join(", ", expectedBaseTypes.Select(t => t.FullName))
             );
         }
 
@@ -94,39 +102,15 @@ namespace HarshPoint
             }
 
             return Write(
-                Error.ArgumentOutOfRange(parameterName, message)
+                new ArgumentOutOfRangeException(parameterName, message)
             );
         }
 
         public ArgumentOutOfRangeException ArgumentOutOfRangeFormat(String parameterName, String format, params Object[] args)
+            => ArgumentOutOfRangeFormat(parameterName, FormatCurrentCulture(format, args));
+
+        public ArgumentException ArgumentTypeNotAssignableTo(String parameterName, Type type, Type expectedBaseType)
         {
-            if (parameterName == null)
-            {
-                throw SelfLogger.Fatal.ArgumentNull(nameof(parameterName));
-            }
-
-            if (format == null)
-            {
-                throw SelfLogger.Fatal.ArgumentNull(nameof(format));
-            }
-
-            if (args == null)
-            {
-                throw SelfLogger.Fatal.ArgumentNull(nameof(args));
-            }
-
-            return Write(
-                Error.ArgumentOutOfRangeFormat(parameterName, format, args)
-            );
-        }
-
-        public ArgumentOutOfRangeException ArgumentTypeNotAssignableTo(String parameterName, Type type, Type expectedBaseType)
-        {
-            if (parameterName == null)
-            {
-                throw SelfLogger.Fatal.ArgumentNull(nameof(parameterName));
-            }
-
             if (type == null)
             {
                 throw SelfLogger.Fatal.ArgumentNull(nameof(type));
@@ -137,13 +121,11 @@ namespace HarshPoint
                 throw SelfLogger.Fatal.ArgumentNull(nameof(expectedBaseType));
             }
 
-            return Write(
-                Error.ArgumentOutOfRangeFormat(
-                    parameterName,
-                    SR.Error_TypeNotAssignableFrom,
-                    expectedBaseType.FullName,
-                    type.FullName
-                )
+            return ArgumentFormat(
+                parameterName,
+                SR.Error_TypeNotAssignableFrom,
+                expectedBaseType.FullName,
+                type.FullName
             );
         }
 
@@ -155,41 +137,28 @@ namespace HarshPoint
             }
 
             return Write(
-                Error.InvalidOperation(message)
+                new InvalidOperationException(message)
             );
         }
 
         public InvalidOperationException InvalidOperationFormat(String format, params Object[] args)
-        {
-            if (format == null)
-            {
-                throw SelfLogger.Fatal.ArgumentNull(nameof(format));
-            }
-
-            if (args == null)
-            {
-                throw SelfLogger.Fatal.ArgumentNull(nameof(args));
-            }
-
-            return Write(
-                Error.InvalidOperationFormat(format, args)
-            );
-        }
+            => InvalidOperation(FormatCurrentCulture(format, args));
 
         public NotImplementedException NotImplemented()
-        {
-            return Write(new NotImplementedException());
-        }
+            => Write(new NotImplementedException());
 
         public InvalidOperationException PropertyNull(String propertyName)
         {
+            if (propertyName == null)
+            {
+                SelfLogger.Fatal.ArgumentNull(nameof(propertyName));
+            }
+
             return InvalidOperationFormat(SR.Error_PropertyNull, propertyName);
         }
 
         public TException Write<TException>(TException exception)
             where TException : Exception
-        {
-            return Write(LogEventLevel.Fatal, exception);
-        }
+            => Write(LogEventLevel.Fatal, exception);
     }
 }

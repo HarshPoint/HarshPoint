@@ -53,12 +53,12 @@ namespace HarshPoint.Provisioning
         {
             if (resolvable == null)
             {
-                throw Error.ArgumentNull(nameof(resolvable));
+                throw Logger.Fatal.ArgumentNull(nameof(resolvable));
             }
 
             if (retrievals == null)
             {
-                throw Error.ArgumentNull(nameof(retrievals));
+                throw Logger.Fatal.ArgumentNull(nameof(retrievals));
             }
 
             return new ResolvableContextModification<TResolved>(
@@ -66,5 +66,7 @@ namespace HarshPoint.Provisioning
                 ctx => ((ClientObjectResolveContext)(ctx)).Include(retrievals)
             );
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveClientObjectExtension));
     }
 }
