@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -19,17 +18,33 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             _source = source;
-            _strategy = ResolveResultConverterStrategy.ForType(typeof(T));
+            _strategy = GetStrategyForType(typeof(T));
         }
 
         public IEnumerator<T> GetEnumerator()
-            => _source.Select(_strategy.Convert).Cast<T>().GetEnumerator();
+            => _strategy
+                .ConvertResults(_source)
+                .Cast<T>()
+                .GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveResultConverter<>));
+        private static ResolveResultConverterStrategy GetStrategyForType(Type type)
+        {
+            if (type == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(type));
+            }
 
-        private static readonly TypeInfo ResultTypeInfo = typeof(T).GetTypeInfo();
+            if (HarshTuple.IsTupleType(type))
+            {
+                return new ResolveResultConverterStrategyTuple(type);
+            }
+
+            return ResolveResultConverterStrategyUnpack.Instance;
+        }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveResultConverter<>));
     }
 }

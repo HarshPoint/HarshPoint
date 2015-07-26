@@ -50,6 +50,19 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             Assert.Equal(Tuple.Create("test", 42), actual);
         }
 
+        [Fact]
+        public void Gets_converted_to_Tuple_of_Tuples()
+        {
+            var result = CreateResult<Tuple<String, Tuple<Boolean, Int32>>>(
+                NestedResolveResult.Pack(42,
+                    NestedResolveResult.Pack(true, "test")
+                )
+            );
+
+            var actual = Assert.Single(result);
+            Assert.Equal(Tuple.Create("test", Tuple.Create(true, 42)), actual);
+        }
+
         private IEnumerable CreateResult<T>(params Object[] source)
             => (IEnumerable)ResolveResultFactory.CreateResult(
                 typeof(IResolve<T>).GetTypeInfo(),

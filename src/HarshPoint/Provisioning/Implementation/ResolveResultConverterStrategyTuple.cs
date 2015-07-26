@@ -1,38 +1,38 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ResolveResultConverterStrategyTuple : ResolveResultConverterStrategy
     {
-        private readonly Type _tupleType;
-        private readonly IImmutableList<Type> _componentTypes;
+        private readonly ImmutableArray<Func<IEnumerator<Object>, Object>> _nested;
 
         public ResolveResultConverterStrategyTuple(Type tupleType)
+            : base(tupleType)
         {
-            _tupleType = tupleType;
-            _componentTypes = HarshTuple.GetComponentTypes(tupleType);
+            _nested = HarshTuple.GetComponentTypes(tupleType)
+                .Select(GetNestedTupleStrategy)
+                .ToImmutableArray();
         }
 
-        public override Object Convert(Object obj)
+        protected override Object ConvertNestedComponents(IEnumerator<Object> componentEnumerator)
+            => HarshTuple.Create(
+                ResultType,
+                _nested.Select(n => n(componentEnumerator))
+            );
+
+        private static Func<IEnumerator<Object>, Object> GetNestedTupleStrategy(Type t)
         {
-            var nested = (obj as INestedResolveResult);
-            
-            if (nested == null)
+            if (HarshTuple.IsTupleType(t))
             {
-                throw Logger.Fatal.ArgumentNotAssignableTo(
-                    nameof(obj),
-                    obj,
-                    typeof(INestedResolveResult)
-                );
+                return new ResolveResultConverterStrategyTuple(t).ConvertNestedComponents;
             }
 
-            var components = nested.ExtractComponents(_componentTypes);
-
-            return HarshTuple.Create(_tupleType, components);
+            return enumerator => enumerator.MoveNext() ? enumerator.Current : null;
         }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveResultConverterStrategyTuple>();
-
     }
 }
