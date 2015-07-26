@@ -7,6 +7,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal abstract class ResolveResultConverterStrategy
     {
+        private readonly Type _resultType;
         private readonly Lazy<IReadOnlyCollection<Type>> _componentsFlat;
             
         protected ResolveResultConverterStrategy()
@@ -20,11 +21,8 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(resultType));
             }
 
-            ResultType = resultType;
-
-            _componentsFlat = new Lazy<IReadOnlyCollection<Type>>(
-                () => GetComponentsFlat(resultType)
-            );
+            _resultType = resultType;
+            _componentsFlat = new Lazy<IReadOnlyCollection<Type>>(GetComponentsFlat);
         }
 
         public virtual IEnumerable<Object> ConvertResults(IEnumerable<Object> results)
@@ -62,6 +60,7 @@ namespace HarshPoint.Provisioning.Implementation
                 return ConvertNestedComponents(enumerator);
             }
         }
+
         protected virtual Object ConvertNestedComponents(IEnumerator<Object> componentEnumerator)
         {
             throw Logger.Fatal.NotImplemented();
@@ -70,12 +69,12 @@ namespace HarshPoint.Provisioning.Implementation
         protected IReadOnlyCollection<Type> ComponentTypesFlattened 
             => _componentsFlat?.Value ?? ImmutableArray<Type>.Empty;
 
-        protected Type ResultType { get; private set; }
+        protected Type ResultType => _resultType;
 
-        private static IReadOnlyCollection<Type> GetComponentsFlat(Type t)
+        private IReadOnlyCollection<Type> GetComponentsFlat()
         {
             var result = ImmutableArray.CreateBuilder<Type>();
-            AddComponentsFlat(result, t);
+            AddComponentsFlat(result, ResultType);
             return result;
         }
 
@@ -87,6 +86,11 @@ namespace HarshPoint.Provisioning.Implementation
                 {
                     AddComponentsFlat(result, ct);
                 }
+            }
+            else if (HarshGrouping.IsGroupingType(t))
+            {
+                AddComponentsFlat(result, t.GenericTypeArguments[0]);
+                AddComponentsFlat(result, t.GenericTypeArguments[1]);
             }
             else
             {
