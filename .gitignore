@@ -6,3 +6,4 @@ obj/
 # MSTest test Results
 [Tt]est[Rr]esults/
 /PSModulePath
+/src/HarshPoint.Shellploy/Generated
