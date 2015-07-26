@@ -45,13 +45,17 @@ namespace HarshPoint
                 throw Logger.Fatal.ArgumentEmptySequence(nameof(componentTypes));
             }
 
-            if (componentTypes.Length > TupleDefinitions.Length)
+            if (componentTypes.Length > MaxTupleComponents)
             {
-                throw Logger.Fatal.ArgumentOutOfRangeFormat(
-                    nameof(componentTypes),
-                    SR.HarshTuple_TooManyComponents,
-                    TupleDefinitions.Length
-                );
+                componentTypes =
+                    componentTypes
+                    .Take(MaxTupleComponents - 1)
+                    .Concat(
+                        MakeTupleType(
+                            componentTypes.Skip(MaxTupleComponents - 1)
+                        )
+                    )
+                    .ToArray();
             }
 
             var definition = TupleDefinitions[componentTypes.Length - 1];
@@ -71,6 +75,8 @@ namespace HarshPoint
             typeof(Tuple<,,,,,,>),
             typeof(Tuple<,,,,,,,>)
         );
+
+        private static readonly Int32 MaxTupleComponents = TupleDefinitions.Length;
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshTuple));
     }

@@ -39,6 +39,10 @@ namespace HarshPoint.Tests
         [Theory]
         [InlineData(typeof(Tuple<Int32>), new[] { typeof(Int32) })]
         [InlineData(typeof(Tuple<Int32, String>), new[] { typeof(Int32), typeof(String) })]
+        [InlineData(
+            typeof(Tuple<Q, Q, Q, Q, Q, Q, Q, Q>), 
+            new[] { typeof(Q), typeof(Q), typeof(Q), typeof(Q), typeof(Q), typeof(Q), typeof(Q), typeof(Q) })
+        ]
         public void MakeTupleType_makes_tuple_type(Type expected, params Type[] args)
         {
             Assert.Equal(expected, HarshTuple.MakeTupleType(args));
@@ -53,23 +57,53 @@ namespace HarshPoint.Tests
         }
 
         [Fact]
-        public void MakeTupleType_fails_nine()
+        public void MakeTupleType_creates_nested_tuple_nine()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(
-                () => HarshTuple.MakeTupleType(
-                    typeof(Int32),
-                    typeof(Int32),
-                    typeof(Int32),
+            var actual = HarshTuple.MakeTupleType(
+                typeof(Q),
+                typeof(Q),
+                typeof(Q),
 
-                    typeof(Int32),
-                    typeof(Int32),
-                    typeof(Int32),
+                typeof(Q),
+                typeof(Q),
+                typeof(Q),
 
-                    typeof(Int32),
-                    typeof(Int32),
-                    typeof(Int32)
-                )
+                typeof(Q),
+                typeof(Q),
+                typeof(Q)
+            );
+
+            Assert.Equal(
+                typeof(Tuple<Q, Q, Q, Q, Q, Q, Q, Tuple<Q, Q>>),
+                actual
             );
         }
+
+        [Fact]
+        public void MakeTupleType_creates_nested_tuple_eighteen()
+        {
+            var actual = HarshTuple.MakeTupleType(
+                typeof(Q), typeof(Q), typeof(Q),
+                typeof(Q), typeof(Q), typeof(Q),
+                typeof(Q), typeof(Q), typeof(Q),
+
+                typeof(Q), typeof(Q), typeof(Q),
+                typeof(Q), typeof(Q), typeof(Q),
+                typeof(Q), typeof(Q), typeof(Q)
+            );
+
+            Assert.Equal(
+                typeof(Tuple<
+                    Q, Q, Q, Q, Q, Q, Q,
+                    Tuple<
+                        Q, Q, Q, Q, Q, Q, Q,
+                        Tuple<Q, Q, Q, Q>
+                    >
+                >),
+                actual
+            );
+        }
+
+        private sealed class Q { }
     }
 }

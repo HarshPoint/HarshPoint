@@ -25,6 +25,9 @@ namespace HarshPoint
             }
         }
 
+        public static IEnumerable<T> Concat<T>(this IEnumerable<T> sequence, params T[] elements)
+            => sequence.Concat((IEnumerable<T>)(elements));
+
         public static TElement FirstOrDefaultByProperty<TElement, TProperty>(
             this IEnumerable<TElement> sequence,
             Func<TElement, TProperty> projection,

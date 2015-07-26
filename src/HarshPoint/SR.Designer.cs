@@ -497,15 +497,6 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The maximum number of components in a tuple {0}..
-        /// </summary>
-        internal static string HarshTuple_TooManyComponents {
-            get {
-                return ResourceManager.GetString("HarshTuple_TooManyComponents", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The specified url &apos;{0}&apos; is not relative to &apos;{1}&apos;..
         /// </summary>
         internal static string HarshUrl_UrlNotRelativeTo {

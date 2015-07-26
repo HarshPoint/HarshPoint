@@ -1,10 +1,7 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace HarshPoint.Tests.Provisioning.Implementation
@@ -16,15 +13,10 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         {
             /* 
                 Tuple[ Planet, Continent, Country, City, Street, Building ]
-
                 Tuple[ Planet, Continent, Country, City, Grouping[Street, Building] ]
-
                 Tuple[ Planet, Continent, Country, Tuple[ City, Grouping[Street, Building] ] ]
-
                 Tuple[ Planet, Tuple[ Continent, Country ], Tuple[ City, Grouping[Street, Building] ] ]
 
-                Tuple[ Planet, Grouping[ Tuple[ Continent, Country ], Tuple[ City, Grouping[Street, Building] ] ] ]
-                
                 Tuple[ Planet, Grouping[ Tuple[ Continent, Country ], Tuple[ City, Grouping[Street, Building] ] ] ]
 
                 Tuple<
@@ -37,6 +29,16 @@ namespace HarshPoint.Tests.Provisioning.Implementation
                         >
                     >
                 >
+
+                GroupBy Tuple(Item1..Item5) => Item6
+                Tuple (
+                    LiftOutOfKey Item1
+                    Tuple( LiftOutOfKey Item2, LiftOutOfKey Item3 )
+                    Tuple( LiftOutOfKey Item4, Grouping (LiftOutOfKey Item5) )
+                )
+
+                GroupBy (Tuple (Item1, Item2) => Item3)
+                Tuple( LiftOutOfKey Item1, Grouping LiftOutOfKey Item2)
             */
 
             var source = Universe.Create();
