@@ -55,6 +55,7 @@
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="HarshBuiltInContentTypeIds.cs" />
     <Compile Include="HarshBuiltInFieldId.cs" />
+    <Compile Include="HarshGrouping.cs" />
     <Compile Include="HarshLoggerFatal.cs" />
     <Compile Include="HarshLoggerError.cs" />
     <Compile Include="HarshExpression.cs" />
@@ -180,7 +181,7 @@
     <Compile Include="Provisioning\Implementation\ResolvableChain.cs" />
     <Compile Include="Provisioning\Implementation\OldResolvable`3.cs" />
     <Compile Include="Provisioning\Implementation\OldResolvable`4.cs" />
-    <Compile Include="Provisioning\Implementation\ResolvedGrouping.cs" />
+    <Compile Include="HarshGrouping`2.cs" />
     <Compile Include="Provisioning\IResolve`1.cs" />
     <Compile Include="Provisioning\Resolve.cs" />
     <Compile Include="Provisioning\Resolvers\OldResolveListByUrl.cs" />

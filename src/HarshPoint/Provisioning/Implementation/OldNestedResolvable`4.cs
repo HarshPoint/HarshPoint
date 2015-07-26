@@ -98,7 +98,7 @@ namespace HarshPoint.Provisioning.Implementation
             var parents = await Parents.TryResolveAsync(context);
 
             return await parents.SelectSequentially(
-                async parent => ResolvedGrouping.Create(
+                async parent => HarshGrouping.Create(
                     parent,
                     await ResolveChainElement(typedContext, parent)
                 )

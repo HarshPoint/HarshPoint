@@ -63,6 +63,6 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         }
 
         private static IGrouping<TKey, TElement> Grouping<TKey, TElement>(TKey key, IEnumerable<TElement> elements)
-            => ResolvedGrouping.Create(key, elements);
+            => HarshGrouping.Create(key, elements);
     }
 }

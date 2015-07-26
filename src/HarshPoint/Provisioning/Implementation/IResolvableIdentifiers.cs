@@ -106,7 +106,7 @@ namespace HarshPoint.Provisioning.Implementation
             await clientContext.ExecuteQueryAsync();
 
             var items = intermediates.Select(
-                results => ResolvedGrouping.Create(
+                results => HarshGrouping.Create(
                     results.Key,
                     resolveQuery.PostQueryTransform(results.Value)
                 )
