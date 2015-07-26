@@ -27,12 +27,12 @@ namespace HarshPoint
         {
             if (clientObject == null)
             {
-                throw Error.ArgumentNull(nameof(clientObject));
+                throw Logger.Fatal.ArgumentNull(nameof(clientObject));
             }
 
             if (expression == null)
             {
-                throw Error.ArgumentNull(nameof(expression));
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
             return clientObject.IsPropertyAvailable(expression.GetMemberName());
@@ -43,12 +43,12 @@ namespace HarshPoint
         {
             if (clientObject == null)
             {
-                throw Error.ArgumentNull(nameof(clientObject));
+                throw Logger.Fatal.ArgumentNull(nameof(clientObject));
             }
 
             if (expression == null)
             {
-                throw Error.ArgumentNull(nameof(expression));
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
             var objectExpression = expression.ConvertToObject();
@@ -62,5 +62,7 @@ namespace HarshPoint
 
             return compiledExpression(clientObject);
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectExtensions));
     }
 }

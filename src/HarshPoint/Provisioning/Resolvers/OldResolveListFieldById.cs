@@ -18,12 +18,12 @@ namespace HarshPoint.Provisioning.Resolvers
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             if (parent == null)
             {
-                throw Error.ArgumentNull(nameof(parent));
+                throw Logger.Fatal.ArgumentNull(nameof(parent));
             }
 
             return this.ResolveQuery(
@@ -32,5 +32,7 @@ namespace HarshPoint.Provisioning.Resolvers
                 parent.Fields
             );
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<OldResolveListFieldById>();
     }
 }

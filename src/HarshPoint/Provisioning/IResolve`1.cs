@@ -24,12 +24,12 @@ namespace HarshPoint.Provisioning
         {
             if (resolvable == null)
             {
-                throw Error.ArgumentNull(nameof(resolvable));
+                throw Logger.Fatal.ArgumentNull(nameof(resolvable));
             }
 
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             var results = await resolvable.TryResolveAsync(context);
@@ -40,12 +40,12 @@ namespace HarshPoint.Provisioning
         {
             if (resolvable == null)
             {
-                throw Error.ArgumentNull(nameof(resolvable));
+                throw Logger.Fatal.ArgumentNull(nameof(resolvable));
             }
 
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             var results = await resolvable.TryResolveAsync(context);
@@ -58,12 +58,12 @@ namespace HarshPoint.Provisioning
         {
             if (resolvable == null)
             {
-                throw Error.ArgumentNull(nameof(resolvable));
+                throw Logger.Fatal.ArgumentNull(nameof(resolvable));
             }
 
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             var results = await resolvable.TryResolveAsync(context);
@@ -72,9 +72,11 @@ namespace HarshPoint.Provisioning
             switch (results.Count())
             {
                 case 1: return results.First();
-                case 0: throw Error.InvalidOperationFormat(SR.Resolvable_NoResult, resolvable);
-                default: throw Error.InvalidOperationFormat(SR.Resolvable_ManyResults, resolvable);
+                case 0: throw Logger.Fatal.InvalidOperationFormat(SR.Resolvable_NoResult, resolvable);
+                default: throw Logger.Fatal.InvalidOperationFormat(SR.Resolvable_ManyResults, resolvable);
             }
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveOldExtensions));
     }
 }

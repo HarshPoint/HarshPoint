@@ -15,7 +15,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (web == null)
             {
-                throw Error.ArgumentNull("web");
+                throw Logger.Fatal.ArgumentNull("web");
             }
 
             SetWeb(web);
@@ -25,7 +25,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (site == null)
             {
-                throw Error.ArgumentNull("site");
+                throw Logger.Fatal.ArgumentNull("site");
             }
 
             SetWeb(site.RootWeb);
@@ -35,7 +35,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (webApplication == null)
             {
-                throw Error.ArgumentNull("webApplication");
+                throw Logger.Fatal.ArgumentNull("webApplication");
             }
 
             WebApplication = webApplication;
@@ -46,7 +46,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (farm == null)
             {
-                throw Error.ArgumentNull("farm");
+                throw Logger.Fatal.ArgumentNull("farm");
             }
 
             Farm = farm;
@@ -115,12 +115,12 @@ namespace HarshPoint.Server.Provisioning
         {
             if (properties == null)
             {
-                throw Error.ArgumentNull(nameof(properties));
+                throw Logger.Fatal.ArgumentNull(nameof(properties));
             }
 
             if (properties.Feature == null)
             {
-                throw Error.ArgumentOutOfRange(nameof(properties), SR.HarshServerProvisionerContext_PropertiesFeatureNull);
+                throw Logger.Fatal.Argument(nameof(properties), SR.HarshServerProvisionerContext_PropertiesFeatureNull);
             }
 
             var parent = properties.Feature.Parent;
@@ -154,5 +154,7 @@ namespace HarshPoint.Server.Provisioning
 
         private static readonly IReadOnlyDictionary<String, String> EmptyUpgradeArguments =
             ImmutableDictionary<String, String>.Empty;
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshServerProvisionerContext>();
     }
 }

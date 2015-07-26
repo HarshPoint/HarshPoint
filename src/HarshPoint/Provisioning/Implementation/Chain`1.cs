@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (other.GetChainElements().Any(el => thisElements.Contains(el)))
             {
-                throw Logger.Fatal.ArgumentOutOfRange(
+                throw Logger.Fatal.Argument(
                     nameof(other),
                     SR.Chain_ElementAlreadyContained
                 );

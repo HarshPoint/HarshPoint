@@ -10,7 +10,7 @@ namespace HarshPoint.Reflection
         {
             if (property == null)
             {
-                throw Error.ArgumentNull(nameof(property));
+                throw Logger.Fatal.ArgumentNull(nameof(property));
             }
 
             var target = Expression.Parameter(typeof(TTarget));
@@ -36,7 +36,7 @@ namespace HarshPoint.Reflection
         {
             if (property == null)
             {
-                throw Error.ArgumentNull(nameof(property));
+                throw Logger.Fatal.ArgumentNull(nameof(property));
             }
 
             var target = Expression.Parameter(typeof(TTarget));
@@ -57,5 +57,7 @@ namespace HarshPoint.Reflection
 
         public static Action<Object, Object> MakeSetter(this PropertyInfo property)
             => MakeSetter<Object, Object>(property);
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(PropertyInfoExtensions));
     }
 }

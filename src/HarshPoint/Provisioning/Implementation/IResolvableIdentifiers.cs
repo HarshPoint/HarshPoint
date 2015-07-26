@@ -26,17 +26,17 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (resolvable == null)
             {
-                throw Error.ArgumentNull(nameof(resolvable));
+                throw Logger.Fatal.ArgumentNull(nameof(resolvable));
             }
 
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             if (items == null)
             {
-                throw Error.ArgumentNull(nameof(items));
+                throw Logger.Fatal.ArgumentNull(nameof(items));
             }
 
             var byId = items.ToImmutableDictionaryFirstWins(
@@ -72,17 +72,17 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             if (resolveQuery == null)
             {
-                throw Error.ArgumentNull(nameof(resolveQuery));
+                throw Logger.Fatal.ArgumentNull(nameof(resolveQuery));
             }
 
             if (parents == null)
             {
-                throw Error.ArgumentNull(nameof(parents));
+                throw Logger.Fatal.ArgumentNull(nameof(parents));
             }
 
             var intermediates = new Dictionary<TParent, IEnumerable<TIntermediate>>();
@@ -123,5 +123,7 @@ namespace HarshPoint.Provisioning.Implementation
                 resolveQuery.IdentifierComparer
             );
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IResolvableIdentifiersExtensions));
     }
 }

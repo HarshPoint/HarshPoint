@@ -10,15 +10,17 @@ namespace HarshPoint.Provisioning
         {
             if (termStore == null)
             {
-                throw Error.ArgumentNull(nameof(termStore));
+                throw Logger.Fatal.ArgumentNull(nameof(termStore));
             }
 
             if (ids == null)
             {
-                throw Error.ArgumentNull(nameof(ids));
+                throw Logger.Fatal.ArgumentNull(nameof(ids));
             }
 
             return new ResolveTermStoreTermSetById(termStore, ids);
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveTermStoreExtensions));
     }
 }

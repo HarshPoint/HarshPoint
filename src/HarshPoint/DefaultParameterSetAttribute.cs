@@ -9,7 +9,7 @@ namespace HarshPoint
         {
             if (defaultParameterSetName == null)
             {
-                throw Error.ArgumentNull(nameof(defaultParameterSetName));
+                throw Logger.Fatal.ArgumentNull(nameof(defaultParameterSetName));
             }
 
             DefaultParameterSetName = defaultParameterSetName;
@@ -20,5 +20,7 @@ namespace HarshPoint
             get;
             private set;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<DefaultParameterSetAttribute>();
     }
 }

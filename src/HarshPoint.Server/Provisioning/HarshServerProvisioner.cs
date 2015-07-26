@@ -16,7 +16,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (String.IsNullOrWhiteSpace(action))
             {
-                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(action));
+                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(action));
             }
 
             if (_runOnUpgradeActions == null)
@@ -66,7 +66,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (runOnUpgradeActions == null)
             {
-                throw Error.ArgumentNull(nameof(runOnUpgradeActions));
+                throw Logger.Fatal.ArgumentNull(nameof(runOnUpgradeActions));
             }
 
             if (_runOnUpgradeActions != null)
@@ -89,7 +89,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (provisioner == null)
             {
-                throw Error.ArgumentNull(nameof(provisioner));
+                throw Logger.Fatal.ArgumentNull(nameof(provisioner));
             }
 
             var serverProvisioner = provisioner.ToServerProvisioner();
@@ -104,7 +104,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (provisioner == null)
             {
-                throw Error.ArgumentNull(nameof(provisioner));
+                throw Logger.Fatal.ArgumentNull(nameof(provisioner));
             }
 
             var serverProvisioner = provisioner.ToServerProvisioner();
@@ -114,5 +114,7 @@ namespace HarshPoint.Server.Provisioning
                 await serverProvisioner.UnprovisionAsync(context);
             }
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshServerProvisioner>();
     }
 }

@@ -30,7 +30,7 @@ namespace HarshPoint.Provisioning
         {
             if (field == null)
             {
-                throw Error.ArgumentNull(nameof(field));
+                throw Logger.Fatal.ArgumentNull(nameof(field));
             }
 
             field.UpdateAndPushChanges(!NoPushChangesToLists);

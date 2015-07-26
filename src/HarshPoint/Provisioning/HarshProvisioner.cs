@@ -63,7 +63,7 @@ namespace HarshPoint.Provisioning
         {
             if (provisioner == null)
             {
-                throw Error.ArgumentNull(nameof(provisioner));
+                throw Logger.Fatal.ArgumentNull(nameof(provisioner));
             }
 
             return ((HarshProvisioner)(provisioner)).ProvisionAsync(context);
@@ -73,7 +73,7 @@ namespace HarshPoint.Provisioning
         {
             if (provisioner == null)
             {
-                throw Error.ArgumentNull(nameof(provisioner));
+                throw Logger.Fatal.ArgumentNull(nameof(provisioner));
             }
 
             return ((HarshProvisioner)(provisioner)).UnprovisionAsync(context);

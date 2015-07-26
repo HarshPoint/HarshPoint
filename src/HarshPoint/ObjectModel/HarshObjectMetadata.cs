@@ -13,7 +13,7 @@ namespace HarshPoint.ObjectModel
         {
             if (type == null)
             {
-                throw Error.ArgumentNull(nameof(type));
+                throw Logger.Fatal.ArgumentNull(nameof(type));
             }
 
             ObjectType = type;
@@ -26,7 +26,7 @@ namespace HarshPoint.ObjectModel
         {
             if (typeInfo == null)
             {
-                throw Error.ArgumentNull(nameof(typeInfo));
+                throw Logger.Fatal.ArgumentNull(nameof(typeInfo));
             }
 
             ObjectType = typeInfo.AsType();
@@ -68,5 +68,7 @@ namespace HarshPoint.ObjectModel
                 .Select(p => new PropertyAccessor(p))
                 .ToImmutableArray();
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshObjectMetadata>();
     }
 }

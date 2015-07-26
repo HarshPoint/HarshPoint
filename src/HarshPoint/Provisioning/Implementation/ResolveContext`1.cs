@@ -22,7 +22,7 @@ namespace HarshPoint.Provisioning
         {
             if (resolvable == null)
             {
-                throw Error.ArgumentNull(nameof(resolvable));
+                throw Logger.Fatal.ArgumentNull(nameof(resolvable));
             }
 
 
@@ -52,5 +52,7 @@ namespace HarshPoint.Provisioning
         }
 
         HarshProvisionerContextBase IResolveContext.ProvisionerContext => ProvisionerContext;
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveContext<>));
     }
 }

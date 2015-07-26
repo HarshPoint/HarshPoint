@@ -31,7 +31,7 @@ namespace HarshPoint.Provisioning.Implementation
                     return null;
                 }
 
-                throw Logger.Fatal.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     nameof(propertyTypeInfo),
                     SR.ResolveResultFactory_PropertyTypeNotGeneric,
                     propertyTypeInfo
@@ -64,7 +64,7 @@ namespace HarshPoint.Provisioning.Implementation
             => GetResolvedType(propertyTypeInfo) != null;
 
         internal static Exception InvalidInterfaceType(String parameterName, Type interfaceType)
-            => Logger.Fatal.ArgumentOutOfRangeFormat(
+            => Logger.Fatal.ArgumentFormat(
                 parameterName,
                 SR.ResolveResultFactory_PropertyTypeUnknownInterface,
                 interfaceType,

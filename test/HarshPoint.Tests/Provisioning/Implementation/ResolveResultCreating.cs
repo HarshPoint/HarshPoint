@@ -53,7 +53,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         [InlineData(typeof(IEnumerable<Int32>))]
         public void Fails_invalid_property_type(Type invalidType)
         {
-            Assert.Throws<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentException>(
                 () => ResolveResultFactory.CreateResult(
                     invalidType.GetTypeInfo(),
                     new[] { "42" },

@@ -17,7 +17,7 @@ namespace HarshPoint.Tests
         {
             if (request == null)
             {
-                throw Error.ArgumentNull(nameof(request));
+                throw Logger.Fatal.ArgumentNull(nameof(request));
             }
 
             var chunkedSb = BuildQueryMethod.Invoke(request, null);
@@ -37,5 +37,7 @@ namespace HarshPoint.Tests
             .ReturnType
             .GetTypeInfo()
             .GetMethod("WriteContentTo", new[] { typeof(TextWriter) });
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientRequestExtension));
     }
 }

@@ -171,7 +171,7 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 if (node == null)
                 {
-                    throw Error.ArgumentNull(nameof(node));
+                    throw Logger.Fatal.ArgumentNull(nameof(node));
                 }
 
                 if (!IsIncludeOrIncludeWithDefaultProperties(node))
@@ -184,7 +184,7 @@ namespace HarshPoint.Provisioning.Implementation
 
                 if (retrievals == null)
                 {
-                    throw Error.ArgumentOutOfRangeFormat(
+                    throw Logger.Fatal.ArgumentFormat(
                        nameof(node),
                        SR.ClientObjectResolveQueryProcessor_IncludeArgNotArray,
                        node

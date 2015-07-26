@@ -12,7 +12,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (provisioner == null)
             {
-                throw Error.ArgumentNull(nameof(provisioner));
+                throw Logger.Fatal.ArgumentNull(nameof(provisioner));
             }
 
             var clientProvisioner = (provisioner as HarshProvisioner);
@@ -25,7 +25,7 @@ namespace HarshPoint.Server.Provisioning
 
             if (serverProvisioner == null)
             {
-                throw Error.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     nameof(provisioner),
                     SR.HarshServerProvisionerConverter_CannotConvert,
                     provisioner.GetType().FullName
@@ -66,7 +66,7 @@ namespace HarshPoint.Server.Provisioning
 
                 if (Web == null)
                 {
-                    throw Error.InvalidOperation(SR.HarshServerProvisionerConverter_OnlyWebAndSiteSupported);
+                    throw Logger.Fatal.InvalidOperation(SR.HarshServerProvisionerConverter_OnlyWebAndSiteSupported);
                 }
 
                 ClientContext = new ClientContext(Web.Url);
@@ -101,5 +101,7 @@ namespace HarshPoint.Server.Provisioning
                 return Provisioner.UnprovisionAsync(ProvisionerContext);
             }
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshProvisionerConverter));
     }
 }

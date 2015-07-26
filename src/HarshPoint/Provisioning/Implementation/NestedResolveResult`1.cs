@@ -27,6 +27,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         Object INestedResolveResult.Value => Value;
 
-        private static HarshLogger Logger = HarshLog.ForContext(typeof(NestedResolveResult<>));
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(NestedResolveResult<>));
     }
 }

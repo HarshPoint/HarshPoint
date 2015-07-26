@@ -11,12 +11,12 @@ namespace HarshPoint.Entity.Metadata
         {
             if (definitionProperty == null)
             {
-                throw Error.ArgumentNull("definitionProperty");
+                throw Logger.Fatal.ArgumentNull("definitionProperty");
             }
 
             if (fieldAttribute == null)
             {
-                throw Error.ArgumentNull("fieldAttribute");
+                throw Logger.Fatal.ArgumentNull("fieldAttribute");
             }
 
             InitializeFromDefinition(definitionProperty, fieldAttribute);
@@ -56,5 +56,7 @@ namespace HarshPoint.Entity.Metadata
             InternalName = definitionProperty.Name;
             StaticName = InternalName;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshFieldMetadata>();
     }
 }

@@ -252,24 +252,24 @@ namespace HarshPoint.Provisioning
 
         private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
 
-        private static void ValidateNotEmptyGuid(String propertyName, Object value)
+        private void ValidateNotEmptyGuid(String propertyName, Object value)
         {
             if (Guid.Empty.Equals(value))
             {
-                throw Error.InvalidOperationFormat(
+                throw Logger.Fatal.InvalidOperationFormat(
                     SR.HarshFieldSchemaXmlProvisioner_PropertyEmptyGuid,
                     propertyName
                 );
             }
         }
 
-        private static void ValidateNotNullOrWhitespace(String propertyName, Object value)
+        private void ValidateNotNullOrWhitespace(String propertyName, Object value)
         {
             var asString = Convert.ToString(value, CultureInfo.InvariantCulture);
 
             if (value == null || String.IsNullOrWhiteSpace(asString))
             {
-                throw Error.InvalidOperationFormat(
+                throw Logger.Fatal.InvalidOperationFormat(
                     SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace,
                     propertyName
                 );

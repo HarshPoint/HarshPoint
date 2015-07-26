@@ -34,10 +34,10 @@ namespace HarshPoint.Tests.Entity
 
             [Theory]
             [InlineData(typeof(NullCtid), typeof(ArgumentNullException))]
-            [InlineData(typeof(EmptyStringCtid), typeof(ArgumentOutOfRangeException))]
-            [InlineData(typeof(ZzzzCtid), typeof(ArgumentOutOfRangeException))]
+            [InlineData(typeof(EmptyStringCtid), typeof(ArgumentException))]
+            [InlineData(typeof(ZzzzCtid), typeof(ArgumentException))]
             [InlineData(typeof(AnotherRelativeCtid), typeof(InvalidOperationException))]
-            [InlineData(typeof(ZeroRelativeCtid), typeof(ArgumentOutOfRangeException))]
+            [InlineData(typeof(ZeroRelativeCtid), typeof(ArgumentException))]
             [InlineData(typeof(NotACt), typeof(InvalidOperationException))]
             [InlineData(typeof(ChildOfNotACt), typeof(InvalidOperationException))]
             public void Throws_for_an_invalid_ContentType(Type ct, Type exceptionType)

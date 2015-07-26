@@ -18,7 +18,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (identifiers == null)
             {
-                throw Error.ArgumentNull(nameof(identifiers));
+                throw Logger.Fatal.ArgumentNull(nameof(identifiers));
             }
 
             Identifiers = identifiers.ToImmutableArray();
@@ -29,5 +29,7 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             private set;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(Resolvable<,,,>));
     }
 }
