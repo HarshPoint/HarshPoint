@@ -7,6 +7,47 @@ namespace HarshPoint
 {
     public static class HarshTuple
     {
+        public static IImmutableList<Type> GetComponentTypes(Type tupleType)
+        {
+            if (tupleType == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(tupleType));
+            }
+
+            if (!tupleType.IsConstructedGenericType)
+            {
+                throw Logger.Fatal.ArgumentOutOfRangeFormat(
+                    nameof(tupleType),
+                    SR.HarshTuple_TypeIsNotAConstructedGenericType,
+                    tupleType
+                );
+            }
+
+            if (!IsTupleType(tupleType))
+            {
+                throw Logger.Fatal.ArgumentOutOfRangeFormat(
+                    nameof(tupleType),
+                    SR.HarshTuple_TypeIsNotATuple,
+                    tupleType
+                );
+            }
+
+            var componentTypes = tupleType.GenericTypeArguments.AsEnumerable();
+
+            if ((componentTypes.Count() == MaxTupleComponents) &&
+                IsTupleType(componentTypes.Last()))
+            {
+                componentTypes =
+                    componentTypes
+                    .Take(MaxTupleComponents - 1)
+                    .Concat(
+                        GetComponentTypes(componentTypes.Last())
+                    );
+            }
+
+            return componentTypes.ToImmutableArray();
+        }
+
         public static Boolean IsTupleType(Type type)
         {
             if (type == null)
@@ -21,7 +62,6 @@ namespace HarshPoint
 
             return TupleDefinitions.Contains(type);
         }
-
 
         public static Type MakeTupleType(IEnumerable<Type> componentTypes)
         {

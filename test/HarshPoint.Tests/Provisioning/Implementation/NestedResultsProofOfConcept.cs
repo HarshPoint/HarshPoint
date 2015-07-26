@@ -13,6 +13,9 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         {
             /* 
                 Tuple[ Planet, Continent, Country, City, Street, Building ]
+                Grouping[ Tuple[ Planet, Continent, Country, City, Street ], Building ]
+                   
+
                 Tuple[ Planet, Continent, Country, City, Grouping[Street, Building] ]
                 Tuple[ Planet, Continent, Country, Tuple[ City, Grouping[Street, Building] ] ]
                 Tuple[ Planet, Tuple[ Continent, Country ], Tuple[ City, Grouping[Street, Building] ] ]

@@ -270,6 +270,12 @@ Property: {0}.{1}</value>
   <data name="HarshProvisionerMetadata_TagTypeNotAssignableFromIDefaultFromContextTag" xml:space="preserve">
     <value>The specified property '{1}.{2}' has DefaultFromContext TagType of '{0}' that does not implement the IDefaultFromContextTag interface.</value>
   </data>
+  <data name="HarshTuple_TypeIsNotAConstructedGenericType" xml:space="preserve">
+    <value>The specified type '{0}' is not a constructed generic type.</value>
+  </data>
+  <data name="HarshTuple_TypeIsNotATuple" xml:space="preserve">
+    <value>The specified type '{0}' is not a Tuple.</value>
+  </data>
   <data name="HarshUrl_UrlNotRelativeTo" xml:space="preserve">
     <value>The specified url '{0}' is not relative to '{1}'.</value>
   </data>

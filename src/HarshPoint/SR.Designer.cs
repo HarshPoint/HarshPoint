@@ -497,6 +497,24 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not a constructed generic type..
+        /// </summary>
+        internal static string HarshTuple_TypeIsNotAConstructedGenericType {
+            get {
+                return ResourceManager.GetString("HarshTuple_TypeIsNotAConstructedGenericType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not a Tuple..
+        /// </summary>
+        internal static string HarshTuple_TypeIsNotATuple {
+            get {
+                return ResourceManager.GetString("HarshTuple_TypeIsNotATuple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified url &apos;{0}&apos; is not relative to &apos;{1}&apos;..
         /// </summary>
         internal static string HarshUrl_UrlNotRelativeTo {
