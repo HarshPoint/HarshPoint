@@ -8,7 +8,6 @@ namespace HarshPoint.Provisioning.Implementation
     internal sealed class ResolveResultConverter<T> : IEnumerable<T>
     {
         private readonly IEnumerable<Object> _source;
-        private readonly ResolveResultConverterStrategy _strategy;
 
         public ResolveResultConverter(IEnumerable<Object> source)
         {
@@ -18,11 +17,10 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             _source = source;
-            _strategy = GetStrategyForType(typeof(T));
         }
 
         public IEnumerator<T> GetEnumerator()
-            => _strategy
+            => Strategy
                 .ConvertResults(_source)
                 .Cast<T>()
                 .GetEnumerator();
@@ -65,6 +63,10 @@ namespace HarshPoint.Provisioning.Implementation
             return false;
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveResultConverter<>));
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(ResolveResultConverter<>));
+
+        private static readonly ResolveResultConverterStrategy Strategy
+            = GetStrategyForType(typeof(T));
     }
 }
