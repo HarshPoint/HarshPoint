@@ -16,7 +16,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         }
 
         [Fact]
-        public void NestedResolveResult_gets_unpacked()
+        public void Gets_unpacked()
         {
             var result = CreateResult<String>(
                 NestedResolveResult.Pack("42", "parent")
@@ -26,6 +26,30 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             Assert.Equal("42", actual);
         }
 
+        [Fact]
+        public void Gets_converted_to_Tuple()
+        {
+            var result = CreateResult<Tuple<String, Int32>>(
+                NestedResolveResult.Pack(42, "test")
+            );
+
+            var actual = Assert.Single(result);
+            Assert.Equal(Tuple.Create("test", 42), actual);
+        }
+
+        [Fact]
+        public void Gets_converted_to_Tuple_skipping_some()
+        {
+
+            var result = CreateResult<Tuple<String, Int32>>(
+                NestedResolveResult.Pack(42,
+                    NestedResolveResult.Pack(true, "test")
+                )
+            );
+
+            var actual = Assert.Single(result);
+            Assert.Equal(Tuple.Create("test", 42), actual);
+        }
 
         private IEnumerable CreateResult<T>(params Object[] source)
             => (IEnumerable)ResolveResultFactory.CreateResult(

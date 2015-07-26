@@ -77,7 +77,7 @@ namespace HarshPoint
                     parameterName,
                     SR.Error_ObjectNotAssignableToOne,
                     value,
-                    expectedBaseTypes
+                    expectedBaseTypes[0]
                 );
             }
 

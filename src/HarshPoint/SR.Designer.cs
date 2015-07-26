@@ -497,6 +497,24 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified item array length {0} doesn&apos;t match the arity of &apos;{1}&apos;..
+        /// </summary>
+        internal static string HarshTuple_CreateTupleItemsCountDoesNotMatchType {
+            get {
+                return ResourceManager.GetString("HarshTuple_CreateTupleItemsCountDoesNotMatchType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot create a tuple with more than {0} components..
+        /// </summary>
+        internal static string HarshTuple_TooManyComponentTypes {
+            get {
+                return ResourceManager.GetString("HarshTuple_TooManyComponentTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not a constructed generic type..
         /// </summary>
         internal static string HarshTuple_TypeIsNotAConstructedGenericType {

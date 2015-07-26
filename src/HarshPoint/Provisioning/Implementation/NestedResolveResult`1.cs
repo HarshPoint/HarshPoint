@@ -23,21 +23,7 @@ namespace HarshPoint.Provisioning.Implementation
             Value = value;
             Parents = parents;
         }
-
-        public ImmutableArray<Object> ExtractComponents(params Type[] componentTypes)
-        {
-            if (componentTypes == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(componentTypes));
-            }
-
-            return ExtractComponents(
-                componentTypes
-                .Select(IntrospectionExtensions.GetTypeInfo)
-                .ToArray()
-            );
-        }
-
+        
         public ImmutableArray<Object> ExtractComponents(params TypeInfo[] componentTypes)
         {
             if (componentTypes == null)

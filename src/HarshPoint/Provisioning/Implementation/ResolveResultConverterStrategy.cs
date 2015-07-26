@@ -15,7 +15,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (HarshTuple.IsTupleType(type))
             {
-                throw new NotImplementedException();
+                return new ResolveResultConverterStrategyTuple(type);
             }
 
             return Unpack;

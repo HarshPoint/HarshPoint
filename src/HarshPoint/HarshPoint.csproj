@@ -106,6 +106,7 @@
     <Compile Include="Provisioning\Implementation\ResolvedPropertyTypeInfo.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultConverter.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultConverterStrategy.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultConverterStrategyTuple.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentType.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentTypeById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentTypeFieldLink.cs" />

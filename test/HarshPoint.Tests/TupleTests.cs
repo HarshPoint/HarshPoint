@@ -48,24 +48,6 @@ namespace HarshPoint.Tests
             Assert.Equal(expected, HarshTuple.GetComponentTypes(t));
         }
 
-        [Fact]
-        public void GetComponentTypes_returns_components_nine_Qs()
-        {
-            Assert.Equal(
-                NineQs,
-                HarshTuple.GetComponentTypes(NineQsType)
-            );
-        }
-
-        [Fact]
-        public void GetComponentTypes_returns_components_eighteen_Qs()
-        {
-            Assert.Equal(
-                EighteenQs,
-                HarshTuple.GetComponentTypes(EighteenQsType)
-            );
-        }
-
         [Theory]
         [InlineData(typeof(Tuple<>))]
         [InlineData(typeof(Tuple<Int32>))]
@@ -113,6 +95,15 @@ namespace HarshPoint.Tests
         }
 
         [Fact]
+        public void MakeTupleType_fails_nine_Qs()
+        {
+            Assert.Throws<ArgumentException>(
+                () => HarshTuple.MakeTupleType(NineQs)
+            );
+        }
+
+#if false
+        [Fact]
         public void MakeTupleType_creates_nested_tuple_nine()
         {
             var actual = HarshTuple.MakeTupleType(NineQs);
@@ -125,12 +116,6 @@ namespace HarshPoint.Tests
             var actual = HarshTuple.MakeTupleType(EighteenQs);
             Assert.Equal(EighteenQsType, actual);
         }
-
-        private static readonly ImmutableArray<Type> NineQs = ImmutableArray.Create(
-            typeof(Q), typeof(Q), typeof(Q),
-            typeof(Q), typeof(Q), typeof(Q),
-            typeof(Q), typeof(Q), typeof(Q)
-        );
 
         private static readonly ImmutableArray<Type> EighteenQs = ImmutableArray.Create(
             typeof(Q), typeof(Q), typeof(Q),
@@ -153,6 +138,13 @@ namespace HarshPoint.Tests
                     Tuple<Q, Q, Q, Q>
                 >
             >);
+#endif
+
+        private static readonly ImmutableArray<Type> NineQs = ImmutableArray.Create(
+            typeof(Q), typeof(Q), typeof(Q),
+            typeof(Q), typeof(Q), typeof(Q),
+            typeof(Q), typeof(Q), typeof(Q)
+        );
 
         private sealed class Q { }
     }

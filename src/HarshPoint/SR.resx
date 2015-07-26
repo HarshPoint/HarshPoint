@@ -270,6 +270,12 @@ Property: {0}.{1}</value>
   <data name="HarshProvisionerMetadata_TagTypeNotAssignableFromIDefaultFromContextTag" xml:space="preserve">
     <value>The specified property '{1}.{2}' has DefaultFromContext TagType of '{0}' that does not implement the IDefaultFromContextTag interface.</value>
   </data>
+  <data name="HarshTuple_CreateTupleItemsCountDoesNotMatchType" xml:space="preserve">
+    <value>The specified item array length {0} doesn't match the arity of '{1}'.</value>
+  </data>
+  <data name="HarshTuple_TooManyComponentTypes" xml:space="preserve">
+    <value>Cannot create a tuple with more than {0} components.</value>
+  </data>
   <data name="HarshTuple_TypeIsNotAConstructedGenericType" xml:space="preserve">
     <value>The specified type '{0}' is not a constructed generic type.</value>
   </data>
