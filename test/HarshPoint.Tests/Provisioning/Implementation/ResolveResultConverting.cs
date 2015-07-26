@@ -38,9 +38,8 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         }
 
         [Fact]
-        public void Gets_converted_to_Tuple_skipping_some()
+        public void Gets_converted_to_Tuple_skipping_some_components()
         {
-
             var result = CreateResult<Tuple<String, Int32>>(
                 NestedResolveResult.Pack(42,
                     NestedResolveResult.Pack(true, "test")
