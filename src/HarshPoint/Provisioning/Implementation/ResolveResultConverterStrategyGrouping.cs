@@ -10,7 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ResolveResultConverterStrategyGrouping : ResolveResultConverterStrategy
     {
-        private readonly Func<Object, IEnumerable<Object>, Object> _groupingFactory;
+        private readonly HarshGroupingDynamicFactory _groupingFactory;
         private readonly ResolveResultConverterStrategy _elementStrategy;
         private readonly ResolveResultConverterStrategy _keyStrategy;
 
@@ -34,7 +34,7 @@ namespace HarshPoint.Provisioning.Implementation
             var keyType = resultType.GenericTypeArguments[0];
             var elementType = resultType.GenericTypeArguments[1];
 
-            _groupingFactory = CreateGroupingFactory(keyType, elementType);
+            _groupingFactory = new HarshGroupingDynamicFactory(keyType, elementType);
 
             _keyStrategy = GetStrategyForType(keyType);
             _elementStrategy = GetStrategyForType(elementType);
@@ -46,7 +46,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .GroupBy(
                     tuple => tuple.Item1,
                     tuple => tuple.Item2,
-                    (key, elements) => _groupingFactory(
+                    (key, elements) => _groupingFactory.Create(
                         key,
                         ConvertElements(elements).ToImmutableArray()
                     )
@@ -65,55 +65,7 @@ namespace HarshPoint.Provisioning.Implementation
             => _elementStrategy.ConvertResults(
                 elements.Select(e => (Object)NestedResolveResult.FromComponents(e))
             );
-
-        private static Func<Object, IEnumerable<Object>, Object> CreateGroupingFactory(Type keyType, Type elementType)
-        {
-            var keyParam = Expression.Parameter(typeof(Object));
-            var elementsParam = Expression.Parameter(typeof(IEnumerable<Object>));
-
-            var lambda = Expression.Lambda<Func<Object, IEnumerable<Object>, Object>>(
-                Expression.Call(
-                    null,
-                    CreateGroupingMethodDefinition.MakeGenericMethod(keyType, elementType),
-                    Expression.Convert(keyParam, keyType),
-                    Expression.Call(
-                        null,
-                        CastMethodDefinition.MakeGenericMethod(elementType),
-                        elementsParam
-                    )
-                ),
-                keyParam,
-                elementsParam
-            );
-
-            return lambda.Compile();
-        }
-
-        private static readonly MethodInfo CastMethodDefinition
-            = typeof(Enumerable)
-                .GetTypeInfo()
-                .GetDeclaredMethods("Cast")
-                .First(m =>
-                {
-                    var parameters = m.GetParameters();
-
-                    return parameters.Length == 1 &&
-                        parameters[0].ParameterType == typeof(IEnumerable);
-                });
-
-        private static readonly MethodInfo CreateGroupingMethodDefinition
-            = typeof(HarshGrouping)
-                .GetTypeInfo()
-                .GetDeclaredMethods("Create")
-                .First(m =>
-                {
-                    var lastParam = m.GetParameters().Last();
-                    var lastParamType = lastParam.ParameterType;
-
-                    return lastParamType.IsConstructedGenericType &&
-                        lastParamType.GetGenericTypeDefinition() == typeof(IEnumerable<>);
-                });
-
+        
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveResultConverterStrategyGrouping>();
     }
 }

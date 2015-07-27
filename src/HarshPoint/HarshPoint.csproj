@@ -57,6 +57,7 @@
     <Compile Include="HarshBuiltInContentTypeIds.cs" />
     <Compile Include="HarshBuiltInFieldId.cs" />
     <Compile Include="HarshGrouping.cs" />
+    <Compile Include="HarshGroupingDynamicFactory.cs" />
     <Compile Include="HarshLoggerFatal.cs" />
     <Compile Include="HarshLoggerError.cs" />
     <Compile Include="HarshExpression.cs" />
