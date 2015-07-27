@@ -11,5 +11,6 @@ namespace HarshPoint.ShellployGenerator
         public String Name { get; set; }
         public Type Type { get; set; }
         public IImmutableList<ShellployCommandPropertyParameterAttribute> ParameterAttributes { get; set; }
+        public bool SkipAssignment { get; internal set; }
     }
 }

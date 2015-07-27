@@ -15,11 +15,18 @@ namespace HarshPoint.ShellployGenerator
         {
             var result = new List<Tuple<String, Object>>()
             {
-                Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.Mandatory),  Mandatory),
-                Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.ParameterSetName),ParameterSet),
-
                 Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.ValueFromPipelineByPropertyName), true),
             };
+
+            if (Mandatory)
+            {
+                Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.Mandatory), Mandatory);
+            }
+
+            if (ParameterSet != null)
+            {
+                Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.ParameterSetName), ParameterSet);
+            }
 
             if (Position != null)
             {

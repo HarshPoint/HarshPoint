@@ -13,18 +13,21 @@ using System.Diagnostics;
 
 namespace HarshPoint.ShellployGenerator
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        static void Main(String[] args)
         {
             if (!args.Any())
             {
-                Console.Write($"Usage: {Process.GetCurrentProcess().ProcessName} outputDirectory");
+                var assemblyFileName = Path.GetFileName(
+                    Assembly.GetEntryAssembly().Location
+                );
+
+                Console.WriteLine($"Usage: {assemblyFileName} outputDirectory");
                 return;
             }
 
             var generator = new CommandCodeGenerator();
-
             var writer = new SourceFileWriter(args[0]);
 
             foreach (var command in new ShellployMetadata().GetCommands())

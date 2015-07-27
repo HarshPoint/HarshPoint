@@ -1,5 +1,6 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
@@ -49,16 +50,59 @@ namespace HarshPoint.ShellployGenerator
             var verb = VerbsCommon.New;
             var noun = type.Name;
 
-            var positionalParametersIndices = _positionalParameters?
+            _positionalParameters = _positionalParameters ?? new Expression<Func<TProvisioner, object>>[] { };
+
+            var provisionerMetadata = new HarshProvisionerMetadata(type);
+
+            var childrenParameterNameArray = new String[] { };
+            if (_hasChildren)
+            {
+                if (provisionerMetadata.Parameters.Any(
+                    p => p.Name == ShellployCommand.ChildrenPropertyName
+                ))
+                {
+                    throw Logger.Fatal.InvalidOperationFormat(
+                        SR.ShellployCommandBuilder_PropertyChildrenAlreadyDefined,
+                        ShellployCommand.ChildrenPropertyName
+                    );
+                }
+
+                childrenParameterNameArray = new String[] { ShellployCommand.ChildrenPropertyName };
+            }
+
+            var positionalParametersIndices = _positionalParameters
                 .Select(
-                    (p, index) => Tuple.Create(p.ExtractSinglePropertyAccess(), index)
+                    p => p.ExtractSinglePropertyAccess().Name
+                )
+                .Concat(childrenParameterNameArray)
+                .Select(
+                    (name, index) => Tuple.Create(name, index)
                 )
                 .ToImmutableDictionary(
-                    tuple => tuple.Item1.Name,
+                    tuple => tuple.Item1,
                     tuple => (Int32?)tuple.Item2
                 );
 
-            var properties = new HarshProvisionerMetadata(type).Parameters
+            var childrenPropertyArray = new ShellployCommandProperty[] { };
+            if (_hasChildren)
+            {
+                childrenPropertyArray = new ShellployCommandProperty[]
+                {
+                    new ShellployCommandProperty{
+                        Name = ShellployCommand.ChildrenPropertyName,
+                        Type = typeof(ScriptBlock),
+                        SkipAssignment = true,
+                        ParameterAttributes = new List<ShellployCommandPropertyParameterAttribute>()
+                        {
+                            new ShellployCommandPropertyParameterAttribute()
+                            {
+                                Position = positionalParametersIndices.GetValueOrDefault(ShellployCommand.ChildrenPropertyName, null),
+                            },
+                        }.ToImmutableList(),
+                    },
+                };
+            }
+            var properties = provisionerMetadata.Parameters
                 .GroupBy(
                     param => param.Name,
                     (key, group) => new ShellployCommandProperty()
@@ -76,11 +120,13 @@ namespace HarshPoint.ShellployGenerator
                             .ToImmutableArray(),
                     }
                 )
+                .Concat(childrenPropertyArray)
                 .ToImmutableArray();
 
             return new ShellployCommand
             {
                 ProvisionerType = type,
+                ContextType = provisionerMetadata.ContextType,
                 ParentProvisionerType = _parentProvisionerType,
                 Namespace = _namespace,
                 Properties = properties,

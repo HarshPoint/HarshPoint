@@ -34,6 +34,14 @@ namespace HarshPoint.ShellployGenerator
                 },
                 IsClass = true,
                 TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed,
+                BaseTypes =
+                {
+                    new CodeTypeReference(
+                        "HarshProvisionerCmdlet",
+                        new CodeTypeReference(command.ProvisionerType),
+                        new CodeTypeReference(command.ContextType)
+                    ),
+                },
             };
 
             commandClass.Members.AddRange(
@@ -42,7 +50,72 @@ namespace HarshPoint.ShellployGenerator
                 .ToArray()
             );
 
+            commandClass.Members.Add(CreateProcessRecordMethod(command));
+
             return commandClass;
+        }
+
+        private static CodeMemberMethod CreateProcessRecordMethod(ShellployCommand command)
+        {
+            var varName = "result";
+
+            var method = new CodeMemberMethod()
+            {
+                Name = "ProcessRecord",
+                ReturnType = null,
+                Attributes = MemberAttributes.Family | MemberAttributes.Override,
+            };
+
+            method.Statements.Add(
+                new CodeVariableDeclarationStatement(
+                    command.ProvisionerType,
+                    varName,
+                    new CodeObjectCreateExpression(command.ProvisionerType)
+                )
+            );
+            method.Statements.AddRange(
+                command.Properties
+                .Where(prop => !prop.SkipAssignment)
+                .Select(prop =>
+                    new CodeAssignStatement(
+                        new CodePropertyReferenceExpression(
+                            new CodeVariableReferenceExpression(varName),
+                            prop.Name
+                        ),
+                        new CodePropertyReferenceExpression(
+                            new CodeThisReferenceExpression(),
+                            prop.Name
+                        )
+                    )
+                ).ToArray()
+            );
+
+            if (command.HasChildren)
+            {
+                method.Statements.Add(
+                    new CodeMethodInvokeExpression(
+                        new CodeTypeReferenceExpression(command.ClassName),
+                        "ProcessChildren",
+                        new CodeVariableReferenceExpression(varName),
+                        new CodePropertyReferenceExpression(
+                            new CodeThisReferenceExpression(),
+                            ShellployCommand.ChildrenPropertyName
+                        )
+                    )
+                );
+            }
+
+            method.Statements.Add(
+                new CodeMethodInvokeExpression(
+                    new CodeMethodReferenceExpression(
+                        new CodeThisReferenceExpression(),
+                        "WriteObject"
+                    ),
+                    new CodeVariableReferenceExpression(varName)
+                )
+            );
+
+            return method;
         }
 
         private static CodeMemberProperty CreateProperty(CodeTypeDeclaration targetClass, ShellployCommandProperty property)
@@ -51,7 +124,7 @@ namespace HarshPoint.ShellployGenerator
             {
                 Name = property.Name,
                 Type = new CodeTypeReference(property.Type),
-                Attributes = MemberAttributes.Public | MemberAttributes.Static,
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
             };
 
             codeProperty.GenerateBackingField(targetClass);

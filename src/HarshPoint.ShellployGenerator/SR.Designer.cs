@@ -97,6 +97,15 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; is already defined..
+        /// </summary>
+        internal static string ShellployCommandBuilder_PropertyChildrenAlreadyDefined {
+            get {
+                return ResourceManager.GetString("ShellployCommandBuilder_PropertyChildrenAlreadyDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Code compile unit does not contain any type declarations..
         /// </summary>
         internal static string SourceFileWriter_NoTypeDefined {
