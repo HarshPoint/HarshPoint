@@ -14,7 +14,7 @@ environment:
   HarshPointTestUser:
     secure: dFT8d/aQmRHTUx2EitgBamM8JR4ROkPqsU3NexYBiyc/lXY+mRuaNVAuBZwgSD1u
   HarshPointTestPassword:
-    secure: VVX16YC4fowxRtF6GaK6Tw==
+    secure: Ldhz1/g23iCZMD3UydbuhgMD6xPf2jSiTow60qXPly0=
   HarshPointTestAuth:
     secure: /aPy/TNRcKlV67mllpvM6ZXAoCLkFaKR3HfBb5+n1gI=
 build:
