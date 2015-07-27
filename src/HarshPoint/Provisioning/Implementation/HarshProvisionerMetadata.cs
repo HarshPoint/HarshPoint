@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using HarshPoint.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -25,6 +26,14 @@ namespace HarshPoint.Provisioning.Implementation
             ParameterSets = new ParameterSetBuilder(this, ProvisioningDefaultValuePolicy.Instance)
                 .Build()
                 .ToImmutableArray();
+
+            ContextType = ObjectType.GetRuntimeBaseTypeChain()
+                .FirstOrDefault(t =>
+                    t.IsGenericType &&
+                    t.GetGenericTypeDefinition() == typeof(HarshProvisionerBase<>)
+                )?
+                .GenericTypeArguments
+                .First();
 
             ParameterProperties = Parameters
                 .Select(p => p.PropertyAccessor)
@@ -49,6 +58,11 @@ namespace HarshPoint.Provisioning.Implementation
             );
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
+        }
+        public Type ContextType
+        {
+            get;
+            private set;
         }
 
         public DefaultFromContextPropertyBinder DefaultFromContextPropertyBinder { get; }
