@@ -150,7 +150,6 @@
     <Compile Include="Provisioning\Implementation\ResolveFailedException.cs" />
     <Compile Include="Provisioning\Implementation\ResolveFailure.cs" />
     <Compile Include="Provisioning\IResolveContext.cs" />
-    <Compile Include="Provisioning\Implementation\Resolvable.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedResolver.cs" />
     <Compile Include="ParameterAttribute.cs" />
     <Compile Include="ObjectModel\ParameterValidationAttribute.cs" />

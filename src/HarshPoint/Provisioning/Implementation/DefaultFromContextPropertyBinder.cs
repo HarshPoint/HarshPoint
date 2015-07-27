@@ -90,16 +90,16 @@ namespace HarshPoint.Provisioning.Implementation
                     .Value;
             }
 
-            if (prop.ResolvedType != null)
+            if (prop.ResolvedPropertyInfo != null)
             {
                 Logger.Debug(
                     "Property {PropertyName} resolves objects of type {ResolvedType}",
                     prop.Name,
-                    prop.ResolvedType
+                    prop.ResolvedPropertyInfo.ResolvedType
                 );
 
                 return ContextStateResolver.Create(
-                    prop.ResolvedType
+                    prop.ResolvedPropertyInfo.ResolvedType
                 );
             }
 

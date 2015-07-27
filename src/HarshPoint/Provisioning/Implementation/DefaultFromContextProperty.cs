@@ -24,7 +24,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             Accessor = accessor;
             Attribute = attribute;
-            ResolvedType = Resolvable.GetResolvedType(PropertyTypeInfo);
+            ResolvedPropertyInfo = ResolvedPropertyTypeInfo.TryParse(PropertyTypeInfo);
 
             ValidateIsNullable();
             ValidateTagTypeIsIDefaultFromContextTag();
@@ -37,7 +37,7 @@ namespace HarshPoint.Provisioning.Implementation
         public PropertyInfo PropertyInfo => Accessor.PropertyInfo;
         public Type PropertyType => PropertyInfo.PropertyType;
         public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
-        public Type ResolvedType { get; private set; }
+        public ResolvedPropertyTypeInfo ResolvedPropertyInfo { get; private set; }
         public Type TagType => Attribute.TagType;
 
         private void ValidateIsNullable()
@@ -55,7 +55,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         private void ValidateWithTagNotResolvable()
         {
-            if ((TagType != null) && (ResolvedType != null))
+            if ((TagType != null) && (ResolvedPropertyInfo != null))
             {
                 throw Logger.Fatal.ObjectMetadata(
                     SR.HarshProvisionerMetadata_NoTagTypesOnResolvers,

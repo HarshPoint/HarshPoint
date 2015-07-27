@@ -33,7 +33,7 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Equal(
                 typeof(String),
-                param.ResolvedType
+                param.ResolvedPropertyInfo?.ResolvedType
             );
         }
 
@@ -53,7 +53,7 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Equal(
                 typeof(String),
-                param.ResolvedType
+                param.ResolvedPropertyInfo?.ResolvedType
             );
         }
 

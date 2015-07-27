@@ -36,7 +36,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             ResolvedPropertyBinder = new ResolvedPropertyBinder(
                 ReadableWritableInstanceProperties.Where(
-                    p => Resolvable.IsResolveType(p.PropertyTypeInfo)
+                    p => ResolvedPropertyTypeInfo.IsResolveType(p.PropertyTypeInfo)
                 )
             );
 
