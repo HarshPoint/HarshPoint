@@ -88,26 +88,6 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw CannotCallThisMethod();
-        }
-
-        IEnumerator<TResult> IEnumerable<TResult>.GetEnumerator()
-        {
-            throw CannotCallThisMethod();
-        }
-
-        TResult IResolveSingle<TResult>.Value
-        {
-            get { throw CannotCallThisMethod(); }
-        }
-
-        TResult IResolveSingleOrDefault<TResult>.Value
-        {
-            get { throw CannotCallThisMethod(); }
-        }
-
         public ResolveBuilder<TResult, TContext> And(Chain<IResolveBuilderElement<TContext>> other)
         {
             Append(other);
@@ -137,10 +117,5 @@ namespace HarshPoint.Provisioning.Implementation
 
             return typed;
         }
-
-        private static Exception CannotCallThisMethod()
-            => Logger.Fatal.InvalidOperation(
-                SR.ResolveBuilder_CannotCallThisMethod
-            );
     }
 }

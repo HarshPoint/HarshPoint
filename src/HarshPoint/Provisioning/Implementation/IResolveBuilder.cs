@@ -10,6 +10,5 @@ namespace HarshPoint.Provisioning.Implementation
         Object Initialize(IResolveContext context);
 
         IEnumerable ToEnumerable(Object state, IResolveContext context);
-
     }
 }

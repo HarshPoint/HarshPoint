@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public abstract class NestedResolveBuilder<TResult, TParent, TContext> :
+    public abstract partial class NestedResolveBuilder<TResult, TParent, TContext> :
         ResolveBuilder<TResult, TContext>
         where TContext : class, IResolveContext
     {

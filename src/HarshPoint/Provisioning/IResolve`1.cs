@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-    public interface IResolve<out T> : IEnumerable<T>, IResolveBuilder
+    public interface IResolve<out T> : IEnumerable<T>
     {
     }
 

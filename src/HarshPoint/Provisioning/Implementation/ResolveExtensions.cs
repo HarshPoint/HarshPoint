@@ -1,6 +1,6 @@
 ﻿namespace HarshPoint.Provisioning.Implementation
 {
-    public static class ResolveBuilderExtensions
+    public static class ResolveExtensions
     {
         public static IResolveBuilder<T, ClientObjectResolveContext> AsClientObjectResolveBuilder<T>(this IResolve<T> resolve)
         {
@@ -31,6 +31,6 @@
             return (IResolveBuilder<T, ClientObjectResolveContext>)resolve;
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveBuilderExtensions));
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveExtensions));
     }
 }

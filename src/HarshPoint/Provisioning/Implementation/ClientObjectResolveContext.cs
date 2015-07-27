@@ -36,9 +36,35 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
+        public void Load<T>(T clientObject, params Expression<Func<T, Object>>[] retrievals)
+            where T : ClientObject
+        {
+            if (clientObject == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(clientObject));
+            }
+
+            if (retrievals == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(retrievals));
+            }
+
+            if (retrievals.Any())
+            {
+                Include(retrievals);
+            }
+
+            Load(clientObject);
+        }
+
         public void Load<T>(T clientObject)
             where T : ClientObject
         {
+            if (clientObject == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(clientObject));
+            }
+
             ProvisionerContext.ClientContext.Load(
                 clientObject,
                 _queryProcessor.GetRetrievals<T>()

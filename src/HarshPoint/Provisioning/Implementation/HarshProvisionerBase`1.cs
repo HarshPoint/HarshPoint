@@ -53,8 +53,8 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected ManualResolver ManualResolver
             => HarshLazy.Initialize(
-                ref _manualResolver, 
-                () => CreateManualResolver(PrepareResolveContext)
+                ref _manualResolver,
+                () => CreateManualResolver(CreateResolveContext)
             );
 
         protected String ParameterSetName => ParameterSet?.Name;
@@ -156,7 +156,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return resolver.TryResolveAsync(
-                PrepareResolveContext()
+                CreateResolveContext()
             );
         }
 
@@ -168,7 +168,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return resolver.TryResolveSingleAsync(
-                PrepareResolveContext()
+                CreateResolveContext()
             );
         }
 
@@ -180,7 +180,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return resolver.ResolveAsync(
-                PrepareResolveContext()
+                CreateResolveContext()
             );
         }
 
@@ -192,7 +192,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return resolver.ResolveSingleAsync(
-                PrepareResolveContext()
+                CreateResolveContext()
             );
         }
 
@@ -202,7 +202,10 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         protected virtual ResolveContext<TContext> CreateResolveContext()
-            => new ResolveContext<TContext>();
+            => new ResolveContext<TContext>()
+            {
+                ProvisionerContext = Context
+            };
 
         internal virtual ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
             => new ManualResolver(resolveContextFactory);
@@ -215,13 +218,6 @@ namespace HarshPoint.Provisioning.Implementation
         internal abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
 
         internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
-
-        private ResolveContext<TContext> PrepareResolveContext()
-        {
-            var resolveContext = CreateResolveContext();
-            resolveContext.ProvisionerContext = Context;
-            return resolveContext;
-        }
 
         private ParameterSet ResolveParameterSet()
         {
@@ -320,7 +316,7 @@ namespace HarshPoint.Provisioning.Implementation
 
                 Metadata.ResolvedPropertyBinder.Bind(
                     this,
-                    PrepareResolveContext
+                    CreateResolveContext
                 );
 
                 await OnResolvedParametersBound();

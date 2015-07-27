@@ -17,6 +17,20 @@ namespace HarshPoint.Provisioning.Implementation
         public static ResolvedPropertyTypeInfo Parse(TypeInfo propertyTypeInfo)
             => Parse(propertyTypeInfo, throwException: true);
 
+        public static Type GetResolvedType(TypeInfo propertyTypeInfo)
+            => TryParse(propertyTypeInfo)?.ResolvedType;
+
+        public static Boolean IsResolveType(TypeInfo propertyTypeInfo)
+            => GetResolvedType(propertyTypeInfo) != null;
+
+        internal static Exception InvalidInterfaceType(String parameterName, Type interfaceType)
+            => Logger.Fatal.ArgumentFormat(
+                parameterName,
+                SR.ResolveResultFactory_PropertyTypeUnknownInterface,
+                interfaceType,
+                String.Join(", ", KnownPropertyTypeDefinitions.Select(t => t.Name))
+            );
+
         private static ResolvedPropertyTypeInfo Parse(TypeInfo propertyTypeInfo, Boolean throwException)
         {
             if (propertyTypeInfo == null)
@@ -56,20 +70,6 @@ namespace HarshPoint.Provisioning.Implementation
                 ResolvedType = propertyTypeInfo.GenericTypeArguments.First(),
             };
         }
-
-        public static Type GetResolvedType(TypeInfo propertyTypeInfo)
-            => Parse(propertyTypeInfo).ResolvedType;
-
-        public static Boolean IsResolveType(TypeInfo propertyTypeInfo)
-            => GetResolvedType(propertyTypeInfo) != null;
-
-        internal static Exception InvalidInterfaceType(String parameterName, Type interfaceType)
-            => Logger.Fatal.ArgumentFormat(
-                parameterName,
-                SR.ResolveResultFactory_PropertyTypeUnknownInterface,
-                interfaceType,
-                String.Join(", ", KnownPropertyTypeDefinitions.Select(t => t.Name))
-            );
 
         private static readonly ImmutableArray<Type> KnownPropertyTypeDefinitions = ImmutableArray.Create(
             typeof(IResolve<>),
