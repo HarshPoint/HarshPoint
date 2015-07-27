@@ -8,6 +8,7 @@ using Xunit;
 
 namespace HarshPoint.Server.Tests
 {
+    [Trait("Category", "HarshPoint.Server")]
     public class HarshServerCompositeProvisionerTests : IClassFixture<SharePointServerFixture>
     {
         private readonly MockRepository _mockRepo = new MockRepository(MockBehavior.Loose)
