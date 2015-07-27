@@ -11,17 +11,21 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         public void Inner_grouping()
         {
             /* 
-                Step1: 
-                    Tuple[ Planet, Continent, Country, City, Street, Building ]
-                    Grouping[ Tuple[ Planet, Continent, Country, City, Street ], Building ]
-                
-                    Tuple[ Planet, Continent, Country, City, Grouping[Street, Building] ]
-                    Tuple[ Planet, Continent, Country, Tuple[ City, Grouping[Street, Building] ] ]
-                    Tuple[ Planet, Tuple[ Continent, Country ], Tuple[ City, Grouping[Street, Building] ] ]
 
-                Step2:
-                    Grouping[ Tuple[ Planet, Tuple[ Continent, Country ], Tuple[ City, Grouping[Street, Building] ] ] ]
-                    Tuple[ Planet, Grouping[ Tuple[ Continent, Country ], Tuple[ City, Grouping[Street, Building] ] ] ]
+                Step1:                            GROUP BY (up to) THIS ┐
+                                                                        ˅
+                    ImmutableArray[ Planet, Continent, Country, City, Street, Building ]
+                    Grouping[ ImmutableArray[ Planet, Continent, Country, City, Street ], Building ]
+                
+                    Tuple[ Planet, Continent, Country, City, Grouping[ Street, Building ] ]
+                    Tuple[ Planet, Continent, Country, Tuple[ City, Grouping[ Street, Building ] ] ]
+                    Tuple[ Planet, Tuple[ Continent, Country ], Tuple[ City, Grouping[ Street, Building ] ] ]
+
+                Step2: GROUP BY THIS ┐
+                                     ˅
+                    Tuple[ Planet, Tuple[ Continent, Country ], Tuple[ City, Grouping[ Street, Building ] ] ]
+                    Grouping[ Tuple[ Planet, Tuple[ Continent, Country ], Tuple[ City, Grouping[ Street, Building ] ] ] ]
+                    Tuple[ Planet, Grouping[ Tuple[ Continent, Country ], Tuple[ City, Grouping[ Street, Building ] ] ] ]
 
                 Tuple<
                     Planet,

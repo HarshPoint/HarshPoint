@@ -28,45 +28,10 @@ namespace HarshPoint.Provisioning.Implementation
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
 
-        private static ResolveResultConverterStrategy GetStrategyForType(Type type)
-        {
-            if (type == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(type));
-            }
-
-            if (HasGrouping(type))
-            {
-                return new ResolveResultConverterStrategyGrouping(type);
-            }
-
-            if (HarshTuple.IsTupleType(type))
-            {
-                return new ResolveResultConverterStrategyTuple(type);
-            }
-
-            return ResolveResultConverterStrategyUnpack.Instance;
-        }
-
-        private static Boolean HasGrouping(Type type)
-        {
-            if (HarshGrouping.IsGroupingType(type))
-            {
-                return true;
-            }
-
-            if (HarshTuple.IsTupleType(type))
-            {
-                return HarshTuple.GetComponentTypes(type).Any(HasGrouping);
-            }
-
-            return false;
-        }
-
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ResolveResultConverter<>));
 
         private static readonly ResolveResultConverterStrategy Strategy
-            = GetStrategyForType(typeof(T));
+            = ResolveResultConverterStrategy.GetStrategyForType(typeof(T));
     }
 }

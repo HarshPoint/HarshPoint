@@ -149,6 +149,9 @@ Number of resolver elements {1}</value>
   <data name="DeferredResolveBuilder_InnerNotInitialized" xml:space="preserve">
     <value>The DeferredResolveBuilder is not initialized. You must first call InitializeContext method.</value>
   </data>
+  <data name="EnumeratorExtensions_EnumerationEnded" xml:space="preserve">
+    <value>Sequence doesn't contain more elements.</value>
+  </data>
   <data name="Error_ArgumentNullOrEmpty" xml:space="preserve">
     <value>Value cannot be null or empty string.</value>
   </data>
@@ -285,6 +288,9 @@ Property: {0}.{1}</value>
   <data name="HarshUrl_UrlNotRelativeTo" xml:space="preserve">
     <value>The specified url '{0}' is not relative to '{1}'.</value>
   </data>
+  <data name="NestedResoveResult_LastComponentCannotBeNull" xml:space="preserve">
+    <value>Last element of the sequence cannot be null.</value>
+  </data>
   <data name="NestedResoveResult_LastComponentTypeMustBeAssignableFromT" xml:space="preserve">
     <value>The last specified component type '{0}' must be assignable from '{1}'.</value>
   </data>
@@ -305,6 +311,9 @@ Property: {0}.{1}</value>
   </data>
   <data name="ResolveRegistrar_ContextFactoryReturnedNull" xml:space="preserve">
     <value>Resolve context factory returned null.</value>
+  </data>
+  <data name="ResolveResultConverterStrategyGrouping_NotAGrouping" xml:space="preserve">
+    <value>The specified type '{0}' is not an IGrouping.</value>
   </data>
   <data name="ResolveResultFactory_ObjectNotConvertable" xml:space="preserve">
     <value>The specified object "{0}" cannot be converted to "{1}".</value>

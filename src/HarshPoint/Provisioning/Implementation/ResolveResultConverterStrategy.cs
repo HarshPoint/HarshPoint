@@ -35,23 +35,23 @@ namespace HarshPoint.Provisioning.Implementation
             return results.Select(ConvertObject);
         }
 
-        protected virtual Object ConvertObject(Object obj)
+        public virtual Object ConvertObject(Object obj)
         {
-            var nested = (obj as INestedResolveResult);
+            var nested = (obj as NestedResolveResult);
 
             if (nested == null)
             {
                 throw Logger.Fatal.ArgumentNotAssignableTo(
                     nameof(obj),
                     obj,
-                    typeof(INestedResolveResult)
+                    typeof(NestedResolveResult)
                 );
             }
 
             return ConvertNested(nested);
         }
 
-        protected virtual Object ConvertNested(INestedResolveResult nested)
+        public virtual Object ConvertNested(NestedResolveResult nested)
         {
             var components = nested.ExtractComponents(ComponentTypesFlattened);
 
@@ -61,7 +61,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        protected virtual Object ConvertNestedComponents(IEnumerator<Object> componentEnumerator)
+        public virtual Object ConvertNestedComponents(IEnumerator<Object> componentEnumerator)
         {
             throw Logger.Fatal.NotImplemented();
         }
@@ -76,6 +76,26 @@ namespace HarshPoint.Provisioning.Implementation
             var result = ImmutableArray.CreateBuilder<Type>();
             AddComponentsFlat(result, ResultType);
             return result;
+        }
+
+        internal static ResolveResultConverterStrategy GetStrategyForType(Type type)
+        {
+            if (type == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(type));
+            }
+
+            if (HarshGrouping.IsGroupingType(type))
+            {
+                return new ResolveResultConverterStrategyGrouping(type);
+            }
+
+            if (HarshTuple.IsTupleType(type))
+            {
+                return new ResolveResultConverterStrategyTuple(type);
+            }
+
+            return ResolveResultConverterStrategyUnpack.Instance;
         }
 
         private static void AddComponentsFlat(ImmutableArray<Type>.Builder result, Type t)

@@ -148,6 +148,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sequence doesn&apos;t contain more elements..
+        /// </summary>
+        internal static string EnumeratorExtensions_EnumerationEnded {
+            get {
+                return ResourceManager.GetString("EnumeratorExtensions_EnumerationEnded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value cannot be null or empty string..
         /// </summary>
         internal static string Error_ArgumentNullOrEmpty {
@@ -542,6 +551,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last element of the sequence cannot be null..
+        /// </summary>
+        internal static string NestedResoveResult_LastComponentCannotBeNull {
+            get {
+                return ResourceManager.GetString("NestedResoveResult_LastComponentCannotBeNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The last specified component type &apos;{0}&apos; must be assignable from &apos;{1}&apos;..
         /// </summary>
         internal static string NestedResoveResult_LastComponentTypeMustBeAssignableFromT {
@@ -601,6 +619,15 @@ namespace HarshPoint {
         internal static string ResolveRegistrar_ContextFactoryReturnedNull {
             get {
                 return ResourceManager.GetString("ResolveRegistrar_ContextFactoryReturnedNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not an IGrouping..
+        /// </summary>
+        internal static string ResolveResultConverterStrategyGrouping_NotAGrouping {
+            get {
+                return ResourceManager.GetString("ResolveResultConverterStrategyGrouping_NotAGrouping", resourceCulture);
             }
         }
         

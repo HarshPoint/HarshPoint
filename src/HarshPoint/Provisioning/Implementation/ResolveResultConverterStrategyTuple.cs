@@ -7,30 +7,32 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ResolveResultConverterStrategyTuple : ResolveResultConverterStrategy
     {
-        private readonly ImmutableArray<Func<IEnumerator<Object>, Object>> _nested;
+        private readonly ImmutableArray<ResolveResultConverterStrategy> _componentStrategies;
 
         public ResolveResultConverterStrategyTuple(Type tupleType)
             : base(tupleType)
         {
-            _nested = HarshTuple.GetComponentTypes(tupleType)
+            _componentStrategies = HarshTuple.GetComponentTypes(tupleType)
                 .Select(GetNestedTupleStrategy)
                 .ToImmutableArray();
         }
 
-        protected override Object ConvertNestedComponents(IEnumerator<Object> componentEnumerator)
+        public override Object ConvertNestedComponents(IEnumerator<Object> componentEnumerator)
             => HarshTuple.Create(
                 ResultType,
-                _nested.Select(n => n(componentEnumerator))
+                _componentStrategies.Select(
+                    s => s.ConvertNestedComponents(componentEnumerator)
+                )
             );
 
-        private static Func<IEnumerator<Object>, Object> GetNestedTupleStrategy(Type t)
+        private static ResolveResultConverterStrategy GetNestedTupleStrategy(Type t)
         {
             if (HarshTuple.IsTupleType(t))
             {
-                return new ResolveResultConverterStrategyTuple(t).ConvertNestedComponents;
+                return new ResolveResultConverterStrategyTuple(t);
             }
 
-            return enumerator => enumerator.MoveNext() ? enumerator.Current : null;
+            return ResolveResultConverterStrategyUnpack.Instance;
         }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveResultConverterStrategyTuple>();

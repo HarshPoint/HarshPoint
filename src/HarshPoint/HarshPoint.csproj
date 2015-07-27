@@ -50,6 +50,7 @@
     <Compile Include="Entity\Metadata\HarshEntityMetadataContentType.cs" />
     <Compile Include="Entity\Metadata\HarshEntityMetadataRepository.cs" />
     <Compile Include="Entity\Metadata\HarshFieldMetadata.cs" />
+    <Compile Include="Extensions\EnumeratorExtensions.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
@@ -87,7 +88,6 @@
     <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextProperty.cs" />
     <Compile Include="Provisioning\Implementation\DeferredResolveBuilder`2.cs" />
-    <Compile Include="Provisioning\Implementation\INestedResolveResult.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilderElement.cs" />
     <Compile Include="Provisioning\Implementation\ManualResolver.cs" />
