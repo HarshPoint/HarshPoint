@@ -110,10 +110,13 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\xunit.core.2.1.0-beta3-build3029\build\portable-net45+dnxcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.1.0-beta3-build3029\build\portable-net45+dnxcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props'))" />
   </Target>
+  <Import Project="..\..\src\FixNugetConfig.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+       Other similar extension points exist, see Microsoft.Common.targets. -->
   <Target Name="BeforeBuild">
+    <CallTarget Targets="FixNugetConfig" />
   </Target>
+  <!--
   <Target Name="AfterBuild">
   </Target>
   -->
