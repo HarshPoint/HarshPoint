@@ -25,8 +25,17 @@ namespace HarshPoint.Provisioning.Implementation
                 )
             );
 
-        private static ResolveResultConverterStrategy GetNestedTupleStrategy(Type t)
+        private ResolveResultConverterStrategy GetNestedTupleStrategy(Type t)
         {
+            if (HarshGrouping.IsGroupingType(t))
+            {
+                throw Logger.Fatal.ArgumentFormat(
+                    nameof(t),
+                    SR.ResolveResultConverterStrategyTuple_NestedGroupingNotAllowed,
+                    ResultType
+                );
+            }
+
             if (HarshTuple.IsTupleType(t))
             {
                 return new ResolveResultConverterStrategyTuple(t);

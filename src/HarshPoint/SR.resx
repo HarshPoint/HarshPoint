@@ -315,6 +315,9 @@ Property: {0}.{1}</value>
   <data name="ResolveResultConverterStrategyGrouping_NotAGrouping" xml:space="preserve">
     <value>The specified type '{0}' is not an IGrouping.</value>
   </data>
+  <data name="ResolveResultConverterStrategyTuple_NestedGroupingNotAllowed" xml:space="preserve">
+    <value>Tuples of IGroupings are not supported: {0}.</value>
+  </data>
   <data name="ResolveResultFactory_ObjectNotConvertable" xml:space="preserve">
     <value>The specified object "{0}" cannot be converted to "{1}".</value>
   </data>

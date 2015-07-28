@@ -632,6 +632,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tuples of IGroupings are not supported: {0}..
+        /// </summary>
+        internal static string ResolveResultConverterStrategyTuple_NestedGroupingNotAllowed {
+            get {
+                return ResourceManager.GetString("ResolveResultConverterStrategyTuple_NestedGroupingNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified object &quot;{0}&quot; cannot be converted to &quot;{1}&quot;..
         /// </summary>
         internal static string ResolveResultFactory_ObjectNotConvertable {
