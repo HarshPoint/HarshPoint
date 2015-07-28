@@ -167,7 +167,6 @@
     <Compile Include="Provisioning\DefaultFromContextTests.cs" />
     <Compile Include="Provisioning\FieldProvisionerTests.cs" />
     <Compile Include="Provisioning\FieldSchemaXmlBuilderTests.cs" />
-    <Compile Include="Provisioning\IdentifierResolving.cs" />
     <Compile Include="Provisioning\Implementation\ChainTests.cs" />
     <Compile Include="Provisioning\Implementation\ManualResolving.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveResults.cs" />
@@ -184,8 +183,6 @@
     <Compile Include="Provisioning\ParameterSetResolving.cs" />
     <Compile Include="Provisioning\PotentiallyDestructiveTests.cs" />
     <Compile Include="Provisioning\ProvisionerTreeBuilder.cs" />
-    <Compile Include="Provisioning\ResolvableChainTests.cs" />
-    <Compile Include="Provisioning\ResolvableTests.cs" />
     <Compile Include="Provisioning\Resolvers\CatalogResolving.cs" />
     <Compile Include="Provisioning\Resolvers\ContentTypeResolving.cs" />
     <Compile Include="Provisioning\Resolvers\FieldResolving.cs" />

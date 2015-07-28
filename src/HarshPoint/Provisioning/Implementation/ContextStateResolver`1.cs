@@ -5,21 +5,8 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ContextStateResolver<TResult> : ResolveBuilder<TResult, IResolveContext>, IResolveOld<TResult>
+    internal sealed class ContextStateResolver<TResult> : ResolveBuilder<TResult, IResolveContext>
     {
-        [Obsolete]
-        public Task<IEnumerable<TResult>> TryResolveAsync(IResolveContext context)
-        {
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
-            return Task.FromResult(
-                context.ProvisionerContext.GetState<TResult>()
-            );
-        }
-
         protected override Object Initialize(IResolveContext context)
         {
             return null;

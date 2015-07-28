@@ -32,6 +32,9 @@ namespace HarshPoint.Provisioning
         public static ResolveContentType ContentType()
             => new ResolveContentType();
 
+        public static ResolveListContentType ContentType(this IResolveBuilder<List, ClientObjectResolveContext> list)
+            => new ResolveListContentType(list);
+
         public static ResolveField Field()
             => new ResolveField();
 
@@ -55,11 +58,6 @@ namespace HarshPoint.Provisioning
 
         public static ResolveTermStoreSiteCollectionDefault TermStoreSiteCollectionDefault()
             => new ResolveTermStoreSiteCollectionDefault();
-
-        public static ResolvedResolver<T> Value<T>(params T[] values)
-        {
-            return new ResolvedResolver<T>(values);
-        }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(Resolve));
     }

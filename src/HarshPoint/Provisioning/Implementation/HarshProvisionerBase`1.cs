@@ -148,54 +148,6 @@ namespace HarshPoint.Provisioning.Implementation
             return HarshTask.Completed;
         }
 
-        protected Task<IEnumerable<T>> TryResolveAsync<T>(IResolveOld<T> resolver)
-        {
-            if (resolver == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(resolver));
-            }
-
-            return resolver.TryResolveAsync(
-                CreateResolveContext()
-            );
-        }
-
-        protected Task<T> TryResolveSingleAsync<T>(IResolveOld<T> resolver)
-        {
-            if (resolver == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(resolver));
-            }
-
-            return resolver.TryResolveSingleAsync(
-                CreateResolveContext()
-            );
-        }
-
-        protected Task<IEnumerable<T>> ResolveAsync<T>(IResolveOld<T> resolver)
-        {
-            if (resolver == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(resolver));
-            }
-
-            return resolver.ResolveAsync(
-                CreateResolveContext()
-            );
-        }
-
-        protected Task<T> ResolveSingleAsync<T>(IResolveOld<T> resolver)
-        {
-            if (resolver == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(resolver));
-            }
-
-            return resolver.ResolveSingleAsync(
-                CreateResolveContext()
-            );
-        }
-
         protected virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
         {
             return new Collection<HarshProvisionerBase>();

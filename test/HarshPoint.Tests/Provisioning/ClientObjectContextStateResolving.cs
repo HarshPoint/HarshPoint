@@ -28,8 +28,13 @@ namespace HarshPoint.Tests.Provisioning
             };
             resolveCtx.Include<Web>(w => w.SiteLogoUrl);
 
-            var resolver = new ClientObjectContextStateResolver<Web>();
-            var resolvedWeb = await resolver.ResolveSingleAsync(resolveCtx);
+            var mr = new ClientObjectManualResolver(() => resolveCtx);
+            var resolver = mr.ResolveSingle(
+                new ClientObjectContextStateResolver<Web>()
+            );
+
+            await ClientContext.ExecuteQueryAsync();
+            var resolvedWeb = resolver.Value;
 
             Assert.True(resolvedWeb.IsPropertyAvailable(w => w.SiteLogoUrl));
         }
@@ -48,8 +53,14 @@ namespace HarshPoint.Tests.Provisioning
             };
             resolveCtx.Include<Web>(w => w.Lists.Include(l => l.ItemCount));
 
-            var resolver = new ClientObjectContextStateResolver<Web>();
-            var resolvedWeb = await resolver.ResolveSingleAsync(resolveCtx);
+            var mr = new ClientObjectManualResolver(() => resolveCtx);
+            var resolver = mr.ResolveSingle(
+                new ClientObjectContextStateResolver<Web>()
+            );
+
+            await ClientContext.ExecuteQueryAsync();
+
+            var resolvedWeb = resolver.Value;
 
             Assert.True(resolvedWeb.Lists.ServerObjectIsNull.HasValue);
             Assert.False(resolvedWeb.Lists.ServerObjectIsNull.Value);

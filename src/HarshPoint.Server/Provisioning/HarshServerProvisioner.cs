@@ -114,7 +114,5 @@ namespace HarshPoint.Server.Provisioning
                 await serverProvisioner.UnprovisionAsync(context);
             }
         }
-
-        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshServerProvisioner>();
     }
 }

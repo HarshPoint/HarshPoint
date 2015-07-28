@@ -71,12 +71,6 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        [Obsolete]
-        internal Expression<Func<T, Object>>[] GetRetrievals<T>()
-        {
-            return _queryProcessor.GetRetrievals<T>();
-        }
-
         internal ClientObjectResolveQueryProcessor QueryProcessor => _queryProcessor;
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ClientObjectResolveContext>();

@@ -9,7 +9,7 @@ namespace HarshPoint.Provisioning.Implementation
         ResolveBuilder<TResult, TContext>
         where TContext : class, IResolveContext
     {
-        protected NestedResolveBuilder(IResolveBuilder<TParent, TContext> parent)
+        protected NestedResolveBuilder(IResolveBuilder<TParent> parent)
         {
             if (parent == null)
             {

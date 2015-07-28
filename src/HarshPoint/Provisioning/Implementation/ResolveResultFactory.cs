@@ -10,12 +10,6 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal static class ResolveResultFactory
     {
-        private static readonly ImmutableArray<Type> KnownPropertyTypeDefinitions = ImmutableArray.Create(
-            typeof(IResolve<>),
-            typeof(IResolveSingle<>),
-            typeof(IResolveSingleOrDefault<>)
-        );
-
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveResultFactory));
 
         public static Object CreateResult(TypeInfo propertyTypeInfo, IEnumerable enumerable, IResolveBuilder builder)
