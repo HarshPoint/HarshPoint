@@ -27,11 +27,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         IEnumerable IResolveBuilderElement<TContext>.ElementToEnumerable(Object state, TContext context)
         {
-            if (state == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(state));
-            }
-
             if (context == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(context));
