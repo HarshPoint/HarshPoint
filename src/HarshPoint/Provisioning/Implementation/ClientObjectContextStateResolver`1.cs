@@ -1,37 +1,47 @@
 ﻿using Microsoft.SharePoint.Client;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
+using System.Collections;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ClientObjectContextStateResolver<T> : IResolve<T>
+    internal sealed class ClientObjectContextStateResolver<T> : ResolveBuilder<T, ClientObjectResolveContext>
         where T : ClientObject
     {
-        public async Task<IEnumerable<T>> TryResolveAsync(IResolveContext context)
+        protected override void InitializeContext(ClientObjectResolveContext context)
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             var state = context.ProvisionerContext.GetState<T>();
 
-            var retrievalContext = context as ClientObjectResolveContext;
-
-            if (retrievalContext != null)
+            foreach (var item in state)
             {
-                var clientContext = retrievalContext.ProvisionerContext.ClientContext;
-                var retrievals = retrievalContext.GetRetrievals<T>();
-
-                foreach (var item in state)
-                {
-                    clientContext.Load(item, retrievals);
-                }
-
-                await clientContext.ExecuteQueryAsync();
+                context.Load(item);
             }
 
-            return state;
+            base.InitializeContext(context);
         }
+
+        protected override Object Initialize(ClientObjectResolveContext context)
+        {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
+            return context.ProvisionerContext.GetState<T>();
+        }
+
+        protected override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
+        {
+            return (IEnumerable)(state);
+        }
+
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectContextStateResolver<>));
     }
 }

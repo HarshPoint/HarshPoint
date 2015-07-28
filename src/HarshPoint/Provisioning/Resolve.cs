@@ -1,89 +1,64 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using HarshPoint.Provisioning.Resolvers;
 using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Taxonomy;
 using System;
-using System.Linq;
 
 namespace HarshPoint.Provisioning
 {
     public static class Resolve
     {
+        public static ResolveContentTypeById ById(this IResolveBuilder<ContentType> parent, params HarshContentTypeId[] ids)
+            => new ResolveContentTypeById(parent, ids);
+
+        public static ResolveFieldById ById(this IResolveBuilder<Field> parent, params Guid[] ids)
+            => new ResolveFieldById(parent, ids);
+
+        public static ResolveTermSetById ById(this IResolveBuilder<TermSet> parent, params Guid[] ids)
+            => new ResolveTermSetById(parent, ids);
+
+        public static ResolveListViewByTitle ByTitle(this IResolveBuilder<View> parent, params String[] titles)
+            => new ResolveListViewByTitle(parent, titles);
+
+        public static ResolveListByUrl ByUrl(this IResolveBuilder<List> parent, params String[] urls)
+            => new ResolveListByUrl(parent, urls);
+
+        public static ResolveListViewByUrl ByUrl(this IResolveBuilder<View> parent, params String[] urls)
+            => new ResolveListViewByUrl(parent, urls);
+
         public static ResolveCatalog Catalog(params ListTemplateType[] templateTypes)
-        {
-            if (templateTypes == null)
-            {
-                throw Error.ArgumentNull(nameof(templateTypes));
-            }
+            => new ResolveCatalog(templateTypes);
 
-            return new ResolveCatalog(templateTypes);
-        }
+        public static ResolveContentType ContentType()
+            => new ResolveContentType();
 
-        public static ResolveContentTypeById ContentTypeById(params String[] ids)
-        {
-            if (ids == null)
-            {
-                throw Error.ArgumentNull(nameof(ids));
-            }
+        public static ResolveListContentType ContentType(this IResolveBuilder<List, ClientObjectResolveContext> list)
+            => new ResolveListContentType(list);
 
-            return new ResolveContentTypeById(
-                ids.Select(HarshContentTypeId.Parse)
-            );
-        }
+        public static ResolveField Field()
+            => new ResolveField();
 
-        public static ResolveContentTypeById ContentTypeById(params HarshContentTypeId[] ids)
-        {
-            if (ids == null)
-            {
-                throw Error.ArgumentNull(nameof(ids));
-            }
+        public static ResolveListField Field(this IResolveBuilder<List, ClientObjectResolveContext> list)
+            => new ResolveListField(list);
 
-            return new ResolveContentTypeById(ids);
-        }
+        public static ResolveList List()
+            => new ResolveList();
 
-        public static ResolveFieldById FieldById(params Guid[] ids)
-        {
-            if (ids == null)
-            {
-                throw Error.ArgumentNull(nameof(ids));
-            }
+        public static ResolveListRootFolder RootFolder(this IResolveBuilder<List, ClientObjectResolveContext> list)
+            => new ResolveListRootFolder(list);
 
-            return new ResolveFieldById(ids);
-        }
+        public static ResolveListView View(this IResolveBuilder<List, ClientObjectResolveContext> list)
+            => new ResolveListView(list);
 
-        public static ResolveFieldByInternalName FieldByInternalName(params String[] names)
-        {
-            if (names == null)
-            {
-                throw Error.ArgumentNull(nameof(names));
-            }
-
-            return new ResolveFieldByInternalName(names);
-        }
-
-        public static ResolveListByUrl ListByUrl(params String[] urls)
-        {
-            if (urls == null)
-            {
-                throw Error.ArgumentNull(nameof(urls));
-            }
-
-
-            return new ResolveListByUrl(urls);
-        }
+        public static ResolveTermStoreTermSet TermSet(this IResolveBuilder<TermStore, ClientObjectResolveContext> termStore)
+            => new ResolveTermStoreTermSet(termStore);
 
         public static ResolveTermStoreKeywordsDefault TermStoreKeywordsDefault()
-        {
-            return new ResolveTermStoreKeywordsDefault();
-        }
+            => new ResolveTermStoreKeywordsDefault();
 
         public static ResolveTermStoreSiteCollectionDefault TermStoreSiteCollectionDefault()
-        {
-            return new ResolveTermStoreSiteCollectionDefault();
-        }
+            => new ResolveTermStoreSiteCollectionDefault();
 
-        public static ResolvedResolver<T> Value<T>(params T[] values)
-        {
-            return new ResolvedResolver<T>(values);
-        }
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(Resolve));
     }
 }

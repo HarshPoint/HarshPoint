@@ -1,30 +1,44 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveCatalog : 
-        Resolvable<List, ListTemplateType, HarshProvisionerContext, ResolveCatalog>
+    public sealed class ResolveCatalog : ClientObjectResolveBuilder<List>
     {
         public ResolveCatalog(IEnumerable<ListTemplateType> identifiers)
-            : base(identifiers)
         {
+            Identifiers = new HashSet<ListTemplateType>(identifiers);
         }
 
-        protected override Task<IEnumerable<List>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
+        public HashSet<ListTemplateType> Identifiers { get; private set; }
+
+        protected override Object Initialize(ClientObjectResolveContext context)
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            return Task.FromResult(
-                Identifiers.Cast<Int32>().Select(id => context.ProvisionerContext.Web.GetCatalog(id))
-            );
+            var lists = Identifiers
+                .Cast<Int32>()
+                .Select(context.ProvisionerContext.Web.GetCatalog)
+                .ToArray();
+
+            foreach (var list in lists)
+            {
+                context.Load(list);
+            }
+
+            return lists;
         }
+
+        protected override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
+            => (IEnumerable)(state);
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveCatalog>();
     }
 }

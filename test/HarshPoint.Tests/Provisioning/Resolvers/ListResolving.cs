@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning.Resolvers
 {
-    public class ListResolving : SharePointClientTest
+    public class ListResolving : ResolverTestBase
     {
         public ListResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
             : base(fixture, output)
@@ -14,17 +14,22 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         }
 
         [Fact]
-        public async Task Documents_list_gets_resolved_by_url()
+        public async Task List_gets_resolved_by_url()
         {
             await Fixture.EnsureTestList();
 
-            var resolver = (IResolve<List>)Resolve.ListByUrl(SharePointClientFixture.TestListUrl);
-            var list = Assert.Single(await resolver.TryResolveAsync(Fixture.ResolveContext));
+            var results = ManualResolver.Resolve(
+                Resolve.List().ByUrl(SharePointClientFixture.TestListUrl)
+            );
+
+            await ClientContext.ExecuteQueryAsync();
+
+            var list = Assert.Single(results);
 
             Assert.NotNull(list);
             Assert.EndsWith(
                 "/" + SharePointClientFixture.TestListUrl,
-                await list.RootFolder.EnsurePropertyAvailable(f => f.ServerRelativeUrl)
+                list.RootFolder.ServerRelativeUrl
             );
         }
 
@@ -33,8 +38,8 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             await Fixture.EnsureTestList();
 
-            var resolver = (IResolve<Folder>)Resolve.ListByUrl(SharePointClientFixture.TestListUrl).RootFolder();
-            var folder = Assert.Single(await resolver.TryResolveAsync(Fixture.ResolveContext));
+            var resolver = Resolve.List().ByUrl(SharePointClientFixture.TestListUrl).RootFolder();
+            var folder = Assert.Single(await ResolveAsync(resolver));
 
             Assert.NotNull(folder);
             Assert.EndsWith(

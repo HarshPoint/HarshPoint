@@ -21,13 +21,13 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             var listAndView = await EnsureTestListAndView();
 
-            IResolve<View> resolvable = Resolve
-                .ListByUrl("Lists/" + ListTitle)
-                .ViewByTitle(ViewTitle);
+            var resolvable = ManualResolver.ResolveSingle(
+                Resolve.List().ByUrl("Lists/" + ListTitle).View().ByTitle(ViewTitle),
+                v => v.Id
+            );
 
-            var view = await resolvable
-                .Include(v => v.Id)
-                .ResolveSingleAsync(Fixture.ResolveContext);
+            await ClientContext.ExecuteQueryAsync();
+            var view = resolvable.Value;
 
             Assert.NotNull(view);
             Assert.Equal(listAndView.Item2.Id, view.Id);
@@ -38,13 +38,13 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             var listAndView = await EnsureTestListAndView();
 
-            IResolve<View> resolvable = Resolve
-                .ListByUrl("Lists/" + ListTitle)
-                .ViewByUrl(ViewTitle + ".aspx");
+            var resolvable = ManualResolver.ResolveSingle(
+                Resolve.List().ByUrl("Lists/" + ListTitle).View().ByUrl(ViewTitle + ".aspx"),
+                v => v.Id
+            );
 
-            var view = await resolvable
-                .Include(v => v.Id)
-                .ResolveSingleAsync(Fixture.ResolveContext);
+            await ClientContext.ExecuteQueryAsync();
+            var view = resolvable.Value;
 
             Assert.NotNull(view);
             Assert.Equal(listAndView.Item2.Id, view.Id);

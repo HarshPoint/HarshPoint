@@ -36,10 +36,12 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (failures==null)
             {
-                throw Error.ArgumentNull(nameof(failures));
+                throw Logger.Fatal.ArgumentNull(nameof(failures));
             }
 
             return String.Join("\n", failures);
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveFailedException>();
     }
 }

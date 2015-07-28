@@ -2,9 +2,11 @@
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Threading.Tasks;
+using HarshPoint.Provisioning.Implementation;
 
 namespace HarshPoint.Provisioning
 {
+#warning NOT_TESTED
     public sealed class HarshFieldTaxonomy : HarshFieldProvisioner<TaxonomyField>
     {
         public Boolean? AllowMultipleValues
@@ -19,22 +21,32 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        public IResolve<TermSet> TermSet
+        public IResolveSingle<TermSet> TermSet
         {
             get;
             set;
         }
 
-        protected override async Task OnProvisioningAsync()
+        protected override void InitializeResolveContext(ClientObjectResolveContext context)
         {
-            var termSet = await ResolveSingleAsync(
-                TermSet.Include(ts => ts.TermStore.Id)
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
+            context.Include<TermSet>(
+                ts => ts.TermStore.Id
             );
 
-            foreach (var field in FieldsResolved)
+            base.InitializeResolveContext(context);
+        }
+
+        protected override async Task OnProvisioningAsync()
+        {
+            foreach (var field in Fields)
             {
-                field.SspId = termSet.TermStore.Id;
-                field.TermSetId = termSet.Id;
+                field.SspId = TermSet.Value.TermStore.Id;
+                field.TermSetId = TermSet.Value.Id;
 
                 SetPropertyIfHasValue(field, AllowMultipleValues, f => f.AllowMultipleValues);
                 SetPropertyIfHasValue(field, IsPathRendered, f => f.IsPathRendered);

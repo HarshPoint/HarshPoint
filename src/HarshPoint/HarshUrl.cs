@@ -22,12 +22,12 @@ namespace HarshPoint
         {
             if (String.IsNullOrWhiteSpace(url))
             {
-                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(url));
+                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(url));
             }
 
             if (String.IsNullOrWhiteSpace(relativeTo))
             {
-                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(relativeTo));
+                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(relativeTo));
             }
 
             if (!relativeTo.EndsWith("/", StringComparison.Ordinal))
@@ -40,7 +40,7 @@ namespace HarshPoint
                 return url.Substring(relativeTo.Length);
             }
 
-            throw Error.ArgumentOutOfRangeFormat(
+            throw Logger.Fatal.ArgumentFormat(
                 nameof(url),
                 SR.HarshUrl_UrlNotRelativeTo,
                 url,
@@ -53,7 +53,7 @@ namespace HarshPoint
         {
             if (folder == null)
             {
-                throw Error.ArgumentNull(nameof(folder));
+                throw Logger.Fatal.ArgumentNull(nameof(folder));
             }
 
             await folder.EnsurePropertyAvailable(s => s.ServerRelativeUrl);
@@ -65,7 +65,7 @@ namespace HarshPoint
         {
             if (site == null)
             {
-                throw Error.ArgumentNull(nameof(site));
+                throw Logger.Fatal.ArgumentNull(nameof(site));
             }
 
             await site.EnsurePropertyAvailable(s => s.ServerRelativeUrl);
@@ -77,7 +77,7 @@ namespace HarshPoint
         {
             if (web == null)
             {
-                throw Error.ArgumentNull(nameof(web));
+                throw Logger.Fatal.ArgumentNull(nameof(web));
             }
 
             var webServerRelativeUrl =
@@ -90,7 +90,7 @@ namespace HarshPoint
         {
             if (String.IsNullOrWhiteSpace(path))
             {
-                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(path));
+                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(path));
             }
 
             return path
@@ -102,7 +102,7 @@ namespace HarshPoint
         {
             if (String.IsNullOrWhiteSpace(path))
             {
-                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(path));
+                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(path));
             }
 
             var leaf = GetLeaf(path);
@@ -120,12 +120,12 @@ namespace HarshPoint
         {
             if (String.IsNullOrWhiteSpace(rootUrl))
             {
-                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(rootUrl));
+                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(rootUrl));
             }
 
             if (String.IsNullOrWhiteSpace(url))
             {
-                throw Error.ArgumentOutOfRange_NullOrWhitespace(nameof(url));
+                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(url));
             }
 
             if (url.StartsWith("/", StringComparison.Ordinal))
@@ -135,5 +135,7 @@ namespace HarshPoint
 
             return Combine(rootUrl, url);
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshUrl));
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Publishing;
 using System;
 using System.Threading.Tasks;
@@ -7,15 +8,22 @@ namespace HarshPoint.Provisioning
 {
     public sealed class HarshDesignPackage : HarshProvisioner
     {
-        internal static readonly IResolve<Folder> SolutionCatalogFolder =
+        internal static readonly IResolveBuilder<Folder, ClientObjectResolveContext> SolutionCatalogFolder =
             Resolve.Catalog(ListTemplateType.SolutionCatalog).RootFolder();
 
+        public HarshDesignPackage()
+        {
+            CatalogFolder = SolutionCatalogFolder;
+        }
+
+        [Parameter]
         public Guid DesignPackageId
         {
             get;
             set;
         }
 
+        [Parameter]
         public String DesignPackageName
         {
             get;
@@ -26,8 +34,7 @@ namespace HarshPoint.Provisioning
         {
             await base.InitializeAsync();
 
-            CatalogFolder = await TryResolveSingleAsync(SolutionCatalogFolder);
-            PackageUrl = await HarshUrl.EnsureServerRelative(CatalogFolder, DesignPackageName);
+            PackageUrl = await HarshUrl.EnsureServerRelative(CatalogFolder.Value, DesignPackageName);
             PackageInfo = new DesignPackageInfo()
             {
                 PackageName = DesignPackageName,
@@ -42,7 +49,8 @@ namespace HarshPoint.Provisioning
             await ClientContext.ExecuteQueryAsync();
         }
         
-        private Folder CatalogFolder
+        [Parameter]
+        private IResolveSingle<Folder> CatalogFolder
         {
             get;
             set;

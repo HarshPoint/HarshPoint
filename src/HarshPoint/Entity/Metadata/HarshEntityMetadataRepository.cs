@@ -20,7 +20,7 @@ namespace HarshPoint.Entity.Metadata
         {
             if (type == null)
             {
-                throw Error.ArgumentNull(nameof(type));
+                throw Logger.Fatal.ArgumentNull(nameof(type));
             }
 
             return GetMetadata(type.GetTypeInfo());
@@ -30,7 +30,7 @@ namespace HarshPoint.Entity.Metadata
         {
             if (typeInfo == null)
             {
-                throw Error.ArgumentNull(nameof(typeInfo));
+                throw Logger.Fatal.ArgumentNull(nameof(typeInfo));
             }
 
             return ImmutableInterlocked.GetOrAdd(
@@ -44,5 +44,7 @@ namespace HarshPoint.Entity.Metadata
         {
             get { return _singleton; }
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshEntityMetadataRepository>();
     }
 }

@@ -12,7 +12,7 @@ namespace HarshPoint.Entity.Metadata
         {
             if (entityTypeInfo == null)
             {
-                throw Error.ArgumentNull("entityTypeInfo");
+                throw Logger.Fatal.ArgumentNull("entityTypeInfo");
             }
 
             _entityTypeInfo = entityTypeInfo;
@@ -45,14 +45,14 @@ namespace HarshPoint.Entity.Metadata
             {
                 if (t == _entityTypeInfo)
                 {
-                    throw Error.InvalidOperationFormat(
+                    throw Logger.Fatal.InvalidOperationFormat(
                         SR.ContentTypeIdBuilder_NoContentTypeAttribute,
                         t.FullName
                     );
                 }
                 else
                 {
-                    throw Error.InvalidOperationFormat(
+                    throw Logger.Fatal.InvalidOperationFormat(
                         SR.ContentTypeIdBuilder_NoContentTypeAttributeBaseClass,
                         t.FullName,
                         _entityTypeInfo.FullName
@@ -75,7 +75,7 @@ namespace HarshPoint.Entity.Metadata
 
                 if (result == null)
                 {
-                    throw Error.InvalidOperationFormat(
+                    throw Logger.Fatal.InvalidOperationFormat(
                         SR.ContentTypeIdBuilder_NoAbsoluteIDInHierarchy,
                         _entityTypeInfo.FullName
                     );
@@ -84,5 +84,7 @@ namespace HarshPoint.Entity.Metadata
                 return result.Append(ctid);
             }
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ContentTypeIdBuilder>();
     }
 }

@@ -1,26 +1,29 @@
-﻿using Microsoft.SharePoint.Client.Taxonomy;
-using System.Collections.Generic;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client.Taxonomy;
 using System.Collections.Immutable;
-using System.Threading.Tasks;
+using System;
+using System.Collections;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveTermStoreKeywordsDefault
-        : Implementation.Resolvable<TermStore, HarshProvisionerContext, ResolveTermStoreKeywordsDefault>
+    public sealed class ResolveTermStoreKeywordsDefault :
+        ResolveBuilder<TermStore, ClientObjectResolveContext>
     {
-        protected override Task<IEnumerable<TermStore>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
+        protected override Object Initialize(ClientObjectResolveContext context)
+            => null;
+
+        protected override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            return Task.FromResult<IEnumerable<TermStore>>(
-                ImmutableArray.Create(
-                    context.ProvisionerContext.TaxonomySession.GetDefaultKeywordsTermStore()
-                )
+            return ImmutableArray.Create(
+                context.ProvisionerContext.TaxonomySession.GetDefaultKeywordsTermStore()
             );
         }
-    }
 
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveTermStoreKeywordsDefault>();
+    }
 }

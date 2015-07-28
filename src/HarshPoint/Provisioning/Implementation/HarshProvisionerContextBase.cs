@@ -43,7 +43,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (type == null)
             {
-                throw Error.ArgumentNull(nameof(type));
+                throw Logger.Fatal.ArgumentNull(nameof(type));
             }
 
             var info = type.GetTypeInfo();
@@ -60,5 +60,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         internal abstract HarshProvisionerContextBase PushStateCore(Object state);
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshProvisionerContextBase>();
     }
 }

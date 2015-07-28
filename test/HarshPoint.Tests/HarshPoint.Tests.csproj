@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Destructurama.Attributed, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2ad38909bb3e5c02, processorArchitecture=MSIL">
@@ -153,6 +155,7 @@
     <Compile Include="Entity\TestEntity.cs" />
     <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
     <Compile Include="Extensions\TypeInfoExtensionsTests.cs" />
+    <Compile Include="GroupingDynamicFactory.cs" />
     <Compile Include="Provisioning\ClientObjectContextStateResolving.cs" />
     <Compile Include="Provisioning\ClientObjectQueryRetrievalsReplacing.cs" />
     <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
@@ -164,21 +167,28 @@
     <Compile Include="Provisioning\DefaultFromContextTests.cs" />
     <Compile Include="Provisioning\FieldProvisionerTests.cs" />
     <Compile Include="Provisioning\FieldSchemaXmlBuilderTests.cs" />
-    <Compile Include="Provisioning\IdentifierResolving.cs" />
+    <Compile Include="Provisioning\Implementation\ChainTests.cs" />
+    <Compile Include="Provisioning\Implementation\ManualResolving.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResolveResults.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResultsProofOfConcept.cs" />
+    <Compile Include="Provisioning\Implementation\ResolvedPropertyBinding.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultConverting.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultCreating.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultTests.cs" />
     <Compile Include="Provisioning\ListProvisioning.cs" />
     <Compile Include="Provisioning\LookupProvisioning.cs" />
     <Compile Include="Provisioning\MandatoryParameters.cs" />
+    <Compile Include="Provisioning\MockResolve.cs" />
     <Compile Include="Provisioning\ParameterSetMetadataBuilding.cs" />
     <Compile Include="Provisioning\ParameterSetResolving.cs" />
     <Compile Include="Provisioning\PotentiallyDestructiveTests.cs" />
     <Compile Include="Provisioning\ProvisionerTreeBuilder.cs" />
-    <Compile Include="Provisioning\ResolvableChainTests.cs" />
-    <Compile Include="Provisioning\ResolvableTests.cs" />
     <Compile Include="Provisioning\Resolvers\CatalogResolving.cs" />
     <Compile Include="Provisioning\Resolvers\ContentTypeResolving.cs" />
     <Compile Include="Provisioning\Resolvers\FieldResolving.cs" />
     <Compile Include="Provisioning\Resolvers\ListResolving.cs" />
     <Compile Include="Provisioning\Resolvers\ListViewResolving.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolverTestBase.cs" />
     <Compile Include="Provisioning\Resolvers\TaxonomyResolving.cs" />
     <Compile Include="Provisioning\RetrievalResolving.cs" />
     <Compile Include="Provisioning\TestFieldBase.cs" />
@@ -189,6 +199,8 @@
     <Compile Include="SharePointClientFixture.cs" />
     <Compile Include="SharePointClientTest.cs" />
     <Compile Include="SeriloggedTest.cs" />
+    <Compile Include="TupleTests.cs" />
+    <Compile Include="Universe.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

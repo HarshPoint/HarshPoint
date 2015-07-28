@@ -1,32 +1,28 @@
 ﻿using HarshPoint.Provisioning.Implementation;
+using HarshPoint.Provisioning.Resolvers;
 using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveFieldById
-        : Resolvable<Field, Guid, HarshProvisionerContext, ResolveFieldById>
+    public sealed class ResolveFieldById : IdentifierResolveBuilder<Field, ClientObjectResolveContext, Guid>
     {
-        public ResolveFieldById(IEnumerable<Guid> ids)
-            : base(ids)
+        public ResolveFieldById(
+            IResolveBuilder<Field> parent,
+            IEnumerable<Guid> identifiers
+        )
+            : base(parent, identifiers)
         {
         }
 
-        protected override Task<IEnumerable<Field>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
+        protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
-            if (context == null)
-            {
-                throw Error.ArgumentNull(nameof(context));
-            }
-
-            return this.ResolveQuery(
-                ClientObjectResolveQuery.FieldById,
-                context,
-                context.ProvisionerContext.Web.Fields,
-                context.ProvisionerContext.Web.AvailableFields
+            context.Include<Field>(
+                f => f.Id
             );
         }
+
+        protected override Guid GetIdentifier(Field result) => result.Id;
     }
 }

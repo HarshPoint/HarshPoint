@@ -17,10 +17,10 @@ namespace HarshPoint.Tests.Entity
 
         [Theory]
         [InlineData(typeof(ArgumentNullException), null)]
-        [InlineData(typeof(ArgumentOutOfRangeException), "")]
-        [InlineData(typeof(ArgumentOutOfRangeException), "    ")]
-        [InlineData(typeof(ArgumentOutOfRangeException), "  not a valid hexadecimal string   ")]
-        [InlineData(typeof(ArgumentOutOfRangeException), "4e003b2c494aeb81c8bebae450ceff")]
+        [InlineData(typeof(ArgumentException), "")]
+        [InlineData(typeof(ArgumentException), "    ")]
+        [InlineData(typeof(ArgumentException), "  not a valid hexadecimal string   ")]
+        [InlineData(typeof(ArgumentException), "4e003b2c494aeb81c8bebae450ceff")]
         public void Ctor_rejects_an_invalid_id(Type exceptionType, String invalidId)
         {
             Assert.Throws(exceptionType, () => new FieldAttribute(invalidId));

@@ -8,7 +8,13 @@ namespace HarshPoint.Provisioning
     {
         public HarshContentType()
         {
-            ModifyChildrenContextState(() => ContentType);
+            ModifyChildrenContextState(
+                () => ContentType
+            );
+
+            ExistingContentType = DeferredResolveBuilder.Create(
+                () => Resolve.ContentType().ById(Id)
+            );
         }
 
         public ContentType ContentType
@@ -17,6 +23,7 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
+        [Parameter]
         public String Description
         {
             get;
@@ -31,7 +38,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        [Parameter(Mandatory = true)]
+        [Parameter(Mandatory = true, ParameterSetName = "Id")]
         public HarshContentTypeId Id
         {
             get;
@@ -45,56 +52,35 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        [Parameter]
-        public IResolve<ContentType> ParentContentType
+        [Parameter(Mandatory = true, ParameterSetName = "ParentContentType")]
+        public IResolveSingle<ContentType> ParentContentType
         {
             get;
             set;
         }
-
-        protected override async Task InitializeAsync()
-        {
-            if ((Id != null) && (ParentContentType != null))
-            {
-                throw Error.InvalidOperation(
-                    SR.HarshContentType_BothIdAndParentContentTypeCannotBeSet
-                );
-            }
-
-            if (Id != null)
-            {
-                ContentType = await TryResolveSingleAsync(
-                    Resolve.ContentTypeById(Id).Include(ct => ct.Name)
-                );
-            }
-            else
-            {
-                throw Error.InvalidOperation("TODO: Should lookup by name.");
-            }
-        }
-
+        
         protected override async Task OnProvisioningAsync()
         {
-            if (ContentType.IsNull())
+            if (ExistingContentType.Value == null)
             {
-                ContentType parentContentType = null;
-
-                if (ParentContentType != null)
-                {
-                    parentContentType = await TryResolveSingleAsync(ParentContentType);
-                }
-
                 ContentType = Web.ContentTypes.Add(new ContentTypeCreationInformation()
                 {
                     Description = Description,
                     Group = Group,
                     Id = Id?.ToString(),
-                    ParentContentType = parentContentType,
+                    ParentContentType = ParentContentType?.Value,
                     Name = Name,
                 });
 
                 await ClientContext.ExecuteQueryAsync();
             }
+        }
+
+        [Parameter]
+        private IResolveSingleOrDefault<ContentType> ExistingContentType
+        {
+            get;
+            set;
         }
     }
 }

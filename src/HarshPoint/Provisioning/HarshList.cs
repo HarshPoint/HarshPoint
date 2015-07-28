@@ -5,11 +5,19 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
+    [DefaultParameterSet("TemplateType")]
     public class HarshList : HarshProvisioner
     {
         public HarshList()
         {
-            ModifyChildrenContextState(() => List);
+            ExistingList = DeferredResolveBuilder.Create(
+                () => Resolve.List().ByUrl(Url)
+            );
+
+            ModifyChildrenContextState(
+                () => List
+            );
+
             TemplateType = ListTemplateType.GenericList;
         }
 
@@ -26,24 +34,28 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        public Int32 TemplateId
+        [Parameter(ParameterSetName = "TemplateId")]
+        public Int32? TemplateId
         {
-            get { return (Int32)TemplateType; }
-            set { TemplateType = (ListTemplateType)value; }
+            get;
+            set;
         }
 
+        [Parameter(ParameterSetName = "TemplateType")]
         public ListTemplateType TemplateType
         {
             get;
             set;
         }
 
+        [Parameter]
         public String Title
         {
             get;
             set;
         }
 
+        [Parameter]
         [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
         public String Url
         {
@@ -51,31 +63,30 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task InitializeAsync()
-        {
-            List = await TryResolveSingleAsync(ListResolver);
-            ListAdded = false;
-
-            await base.InitializeAsync();
-        }
-
         protected override async Task OnProvisioningAsync()
         {
-            if (List.IsNull())
+            if (ExistingList.Value.IsNull())
             {
                 ListAdded = true;
                 List = Web.Lists.Add(new ListCreationInformation()
                 {
-                    TemplateType = TemplateId,
+                    TemplateType = TemplateId ?? (Int32)TemplateType,
                     Title = Title,
                     Url = Url,
                 });
 
                 await ClientContext.ExecuteQueryAsync();
             }
+            else
+            {
+                List = ExistingList.Value;
+            }
         }
 
-        private IResolve<List> ListResolver => Resolve.ListByUrl(Url);
+        private IResolveSingleOrDefault<List> ExistingList
+        {
+            get; set;
+        }
     }
 
 }

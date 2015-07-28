@@ -22,7 +22,7 @@ namespace HarshPoint
         {
             if (factory == null)
             {
-                throw Error.ArgumentNull(nameof(factory));
+                throw Logger.Fatal.ArgumentNull(nameof(factory));
             }
 
             if (Equals(field, default(T)))
@@ -32,5 +32,7 @@ namespace HarshPoint
 
             return field;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshLazy));
     }
 }

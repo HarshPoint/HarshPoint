@@ -19,10 +19,10 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>(l => l.Title);
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
-            var expression = GetExpression(w => w.Lists);
+            var visitor = (ctx.QueryProcessor);
+            var expression = GetExpression(w => w.Created);
 
-            var actual = visitor.AddContextRetrievals(expression);
+            var actual = visitor.Process(expression);
 
             Assert.Equal(expression.ToString(), actual.ToString());
         }
@@ -34,7 +34,7 @@ namespace HarshPoint.Tests.Provisioning
             ctx.Include<List>(l => l.Title);
             ctx.Include<Field>(f => f.InternalName);
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = ctx.QueryProcessor;
             var expression = GetExpression(
                 w => w.Lists.Include(
                     l => l.Fields.Include()
@@ -48,7 +48,7 @@ namespace HarshPoint.Tests.Provisioning
                 )
             );
 
-            var actual = visitor.AddContextRetrievals(expression);
+            var actual = visitor.Process(expression);
 
             Assert.Equal(expected.ToString(), actual.ToString());
         }
@@ -59,12 +59,12 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>(l => l.Title);
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = ctx.QueryProcessor;
             var expression = GetExpression(
                 w => w.Lists.Include()
             );
 
-            var visited = visitor.AddContextRetrievals(expression);
+            var visited = visitor.Process(expression);
             Assert.NotSame(expression, visited);
 
             var lambda = visited as LambdaExpression;
@@ -90,13 +90,13 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>(l => l.Title);
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = (ctx.QueryProcessor);
 
             var expression = GetExpression(
                 w => w.Lists.Include(l => l.Description)
             );
 
-            var visited = visitor.AddContextRetrievals(expression);
+            var visited = visitor.Process(expression);
             Assert.NotSame(expression, visited);
 
             var lambda = visited as LambdaExpression;
@@ -122,13 +122,13 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>(l => l.Title);
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = (ctx.QueryProcessor);
 
             var expression = GetExpression(
                 w => w.Lists.IncludeWithDefaultProperties()
             );
 
-            var visited = visitor.AddContextRetrievals(expression);
+            var visited = visitor.Process(expression);
             Assert.NotSame(expression, visited);
 
             var lambda = visited as LambdaExpression;
@@ -154,13 +154,13 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = new ClientObjectResolveContext();
             ctx.Include<List>();
 
-            var visitor = new ClientObjectResolveQueryProcessor(ctx);
+            var visitor = (ctx.QueryProcessor);
 
             var expression = GetExpression(
                 w => w.Lists.Include()
             );
 
-            var visited = visitor.AddContextRetrievals(expression);
+            var visited = visitor.Process(expression);
             Assert.NotSame(expression, visited);
 
             var lambda = visited as LambdaExpression;
@@ -169,6 +169,20 @@ namespace HarshPoint.Tests.Provisioning
             var listsAccess = lambda.Body as MemberExpression;
             Assert.NotNull(listsAccess);
             Assert.Equal("Lists", listsAccess.Member.Name);
+        }
+
+        [Fact]
+        public void Missing_Include_call_is_added()
+        {
+            var ctx = new ClientObjectResolveContext();
+            ctx.Include<List>(l => l.Title);
+
+            var expression = GetExpression(w => w.Lists);
+
+            var expected = GetExpression(w => w.Lists.Include(l => l.Title));
+            var actual = ctx.QueryProcessor.Process(expression);
+
+            Assert.Equal(expected.ToString(), actual.ToString());
         }
 
 

@@ -8,5 +8,18 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+environment:
+  HarshPointTestUrl:
+    secure: la+SCbMXpAZIZMxu46R9T4qKSdvEtvAHwfUBln2ip4+I9HV4/Rw8800MEVtAfaZ+tnIIo7fZYR4Dv1JTfiR0WQ==
+  HarshPointTestUser:
+    secure: dFT8d/aQmRHTUx2EitgBamM8JR4ROkPqsU3NexYBiyc/lXY+mRuaNVAuBZwgSD1u
+  HarshPointTestPassword:
+    secure: Ldhz1/g23iCZMD3UydbuhgMD6xPf2jSiTow60qXPly0=
+  HarshPointTestAuth:
+    secure: /aPy/TNRcKlV67mllpvM6ZXAoCLkFaKR3HfBb5+n1gI=
 build:
   verbosity: minimal
+test:
+  categories:
+    except:
+    - HarshPoint.Server

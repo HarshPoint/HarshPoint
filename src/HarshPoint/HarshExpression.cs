@@ -7,7 +7,6 @@ namespace HarshPoint
 {
     public static class HarshExpression
     {
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static PropertyInfo TryExtractSinglePropertyAccess(Expression<Func<Object>> expression)
         {

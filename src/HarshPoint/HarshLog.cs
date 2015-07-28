@@ -13,7 +13,7 @@ namespace HarshPoint
         {
             if (logger == null)
             {
-                throw Error.ArgumentNull(nameof(logger));
+                throw Logger.Fatal.ArgumentNull(nameof(logger));
             }
 
             return (logger as HarshLogger) ?? new HarshLogger(logger);
@@ -34,5 +34,7 @@ namespace HarshPoint
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public static HarshLogger ForContext<TSource>()
             => Log.ForContext<TSource>().ToHarshLogger();
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshLog));
     }
 }

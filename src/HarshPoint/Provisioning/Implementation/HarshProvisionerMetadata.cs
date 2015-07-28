@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using HarshPoint.ObjectModel;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -25,15 +26,24 @@ namespace HarshPoint.Provisioning.Implementation
                 .Build()
                 .ToImmutableArray();
 
-            DefaultFromContextParameterBinder = 
-                new DefaultFromContextParameterBinder(Parameters);
-
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
+
+            DefaultFromContextPropertyBinder = new DefaultFromContextPropertyBinder(
+                ReadableWritableInstancePropertiesWith<DefaultFromContextAttribute>(inherit: true).Select(
+                    t => new DefaultFromContextProperty(t.Item1, t.Item2)
+                )
+            );
+
+            ResolvedPropertyBinder = new ResolvedPropertyBinder(
+                ReadableWritableInstanceProperties.Where(
+                    p => ResolvedPropertyTypeInfo.IsResolveType(p.PropertyTypeInfo)
+                )
+            );
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
         }
 
-        public DefaultFromContextParameterBinder DefaultFromContextParameterBinder
+        public DefaultFromContextPropertyBinder DefaultFromContextPropertyBinder
         {
             get;
             private set;
@@ -49,6 +59,12 @@ namespace HarshPoint.Provisioning.Implementation
             => ParameterSets.SelectMany(set => set.Parameters);
 
         public IReadOnlyList<ParameterSet> ParameterSets
+        {
+            get;
+            private set;
+        }
+
+        public ResolvedPropertyBinder ResolvedPropertyBinder
         {
             get;
             private set;

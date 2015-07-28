@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.ObjectModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
@@ -106,12 +107,12 @@ namespace HarshPoint.Entity.Metadata
         {
             if (repository== null)
             {
-                throw Error.ArgumentNull(nameof(repository));
+                throw Logger.Fatal.ArgumentNull(nameof(repository));
             }
 
             if (typeInfo == null)
             {
-                throw Error.ArgumentNull(nameof(typeInfo));
+                throw Logger.Fatal.ArgumentNull(nameof(typeInfo));
             }
 
             if (typeInfo.IsDefined(typeof(ContentTypeAttribute), inherit: false))

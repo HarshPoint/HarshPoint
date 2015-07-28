@@ -1,7 +1,6 @@
 ﻿using HarshPoint.Provisioning;
 using HarshPoint.Provisioning.Implementation;
 using System;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,31 +13,31 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public async Task Resolves_String()
+        public void Resolves_String()
         {
             var ctx = Fixture.Context.PushState("42");
             var resolver = new ContextStateResolver<String>();
 
-            var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
-            var many = await resolver.TryResolveAsync(resolveCtx);
+            var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>());
+            var many = mr.Resolve(resolver);
 
             Assert.Single(many, "42");
         }
 
         [Fact]
-        public async Task Resolves_most_recent_String()
+        public void Resolves_most_recent_String()
         {
             var ctx = Fixture.Context.PushState("4242").PushState("42");
             var resolver = new ContextStateResolver<String>();
 
-            var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
-            var many = await resolver.TryResolveAsync(resolveCtx);
+            var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>());
+            var many = mr.Resolve(resolver);
 
             Assert.Single(many, "42");
         }
 
         [Fact]
-        public async Task Flattens_enumerable_states()
+        public void Flattens_enumerable_states()
         {
             var ctx = Fixture.Context
                 .PushState("123")
@@ -46,8 +45,8 @@ namespace HarshPoint.Tests.Provisioning
 
             var resolver = new ContextStateResolver<String>();
 
-            var resolveCtx = new ResolveContext<HarshProvisionerContext>(ctx);
-            var many = await resolver.TryResolveAsync(resolveCtx);
+            var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>());
+            var many = mr.Resolve(resolver);
 
             Assert.Collection(
                 many,

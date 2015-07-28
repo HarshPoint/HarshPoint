@@ -1,5 +1,4 @@
-﻿using HarshPoint.Provisioning;
-using HarshPoint.Provisioning.Implementation;
+﻿using HarshPoint.ObjectModel;
 using System;
 using System.Linq;
 using Xunit;
@@ -108,9 +107,23 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
+        public void Internal_writable_can_be_set_using_parameter()
+        {
+            var sets = Build<InternalWritableParam>();
+            var set = Assert.Single(sets);
+
+            var param = Assert.Single(set.Parameters);
+            Assert.Equal("InternalWritable", param.Name);
+
+            var target = new InternalWritableParam();
+            param.Setter(target, "42");
+            Assert.Equal("42", target.InternalWritable);
+        }
+
+        [Fact]
         public void Fails_when_default_set_doesnt_exist()
         {
-            Assert.Throws<HarshProvisionerMetadataException>(
+            Assert.Throws<HarshObjectMetadataException>(
                 () => Build<WithNonexistentDefaultParamSet>()
             );
         }
@@ -118,7 +131,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_Parameter_both_common_and_in_set()
         {
-            Assert.Throws<HarshProvisionerMetadataException>(
+            Assert.Throws<HarshObjectMetadataException>(
                 () => Build<ParameterBothCommonAndInSet>()
             );
         }
@@ -126,7 +139,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_Parameter_twice_in_one_set()
         {
-            Assert.Throws<HarshProvisionerMetadataException>(
+            Assert.Throws<HarshObjectMetadataException>(
                 () => Build<ParameterInOneSetTwice>()
             );
         }
@@ -134,23 +147,15 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_non_readable_param()
         {
-            Assert.Throws<HarshProvisionerMetadataException>(
+            Assert.Throws<HarshObjectMetadataException>(
                 () => Build<NonReadableParam>()
-            );
-        }
-
-        [Fact]
-        public void Fails_internal_writable_param()
-        {
-            Assert.Throws<HarshProvisionerMetadataException>(
-                () => Build<InternalWritableParam>()
             );
         }
 
         [Fact]
         public void Fails_nonnullable_mandatory()
         {
-            var exc = Assert.Throws<HarshProvisionerMetadataException>(
+            var exc = Assert.Throws<HarshObjectMetadataException>(
                 () => Build<NonnullableMandatoryParamType>()
             );
         }
@@ -257,8 +262,8 @@ namespace HarshPoint.Tests.Provisioning
             [Parameter]
             public String InternalWritable
             {
-                get { return null; }
-                internal set { }
+                get;
+                internal set;
             }
         }
 

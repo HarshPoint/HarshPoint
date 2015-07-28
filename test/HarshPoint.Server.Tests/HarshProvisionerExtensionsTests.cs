@@ -8,6 +8,7 @@ using Xunit;
 
 namespace HarshPoint.Server.Tests
 {
+    [Trait("Category", "HarshPoint.Server")]
     public class HarshProvisionerExtensionsTests : IClassFixture<SharePointServerFixture>
     {
         public HarshProvisionerExtensionsTests(SharePointServerFixture data)

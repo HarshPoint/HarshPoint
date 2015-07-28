@@ -20,8 +20,10 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task Default_SiteCollection_TermStore_gets_resolved()
         {
-            var resolver = Resolve.TermStoreSiteCollectionDefault();
-            var termStore = await resolver.ResolveSingleAsync(Fixture.ResolveContext);
+            var resolver = ManualResolver.ResolveSingle(Resolve.TermStoreSiteCollectionDefault());
+            await ClientContext.ExecuteQueryAsync();
+
+            var termStore = resolver.Value;
             Assert.NotNull(termStore);
 
             var expected = Fixture.TaxonomySession.GetDefaultSiteCollectionTermStore();
@@ -36,8 +38,10 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task Default_Keywords_TermStore_gets_resolved()
         {
-            var resolver = Resolve.TermStoreKeywordsDefault();
-            var termStore = await resolver.ResolveSingleAsync(Fixture.ResolveContext);
+            var resolver = ManualResolver.ResolveSingle(Resolve.TermStoreKeywordsDefault());
+            await ClientContext.ExecuteQueryAsync();
+
+            var termStore = resolver.Value;
             Assert.NotNull(termStore);
 
             var expected = Fixture.TaxonomySession.GetDefaultKeywordsTermStore();
@@ -54,8 +58,12 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
             var expected = await EnsureTestTermSet();
 
-            IResolve<TermSet> resolver = Resolve.TermStoreSiteCollectionDefault().TermSetById(TermSetId);
-            var actual = await resolver.ResolveSingleAsync(Fixture.ResolveContext);
+            var resolver = ManualResolver.ResolveSingle(
+                Resolve.TermStoreSiteCollectionDefault().TermSet().ById(TermSetId)
+            );
+            await ClientContext.ExecuteQueryAsync();
+
+            var actual = resolver.Value;
 
             Fixture.ClientContext.Load(actual, ts => ts.Id, ts => ts.Name);
             await Fixture.ClientContext.ExecuteQueryAsync();

@@ -8,7 +8,7 @@ namespace HarshPoint
         {
             if (collection == null)
             {
-                throw Error.ArgumentNull(nameof(collection));
+                throw Logger.Fatal.ArgumentNull(nameof(collection));
             }
 
             if (collection.Contains(item))
@@ -23,12 +23,12 @@ namespace HarshPoint
         {
             if (collection == null)
             {
-                throw Error.ArgumentNull(nameof(collection));
+                throw Logger.Fatal.ArgumentNull(nameof(collection));
             }
 
             if (items == null)
             {
-                throw Error.ArgumentNull(nameof(items));
+                throw Logger.Fatal.ArgumentNull(nameof(items));
             }
 
             var list = (collection as List<T>);
@@ -50,5 +50,7 @@ namespace HarshPoint
                 }
             }
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ICollectionExtensions));
     }
 }

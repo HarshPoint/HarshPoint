@@ -10,7 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (resolvedType == null)
             {
-                throw Error.ArgumentNull(nameof(resolvedType));
+                throw Logger.Fatal.ArgumentNull(nameof(resolvedType));
             }
 
             if (ClientObjectTypeInfo.IsAssignableFrom(resolvedType.GetTypeInfo()))
@@ -27,5 +27,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         private static readonly TypeInfo ClientObjectTypeInfo =
             typeof(ClientObject).GetTypeInfo();
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ContextStateResolver));
     }
 }

@@ -1,7 +1,8 @@
-using System.Resources;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Resources;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyProduct("HarshPoint")]
 [assembly: AssemblyCopyright("Copyright © 2014-2015 Julie Koubová")]
@@ -10,3 +11,7 @@ using System;
 [assembly: NeutralResourcesLanguage("en")]
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(false)]
+
+#if DEBUG
+[assembly: SuppressMessage("Microsoft.Design", "CA2210:AssembliesShouldHaveValidStrongNames")]
+#endif

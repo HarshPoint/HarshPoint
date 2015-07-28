@@ -24,12 +24,14 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (state == null)
             {
-                throw Error.ArgumentNull(nameof(state));
+                throw Logger.Fatal.ArgumentNull(nameof(state));
             }
 
             return this.With(c => c._stateStack, _stateStack.Push(state));
         }
 
         Object IHarshCloneable.Clone() => Clone();
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshProvisionerContextBase<>));
     }
 }

@@ -1,4 +1,5 @@
-﻿using Serilog.Core.Enrichers;
+﻿using HarshPoint.ObjectModel;
+using Serilog.Core.Enrichers;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -22,6 +23,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         private ICollection<HarshProvisionerBase> _children;
         private ICollection<Func<Object>> _childrenContextStateModifiers;
+        private ManualResolver _manualResolver;
         private HarshProvisionerMetadata _metadata;
 
         protected HarshProvisionerBase()
@@ -49,6 +51,12 @@ namespace HarshPoint.Provisioning.Implementation
             set;
         }
 
+        protected ManualResolver ManualResolver
+            => HarshLazy.Initialize(
+                ref _manualResolver,
+                () => CreateManualResolver(CreateResolveContext)
+            );
+
         protected String ParameterSetName => ParameterSet?.Name;
 
         internal Boolean HasChildren
@@ -64,7 +72,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (modifier == null)
             {
-                throw Error.ArgumentNull(nameof(modifier));
+                throw Logger.Fatal.ArgumentNull(nameof(modifier));
             }
 
             if (_childrenContextStateModifiers == null)
@@ -79,7 +87,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (state == null)
             {
-                throw Error.ArgumentNull(nameof(state));
+                throw Logger.Fatal.ArgumentNull(nameof(state));
             }
 
             ModifyChildrenContextState(() => state);
@@ -89,7 +97,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             return RunSelfAndChildren(
@@ -103,7 +111,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             if (MayDeleteUserData || context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
@@ -140,64 +148,23 @@ namespace HarshPoint.Provisioning.Implementation
             return HarshTask.Completed;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected Task<IEnumerable<T>> TryResolveAsync<T>(IResolve<T> resolver)
-        {
-            if (resolver == null)
-            {
-                throw Error.ArgumentNull(nameof(resolver));
-            }
-
-            return resolver.TryResolveAsync(
-                PrepareResolveContext()
-            );
-        }
-
-        protected Task<T> TryResolveSingleAsync<T>(IResolve<T> resolver)
-        {
-            if (resolver == null)
-            {
-                throw Error.ArgumentNull(nameof(resolver));
-            }
-
-            return resolver.TryResolveSingleAsync(
-                PrepareResolveContext()
-            );
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected Task<IEnumerable<T>> ResolveAsync<T>(IResolve<T> resolver)
-        {
-            if (resolver == null)
-            {
-                throw Error.ArgumentNull(nameof(resolver));
-            }
-
-            return resolver.ResolveAsync(
-                PrepareResolveContext()
-            );
-        }
-
-        protected Task<T> ResolveSingleAsync<T>(IResolve<T> resolver)
-        {
-            if (resolver == null)
-            {
-                throw Error.ArgumentNull(nameof(resolver));
-            }
-
-            return resolver.ResolveSingleAsync(
-                PrepareResolveContext()
-            );
-        }
-
         protected virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
         {
             return new Collection<HarshProvisionerBase>();
         }
 
-        internal virtual ResolveContext<TContext> CreateResolveContext()
+        protected virtual ResolveContext<TContext> CreateResolveContext()
+            => new ResolveContext<TContext>()
+            {
+                ProvisionerContext = Context
+            };
+
+        internal virtual ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
+            => new ManualResolver(resolveContextFactory);
+
+        internal virtual Task OnResolvedParametersBound()
         {
-            return new ResolveContext<TContext>();
+            return HarshTask.Completed;
         }
 
         internal abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
@@ -243,13 +210,6 @@ namespace HarshPoint.Provisioning.Implementation
                 .Aggregate(
                     Context, (ctx, state) => (TContext)ctx.PushState(state)
                 );
-        }
-
-        private ResolveContext<TContext> PrepareResolveContext()
-        {
-            var resolveContext = CreateResolveContext();
-            resolveContext.ProvisionerContext = Context;
-            return resolveContext;
         }
 
         private Task ProvisionChildrenAsync()
@@ -301,10 +261,20 @@ namespace HarshPoint.Provisioning.Implementation
         {
             return RunWithContext(context, async delegate
             {
+                Metadata.DefaultFromContextPropertyBinder.Bind(
+                    this,
+                    Context
+                );
+
+                Metadata.ResolvedPropertyBinder.Bind(
+                    this,
+                    CreateResolveContext
+                );
+
+                await OnResolvedParametersBound();
+
                 // parameter set resolving depends on values
                 // from context being already set
-
-                Metadata.DefaultFromContextParameterBinder.Bind(this, Context);
 
                 using (_parameterSet.Enter(ResolveParameterSet()))
                 {
@@ -325,7 +295,7 @@ namespace HarshPoint.Provisioning.Implementation
                 await childAction();
             });
         }
-        
+
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         protected static readonly ICollection<HarshProvisionerBase> NoChildren =
             ImmutableArray<HarshProvisionerBase>.Empty;

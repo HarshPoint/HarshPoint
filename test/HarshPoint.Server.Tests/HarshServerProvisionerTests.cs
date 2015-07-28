@@ -7,8 +7,14 @@ using Xunit;
 
 namespace HarshPoint.Server.Tests
 {
+    [Trait("Category", "HarshPoint.Server")]
     public class HarshServerProvisionerTests : IClassFixture<SharePointServerFixture>
     {
+        private readonly MockRepository _mockRepo = new MockRepository(MockBehavior.Loose)
+        {
+            CallBase = true
+        };
+
         public HarshServerProvisionerTests(SharePointServerFixture fixture)
         {
             SPFixture = fixture;
@@ -23,7 +29,7 @@ namespace HarshPoint.Server.Tests
         [Fact]
         public async Task Provision_calls_Initialize()
         {
-            var mock = new Mock<HarshServerProvisioner>();
+            var mock = _mockRepo.Create<HarshServerProvisioner>();
 
             mock.Protected()
                 .Setup<Task>("InitializeAsync")
@@ -37,7 +43,7 @@ namespace HarshPoint.Server.Tests
         [Fact]
         public async Task Provision_calls_OnProvisioning()
         {
-            var mock = new Mock<HarshServerProvisioner>();
+            var mock = _mockRepo.Create<HarshServerProvisioner>();
 
             mock.Protected()
                 .Setup<Task>("OnProvisioningAsync")
@@ -51,7 +57,7 @@ namespace HarshPoint.Server.Tests
         [Fact]
         public void Provision_always_calls_Complete()
         {
-            var mock = new Mock<HarshServerProvisioner>();
+            var mock = _mockRepo.Create<HarshServerProvisioner>();
 
             mock.Protected()
                 .Setup<Task>("OnProvisioningAsync")
@@ -71,7 +77,7 @@ namespace HarshPoint.Server.Tests
         [Fact]
         public async Task Unprovision_calls_Initialize()
         {
-            var mock = new Mock<HarshServerProvisioner>();
+            var mock = _mockRepo.Create<HarshServerProvisioner>();
 
             mock.Protected()
                 .Setup<Task>("InitializeAsync")
@@ -85,7 +91,7 @@ namespace HarshPoint.Server.Tests
         [Fact]
         public async Task Unprovision_calls_OnUnprovisioning()
         {
-            var mock = new Mock<HarshServerProvisioner>();
+            var mock = _mockRepo.Create<HarshServerProvisioner>();
 
             mock.Protected()
                 .Setup<Task>("OnUnprovisioningAsync")
@@ -99,7 +105,7 @@ namespace HarshPoint.Server.Tests
         [Fact]
         public void Unprovision_always_calls_Complete()
         {
-            var mock = new Mock<HarshServerProvisioner>();
+            var mock = _mockRepo.Create<HarshServerProvisioner>();
 
             mock.Protected().Setup("OnUnprovisioningAsync").Throws<Exception>();
             mock.Protected().Setup("Complete").Verifiable();

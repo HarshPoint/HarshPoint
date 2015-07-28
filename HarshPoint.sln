@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329
 		appveyor.yml = appveyor.yml
 		src\AssemblyInfo.Shared.cs = src\AssemblyInfo.Shared.cs
 		src\CodeAnalysisDictionary.xml = src\CodeAnalysisDictionary.xml
+		src\CodeAnalysisRules.ruleset = src\CodeAnalysisRules.ruleset
 		src\FixNugetConfig.targets = src\FixNugetConfig.targets
 		LICENSE = LICENSE
 		nuget.config = nuget.config

@@ -2,24 +2,39 @@
 using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveListViewByUrl : 
-        NestedResolvable<List, View, String, HarshProvisionerContext, ResolveListViewByUrl>
+    public sealed class ResolveListViewByUrl : IdentifierResolveBuilder<View, ClientObjectResolveContext, String>
     {
-        public ResolveListViewByUrl(IResolve<List> parent, IEnumerable<String> urls) 
-            : base(parent, urls)
+        public ResolveListViewByUrl(
+            IResolveBuilder<View> parent,
+            IEnumerable<String> identifiers
+        )
+            : base(parent, identifiers, StringComparer.OrdinalIgnoreCase)
         {
         }
 
-        protected override Task<IEnumerable<View>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context, List parent)
+        protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
-            return this.ResolveQuery(
-                ClientObjectResolveQuery.ListViewByUrl,
-                context,
-                parent
+            context.Include<List>(
+                l=>l.RootFolder.ServerRelativeUrl
+            );
+
+            context.Include<View>(
+                v => v.ServerRelativeUrl
+            );
+
+            base.InitializeContextBeforeParent(context);
+        }
+
+        protected override string GetIdentifierFromNested(NestedResolveResult nested)
+        {
+            var tuple = nested.ExtractComponents<List, View>();
+
+            return HarshUrl.GetRelativeTo(
+                tuple.Item2.ServerRelativeUrl,
+                tuple.Item1.RootFolder.ServerRelativeUrl
             );
         }
     }

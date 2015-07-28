@@ -10,7 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (valueAccessorExpr == null)
             {
-                throw Error.ArgumentNull(nameof(valueAccessorExpr));
+                throw Logger.Fatal.ArgumentNull(nameof(valueAccessorExpr));
             }
 
             PropertyName = valueAccessorExpr.GetMemberName();
@@ -46,7 +46,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (element == null)
             {
-                throw Error.ArgumentNull("element");
+                throw Logger.Fatal.ArgumentNull("element");
             }
 
             var value = ValueAccessor();
@@ -63,5 +63,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             return element;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshFieldSchemaXmlAttributeSetter>();
     }
 }

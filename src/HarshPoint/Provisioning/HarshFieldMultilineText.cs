@@ -18,7 +18,7 @@ namespace HarshPoint.Provisioning
 
         protected override async Task OnProvisioningAsync()
         {
-            foreach (var field in FieldsResolved)
+            foreach (var field in Fields)
             {
                 SetPropertyIfHasValue(field, AllowHyperlink, f => f.AllowHyperlink);
                 SetPropertyIfHasValue(field, AppendOnly, f => f.AppendOnly);

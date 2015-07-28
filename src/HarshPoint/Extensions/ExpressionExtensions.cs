@@ -10,13 +10,12 @@ namespace HarshPoint
 {
     public static class ExpressionExtensions
     {
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static Expression<Func<T, Object>> ConvertToObject<T, TResult>(this Expression<Func<T, TResult>> expression)
         {
             if (expression == null)
             {
-                throw Error.ArgumentNull(nameof(expression));
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
             return Expression.Lambda<Func<T, Object>>(
@@ -28,14 +27,12 @@ namespace HarshPoint
             );
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static String GetMemberName<T, TResult>(this Expression<Func<T, TResult>> expression)
         {
             return GetMemberName((Expression)expression);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static String GetMemberName<T>(this Expression<Func<T>> expression)
         {
@@ -55,7 +52,7 @@ namespace HarshPoint
         {
             if (expression == null)
             {
-                throw Error.ArgumentNull(nameof(expression));
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
             var visitor = new ExtractMemberAccessVisitor();
@@ -63,7 +60,7 @@ namespace HarshPoint
 
             if (visitor.Members.IsEmpty)
             {
-                throw Error.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     nameof(expression),
                     SR.ExpressionExtensions_MemberExpressionNotFound
                 );
@@ -77,7 +74,7 @@ namespace HarshPoint
         {
             if (expression == null)
             {
-                throw Error.ArgumentNull(nameof(expression));
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
             return (PropertyInfo)ExtractMemberAccess(expression).First();
@@ -87,7 +84,7 @@ namespace HarshPoint
         {
             if (expression == null)
             {
-                throw Error.ArgumentNull(nameof(expression));
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
             return ExtractMemberAccess(expression).First() as FieldInfo;
@@ -97,7 +94,7 @@ namespace HarshPoint
         {
             if (expression == null)
             {
-                throw Error.ArgumentNull(nameof(expression));
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
             return ExtractMemberAccess(expression).First() as PropertyInfo;
@@ -120,7 +117,7 @@ namespace HarshPoint
             {
                 if (node == null)
                 {
-                    throw Error.ArgumentNull("node");
+                    throw Logger.Fatal.ArgumentNull("node");
                 }
 
                 if (node.Member != null)
@@ -131,5 +128,7 @@ namespace HarshPoint
                 return base.VisitMember(node);
             }
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ExpressionExtensions));
     }
 }

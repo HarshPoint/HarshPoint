@@ -96,7 +96,7 @@ namespace HarshPoint.Tests.Provisioning
                 {
                     new HarshFieldRef()
                     {
-                        Fields = Resolve.FieldById(fieldId),
+                        Fields = Resolve.Field().ById(fieldId),
                     },
                 }
             };
@@ -127,16 +127,13 @@ namespace HarshPoint.Tests.Provisioning
             }
             finally
             {
-                if (ct.ContentType != null)
+                try
                 {
-                    ct.ContentType.DeleteObject();
-                    await Fixture.ClientContext.ExecuteQueryAsync();
+                    Fixture.Web.ContentTypes.GetById(_id.ToString()).DeleteObject();
                 }
-
-                if (field.Field != null)
+                finally
                 {
-                    field.Field.DeleteObject();
-                    await Fixture.ClientContext.ExecuteQueryAsync();
+                    Fixture.Web.Fields.GetById(fieldId).DeleteObject();
                 }
             }
         }

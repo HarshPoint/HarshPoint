@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning
     {
         [Parameter]
         [DefaultFromContext]
-        public IResolve<Field> Fields
+        public IResolve<TField> Fields
         {
             get;
             set;
@@ -26,31 +26,17 @@ namespace HarshPoint.Provisioning
             set;
         }
 
-        protected override async Task InitializeAsync()
-        {
-            FieldsResolved = (await TryResolveAsync(Fields)).Cast<TField>();
-
-            await base.InitializeAsync();
-        }
-
-        protected IEnumerable<TField> FieldsResolved
-        {
-            get;
-            private set;
-        }
-
         protected void UpdateField(TField field)
         {
             if (field == null)
             {
-                throw Error.ArgumentNull(nameof(field));
+                throw Logger.Fatal.ArgumentNull(nameof(field));
             }
 
             field.UpdateAndPushChanges(!NoPushChangesToLists);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected void SetPropertyIfHasValue<T>(TField field, Nullable<T> value, Expression<Func<TField, T>> property)
             where T : struct
         {

@@ -81,7 +81,7 @@ namespace HarshPoint.Tests
             private set;
         }
 
-        public ResolveContext<HarshProvisionerContext> ResolveContext
+        public ClientObjectResolveContext CreateResolveContext()
             => new ClientObjectResolveContext() { ProvisionerContext = Context };
 
         public void Dispose()

@@ -9,7 +9,7 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class ClientObjectContextStateResolving : SharePointClientTest
     {
-        public ClientObjectContextStateResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
+        public ClientObjectContextStateResolving(SharePointClientFixture fixture, ITestOutputHelper output)
             : base(fixture, output)
         {
         }
@@ -28,8 +28,13 @@ namespace HarshPoint.Tests.Provisioning
             };
             resolveCtx.Include<Web>(w => w.SiteLogoUrl);
 
-            var resolver = new ClientObjectContextStateResolver<Web>();
-            var resolvedWeb = await resolver.ResolveSingleAsync(resolveCtx);
+            var mr = new ClientObjectManualResolver(() => resolveCtx);
+            var resolver = mr.ResolveSingle(
+                new ClientObjectContextStateResolver<Web>()
+            );
+
+            await ClientContext.ExecuteQueryAsync();
+            var resolvedWeb = resolver.Value;
 
             Assert.True(resolvedWeb.IsPropertyAvailable(w => w.SiteLogoUrl));
         }
@@ -48,14 +53,20 @@ namespace HarshPoint.Tests.Provisioning
             };
             resolveCtx.Include<Web>(w => w.Lists.Include(l => l.ItemCount));
 
-            var resolver = new ClientObjectContextStateResolver<Web>();
-            var resolvedWeb = await resolver.ResolveSingleAsync(resolveCtx);
+            var mr = new ClientObjectManualResolver(() => resolveCtx);
+            var resolver = mr.ResolveSingle(
+                new ClientObjectContextStateResolver<Web>()
+            );
+
+            await ClientContext.ExecuteQueryAsync();
+
+            var resolvedWeb = resolver.Value;
 
             Assert.True(resolvedWeb.Lists.ServerObjectIsNull.HasValue);
             Assert.False(resolvedWeb.Lists.ServerObjectIsNull.Value);
             Assert.NotEmpty(resolvedWeb.Lists);
 
-            Assert.All(resolvedWeb.Lists, 
+            Assert.All(resolvedWeb.Lists,
                 list => Assert.True(
                     list.IsPropertyAvailable(l => l.ItemCount)
                 )

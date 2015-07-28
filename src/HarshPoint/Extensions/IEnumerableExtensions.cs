@@ -14,7 +14,7 @@ namespace HarshPoint
         {
             if (sequence == null)
             {
-                throw Error.ArgumentNull(nameof(sequence));
+                throw Logger.Fatal.ArgumentNull(nameof(sequence));
             }
 
             var enumerator = sequence.GetEnumerator();
@@ -25,6 +25,9 @@ namespace HarshPoint
             }
         }
 
+        public static IEnumerable<T> Concat<T>(this IEnumerable<T> sequence, params T[] elements)
+            => sequence.Concat((IEnumerable<T>)(elements));
+
         public static TElement FirstOrDefaultByProperty<TElement, TProperty>(
             this IEnumerable<TElement> sequence,
             Func<TElement, TProperty> projection,
@@ -34,12 +37,12 @@ namespace HarshPoint
         {
             if (sequence == null)
             {
-                throw Error.ArgumentNull(nameof(sequence));
+                throw Logger.Fatal.ArgumentNull(nameof(sequence));
             }
 
             if (projection == null)
             {
-                throw Error.ArgumentNull(nameof(projection));
+                throw Logger.Fatal.ArgumentNull(nameof(projection));
             }
 
             if (equalityComparer == null)
@@ -55,19 +58,18 @@ namespace HarshPoint
             );
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static async Task<IEnumerable<TResult>> SelectSequentially<TSource, TResult>(
             this IEnumerable<TSource> sequence,
             Func<TSource, Task<TResult>> selector)
         {
             if (sequence == null)
             {
-                throw Error.ArgumentNull(nameof(sequence));
+                throw Logger.Fatal.ArgumentNull(nameof(sequence));
             }
 
             if (selector == null)
             {
-                throw Error.ArgumentNull(nameof(selector));
+                throw Logger.Fatal.ArgumentNull(nameof(selector));
             }
 
             var source = sequence.ToArray();
@@ -90,17 +92,17 @@ namespace HarshPoint
         {
             if (sequence == null)
             {
-                throw Error.ArgumentNull(nameof(sequence));
+                throw Logger.Fatal.ArgumentNull(nameof(sequence));
             }
 
             if (keySelector == null)
             {
-                throw Error.ArgumentNull(nameof(keySelector));
+                throw Logger.Fatal.ArgumentNull(nameof(keySelector));
             }
 
             if (elementSelector == null)
             {
-                throw Error.ArgumentNull(nameof(elementSelector));
+                throw Logger.Fatal.ArgumentNull(nameof(elementSelector));
             }
 
             var builder = ImmutableDictionary<TKey, TElement>.Empty
@@ -123,5 +125,6 @@ namespace HarshPoint
             return builder.ToImmutable();
         }
 
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IEnumerableExtensions));
     }
 }

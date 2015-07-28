@@ -1,20 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ContextStateResolver<T> : IResolve<T>
+    internal sealed class ContextStateResolver<TResult> : ResolveBuilder<TResult, IResolveContext>
     {
-        public Task<IEnumerable<T>> TryResolveAsync(IResolveContext context)
+        protected override Object Initialize(IResolveContext context)
+        {
+            return null;
+        }
+
+        protected override IEnumerable ToEnumerable(Object state, IResolveContext context)
         {
             if (context == null)
             {
-                throw Error.ArgumentNull(nameof(context));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
-            
-            return Task.FromResult(
-                context.ProvisionerContext.GetState<T>()
-            );
+
+            return context.ProvisionerContext.GetState<TResult>();
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ContextStateResolver<>));
     }
 }

@@ -13,7 +13,8 @@ namespace HarshPoint.Provisioning
             private set;
         }
 
-        public IResolve<Folder> Folder
+        [Parameter]
+        public IResolveSingle<Folder> Folder
         {
             get;
             set;
@@ -39,17 +40,15 @@ namespace HarshPoint.Provisioning
 
         protected override async Task OnProvisioningAsync()
         {
-            var folder = await TryResolveSingleAsync(Folder);
-
             var fci = new FileCreationInformation()
             {
                 ContentStream = ContentStream,
                 Overwrite = OverwriteExisting,
-                Url = await HarshUrl.EnsureServerRelative(folder, FileName),
+                Url = await HarshUrl.EnsureServerRelative(Folder.Value, FileName),
             };
 
-            AddedFile = folder.Files.Add(fci);
-            await folder.Context.ExecuteQueryAsync();
+            AddedFile = Folder.Value.Files.Add(fci);
+            await ClientContext.ExecuteQueryAsync();
         }
     }
 }

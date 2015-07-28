@@ -12,7 +12,7 @@ namespace HarshPoint.Entity.Metadata
 
             if (ContentTypeAttribute == null)
             {
-                throw Error.ArgumentOutOfRangeFormat(
+                throw Logger.Fatal.ArgumentFormat(
                     nameof(entityTypeInfo),
                     SR.HarshEntityMetadataContentType_NoContentTypeAttribute,
                     entityTypeInfo.FullName
@@ -33,5 +33,7 @@ namespace HarshPoint.Entity.Metadata
             get;
             private set;
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshEntityMetadataContentType>();
     }
 }

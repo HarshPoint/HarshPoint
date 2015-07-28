@@ -17,6 +17,9 @@ namespace HarshPoint.Provisioning
 
         public Web Web => Context?.Web;
 
+        protected new ClientObjectManualResolver ManualResolver
+            => (ClientObjectManualResolver)base.ManualResolver;
+
         public void ModifyChildrenContextState(Func<ClientObject> modifier)
         {
             ModifyChildrenContextState(() =>
@@ -32,16 +35,39 @@ namespace HarshPoint.Provisioning
             });
         }
 
-        internal sealed override ResolveContext<HarshProvisionerContext> CreateResolveContext()
+        protected virtual void InitializeResolveContext(ClientObjectResolveContext context)
         {
-            return new ClientObjectResolveContext();
+        }
+
+        internal sealed override ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
+            => new ClientObjectManualResolver(
+                () => (ClientObjectResolveContext)resolveContextFactory()
+            );
+
+        protected sealed override ResolveContext<HarshProvisionerContext> CreateResolveContext()
+        {
+            var ctx = new ClientObjectResolveContext()
+            {
+                ProvisionerContext = Context
+            };
+
+            InitializeResolveContext(ctx);
+            return ctx;
+        }
+
+        internal sealed override async Task OnResolvedParametersBound()
+        {
+            if (ClientContext.HasPendingRequest)
+            {
+                await ClientContext.ExecuteQueryAsync();
+            }
         }
 
         internal sealed override Task ProvisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
         {
             if (provisioner == null)
             {
-                throw Error.ArgumentNull(nameof(provisioner));
+                throw Logger.Fatal.ArgumentNull(nameof(provisioner));
             }
 
             return ((HarshProvisioner)(provisioner)).ProvisionAsync(context);
@@ -51,7 +77,7 @@ namespace HarshPoint.Provisioning
         {
             if (provisioner == null)
             {
-                throw Error.ArgumentNull(nameof(provisioner));
+                throw Logger.Fatal.ArgumentNull(nameof(provisioner));
             }
 
             return ((HarshProvisioner)(provisioner)).UnprovisionAsync(context);

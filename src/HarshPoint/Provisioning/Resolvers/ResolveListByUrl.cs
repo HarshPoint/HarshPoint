@@ -1,26 +1,35 @@
-﻿using HarshPoint.Provisioning.Implementation;
-using Microsoft.SharePoint.Client;
+﻿using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace HarshPoint.Provisioning.Resolvers
+namespace HarshPoint.Provisioning.Implementation
 {
-    public sealed class ResolveListByUrl : 
-        Resolvable<List, String, HarshProvisionerContext, ResolveListByUrl>
+    public class ResolveListByUrl : IdentifierResolveBuilder<List, ClientObjectResolveContext, String>
     {
-        public ResolveListByUrl(IEnumerable<String> urls)
-            : base(urls)
+        public ResolveListByUrl(
+            IResolveBuilder<List> parent,
+            IEnumerable<String> urls
+        )
+            : base(parent, urls, StringComparer.OrdinalIgnoreCase)
         {
         }
 
-        protected override async Task<IEnumerable<List>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context)
+        protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
-            return await this.ResolveQuery(
-                ClientObjectResolveQuery.ListByUrl,
-                context,
-                context.ProvisionerContext.Web
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
+            context.Include<List>(
+                list => list.ParentWebUrl,
+                list => list.RootFolder.ServerRelativeUrl
             );
         }
+
+        protected override String GetIdentifier(List result)
+            => HarshUrl.GetRelativeTo(result.RootFolder.ServerRelativeUrl, result.ParentWebUrl);
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveListByUrl>();
     }
 }

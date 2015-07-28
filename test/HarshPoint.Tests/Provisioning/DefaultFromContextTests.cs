@@ -1,8 +1,9 @@
-﻿using HarshPoint.Provisioning;
+﻿using HarshPoint.ObjectModel;
+using HarshPoint.Provisioning;
 using HarshPoint.Provisioning.Implementation;
+using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -22,8 +23,7 @@ namespace HarshPoint.Tests.Provisioning
             var metadata = new HarshProvisionerMetadata(typeof(SingleResolverProvisioner));
 
             var param = Assert.Single(
-                metadata.DefaultParameterSet.Parameters
-                    .Where(p => p.IsDefaultFromContext)
+                metadata.DefaultFromContextPropertyBinder.Properties
             );
 
             Assert.Equal(
@@ -33,7 +33,7 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Equal(
                 typeof(String),
-                param.ResolvedType
+                param.ResolvedPropertyInfo?.ResolvedType
             );
         }
 
@@ -43,8 +43,7 @@ namespace HarshPoint.Tests.Provisioning
             var metadata = new HarshProvisionerMetadata(typeof(ResolverProvisioner));
 
             var param = Assert.Single(
-                metadata.DefaultParameterSet.Parameters
-                    .Where(p => p.IsDefaultFromContext)
+                metadata.DefaultFromContextPropertyBinder.Properties
             );
 
             Assert.Equal(
@@ -54,50 +53,59 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Equal(
                 typeof(String),
-                param.ResolvedType
+                param.ResolvedPropertyInfo?.ResolvedType
             );
         }
 
         [Fact]
-        public async Task Resolve_property_gets_assigned()
+        public void Resolve_property_gets_assigned()
         {
             var prov = new ResolverProvisioner();
 
             Assert.Null(prov.Resolver);
 
-            await prov.ProvisionAsync(Fixture.Context);
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(
+                prov,
+                Fixture.Context
+            );
 
             Assert.NotNull(prov.Resolver);
             Assert.IsType<ContextStateResolver<String>>(prov.Resolver);
         }
 
         [Fact]
-        public async Task ResolveSingle_property_gets_assigned()
+        public void ResolveSingle_property_gets_assigned()
         {
             var prov = new SingleResolverProvisioner();
 
             Assert.Null(prov.SingleResolver);
 
-            await prov.ProvisionAsync(Fixture.Context);
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(
+                prov,
+                Fixture.Context
+            );
 
             Assert.NotNull(prov.SingleResolver);
             Assert.IsType<ContextStateResolver<String>>(prov.SingleResolver);
         }
 
         [Fact]
-        public async Task String_property_gets_assigned()
+        public void String_property_gets_assigned()
         {
             var prov = new StringProvisioner();
 
             Assert.Null(prov.StringProperty);
 
-            await prov.ProvisionAsync(Fixture.Context.PushState("42"));
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(
+                prov,
+                Fixture.Context.PushState("42")
+            );
 
             Assert.Equal("42", prov.StringProperty);
         }
 
         [Fact]
-        public async Task Tagged_property_gets_assigned()
+        public void Tagged_property_gets_assigned()
         {
             var prov = new TaggedProvisioner();
             Assert.Null(prov.TaggedStringProperty);
@@ -106,19 +114,25 @@ namespace HarshPoint.Tests.Provisioning
                 .PushState("red herring")
                 .PushState(new DummyTag() { Value = "424242" });
 
-            await prov.ProvisionAsync(state);
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(
+                prov,
+                state
+            );
 
             Assert.Equal("424242", prov.TaggedStringProperty);
         }
 
         [Fact]
-        public async Task Assigned_property_doesnt_get_overwritten()
+        public void Assigned_property_doesnt_get_overwritten()
         {
             var prov = new ResolverProvisioner();
-            var resolver = new DummyResolver();
+            var resolver = Mock.Of<IResolve<String>>();
             prov.Resolver = resolver;
 
-            await prov.ProvisionAsync(Fixture.Context);
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(
+                prov,
+                Fixture.Context
+            );
 
             Assert.Same(resolver, prov.Resolver);
         }
@@ -126,8 +140,8 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Fails_if_TagType_doesnt_implement_IDefaultFromContextTag()
         {
-            Assert.Throws<HarshProvisionerMetadataException>(
-                () => new ParameterSetBuilder(typeof(WrongTagType)).Build()
+            Assert.Throws<HarshObjectMetadataException>(
+                () => new HarshProvisionerMetadata(typeof(WrongTagType))
             );
         }
 
@@ -177,14 +191,6 @@ namespace HarshPoint.Tests.Provisioning
 
         private class DummyTag : DefaultFromContextTag<String>
         {
-        }
-
-        private class DummyResolver : IResolve<String>
-        {
-            public Task<IEnumerable<string>> TryResolveAsync(IResolveContext context)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         private sealed class WrongTagType : HarshProvisioner

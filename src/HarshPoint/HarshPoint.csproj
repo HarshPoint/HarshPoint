@@ -24,7 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\CodeAnalysisRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -34,11 +34,13 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="Extensions\ClientContextExtensions.cs" />
     <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="Entity\ContentTypeAttribute.cs" />
     <Compile Include="Entity\HarshEntity.cs" />
@@ -48,12 +50,14 @@
     <Compile Include="Entity\Metadata\HarshEntityMetadataContentType.cs" />
     <Compile Include="Entity\Metadata\HarshEntityMetadataRepository.cs" />
     <Compile Include="Entity\Metadata\HarshFieldMetadata.cs" />
-    <Compile Include="Error.cs" />
+    <Compile Include="Extensions\EnumeratorExtensions.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\ICollectionExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="HarshBuiltInContentTypeIds.cs" />
     <Compile Include="HarshBuiltInFieldId.cs" />
+    <Compile Include="HarshGrouping.cs" />
+    <Compile Include="HarshGroupingDynamicFactory.cs" />
     <Compile Include="HarshLoggerFatal.cs" />
     <Compile Include="HarshLoggerError.cs" />
     <Compile Include="HarshExpression.cs" />
@@ -62,11 +66,15 @@
     <Compile Include="HarshLogger.cs" />
     <Compile Include="HarshLoggerWrapper.cs" />
     <Compile Include="HarshScopedValue`1.cs" />
+    <Compile Include="HarshTuple.cs" />
     <Compile Include="IHarshCloneable.cs" />
+    <Compile Include="ObjectModel\HarshObjectMetadata.cs" />
+    <Compile Include="ObjectModel\PropertyAccessor.cs" />
     <Compile Include="Provisioning\DefaultContentTypeGroup.cs" />
     <Compile Include="Provisioning\DefaultFieldGroup.cs" />
     <Compile Include="Provisioning\DefaultFromContextTag`1.cs" />
-    <Compile Include="Provisioning\DefaultParameterSetAttribute.cs" />
+    <Compile Include="DefaultParameterSetAttribute.cs" />
+    <Compile Include="Provisioning\DeferredResolveBuilder.cs" />
     <Compile Include="Provisioning\HarshContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshFieldProvisioner.cs" />
     <Compile Include="Provisioning\HarshFieldRef.cs" />
@@ -75,9 +83,51 @@
     <Compile Include="Provisioning\HarshDateTimeField.cs" />
     <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
+    <Compile Include="Provisioning\Implementation\Chain`1.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectManualResolver.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`1.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`2.cs" />
+    <Compile Include="Provisioning\Implementation\DefaultFromContextProperty.cs" />
+    <Compile Include="Provisioning\Implementation\DeferredResolveBuilder`2.cs" />
+    <Compile Include="Provisioning\Implementation\DeferredResolveBuilder`2_IResolve.cs" />
+    <Compile Include="Provisioning\Implementation\IResolveBuilder`1.cs" />
+    <Compile Include="Provisioning\Implementation\IResolveBuilderElement.cs" />
+    <Compile Include="Provisioning\Implementation\ManualResolver.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResolveBuilder`3.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResolveResult.cs" />
+    <Compile Include="Provisioning\Implementation\NestedResolveResult`1.cs" />
+    <Compile Include="Provisioning\ResolveExtensions.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveBuilder`2.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveBuilder`2_Element.cs" />
+    <Compile Include="Provisioning\Implementation\IdentifierResolveBuilder`3.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerTreeBuilder.cs" />
-    <Compile Include="Provisioning\Implementation\DefaultFromContextParameterBinder.cs" />
-    <Compile Include="Provisioning\ParameterValidationExceptionLoggerExtension.cs" />
+    <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyBinder.cs" />
+    <Compile Include="Provisioning\Implementation\IResolveBuilder`2.cs" />
+    <Compile Include="Provisioning\Implementation\IResolveBuilder.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveBuilder`2_IResolve.cs" />
+    <Compile Include="Provisioning\Implementation\ResolvedPropertyBinder.cs" />
+    <Compile Include="Provisioning\Implementation\ResolvedPropertyTypeInfo.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveBuilderAdapter`1.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultConverter.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultConverterStrategy.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultConverterStrategyGrouping.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultConverterStrategyTuple.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultConverterStrategyUnpack.cs" />
+    <Compile Include="Provisioning\ResolveBuilderExtensions.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveContentType.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveContentTypeById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveContentTypeFieldLink.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveField.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultSingleOrDefault`1.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResult`1.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultBase.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultSingle`1.cs" />
+    <Compile Include="Provisioning\IResolveSingleOrDefault`1.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveResultFactory.cs" />
+    <Compile Include="Provisioning\IResolveSingle`1.cs" />
+    <Compile Include="ObjectModel\ParameterValidationExceptionLoggerExtension.cs" />
     <Compile Include="Provisioning\HarshRemoveContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshFieldTaxonomy.cs" />
     <Compile Include="Provisioning\IDefaultFromContextTag.cs" />
@@ -86,37 +136,29 @@
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQueryProcessor.cs" />
     <Compile Include="Provisioning\Implementation\ContextStateResolver.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
-    <Compile Include="Provisioning\Implementation\HarshProvisionerMetadataExceptionLoggerExtension.cs" />
-    <Compile Include="Provisioning\Implementation\HarshProvisionerMetadataException.cs" />
-    <Compile Include="Provisioning\Implementation\IResolvableIdentifiers.cs" />
-    <Compile Include="Provisioning\Implementation\Parameter.cs" />
-    <Compile Include="Provisioning\Implementation\ParameterSet.cs" />
-    <Compile Include="Provisioning\Implementation\ParameterSetBuilder.cs" />
-    <Compile Include="Provisioning\Implementation\ParameterSetResolver.cs" />
-    <Compile Include="Provisioning\Implementation\ResolvableContextModification`1.cs" />
+    <Compile Include="ObjectModel\HarshObjectMetadataExceptionLoggerExtension.cs" />
+    <Compile Include="ObjectModel\HarshObjectMetadataException.cs" />
+    <Compile Include="ObjectModel\Parameter.cs" />
+    <Compile Include="ObjectModel\ParameterSet.cs" />
+    <Compile Include="ObjectModel\ParameterSetBuilder.cs" />
+    <Compile Include="ObjectModel\ParameterSetResolver.cs" />
     <Compile Include="Provisioning\Implementation\ResolveContext`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveFailedException.cs" />
     <Compile Include="Provisioning\Implementation\ResolveFailure.cs" />
     <Compile Include="Provisioning\IResolveContext.cs" />
-    <Compile Include="Provisioning\Implementation\Resolvable.cs" />
-    <Compile Include="Provisioning\Implementation\ResolvedResolver.cs" />
-    <Compile Include="Provisioning\ParameterAttribute.cs" />
-    <Compile Include="Provisioning\ParameterValidationAttribute.cs" />
-    <Compile Include="Provisioning\ParameterValidationException.cs" />
-    <Compile Include="Provisioning\ResolveClientObjectExtension.cs" />
-    <Compile Include="Provisioning\ResolveListExtensions.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery`4.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveListFieldById.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveListFieldByInternalName.cs" />
+    <Compile Include="ParameterAttribute.cs" />
+    <Compile Include="ObjectModel\ParameterValidationAttribute.cs" />
+    <Compile Include="ObjectModel\ParameterValidationException.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveListContentType.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveListField.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveList.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveListView.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByTitle.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByUrl.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveTermStoreTermSetById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveTermSetById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveTermStoreTermSet.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreKeywordsDefault.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreSiteCollectionDefault.cs" />
-    <Compile Include="Provisioning\ResolveTermStoreExtensions.cs" />
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
     <Compile Include="HarshTask.cs" />
@@ -131,23 +173,13 @@
     <Compile Include="Provisioning\HarshSiteGroup.cs" />
     <Compile Include="Provisioning\Implementation\ContextStateResolver`1.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerContextBase`1.cs" />
-    <Compile Include="Provisioning\Implementation\IResolvableChainElement.cs" />
-    <Compile Include="Provisioning\Implementation\NestedResolvable`4.cs" />
-    <Compile Include="Provisioning\Implementation\NestedResolvable`5.cs" />
-    <Compile Include="Provisioning\Implementation\ResolvableChain.cs" />
-    <Compile Include="Provisioning\Implementation\Resolvable`3.cs" />
-    <Compile Include="Provisioning\Implementation\Resolvable`4.cs" />
-    <Compile Include="Provisioning\Implementation\ResolvedGrouping.cs" />
+    <Compile Include="HarshGrouping`2.cs" />
     <Compile Include="Provisioning\IResolve`1.cs" />
     <Compile Include="Provisioning\Resolve.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveContentTypeById.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveCatalog.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListRootFolder.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HarshContentTypeId.cs" />
-    <Compile Include="HarshObjectMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerBase.cs" />
     <Compile Include="Provisioning\HarshField.cs" />
@@ -159,6 +191,7 @@
     <Compile Include="Provisioning\Implementation\HarshProvisionerContextBase.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerMetadata.cs" />
     <Compile Include="Provisioning\NeverDeletesUserDataAttribute.cs" />
+    <Compile Include="Reflection\TypeInfoExtensions.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -238,8 +271,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <Import Project="..\FixNugetConfig.targets"/>
-
+  <Import Project="..\FixNugetConfig.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetDir)*.dll" "$(SolutionDir)src\HarshPoint.Shellploy\" || exit 1
 copy "$(TargetDir)*.pdb" "$(SolutionDir)src\HarshPoint.Shellploy\" || exit 1</PostBuildEvent>
