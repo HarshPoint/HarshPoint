@@ -10,6 +10,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         Object ElementInitialize(TContext context);
 
-        IEnumerable ElementToEnumerable(Object state, TContext context);
+        IEnumerable ElementToEnumerable(TContext context, Object state);
     }
 }

@@ -51,7 +51,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var field = Web.Fields.GetById(HarshBuiltInFieldId.Title);
             var mock = new Mock<IResolveBuilder>();
 
-            mock.Setup(x => x.ToEnumerable(It.IsAny<Object>(), It.IsAny<IResolveContext>()))
+            mock.Setup(x => x.ToEnumerable(It.IsAny<IResolveContext>(), It.IsAny<Object>()))
                 .Returns<Object, IResolveContext>((state, ctx) =>
                 {
                     var corc = Assert.IsType<ClientObjectResolveContext>(ctx);

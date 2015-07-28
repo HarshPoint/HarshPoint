@@ -32,7 +32,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        IEnumerable<Object> IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(IResolveContext context, Object state)
         {
             if (state == null)
             {
@@ -65,7 +65,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return Elements.SelectMany(
-                (e, i) => e.ElementToEnumerable(elementStates[i], typedContext).Cast<Object>()
+                (e, i) => e.ElementToEnumerable(typedContext, elementStates[i]).Cast<Object>()
             );
         }
 

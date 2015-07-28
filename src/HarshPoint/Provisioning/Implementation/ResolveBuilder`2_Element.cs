@@ -25,7 +25,7 @@ namespace HarshPoint.Provisioning.Implementation
             return Initialize(context);
         }
 
-        IEnumerable IResolveBuilderElement<TContext>.ElementToEnumerable(Object state, TContext context)
+        IEnumerable IResolveBuilderElement<TContext>.ElementToEnumerable(TContext context, Object state)
         {
             if (context == null)
             {

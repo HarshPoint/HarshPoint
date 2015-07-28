@@ -166,9 +166,9 @@ namespace HarshPoint.Provisioning.Implementation
             );
 
             var resultSource = resolveBuilder.ToEnumerable(
-                resolveBuilder.Initialize(resolveContext),
                 resolveContext
-            );
+,
+                resolveBuilder.Initialize(resolveContext));
 
             Logger.Debug(
                 "Property {PropertyName} resolver {$Resolver} resolved into {$Value}.",

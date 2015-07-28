@@ -69,7 +69,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         {
             var mock = new Mock<IResolveBuilder>();
 
-            mock.Setup(x => x.ToEnumerable(It.IsAny<Object>(), It.IsAny<IResolveContext>()))
+            mock.Setup(x => x.ToEnumerable(It.IsAny<IResolveContext>(), It.IsAny<Object>()))
                 .Returns((result ?? ExpectedArray));
 
             return mock;

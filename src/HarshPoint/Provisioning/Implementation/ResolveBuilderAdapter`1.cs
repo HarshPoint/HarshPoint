@@ -24,8 +24,8 @@ namespace HarshPoint.Provisioning.Implementation
         Object IResolveBuilder.Initialize(IResolveContext context)
             => _inner.Initialize(context);
 
-        IEnumerable<Object> IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
-            => _inner.ToEnumerable(state, context);
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(IResolveContext context, Object state)
+            => _inner.ToEnumerable(context, state);
 
         TResult IResolveSingle<TResult>.Value { get { throw CannotCall(); } }
         TResult IResolveSingleOrDefault<TResult>.Value { get { throw CannotCall(); } }

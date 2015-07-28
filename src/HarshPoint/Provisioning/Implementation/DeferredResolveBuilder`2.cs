@@ -33,9 +33,9 @@ namespace HarshPoint.Provisioning.Implementation
             InitializeInner(context);
         }
 
-        IEnumerable<Object> IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(IResolveContext context, Object state)
         {
-            return Inner.ToEnumerable(state, context);
+            return Inner.ToEnumerable(context, state);
         }
 
         private void InitializeInner(IResolveContext context)

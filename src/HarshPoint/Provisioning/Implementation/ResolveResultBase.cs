@@ -33,7 +33,7 @@ namespace HarshPoint.Provisioning.Implementation
             throw Logger.Fatal.NotImplemented();
         }
 
-        IEnumerable<Object> IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(IResolveContext context, Object state)
         {
             throw Logger.Fatal.NotImplemented();
         }

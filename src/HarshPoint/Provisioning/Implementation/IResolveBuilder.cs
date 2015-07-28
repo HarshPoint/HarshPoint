@@ -9,6 +9,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         Object Initialize(IResolveContext context);
 
-        IEnumerable<Object> ToEnumerable(Object state, IResolveContext context);
+        IEnumerable<Object> ToEnumerable(IResolveContext context, Object state);
     }
 }
