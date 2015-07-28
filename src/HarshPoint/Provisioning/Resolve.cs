@@ -1,6 +1,7 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using HarshPoint.Provisioning.Resolvers;
 using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 
 namespace HarshPoint.Provisioning
@@ -12,6 +13,9 @@ namespace HarshPoint.Provisioning
 
         public static ResolveFieldById ById(this IResolveBuilder<Field> parent, params Guid[] ids)
             => new ResolveFieldById(parent, ids);
+
+        public static ResolveTermSetById ById(this IResolveBuilder<TermSet> parent, params Guid[] ids)
+            => new ResolveTermSetById(parent, ids);
 
         public static ResolveListViewByTitle ByTitle(this IResolveBuilder<View> parent, params String[] titles)
             => new ResolveListViewByTitle(parent, titles);
@@ -43,15 +47,14 @@ namespace HarshPoint.Provisioning
         public static ResolveListView View(this IResolveBuilder<List, ClientObjectResolveContext> list)
             => new ResolveListView(list);
 
+        public static ResolveTermStoreTermSet TermSet(this IResolveBuilder<TermStore, ClientObjectResolveContext> termStore)
+            => new ResolveTermStoreTermSet(termStore);
+
         public static ResolveTermStoreKeywordsDefault TermStoreKeywordsDefault()
-        {
-            return new ResolveTermStoreKeywordsDefault();
-        }
+            => new ResolveTermStoreKeywordsDefault();
 
         public static ResolveTermStoreSiteCollectionDefault TermStoreSiteCollectionDefault()
-        {
-            return new ResolveTermStoreSiteCollectionDefault();
-        }
+            => new ResolveTermStoreSiteCollectionDefault();
 
         public static ResolvedResolver<T> Value<T>(params T[] values)
         {

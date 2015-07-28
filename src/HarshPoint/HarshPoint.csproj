@@ -158,16 +158,13 @@
     <Compile Include="Provisioning\Implementation\ClientObjectResolveQuery`4.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListField.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveList.cs" />
-    <Compile Include="Provisioning\Resolvers\OldResolveListFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListView.cs" />
-    <Compile Include="Provisioning\Resolvers\OldResolveListViewByTitle.cs" />
-    <Compile Include="Provisioning\Resolvers\OldResolveListViewByUrl.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByTitle.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByUrl.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveTermStoreTermSetById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveTermSetById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveTermStoreTermSet.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreKeywordsDefault.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreSiteCollectionDefault.cs" />
-    <Compile Include="Provisioning\ResolveTermStoreExtensions.cs" />
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
     <Compile Include="HarshTask.cs" />
@@ -191,7 +188,6 @@
     <Compile Include="HarshGrouping`2.cs" />
     <Compile Include="Provisioning\IResolve`1.cs" />
     <Compile Include="Provisioning\Resolve.cs" />
-    <Compile Include="Provisioning\Resolvers\OldResolveListByUrl.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveCatalog.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListRootFolder.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />

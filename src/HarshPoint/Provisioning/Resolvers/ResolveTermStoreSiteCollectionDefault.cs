@@ -1,24 +1,26 @@
-﻿using Microsoft.SharePoint.Client.Taxonomy;
-using System.Collections.Generic;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client.Taxonomy;
+using System;
+using System.Collections;
 using System.Collections.Immutable;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveTermStoreSiteCollectionDefault
-        : Implementation.OldResolvable<TermStore, HarshProvisionerContext, ResolveTermStoreSiteCollectionDefault>
+    public sealed class ResolveTermStoreSiteCollectionDefault :
+        ResolveBuilder<TermStore, ClientObjectResolveContext>
     {
-        protected override Task<IEnumerable<TermStore>> ResolveChainElementOld(ResolveContext<HarshProvisionerContext> context)
+        protected override Object Initialize(ClientObjectResolveContext context)
+            => null;
+
+        protected override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
         {
             if (context == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            return Task.FromResult<IEnumerable<TermStore>>(
-                ImmutableArray.Create(
-                    context.ProvisionerContext.TaxonomySession.GetDefaultSiteCollectionTermStore()
-                )
+            return ImmutableArray.Create(
+                context.ProvisionerContext.TaxonomySession.GetDefaultSiteCollectionTermStore()
             );
         }
 
