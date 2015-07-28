@@ -76,18 +76,8 @@ namespace HarshPoint.ShellployGenerator
             method.Statements.AddRange(
                 command.Properties
                 .Where(prop => !prop.SkipAssignment)
-                .Select(prop =>
-                    new CodeAssignStatement(
-                        new CodePropertyReferenceExpression(
-                            new CodeVariableReferenceExpression(varName),
-                            prop.Name
-                        ),
-                        new CodePropertyReferenceExpression(
-                            new CodeThisReferenceExpression(),
-                            prop.Name
-                        )
-                    )
-                ).ToArray()
+                .Select(prop => CreatePropertyAssignment(prop, varName))
+                .ToArray()
             );
 
             if (command.HasChildren)
@@ -118,12 +108,43 @@ namespace HarshPoint.ShellployGenerator
             return method;
         }
 
+        private static CodeAssignStatement CreatePropertyAssignment(
+            ShellployCommandProperty property, 
+            String varName
+        )
+        {
+            CodeExpression valueExpression = new CodePropertyReferenceExpression(
+                new CodeThisReferenceExpression(),
+                property.Name
+            );
+
+            if (property.Type == typeof(Boolean))
+            {
+                valueExpression = new CodeMethodInvokeExpression(valueExpression, "ToBool");
+            }
+
+            return new CodeAssignStatement(
+                new CodePropertyReferenceExpression(
+                    new CodeVariableReferenceExpression(varName),
+                    property.Name
+                ),
+                valueExpression
+            );
+        }
+
         private static CodeMemberProperty CreateProperty(CodeTypeDeclaration targetClass, ShellployCommandProperty property)
         {
+            var type = property.Type;
+
+            if (type == typeof(Boolean))
+            {
+                type = typeof(SwitchParameter);
+            }
+
             var codeProperty = new CodeMemberProperty()
             {
                 Name = property.Name,
-                Type = new CodeTypeReference(property.Type),
+                Type = new CodeTypeReference(type),
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
             };
 
