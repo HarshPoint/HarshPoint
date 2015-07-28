@@ -120,24 +120,8 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (resolveBuilder == null)
             {
-                var resolveBuilderAdapter = value as IResolveBuilderAdapter;
-
-                if (resolveBuilderAdapter != null)
-                {
-                    Logger.Debug(
-                        "Property {PropertyName} value {$Value} is an IResolveBuilderAdapter.",
-                        property.Name,
-                        value
-                    );
-
-                    resolveBuilder = resolveBuilderAdapter.ResolveBuilder;
-                }
-            }
-
-            if (resolveBuilder == null)
-            {
                 Logger.Debug(
-                    "Property {PropertyName} value {$Value} cannot be turned into an IResolveBuilder, skipping.",
+                    "Property {PropertyName} value {$Value} is not an IResolveBuilder, skipping.",
                     property.Name,
                     value
                 );

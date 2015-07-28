@@ -8,7 +8,7 @@ namespace HarshPoint.Provisioning.Resolvers
         IdentifierResolveBuilder<ContentType, ClientObjectResolveContext, HarshContentTypeId>
     {
         public ResolveContentTypeById(
-            IResolveBuilder<ContentType, ClientObjectResolveContext> parent,
+            IResolveBuilder<ContentType> parent,
             IEnumerable<HarshContentTypeId> ids
         )
             : base(parent, ids)

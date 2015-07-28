@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -32,7 +33,7 @@ namespace HarshPoint.Provisioning.Implementation
             throw Logger.Fatal.NotImplemented();
         }
 
-        IEnumerable IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
         {
             throw Logger.Fatal.NotImplemented();
         }

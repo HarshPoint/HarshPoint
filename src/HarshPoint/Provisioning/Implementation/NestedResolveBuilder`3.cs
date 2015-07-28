@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning.Implementation
             Parent = parent;
         }
 
-        public IResolveBuilder<TParent, TContext> Parent { get; private set; }
+        public IResolveBuilder<TParent> Parent { get; private set; }
 
         protected sealed override void InitializeContext(TContext context)
         {

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -12,7 +13,7 @@ namespace HarshPoint.Provisioning.Implementation
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IdentifierResolveBuilder<,,>));
 
         protected IdentifierResolveBuilder(
-            IResolveBuilder<TResult, TContext> parent,
+            IResolveBuilder<TResult> parent,
             IEnumerable<TIdentifier> identifiers
         )
             : this(parent, identifiers, null)
@@ -20,7 +21,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         protected IdentifierResolveBuilder(
-            IResolveBuilder<TResult, TContext> parent,
+            IResolveBuilder<TResult> parent,
             IEnumerable<TIdentifier> identifiers,
             IEqualityComparer<TIdentifier> identifierComparer
         )
@@ -47,12 +48,11 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        public IResolveBuilder<TResult, TContext> Parent { get; private set; }
+        public IResolveBuilder<TResult> Parent { get; private set; }
 
         public HashSet<TIdentifier> Identifiers { get; private set; }
 
         public IEqualityComparer<TIdentifier> IdentifierComparer => Identifiers.Comparer;
-
 
         protected sealed override void InitializeContext(TContext context)
         {
@@ -67,14 +67,44 @@ namespace HarshPoint.Provisioning.Implementation
         protected override Object Initialize(TContext context)
             => Parent.Initialize(context);
 
-        protected abstract TIdentifier GetIdentifier(TResult result);
+        protected virtual TIdentifier GetIdentifier(TResult result)
+        {
+            throw Logger.Fatal.NotImplemented();
+        }
+
+        protected virtual TIdentifier GetIdentifierFromNested(NestedResolveResult nested)
+        {
+            if (nested == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(nested));
+            }
+
+            return GetIdentifier((TResult)nested.Value);
+        }
+
+        protected virtual TIdentifier GetIdentifierFromItem(Object item)
+        {
+            if (item == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(item));
+            }
+
+            var nested = (item as NestedResolveResult);
+
+            if (nested != null)
+            {
+                return GetIdentifierFromNested(nested);
+            }
+
+            return GetIdentifier((TResult)(item));
+        }
 
         protected override IEnumerable ToEnumerable(Object state, TContext context)
         {
             var items = Parent.ToEnumerable(state, context);
 
             var byId = items.ToImmutableDictionaryFirstWins(
-                item => GetIdentifier(NestedResolveResult.Unpack<TResult>(item)),
+                item => GetIdentifierFromItem(item),
                 item => item,
                 IdentifierComparer
             );

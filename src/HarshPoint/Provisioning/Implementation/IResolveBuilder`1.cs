@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace HarshPoint.Provisioning.Implementation
+﻿namespace HarshPoint.Provisioning.Implementation
 {
-    public interface IResolveBuilder<TContext> : IResolveBuilder
-        where TContext : IResolveContext
+    public interface IResolveBuilder<out TResult> :
+        IResolveBuilder,
+        IResolve<TResult>,
+        IResolveSingle<TResult>,
+        IResolveSingleOrDefault<TResult>
     {
-        void InitializeContext(TContext context);
-
-        Object Initialize(TContext context);
-
-        IEnumerable<Object> ToEnumerable(Object state, TContext context);
     }
 }

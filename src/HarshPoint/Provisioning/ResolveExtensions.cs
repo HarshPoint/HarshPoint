@@ -1,4 +1,6 @@
-﻿namespace HarshPoint.Provisioning.Implementation
+﻿using HarshPoint.Provisioning.Implementation;
+
+namespace HarshPoint.Provisioning
 {
     public static class ResolveExtensions
     {

@@ -2,32 +2,27 @@
 using HarshPoint.Provisioning.Implementation;
 using System;
 using Moq;
+using System.Linq;
 
 namespace HarshPoint.Tests.Provisioning
 {
     public class MockResolve
     {
-        public static IResolveBuilder<TResult, IResolveContext> Build<TResult>(
+        public static IResolveBuilder<TResult> Build<TResult>(
             params TResult[] results
         )
-            => Mock<TResult>(results).Object;
+            => Mock(results).Object;
 
-        public static Mock<IResolveBuilder<TResult, IResolveContext>> Mock<TResult>(
+        public static Mock<IResolveBuilder<TResult>> Mock<TResult>(
             params TResult[] results
         )
-            => Mock<TResult, IResolveContext>(results);
-
-        public static Mock<IResolveBuilder<TResult, TContext>> Mock<TResult, TContext>(
-            params TResult[] results
-        )
-            where TContext : IResolveContext
         {
-            var mock = new Mock<IResolveBuilder<TResult, TContext>>();
+            var mock = new Mock<IResolveBuilder>();
 
             mock.Setup(x => x.ToEnumerable(It.IsAny<Object>(), It.IsAny<IResolveContext>()))
-                .Returns(results);
+                .Returns(() => results.Cast<Object>());
 
-            return mock;
+            return mock.As<IResolveBuilder<TResult>>();
         }
     }
 }

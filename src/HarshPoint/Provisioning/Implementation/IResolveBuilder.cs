@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -9,6 +9,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         Object Initialize(IResolveContext context);
 
-        IEnumerable ToEnumerable(Object state, IResolveContext context);
+        IEnumerable<Object> ToEnumerable(Object state, IResolveContext context);
     }
 }

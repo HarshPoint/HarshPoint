@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    partial class DeferredResolveBuilder<TResult, TContext> : IResolve<TResult>, IResolveSingle<TResult>, IResolveSingleOrDefault<TResult>
+    partial class DeferredResolveBuilder<TResult> : IResolve<TResult>, IResolveSingle<TResult>, IResolveSingleOrDefault<TResult>
     {
         TResult IResolveSingle<TResult>.Value { get { throw CannotCall(); } }
         TResult IResolveSingleOrDefault<TResult>.Value { get { throw CannotCall(); } }

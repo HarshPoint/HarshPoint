@@ -7,14 +7,20 @@ namespace HarshPoint.Provisioning
 {
     public static class Resolve
     {
-        public static ResolveContentTypeById ById(this IResolveBuilder<ContentType, ClientObjectResolveContext> parent, params HarshContentTypeId[] ids)
+        public static ResolveContentTypeById ById(this IResolveBuilder<ContentType> parent, params HarshContentTypeId[] ids)
             => new ResolveContentTypeById(parent, ids);
 
-        public static ResolveFieldById ById(this IResolveBuilder<Field, ClientObjectResolveContext> parent, params Guid[] ids)
+        public static ResolveFieldById ById(this IResolveBuilder<Field> parent, params Guid[] ids)
             => new ResolveFieldById(parent, ids);
 
-        public static ResolveListByUrl ByUrl(this IResolveBuilder<List, ClientObjectResolveContext> parent, params String[] urls)
+        public static ResolveListViewByTitle ByTitle(this IResolveBuilder<View> parent, params String[] titles)
+            => new ResolveListViewByTitle(parent, titles);
+
+        public static ResolveListByUrl ByUrl(this IResolveBuilder<List> parent, params String[] urls)
             => new ResolveListByUrl(parent, urls);
+
+        public static ResolveListViewByUrl ByUrl(this IResolveBuilder<View> parent, params String[] urls)
+            => new ResolveListViewByUrl(parent, urls);
 
         public static ResolveCatalog Catalog(params ListTemplateType[] templateTypes)
             => new ResolveCatalog(templateTypes);
@@ -34,16 +40,8 @@ namespace HarshPoint.Provisioning
         public static ResolveListRootFolder RootFolder(this IResolveBuilder<List, ClientObjectResolveContext> list)
             => new ResolveListRootFolder(list);
 
-        [Obsolete]
-        public static OldResolveListByUrl ListByUrlOld(params String[] urls)
-        {
-            if (urls == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(urls));
-            }
-
-            return new OldResolveListByUrl(urls);
-        }
+        public static ResolveListView View(this IResolveBuilder<List, ClientObjectResolveContext> list)
+            => new ResolveListView(list);
 
         public static ResolveTermStoreKeywordsDefault TermStoreKeywordsDefault()
         {

@@ -49,10 +49,10 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var mr = new ClientObjectManualResolver(Fixture.CreateResolveContext);
 
             var field = Web.Fields.GetById(HarshBuiltInFieldId.Title);
-            var mock = MockResolve.Mock<Field>(field);
+            var mock = new Mock<IResolveBuilder>();
 
             mock.Setup(x => x.ToEnumerable(It.IsAny<Object>(), It.IsAny<IResolveContext>()))
-                .Callback<Object, IResolveContext>((state, ctx) =>
+                .Returns<Object, IResolveContext>((state, ctx) =>
                 {
                     var corc = Assert.IsType<ClientObjectResolveContext>(ctx);
                     var retrievals = corc.QueryProcessor
@@ -65,10 +65,11 @@ namespace HarshPoint.Tests.Provisioning.Implementation
                     );
 
                     Assert.Equal(expected, actual);
+                    return new Object[] { field };
                 });
 
             var result = mr.Resolve(
-                mock.Object,
+                mock.As<IResolveBuilder<Field>>().Object,
                 f => f.FieldTypeKind
             );
 

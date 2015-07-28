@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal class NestedResolveResult
+    public class NestedResolveResult
     {
         protected NestedResolveResult(Object value, IImmutableList<Object> parents)
         {
@@ -89,6 +89,16 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return array.ToImmutableArray();
+        }
+
+        public Tuple<T1, T2> ExtractComponents<T1, T2>()
+        {
+            var components = ExtractComponents(typeof(T1), typeof(T2));
+
+            return Tuple.Create(
+                (T1)components[0],
+                (T2)components[1]
+            );
         }
 
         public Object Value { get; private set; }

@@ -14,45 +14,25 @@ namespace HarshPoint.Provisioning.Implementation
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveBuilder<,>));
 
         Object IResolveBuilder.Initialize(IResolveContext context)
-            => ThisAsResolveBuilderOfTContext.Initialize(
-                ValidateContext(context)
-            );
-
-        void IResolveBuilder.InitializeContext(IResolveContext context)
-            => ThisAsResolveBuilderOfTContext.InitializeContext(
-                ValidateContext(context)
-            );
-
-        IEnumerable IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
-            => ThisAsResolveBuilderOfTContext.ToEnumerable(
-                state,
-                ValidateContext(context)
-            );
-
-        Object IResolveBuilder<TContext>.Initialize(TContext context)
         {
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
+            var typedContext = ValidateContext(context);
 
-            return Elements.Select(e => e.ElementInitialize(context)).ToArray();
+            return Elements
+                .Select(e => e.ElementInitialize(typedContext))
+                .ToArray();
         }
 
-        void IResolveBuilder<TContext>.InitializeContext(TContext context)
+        void IResolveBuilder.InitializeContext(IResolveContext context)
         {
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
+            var typedContext = ValidateContext(context);
 
             foreach (var element in Elements)
             {
-                element.ElementInitializeContext(context);
+                element.ElementInitializeContext(typedContext);
             }
         }
 
-        IEnumerable<Object> IResolveBuilder<TContext>.ToEnumerable(Object state, TContext context)
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
         {
             if (state == null)
             {
@@ -64,6 +44,7 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
+            var typedContext = ValidateContext(context);
             var elementStates = (state as Object[]);
 
             if (elementStates == null)
@@ -84,7 +65,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return Elements.SelectMany(
-                (e, i) => e.ElementToEnumerable(elementStates[i], context).Cast<Object>()
+                (e, i) => e.ElementToEnumerable(elementStates[i], typedContext).Cast<Object>()
             );
         }
 
@@ -93,9 +74,6 @@ namespace HarshPoint.Provisioning.Implementation
             Append(other);
             return this;
         }
-
-        private IResolveBuilder<TContext> ThisAsResolveBuilderOfTContext
-            => this;
 
         private static TContext ValidateContext(IResolveContext context)
         {

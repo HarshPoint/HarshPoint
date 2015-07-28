@@ -2,25 +2,29 @@
 using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveListViewByTitle : 
-        OldNestedResolvable<List, View, String, HarshProvisionerContext, ResolveListViewByTitle>
+    public sealed class ResolveListViewByTitle : IdentifierResolveBuilder<View, ClientObjectResolveContext, String>
     {
-        public ResolveListViewByTitle(IResolveOld<List> parent, IEnumerable<String> titles) 
-            : base(parent, titles)
+        public ResolveListViewByTitle(
+            IResolveBuilder<View> parent, 
+            IEnumerable<String> identifiers
+        )
+            : base(parent, identifiers, StringComparer.OrdinalIgnoreCase)
         {
         }
 
-        protected override Task<IEnumerable<View>> ResolveChainElement(ResolveContext<HarshProvisionerContext> context, List parent)
+        protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
-            return this.ResolveQuery(
-                ClientObjectResolveQuery.ListViewByTitle,
-                context,
-                parent
+            context.Include<View>(
+                v => v.Title
             );
+
+            base.InitializeContextBeforeParent(context);
         }
+
+        protected override string GetIdentifier(View result)
+            => result.Title;
     }
 }

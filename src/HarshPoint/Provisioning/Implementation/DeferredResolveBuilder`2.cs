@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -7,15 +6,14 @@ namespace HarshPoint.Provisioning.Implementation
     /// <remarks>Does not inherit from <see cref="ResolveBuilder{TResult, TContext}" />
     /// because that one inherits from <see cref="Chain{TElement}"/> and we don't want
     /// that functionality here.</remarks>
-    internal sealed partial class DeferredResolveBuilder<TResult, TContext> : 
-        IResolveBuilder<TResult, TContext>
-        where TContext : class, IResolveContext
+    internal sealed partial class DeferredResolveBuilder<TResult> : 
+        IResolveBuilder<TResult>
     {
-        private readonly Func<IResolveBuilder<TResult, TContext>> _factory;
+        private readonly Func<IResolveBuilder<TResult>> _factory;
 
-        private IResolveBuilder<TResult, TContext> _inner;
+        private IResolveBuilder<TResult> _inner;
 
-        public DeferredResolveBuilder(Func<IResolveBuilder<TResult, TContext>> factory)
+        public DeferredResolveBuilder(Func<IResolveBuilder<TResult>> factory)
         {
             if (factory == null)
             {
@@ -30,27 +28,12 @@ namespace HarshPoint.Provisioning.Implementation
             return Inner.Initialize(context);
         }
 
-        Object IResolveBuilder<TContext>.Initialize(TContext context)
-        {
-            return Inner.Initialize(context);
-        }
-
         void IResolveBuilder.InitializeContext(IResolveContext context)
         {
             InitializeInner(context);
         }
 
-        void IResolveBuilder<TContext>.InitializeContext(TContext context)
-        {
-            InitializeInner(context);
-        }
-
-        IEnumerable IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
-        {
-            return Inner.ToEnumerable(state, context);
-        }
-
-        IEnumerable<Object> IResolveBuilder<TContext>.ToEnumerable(Object state, TContext context)
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
         {
             return Inner.ToEnumerable(state, context);
         }
@@ -61,7 +44,7 @@ namespace HarshPoint.Provisioning.Implementation
             _inner.InitializeContext(context);
         }
 
-        private IResolveBuilder<TResult, TContext> Inner
+        private IResolveBuilder<TResult> Inner
         {
             get
             {
@@ -76,6 +59,6 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(DeferredResolveBuilder<,>));
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(DeferredResolveBuilder<>));
     }
 }

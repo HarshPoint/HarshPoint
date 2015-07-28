@@ -1,7 +1,10 @@
-﻿namespace HarshPoint.Provisioning.Implementation
+﻿using System;
+using System.Collections.Generic;
+
+namespace HarshPoint.Provisioning.Implementation
 {
     public interface IResolveBuilder<out TResult, TContext> :
-        IResolveBuilder<TContext>,
+        IResolveBuilder<TResult>,
         IResolve<TResult>,
         IResolveSingle<TResult>,
         IResolveSingleOrDefault<TResult>

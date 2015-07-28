@@ -57,20 +57,20 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         private ResolvedPropertyBinder Binder { get; set; }
 
         private IResolveSingleOrDefault<Int32> MockSingleOrDefaultResolve()
-            => MockResolveBuilder(new[] { 42 }).As<IResolveSingleOrDefault<Int32>>().Object;
+            => MockResolveBuilder(new Object[] { 42 }).As<IResolveSingleOrDefault<Int32>>().Object;
 
         private IResolveSingle<String> MockSingleResolve()
-            => MockResolveBuilder(new[] { "42" }).As<IResolveSingle<String>>().Object;
+            => MockResolveBuilder(new Object[] { "42" }).As<IResolveSingle<String>>().Object;
 
         private IResolve<String> MockResolve(IEnumerable<String> result = null)
-        => MockResolveBuilder(result).As<IResolve<String>>().Object;
+            => MockResolveBuilder(result).As<IResolve<String>>().Object;
 
-        private static Mock<IResolveBuilder> MockResolveBuilder<T>(IEnumerable<T> result)
+        private static Mock<IResolveBuilder> MockResolveBuilder(IEnumerable<Object> result)
         {
             var mock = new Mock<IResolveBuilder>();
 
             mock.Setup(x => x.ToEnumerable(It.IsAny<Object>(), It.IsAny<IResolveContext>()))
-                .Returns(((IEnumerable)result ?? ExpectedArray));
+                .Returns((result ?? ExpectedArray));
 
             return mock;
         }

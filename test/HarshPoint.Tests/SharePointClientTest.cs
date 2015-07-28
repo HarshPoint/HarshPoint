@@ -13,7 +13,7 @@ namespace HarshPoint.Tests
             : base(output)
         {
             Fixture = fixture;
-            ManualResolver = new ManualResolver(fixture.CreateResolveContext);
+            ManualResolver = new ClientObjectManualResolver(fixture.CreateResolveContext);
         }
 
         public ClientContext ClientContext => Fixture?.ClientContext;
@@ -22,6 +22,6 @@ namespace HarshPoint.Tests
 
         public SharePointClientFixture Fixture { get; private set; }
 
-        public ManualResolver ManualResolver { get; private set; }
+        public ClientObjectManualResolver ManualResolver { get; private set; }
     }
 }

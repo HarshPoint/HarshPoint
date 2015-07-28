@@ -4,24 +4,32 @@ using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public sealed class ResolveBuilderAdapter<T> : IResolveBuilderAdapter, IResolve<T>, IResolveSingle<T>, IResolveSingleOrDefault<T>
+    internal sealed class ResolveBuilderAdapter<TResult> : IResolveBuilder<TResult>
     {
-        internal ResolveBuilderAdapter(IResolveBuilder builder) 
+        private readonly IResolveBuilder _inner;
+
+        public ResolveBuilderAdapter(IResolveBuilder builder)
         {
             if (builder == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(builder));
             }
 
-            ResolveBuilder = builder;
+            _inner = builder;
         }
 
-        internal IResolveBuilder ResolveBuilder { get; private set; }
-        IResolveBuilder IResolveBuilderAdapter.ResolveBuilder => ResolveBuilder;
+        void IResolveBuilder.InitializeContext(IResolveContext context)
+            => _inner.InitializeContext(context);
 
-        T IResolveSingle<T>.Value { get { throw CannotCall(); } }
-        T IResolveSingleOrDefault<T>.Value { get { throw CannotCall(); } }
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() { throw CannotCall(); }
+        Object IResolveBuilder.Initialize(IResolveContext context)
+            => _inner.Initialize(context);
+
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(Object state, IResolveContext context)
+            => _inner.ToEnumerable(state, context);
+
+        TResult IResolveSingle<TResult>.Value { get { throw CannotCall(); } }
+        TResult IResolveSingleOrDefault<TResult>.Value { get { throw CannotCall(); } }
+        IEnumerator<TResult> IEnumerable<TResult>.GetEnumerator() { throw CannotCall(); }
         IEnumerator IEnumerable.GetEnumerator() { throw CannotCall(); }
 
         private static Exception CannotCall()

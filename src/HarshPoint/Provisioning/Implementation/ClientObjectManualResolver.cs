@@ -17,24 +17,24 @@ namespace HarshPoint.Provisioning.Implementation
             params Expression<Func<T, Object>>[] retrievals
         )
             where T : ClientObject
-            => Bind(resolve);
+            => Bind(resolve, retrievals);
 
         public IResolveSingle<T> ResolveSingle<T>(
             IResolveSingle<T> resolve,
             params Expression<Func<T, Object>>[] retrievals
         )
             where T : ClientObject
-            => Bind(resolve);
+            => Bind(resolve, retrievals);
 
         public IResolveSingleOrDefault<T> ResolveSingleOrDefault<T>(
             IResolveSingleOrDefault<T> resolve,
             params Expression<Func<T, Object>>[] retrievals
         )
             where T : ClientObject
-            => Bind(resolve);
+            => Bind(resolve, retrievals);
 
-        private T Bind<T>(T obj, Expression<Func<T, Object>>[] retrievals)
-            where T : ClientObject
+        private TResolve Bind<TResolve, TResult>(TResolve obj, Expression<Func<TResult, Object>>[] retrievals)
+            where TResult : ClientObject
         {
             var factory = ResolveContextFactory;
 

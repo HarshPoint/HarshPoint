@@ -11,11 +11,18 @@ namespace HarshPoint.Provisioning
         public HarshListView()
         {
             ViewFields = new Collection<String>();
+
+            ExistingViews = DeferredResolveBuilder.Create(() =>
+                Lists
+                .AsClientObjectResolveBuilder()
+                .View().ByUrl(Url)
+                .As<Tuple<List, View>>()
+            );
         }
 
         [Parameter]
         [DefaultFromContext]
-        public IResolveOld<List> Lists
+        public IResolve<List> Lists
         {
             get;
             set;
@@ -41,14 +48,10 @@ namespace HarshPoint.Provisioning
 
         protected override async Task OnProvisioningAsync()
         {
-            var lists = await ResolveAsync(
-                (IResolveOld<IGrouping<List, View>>)Lists.ViewByUrl(Url)
-            );
-
-            foreach (var grouping in lists)
+            foreach (var listView in ExistingViews)
             {
-                var list = grouping.Key;
-                var view = grouping.SingleOrDefault();
+                var list = listView.Item1;
+                var view = listView.Item2;
 
                 if (view == null)
                 {
@@ -64,6 +67,11 @@ namespace HarshPoint.Provisioning
             }
 
             await ClientContext.ExecuteQueryAsync();
+        }
+
+        private IResolve<Tuple<List, View>> ExistingViews
+        {
+            get; set;
         }
 
         private String InitialTitle

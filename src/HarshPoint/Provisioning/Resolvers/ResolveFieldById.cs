@@ -9,7 +9,7 @@ namespace HarshPoint.Provisioning.Resolvers
     public sealed class ResolveFieldById : IdentifierResolveBuilder<Field, ClientObjectResolveContext, Guid>
     {
         public ResolveFieldById(
-            IResolveBuilder<Field, ClientObjectResolveContext> parent,
+            IResolveBuilder<Field> parent,
             IEnumerable<Guid> identifiers
         )
             : base(parent, identifiers)
