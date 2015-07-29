@@ -215,6 +215,9 @@ Number of resolver elements {1}</value>
   <data name="HarshContentType_BothIdAndParentContentTypeCannotBeSet" xml:space="preserve">
     <value>Id and ParentContentType properties cannot be both set.</value>
   </data>
+  <data name="HarshDependencyGraph_EdgeFromToEqual" xml:space="preserve">
+    <value>The specified edge from "{0}" to "{1}" is invalid.</value>
+  </data>
   <data name="HarshEntityMetadataContentType_NoContentTypeAttribute" xml:space="preserve">
     <value>The specified type '{0}' has no ContentTypeAttribute.</value>
   </data>

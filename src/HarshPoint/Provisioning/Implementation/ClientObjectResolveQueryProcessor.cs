@@ -12,39 +12,8 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ClientObjectResolveQueryProcessor
     {
-        private IImmutableDictionary<Type, IImmutableList<Expression>> _retrievals;
-
-        public ClientObjectResolveQueryProcessor(IImmutableDictionary<Type, IImmutableList<Expression>> retrievals)
-        {
-            if (retrievals == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(retrievals));
-            }
-
-            _retrievals = retrievals;
-        }
-
-        public ClientObjectResolveQueryProcessor(Type type, IEnumerable<Expression> retrievals)
-        {
-            if (type == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(type));
-            }
-
-            if (retrievals == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(retrievals));
-            }
-
-            _retrievals = ImmutableDictionary<Type, IImmutableList<Expression>>.Empty.Add(
-                type, retrievals.ToImmutableArray()
-            );
-        }
-
-        public ClientObjectResolveQueryProcessor()
-        {
-            _retrievals = ImmutableDictionary<Type, IImmutableList<Expression>>.Empty;
-        }
+        private IImmutableDictionary<Type, IImmutableList<Expression>> _retrievals
+           = ImmutableDictionary<Type, IImmutableList<Expression>>.Empty;
 
         public void Include<T>(params Expression<Func<T, Object>>[] retrievals)
         {
@@ -86,17 +55,7 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
-            var includeInjecting = new IncludeInjectingVisitor();
-            var retrievalAppending = new RetrievalAppendingVisitor(_retrievals);
-
-            Logger.Debug("Expression processing: {Expression}", expression);
-            var includesInjected = includeInjecting.Visit(expression);
-
-            Logger.Debug("Includes injected: {Expression}", includesInjected);
-            var result = retrievalAppending.Visit(includesInjected);
-
-            Logger.Debug("Retrievals appended: {Expression}", result);
-            return result;
+            return ProcessCore(expression, _retrievals);
         }
 
         public IQueryable<T> Process<T>(IQueryable<T> query)
@@ -109,6 +68,24 @@ namespace HarshPoint.Provisioning.Implementation
             return query.Provider.CreateQuery<T>(
                 Process(query.Expression)
             );
+        }
+
+        private static Expression ProcessCore(
+            Expression expression, 
+            IImmutableDictionary<Type, IImmutableList<Expression>> retrievals
+        )
+        {
+            var includeInjecting = new IncludeInjectingVisitor();
+            var retrievalAppending = new RetrievalAppendingVisitor(retrievals);
+
+            Logger.Debug("Expression processing: {Expression}", expression);
+            var includesInjected = includeInjecting.Visit(expression);
+
+            Logger.Debug("Includes injected: {Expression}", includesInjected);
+            var result = retrievalAppending.Visit(includesInjected);
+
+            Logger.Debug("Retrievals appended: {Expression}", result);
+            return result;
         }
 
         private sealed class IncludeInjectingVisitor : ExpressionVisitor

@@ -148,6 +148,7 @@
   <ItemGroup>
     <Compile Include="ClientRequestExtension.cs" />
     <Compile Include="CloneableTests.cs" />
+    <Compile Include="DependencyGraphTests.cs" />
     <Compile Include="Entity\ContentTypeIdBuilderTests.cs" />
     <Compile Include="Entity\FieldAttributeTests.cs" />
     <Compile Include="Entity\HarshEntityMetadataContentTypeTests.cs" />

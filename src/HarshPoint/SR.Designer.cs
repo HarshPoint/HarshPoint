@@ -346,6 +346,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified edge from &quot;{0}&quot; to &quot;{1}&quot; is invalid..
+        /// </summary>
+        internal static string HarshDependencyGraph_EdgeFromToEqual {
+            get {
+                return ResourceManager.GetString("HarshDependencyGraph_EdgeFromToEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This HarshEntityMetadata instance doesn&apos;t belong to a HarshEntityMetadataRepository..
         /// </summary>
         internal static string HarshEntityMetadata_DoesntBelongToARepo {
