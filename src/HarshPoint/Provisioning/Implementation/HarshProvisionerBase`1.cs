@@ -154,10 +154,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         protected virtual ResolveContext<TContext> CreateResolveContext()
-            => new ResolveContext<TContext>()
-            {
-                ProvisionerContext = Context
-            };
+            => new ResolveContext<TContext>(Context);
 
         internal virtual ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
             => new ManualResolver(resolveContextFactory);

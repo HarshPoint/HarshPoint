@@ -25,10 +25,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Title_gets_resolved_with_InternalName()
         {
-            var ctx = new ClientObjectResolveContext()
-            {
-                ProvisionerContext = Fixture.Context
-            };
+            var ctx = new ClientObjectResolveContext(Fixture.Context);
 
             ctx.Include<Field>(
                 f => f.InternalName,

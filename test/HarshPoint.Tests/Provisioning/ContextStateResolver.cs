@@ -18,7 +18,7 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = Fixture.Context.PushState("42");
             var resolver = new ContextStateResolver<String>();
 
-            var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>());
+            var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>(ctx));
             var many = mr.Resolve(resolver);
 
             Assert.Single(many, "42");
@@ -30,7 +30,7 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = Fixture.Context.PushState("4242").PushState("42");
             var resolver = new ContextStateResolver<String>();
 
-            var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>());
+            var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>(ctx));
             var many = mr.Resolve(resolver);
 
             Assert.Single(many, "42");
@@ -45,7 +45,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var resolver = new ContextStateResolver<String>();
 
-            var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>());
+            var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>(ctx));
             var many = mr.Resolve(resolver);
 
             Assert.Collection(

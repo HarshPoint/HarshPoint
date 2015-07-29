@@ -8,7 +8,13 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public sealed class ClientObjectResolveContext : ResolveContext<HarshProvisionerContext>
     {
-        private readonly ClientObjectResolveQueryProcessor _queryProcessor = new ClientObjectResolveQueryProcessor();
+        private readonly ClientObjectResolveQueryProcessor _queryProcessor
+            = new ClientObjectResolveQueryProcessor();
+
+        public ClientObjectResolveContext(HarshProvisionerContext provisionerContext)
+            : base(provisionerContext)
+        {
+        }
 
         public void Include<T>(params Expression<Func<T, Object>>[] retrievals)
             where T : ClientObject

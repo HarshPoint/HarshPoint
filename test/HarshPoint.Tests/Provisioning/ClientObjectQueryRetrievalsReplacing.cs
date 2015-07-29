@@ -7,16 +7,16 @@ using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class ClientObjectQueryRetrievalsReplacing : SeriloggedTest
+    public class ClientObjectQueryRetrievalsReplacing : SharePointClientTest
     {
-        public ClientObjectQueryRetrievalsReplacing(ITestOutputHelper output) : base(output)
+        public ClientObjectQueryRetrievalsReplacing(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
         {
         }
 
         [Fact]
         public void Does_not_modify_expression_without_Include()
         {
-            var ctx = new ClientObjectResolveContext();
+            var ctx = Fixture.CreateResolveContext();
             ctx.Include<List>(l => l.Title);
 
             var visitor = (ctx.QueryProcessor);
@@ -30,7 +30,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Retrievals_of_two_types_are_added()
         {
-            var ctx = new ClientObjectResolveContext();
+            var ctx = Fixture.CreateResolveContext();
             ctx.Include<List>(l => l.Title);
             ctx.Include<Field>(f => f.InternalName);
 
@@ -56,7 +56,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Empty_Include_is_replaced_with_retrievals()
         {
-            var ctx = new ClientObjectResolveContext();
+            var ctx = Fixture.CreateResolveContext();
             ctx.Include<List>(l => l.Title);
 
             var visitor = ctx.QueryProcessor;
@@ -87,7 +87,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Retrievals_are_added_to_existing_Include()
         {
-            var ctx = new ClientObjectResolveContext();
+            var ctx = Fixture.CreateResolveContext();
             ctx.Include<List>(l => l.Title);
 
             var visitor = (ctx.QueryProcessor);
@@ -119,7 +119,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Empty_IncludeWitDefaultProperties_is_replaced_with_retrievals()
         {
-            var ctx = new ClientObjectResolveContext();
+            var ctx = Fixture.CreateResolveContext();
             ctx.Include<List>(l => l.Title);
 
             var visitor = (ctx.QueryProcessor);
@@ -151,7 +151,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Include_call_is_removed_when_no_retrievals()
         {
-            var ctx = new ClientObjectResolveContext();
+            var ctx = Fixture.CreateResolveContext();
             ctx.Include<List>();
 
             var visitor = (ctx.QueryProcessor);
@@ -174,7 +174,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Missing_Include_call_is_added()
         {
-            var ctx = new ClientObjectResolveContext();
+            var ctx = Fixture.CreateResolveContext();
             ctx.Include<List>(l => l.Title);
 
             var expression = GetExpression(w => w.Lists);

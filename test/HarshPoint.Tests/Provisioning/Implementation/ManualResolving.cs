@@ -52,7 +52,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var mock = new Mock<IResolveBuilder>();
 
             mock.Setup(x => x.ToEnumerable(It.IsAny<IResolveContext>(), It.IsAny<Object>()))
-                .Returns<Object, IResolveContext>((state, ctx) =>
+                .Returns<IResolveContext, Object>((ctx, state) =>
                 {
                     var corc = Assert.IsType<ClientObjectResolveContext>(ctx);
                     var retrievals = corc.QueryProcessor

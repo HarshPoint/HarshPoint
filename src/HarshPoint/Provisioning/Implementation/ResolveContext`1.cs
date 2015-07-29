@@ -9,10 +9,6 @@ namespace HarshPoint.Provisioning
     {
         private List<ResolveFailure> _failures;
 
-        public ResolveContext()
-        {
-        }
-
         public ResolveContext(TProvisionerContext provisionerContext)
         {
             ProvisionerContext = provisionerContext;
@@ -48,7 +44,7 @@ namespace HarshPoint.Provisioning
         public TProvisionerContext ProvisionerContext
         {
             get;
-            internal set;
+            private set;
         }
 
         HarshProvisionerContextBase IResolveContext.ProvisionerContext => ProvisionerContext;

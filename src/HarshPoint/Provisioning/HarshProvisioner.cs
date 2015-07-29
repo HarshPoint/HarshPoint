@@ -46,11 +46,7 @@ namespace HarshPoint.Provisioning
 
         protected sealed override ResolveContext<HarshProvisionerContext> CreateResolveContext()
         {
-            var ctx = new ClientObjectResolveContext()
-            {
-                ProvisionerContext = Context
-            };
-
+            var ctx = new ClientObjectResolveContext(Context);
             InitializeResolveContext(ctx);
             return ctx;
         }
