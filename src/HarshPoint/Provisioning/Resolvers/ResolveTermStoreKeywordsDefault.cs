@@ -1,18 +1,15 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System.Collections.Immutable;
-using System;
-using System.Collections;
+using Microsoft.SharePoint.Client;
+using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveTermStoreKeywordsDefault :
-        ResolveBuilder<TermStore, ClientObjectResolveContext>
+        ClientObjectResolveBuilder<TermStore>
     {
-        protected override Object Initialize(ClientObjectResolveContext context)
-            => null;
-
-        protected override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
+        protected override IEnumerable<TermStore> CreateObjects(ClientObjectResolveContext context)
         {
             if (context == null)
             {

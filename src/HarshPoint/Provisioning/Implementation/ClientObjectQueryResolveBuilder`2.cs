@@ -11,16 +11,13 @@ namespace HarshPoint.Provisioning.Implementation
         where TResult : ClientObject
         where TQueryResult : ClientObject
     {
-        protected override Object Initialize(ClientObjectResolveContext context)
+        protected sealed override Object Initialize(ClientObjectResolveContext context)
         {
             var queries = CreateQueries(context);
 
             if (queries == null)
             {
-                throw Logger.Fatal.InvalidOperationFormat(
-                    SR.ClientObjectResolveBuilder_ToQueryableReturnedNull,
-                    GetType()
-                );
+                return new IEnumerable<TQueryResult>[0];
             }
 
             return queries
@@ -28,7 +25,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToArray();
         }
 
-        protected override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
+        protected sealed override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
         {
             if (state == null)
             {
@@ -66,9 +63,7 @@ namespace HarshPoint.Provisioning.Implementation
         protected virtual IQueryable<TQueryResult>[] CreateQueries(
             ClientObjectResolveContext context
         )
-        {
-            return new[] { CreateQuery(context) };
-        }
+            => new[] { CreateQuery(context) };
 
         protected virtual IEnumerable<TResult> TransformQueryResults(
             IEnumerable<TQueryResult> results,

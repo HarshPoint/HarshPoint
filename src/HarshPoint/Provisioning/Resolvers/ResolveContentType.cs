@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveContentType : ClientObjectResolveBuilder<ContentType>
+    public sealed class ResolveContentType : ClientObjectQueryResolveBuilder<ContentType>
     {
         protected override IQueryable<ContentType>[] CreateQueries(ClientObjectResolveContext context)
         {

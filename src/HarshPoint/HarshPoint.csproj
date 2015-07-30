@@ -88,8 +88,9 @@
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectManualResolver.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectQueryResolveBuilder`1.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectQueryResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`1.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextProperty.cs" />
     <Compile Include="Provisioning\Implementation\DeferredResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\DeferredResolveBuilder`2_IResolve.cs" />

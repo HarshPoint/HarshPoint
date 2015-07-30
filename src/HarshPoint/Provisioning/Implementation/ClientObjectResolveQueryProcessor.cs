@@ -22,10 +22,26 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(retrievals));
             }
 
+            Logger.Debug(
+                "Including {Type} {@Retrievals}",
+                typeof(T),
+                retrievals
+            );
+
             if (!retrievals.Any())
             {
                 return;
             }
+
+            var retrievalsWithIncludes = IncludeInjectingVisitor.Instance.Visit(
+                new ReadOnlyCollection<Expression>(retrievals)
+            );
+
+            Logger.Debug(
+                "Retrievals with includes for {Type}: {@Retrievals}",
+                typeof(T),
+                retrievalsWithIncludes
+            );
 
             _retrievals = _retrievals.SetItem(
                 typeof(T),
@@ -33,29 +49,31 @@ namespace HarshPoint.Provisioning.Implementation
                     typeof(T),
                     ImmutableList<Expression>.Empty
                 )
-                .AddRange(retrievals)
+                .AddRange(retrievalsWithIncludes)
             );
         }
 
         public Expression<Func<T, Object>>[] GetRetrievals<T>()
-        {
-            return _retrievals
-                .GetValueOrDefault(
-                    typeof(T),
-                    ImmutableArray<Expression>.Empty
-                )
+            => GetRetrievals(typeof(T))
                 .Cast<Expression<Func<T, Object>>>()
                 .ToArray();
-        }
 
-        public Expression Process(Expression expression)
+        public Expression[] GetRetrievals(Type type)
         {
-            if (expression == null)
+            if (type == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(expression));
+                throw Logger.Fatal.ArgumentNull(nameof(type));
             }
 
-            return ProcessCore(expression, _retrievals);
+            var visitor = new RetrievalAppendingVisitor(this);
+
+            return _retrievals
+                .GetValueOrDefault(
+                    type,
+                    ImmutableArray<Expression>.Empty
+                )
+                .Select(visitor.Visit)
+                .ToArray();
         }
 
         public IQueryable<T> Process<T>(IQueryable<T> query)
@@ -70,26 +88,29 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        private static Expression ProcessCore(
-            Expression expression, 
-            IImmutableDictionary<Type, IImmutableList<Expression>> retrievals
-        )
+        public Expression Process(Expression expression)
         {
-            var includeInjecting = new IncludeInjectingVisitor();
-            var retrievalAppending = new RetrievalAppendingVisitor(retrievals);
+            if (expression == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
+            }
 
             Logger.Debug("Expression processing: {Expression}", expression);
-            var includesInjected = includeInjecting.Visit(expression);
 
+            var includesInjected = IncludeInjectingVisitor.Instance.Visit(expression);
             Logger.Debug("Includes injected: {Expression}", includesInjected);
-            var result = retrievalAppending.Visit(includesInjected);
 
+            var retrievalAppending = new RetrievalAppendingVisitor(this);
+            var result = retrievalAppending.Visit(includesInjected);
             Logger.Debug("Retrievals appended: {Expression}", result);
+
             return result;
         }
 
         private sealed class IncludeInjectingVisitor : ExpressionVisitor
         {
+            private IncludeInjectingVisitor() { }
+
             protected override Expression VisitConstant(ConstantExpression node)
                 => WrapWithIncludeCall(node);
 
@@ -99,7 +120,7 @@ namespace HarshPoint.Provisioning.Implementation
             protected override Expression VisitMethodCall(MethodCallExpression node)
                 => WrapWithIncludeCall(node);
 
-            private static Expression WrapWithIncludeCall(Expression expression)
+            private Expression WrapWithIncludeCall(Expression expression)
             {
                 var elementType = ExtractQueryResultTypes(expression.Type).FirstOrDefault();
 
@@ -108,41 +129,58 @@ namespace HarshPoint.Provisioning.Implementation
                     return expression;
                 }
 
-                var methodCall = new IncludeCallInfo(expression as MethodCallExpression);
+                var instance = expression;
+                var retrievals = new ReadOnlyCollection<Expression>(new Expression[0]);
 
-                if ((methodCall != null) && (methodCall.ElementType == elementType))
+                var methodCall = expression as MethodCallExpression;
+                var includeCall = new IncludeCallInfo(methodCall);
+
+                if (includeCall.IsInclude)
                 {
-                    return expression;
+                    var arrayInit = methodCall.Arguments[1] as NewArrayExpression;
+
+                    if (arrayInit == null)
+                    {
+                        throw Logger.Fatal.ArgumentFormat(
+                            nameof(expression),
+                            SR.ClientObjectResolveQueryProcessor_IncludeArgNotArray,
+                            methodCall
+                        );
+                    }
+
+                    instance = methodCall.Arguments[0];
+                    retrievals = Visit(arrayInit.Expressions);
                 }
+
 
                 return Expression.Call(
                     null,
                     IncludeMethod.MakeGenericMethod(elementType),
-                    expression,
+                    instance,
                     Expression.NewArrayInit(
                         typeof(Expression<>).MakeGenericType(
                             typeof(Func<,>).MakeGenericType(
                                 elementType,
                                 typeof(Object)
                             )
-                        )
+                        ),
+                        retrievals
                     )
                 );
             }
+
+            public static IncludeInjectingVisitor Instance { get; }
+                = new IncludeInjectingVisitor();
         }
 
         private sealed class RetrievalAppendingVisitor : ExpressionVisitor
         {
-            public RetrievalAppendingVisitor(IImmutableDictionary<Type, IImmutableList<Expression>> retrievals)
+            public RetrievalAppendingVisitor(ClientObjectResolveQueryProcessor owner)
             {
-                Retrievals = retrievals;
+                Owner = owner;
             }
 
-            public IImmutableDictionary<Type, IImmutableList<Expression>> Retrievals
-            {
-                get;
-                private set;
-            }
+            public ClientObjectResolveQueryProcessor Owner { get; private set; }
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
@@ -151,12 +189,13 @@ namespace HarshPoint.Provisioning.Implementation
                     throw Logger.Fatal.ArgumentNull(nameof(node));
                 }
 
-                if (!IsIncludeOrIncludeWithDefaultProperties(node))
+                var callInfo = new IncludeCallInfo(node);
+
+                if (!callInfo.IsInclude)
                 {
                     return base.VisitMethodCall(node);
                 }
 
-                var retrievedType = node.Method.GetGenericArguments().Single();
                 var retrievals = node.Arguments[1] as NewArrayExpression;
 
                 if (retrievals == null)
@@ -168,15 +207,22 @@ namespace HarshPoint.Provisioning.Implementation
                    );
                 }
 
+                Logger.Debug(
+                    "RetrievalAppendingVisitor processing {Expression}",
+                    node
+                );
+
                 var retrievalsCombined = new ReadOnlyCollection<Expression>(
                     retrievals.Expressions
                     .Concat(
-                        Retrievals.GetValueOrDefault(
-                            retrievedType,
-                            ImmutableArray<Expression>.Empty
-                        )
+                        Owner.GetRetrievals(callInfo.ElementType)
                     )
                     .ToArray()
+                );
+
+                Logger.Debug(
+                    "RetrievalAppendingVisitor retrievals to include: {Retrievals}",
+                    retrievalsCombined
                 );
 
                 if (!retrievalsCombined.Any())
@@ -191,7 +237,7 @@ namespace HarshPoint.Provisioning.Implementation
                     Expression.NewArrayInit(
                         typeof(Expression<>).MakeGenericType(
                             typeof(Func<,>).MakeGenericType(
-                                retrievedType,
+                                callInfo.ElementType,
                                 typeof(Object)
                             )
                         ),
@@ -234,7 +280,7 @@ namespace HarshPoint.Provisioning.Implementation
 
                 IsIncludeWithDefaultProperties = node.Method.Name.Equals("IncludeWithDefaultProperties");
                 IsInclude = IsIncludeWithDefaultProperties || node.Method.Name.Equals("Include");
-                
+
                 if (!IsInclude)
                 {
                     return;
@@ -262,13 +308,14 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        private static Boolean IsIncludeOrIncludeWithDefaultProperties(MethodCallExpression node)
-        {
-            return new IncludeCallInfo(node).IsInclude;
-        }
-
         private static IEnumerable<Type> ExtractQueryResultTypes(Type queryable)
         {
+            if (queryable.IsConstructedGenericType &&
+                queryable.GetGenericTypeDefinition() == typeof(IQueryable<>))
+            {
+                return ImmutableArray.Create(queryable.GenericTypeArguments[0]);
+            }
+
             return from baseType in queryable.GetRuntimeBaseTypeChain()
 
                    from interfaceType in baseType.ImplementedInterfaces

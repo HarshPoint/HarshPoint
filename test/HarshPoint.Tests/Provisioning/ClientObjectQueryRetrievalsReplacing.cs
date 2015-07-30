@@ -1,5 +1,6 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Linq.Expressions;
 using Xunit;
@@ -184,7 +185,6 @@ namespace HarshPoint.Tests.Provisioning
 
             Assert.Equal(expected.ToString(), actual.ToString());
         }
-
 
         private static Expression GetExpression(Expression<Func<Web, Object>> expr)
         {

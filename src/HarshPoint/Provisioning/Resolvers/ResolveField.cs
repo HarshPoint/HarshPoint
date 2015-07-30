@@ -6,7 +6,7 @@ using System.Linq;
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveField :
-        ClientObjectResolveBuilder<Field>
+        ClientObjectQueryResolveBuilder<Field>
     {
         protected override IQueryable<Field>[] CreateQueries(ClientObjectResolveContext context)
         {
