@@ -21,7 +21,7 @@ namespace HarshPoint.Tests.Provisioning
             ctx.Include<List>(l => l.Title);
 
             var visitor = (ctx.QueryProcessor);
-            var expression = GetExpression(w => w.Created);
+            var expression = GetExpression<Web>(w => w.Created);
 
             var actual = visitor.Process(expression);
 
@@ -36,13 +36,13 @@ namespace HarshPoint.Tests.Provisioning
             ctx.Include<Field>(f => f.InternalName);
 
             var visitor = ctx.QueryProcessor;
-            var expression = GetExpression(
+            var expression = GetExpression<Web>(
                 w => w.Lists.Include(
                     l => l.Fields.Include()
                 )
             );
 
-            var expected = GetExpression(
+            var expected = GetExpression<Web>(
                 w => w.Lists.Include(
                     l => l.Fields.Include(f => f.InternalName),
                     l => l.Title
@@ -61,7 +61,7 @@ namespace HarshPoint.Tests.Provisioning
             ctx.Include<List>(l => l.Title);
 
             var visitor = ctx.QueryProcessor;
-            var expression = GetExpression(
+            var expression = GetExpression<Web>(
                 w => w.Lists.Include()
             );
 
@@ -93,7 +93,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var visitor = (ctx.QueryProcessor);
 
-            var expression = GetExpression(
+            var expression = GetExpression<Web>(
                 w => w.Lists.Include(l => l.Description)
             );
 
@@ -125,7 +125,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var visitor = (ctx.QueryProcessor);
 
-            var expression = GetExpression(
+            var expression = GetExpression<Web>(
                 w => w.Lists.IncludeWithDefaultProperties()
             );
 
@@ -157,7 +157,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var visitor = (ctx.QueryProcessor);
 
-            var expression = GetExpression(
+            var expression = GetExpression<Web>(
                 w => w.Lists.Include()
             );
 
@@ -178,17 +178,30 @@ namespace HarshPoint.Tests.Provisioning
             var ctx = Fixture.CreateResolveContext();
             ctx.Include<List>(l => l.Title);
 
-            var expression = GetExpression(w => w.Lists);
+            var expression = GetExpression<Web>(w => w.Lists);
 
-            var expected = GetExpression(w => w.Lists.Include(l => l.Title));
+            var expected = GetExpression<Web>(w => w.Lists.Include(l => l.Title));
             var actual = ctx.QueryProcessor.Process(expression);
 
             Assert.Equal(expected.ToString(), actual.ToString());
         }
 
-        private static Expression GetExpression(Expression<Func<Web, Object>> expr)
+        [Fact]
+        public void Doesnt_loop_endlessly_with_a_recursive_expression()
+        {
+            var ctx = Fixture.CreateResolveContext();
+            ctx.Include<Term>(t => t.Terms);
+
+            ctx.QueryProcessor.Process(
+                GetExpression<TermSet>(ts => ts.Terms)
+            );
+
+        }
+
+        private static Expression GetExpression<T>(Expression<Func<T, Object>> expr)
         {
             return expr;
         }
+        
     }
 }
