@@ -61,7 +61,7 @@ namespace HarshPoint
             }
 
             var node = default(T);
-            var result = ImmutableArray.CreateBuilder<T>(Graph.Count);
+            var results = ImmutableArray.CreateBuilder<T>(Graph.Count);
             var pending = Graph;
 
             while (NextRootNode(pending, out node))
@@ -73,17 +73,17 @@ namespace HarshPoint
                     (acc, kvp) => acc.SetItem(kvp.Key, kvp.Value.Remove(node))
                 );
 
-                result.Add(node);
+                results.Add(node);
             }
 
-            if (result.Count != Graph.Count)
+            if (results.Count != Graph.Count)
             {
                 throw Logger.Fatal.Write(
                     new HarshDependencyGraphCycleException()
                 );
             }
 
-            return result.ToImmutable();
+            return results.ToImmutable();
         }
 
         private static Boolean NextRootNode(ImmutableDictionary<T, ImmutableHashSet<T>> pending, out T result)
