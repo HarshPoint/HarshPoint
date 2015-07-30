@@ -40,6 +40,7 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="Diagnostics\ExpressionScalarConversionPolicy.cs" />
     <Compile Include="Extensions\ClientContextExtensions.cs" />
     <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="Entity\ContentTypeAttribute.cs" />

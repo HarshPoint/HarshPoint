@@ -1,4 +1,5 @@
 ﻿using Destructurama;
+using HarshPoint.Diagnostics;
 using Serilog;
 using Serilog.Context;
 using Serilog.Events;
@@ -22,6 +23,7 @@ namespace HarshPoint.Tests
         static SeriloggedTest()
         {
             Log.Logger = new LoggerConfiguration()
+                .Destructure.With<ExpressionScalarConversionPolicy>()
                 .Destructure.UsingAttributes()
                 .MinimumLevel.Verbose()
                 .WriteTo.Observers(
