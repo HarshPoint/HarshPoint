@@ -35,6 +35,54 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Client.Policy.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.Office.Client.Policy.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Client.TranslationServices.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.Office.Client.TranslationServices.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePoint.15.0.4649.1000\lib\net45\Microsoft.SharePoint.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.DocumentManagement.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.DocumentManagement.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Publishing.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.Publishing.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Runtime.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.Runtime.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Search.Applications.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.Search.Applications.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Search.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.Search.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Taxonomy.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.Taxonomy.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.UserProfiles.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.UserProfiles.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.WorkflowServices.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JulieKoubova.SharePointOnline.CSOM.16.0.3104.1200\lib\portable-windows8+net45+wpa81\Microsoft.SharePoint.Client.WorkflowServices.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Serilog.1.5.9\lib\net45\Serilog.dll</HintPath>
       <Private>True</Private>
@@ -64,10 +112,12 @@
     <Compile Include="CommandCodeGenerator.cs" />
     <Compile Include="CodeDomExtensions.cs" />
     <Compile Include="IShellployCommandBuilder.cs" />
+    <Compile Include="IShellployCommandBuilderParent.cs" />
     <Compile Include="ShellployCommand.cs" />
     <Compile Include="ShellployCommandBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShellployCommandBuilderParent.cs" />
     <Compile Include="ShellployCommandProperty.cs" />
     <Compile Include="ShellployCommandPropertyParameterAttribute.cs" />
     <Compile Include="ShellployMetadata.cs" />

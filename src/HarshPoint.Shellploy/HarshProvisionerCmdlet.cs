@@ -17,10 +17,11 @@ namespace HarshPoint.Shellploy
         {
             if (children != null)
             {
-                var psChildren = children.Invoke();
+                var psChildren = children.Invoke()
+                    .Select (c => c.BaseObject);
                 foreach (var child in psChildren)
                 {
-                    HarshProvisionerTreeBuilder.AddChild(provisioner, child.BaseObject);
+                    HarshProvisionerTreeBuilder.AddChild(provisioner, child);
                 }
             }
         }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using HarshPoint.Provisioning.Implementation;
+using System;
 using System.CodeDom;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Reflection;
@@ -46,19 +48,18 @@ namespace HarshPoint.ShellployGenerator
 
             commandClass.Members.AddRange(
                 command.Properties
+                .Where(p => !p.UseFixedValue)
                 .Select(p => CreateProperty(commandClass, p))
                 .ToArray()
             );
 
-            commandClass.Members.Add(CreateProcessRecordMethod(command));
+            commandClass.Members.AddRange(CreateProvisionerMethods(command).ToArray());
 
             return commandClass;
         }
 
         private static CodeMemberMethod CreateProcessRecordMethod(ShellployCommand command)
         {
-            var varName = "result";
-
             var method = new CodeMemberMethod()
             {
                 Name = "ProcessRecord",
@@ -67,65 +68,141 @@ namespace HarshPoint.ShellployGenerator
             };
 
             method.Statements.Add(
-                new CodeVariableDeclarationStatement(
-                    command.ProvisionerType,
-                    varName,
-                    new CodeObjectCreateExpression(command.ProvisionerType)
-                )
-            );
-            method.Statements.AddRange(
-                command.Properties
-                .Where(prop => !prop.SkipAssignment)
-                .Select(prop => CreatePropertyAssignment(prop, varName))
-                .ToArray()
-            );
-
-            if (command.HasChildren)
-            {
-                method.Statements.Add(
-                    new CodeMethodInvokeExpression(
-                        new CodeTypeReferenceExpression(command.ClassName),
-                        "ProcessChildren",
-                        new CodeVariableReferenceExpression(varName),
-                        new CodePropertyReferenceExpression(
-                            new CodeThisReferenceExpression(),
-                            ShellployCommand.ChildrenPropertyName
-                        )
-                    )
-                );
-            }
-
-            method.Statements.Add(
                 new CodeMethodInvokeExpression(
                     new CodeMethodReferenceExpression(
-                        new CodeThisReferenceExpression(),
+                        This,
                         "WriteObject"
                     ),
-                    new CodeVariableReferenceExpression(varName)
+                    new CodeMethodInvokeExpression(
+                        This,
+                        $"CreateProvisioner{command.ProvisionerType.Name}"
+                    )
                 )
             );
 
             return method;
         }
 
+        public static IEnumerable<CodeMemberMethod> CreateProvisionerMethods(ShellployCommand command)
+        {
+            var methods = new List<CodeMemberMethod>();
+            methods.Add(CreateProcessRecordMethod(command));
+
+            var resultVar = new CodeVariableReferenceExpression("result");
+            var innerVar = new CodeVariableReferenceExpression("inner");
+
+            var types = command.ParentProvisionerTypes
+                .Concat(new Type[] { command.ProvisionerType })
+                .Reverse().ToArray();
+
+            for (int i = 0; i < types.Length; i++)
+            {
+                var type = types[i];
+                var previousType = 0 < i ? types[i - 1] : null;
+                var nextType = i < (types.Length - 1) ? types[i + 1] : null;
+
+                var method = new CodeMemberMethod()
+                {
+                    Name = $"CreateProvisioner{type.Name}",
+                    ReturnType = new CodeTypeReference(typeof(object)),
+                    Attributes = MemberAttributes.Private,
+                };
+
+                if (previousType != null)
+                {
+                    method.Parameters.Add(
+                        new CodeParameterDeclarationExpression(previousType, innerVar.VariableName)
+                    );
+                }
+
+                method.Statements.Add(
+                    new CodeVariableDeclarationStatement(
+                        type,
+                        resultVar.VariableName,
+                        new CodeObjectCreateExpression(type)
+                    )
+                );
+                method.Statements.AddRange(
+                    command.Properties
+                    .Where(prop => prop.AssignmentOnType == type)
+                    .Select(prop => CreatePropertyAssignment(prop, resultVar))
+                    .ToArray()
+                );
+
+                if (previousType != null)
+                {
+                    method.Statements.Add(
+                        new CodeMethodInvokeExpression(
+                            new CodeTypeReferenceExpression(typeof(HarshProvisionerTreeBuilder)),
+                            nameof(HarshProvisionerTreeBuilder.AddChild),
+                            resultVar, innerVar
+                        )
+                    );
+                }
+                else if (command.HasChildren)
+                {
+                    method.Statements.Add(
+                        new CodeMethodInvokeExpression(
+                            new CodeTypeReferenceExpression(command.ClassName),
+                            "ProcessChildren",
+                            resultVar,
+                            new CodePropertyReferenceExpression(
+                                This,
+                                ShellployCommand.ChildrenPropertyName
+                            )
+                        )
+                    );
+                }
+
+                if (nextType != null)
+                {
+                    method.Statements.Add(
+                        new CodeMethodReturnStatement(
+                            new CodeMethodInvokeExpression(
+                                This,
+                                $"CreateProvisioner{nextType.Name}",
+                                resultVar
+                            )
+                        )
+                    );
+                }
+                else
+                {
+                    method.Statements.Add(
+                        new CodeMethodReturnStatement(resultVar)
+                    );
+                }
+
+                methods.Add(method);
+                previousType = type;
+            }
+
+            return methods;
+        }
+
         private static CodeAssignStatement CreatePropertyAssignment(
-            ShellployCommandProperty property, 
-            String varName
+            ShellployCommandProperty property,
+            CodeExpression resultVar
         )
         {
             CodeExpression valueExpression = new CodePropertyReferenceExpression(
-                new CodeThisReferenceExpression(),
+                This,
                 property.Name
             );
 
-            if (property.Type == typeof(Boolean))
+            if (property.UseFixedValue)
+            {
+                valueExpression = CreateLiteralExpression(property.FixedValue);
+            }
+            else if (property.Type == typeof(Boolean))
             {
                 valueExpression = new CodeMethodInvokeExpression(valueExpression, "ToBool");
             }
 
+
             return new CodeAssignStatement(
                 new CodePropertyReferenceExpression(
-                    new CodeVariableReferenceExpression(varName),
+                    resultVar,
                     property.Name
                 ),
                 valueExpression
@@ -170,8 +247,19 @@ namespace HarshPoint.ShellployGenerator
                 return new CodeTypeOfExpression(typeValue);
             }
 
+            var type = value.GetType();
+            if (type.IsEnum)
+            {
+                return new CodeFieldReferenceExpression(
+                    new CodeTypeReferenceExpression(type),
+                    type.GetEnumName(value)
+                );
+            }
+
             return new CodePrimitiveExpression(value);
         }
+
+        private static readonly CodeThisReferenceExpression This = new CodeThisReferenceExpression();
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<CommandCodeGenerator>();
     }

@@ -12,7 +12,7 @@ namespace HarshPoint.ShellployGenerator
 
         public String ClassName { get; set; }
         public Boolean HasChildren { get; set; }
-        public Type ParentProvisionerType { get; set; }
+        public IEnumerable<Type> ParentProvisionerTypes { get; set; }
         public String Noun { get; internal set; }
         public Type ProvisionerType { get; set; }
         public String Verb { get; set; }

@@ -97,6 +97,15 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The parent and child properties contains item with the same name..
+        /// </summary>
+        internal static string ShellployCommandBuilder_Overlaps {
+            get {
+                return ResourceManager.GetString("ShellployCommandBuilder_Overlaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; is already defined..
         /// </summary>
         internal static string ShellployCommandBuilder_PropertyChildrenAlreadyDefined {

@@ -129,6 +129,9 @@
   <data name="CodeDomExtensions_PropertySetterNotEmpty" xml:space="preserve">
     <value>Property setter is not empty.</value>
   </data>
+  <data name="ShellployCommandBuilder_Overlaps" xml:space="preserve">
+    <value>The parent and child properties contains item with the same name.</value>
+  </data>
   <data name="ShellployCommandBuilder_PropertyChildrenAlreadyDefined" xml:space="preserve">
     <value>Property '{0}' is already defined.</value>
   </data>

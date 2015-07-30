@@ -3,6 +3,7 @@ using HarshPoint.Tests;
 using Moq;
 using System;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Management.Automation;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -58,7 +59,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             Assert.Equal("New" + nameof(HarshEmptyTestProvisioner) + "Command", command.ClassName);
             Assert.Equal(false, command.HasChildren);
-            Assert.Equal(null, command.ParentProvisionerType);
+            Assert.Equal(0, command.ParentProvisionerTypes.Count());
             Assert.Equal(nameof(HarshEmptyTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshEmptyTestProvisioner), command.ProvisionerType);
             Assert.Equal("New", command.Verb);
@@ -77,7 +78,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             Assert.Equal("New" + nameof(HarshEmptyTestProvisioner) + "Command", command.ClassName);
             Assert.Equal(true, command.HasChildren);
-            Assert.Equal(null, command.ParentProvisionerType);
+            Assert.Equal(0, command.ParentProvisionerTypes.Count());
             Assert.Equal(nameof(HarshEmptyTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshEmptyTestProvisioner), command.ProvisionerType);
             Assert.Equal("New", command.Verb);
@@ -88,7 +89,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             var propName = ShellployCommand.ChildrenPropertyName;
             Assert.Equal(typeof(ScriptBlock), properties[propName].Type);
-            Assert.Equal(true, properties[propName].SkipAssignment);
+            Assert.Equal(null, properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
             Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
@@ -105,7 +106,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             Assert.Equal("New" + nameof(HarshTestProvisioner) + "Command", command.ClassName);
             Assert.Equal(false, command.HasChildren);
-            Assert.Equal(null, command.ParentProvisionerType);
+            Assert.Equal(0, command.ParentProvisionerTypes.Count());
             Assert.Equal(nameof(HarshTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshTestProvisioner), command.ProvisionerType);
             Assert.Equal("New", command.Verb);
@@ -116,7 +117,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             var propName = nameof(HarshTestProvisioner.BasicParam);
             Assert.Equal(typeof(String), properties[propName].Type);
-            Assert.Equal(false, properties[propName].SkipAssignment);
+            Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
             Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
@@ -124,7 +125,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             propName = nameof(HarshTestProvisioner.MandatoryParam);
             Assert.Equal(typeof(String), properties[propName].Type);
-            Assert.Equal(false, properties[propName].SkipAssignment);
+            Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
             Assert.Equal(true, properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
@@ -132,7 +133,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             propName = nameof(HarshTestProvisioner.ParamSetA);
             Assert.Equal(typeof(String), properties[propName].Type);
-            Assert.Equal(false, properties[propName].SkipAssignment);
+            Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
             Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("A", properties[propName].ParameterAttributes[0].ParameterSet);
@@ -140,7 +141,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             propName = nameof(HarshTestProvisioner.ParamSetB);
             Assert.Equal(typeof(String), properties[propName].Type);
-            Assert.Equal(false, properties[propName].SkipAssignment);
+            Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
             Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("B", properties[propName].ParameterAttributes[0].ParameterSet);
@@ -148,7 +149,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             propName = nameof(HarshTestProvisioner.ParamSetA_BMandatory);
             Assert.Equal(typeof(String), properties[propName].Type);
-            Assert.Equal(false, properties[propName].SkipAssignment);
+            Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(2, properties[propName].ParameterAttributes.Count);
             Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("A", properties[propName].ParameterAttributes[0].ParameterSet);
@@ -168,7 +169,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             Assert.Equal("New" + nameof(HarshCustomChildrenTestProvisioner) + "Command", command.ClassName);
             Assert.Equal(false, command.HasChildren);
-            Assert.Equal(null, command.ParentProvisionerType);
+            Assert.Equal(0, command.ParentProvisionerTypes.Count());
             Assert.Equal(nameof(HarshCustomChildrenTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshCustomChildrenTestProvisioner), command.ProvisionerType);
             Assert.Equal("New", command.Verb);
@@ -179,7 +180,7 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             var propName = nameof(HarshCustomChildrenTestProvisioner.Children);
             Assert.Equal(typeof(String), properties[propName].Type);
-            Assert.Equal(false, properties[propName].SkipAssignment);
+            Assert.Equal(typeof(HarshCustomChildrenTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
             Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);

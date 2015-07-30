@@ -25,15 +25,18 @@ namespace HarshPoint.ShellployGenerator
                 throw Logger.Fatal.ArgumentNullOrEmpty(nameof(outputDirectory));
             }
 
+            if (File.Exists(outputDirectory))
+            {
+                throw Logger.Fatal.Argument(nameof(outputDirectory), SR.SourceFileWriter_OutputDirectoryIsFile);
+            }
+
             if (!Directory.Exists(outputDirectory))
             {
-                if (File.Exists(outputDirectory))
-                {
-                    throw Logger.Fatal.Argument(nameof(outputDirectory), SR.SourceFileWriter_OutputDirectoryIsFile);
-                }
-
-                Directory.CreateDirectory(outputDirectory);
+                Directory.Delete(outputDirectory, true);
             }
+
+
+            Directory.CreateDirectory(outputDirectory);
 
             _outputDirectory = outputDirectory;
         }
