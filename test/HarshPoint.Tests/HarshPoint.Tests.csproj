@@ -158,7 +158,7 @@
     <Compile Include="Extensions\TypeInfoExtensionsTests.cs" />
     <Compile Include="GroupingDynamicFactory.cs" />
     <Compile Include="Provisioning\ClientObjectContextStateResolving.cs" />
-    <Compile Include="Provisioning\ClientObjectQueryRetrievalsReplacing.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessing.cs" />
     <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
     <Compile Include="Provisioning\ContentTypeRef.cs" />
     <Compile Include="Provisioning\ContentTypeTests.cs" />
