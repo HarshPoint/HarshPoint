@@ -8,8 +8,8 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public sealed class ClientObjectResolveContext : ResolveContext<HarshProvisionerContext>
     {
-        private readonly ClientObjectResolveQueryProcessor _queryProcessor
-            = new ClientObjectResolveQueryProcessor();
+        private readonly ClientObjectQueryProcessor _queryProcessor
+            = new ClientObjectQueryProcessor();
 
         public ClientObjectResolveContext(HarshProvisionerContext provisionerContext)
             : base(provisionerContext)
@@ -77,7 +77,7 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        internal ClientObjectResolveQueryProcessor QueryProcessor => _queryProcessor;
+        internal ClientObjectQueryProcessor QueryProcessor => _queryProcessor;
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ClientObjectResolveContext>();
     }

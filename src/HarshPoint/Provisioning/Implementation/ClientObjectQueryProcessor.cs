@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ClientObjectResolveQueryProcessor
+    internal sealed class ClientObjectQueryProcessor
     {
         private IImmutableDictionary<Type, IImmutableList<Expression>> _retrievals
            = ImmutableDictionary<Type, IImmutableList<Expression>>.Empty;
@@ -175,12 +175,12 @@ namespace HarshPoint.Provisioning.Implementation
 
         private sealed class RetrievalAppendingVisitor : ExpressionVisitor
         {
-            public RetrievalAppendingVisitor(ClientObjectResolveQueryProcessor owner)
+            public RetrievalAppendingVisitor(ClientObjectQueryProcessor owner)
             {
                 Owner = owner;
             }
 
-            public ClientObjectResolveQueryProcessor Owner { get; private set; }
+            public ClientObjectQueryProcessor Owner { get; private set; }
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
@@ -327,7 +327,7 @@ namespace HarshPoint.Provisioning.Implementation
                    select interfaceType.GenericTypeArguments[0];
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext<ClientObjectResolveQueryProcessor>();
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ClientObjectQueryProcessor>();
 
         private static readonly MethodInfo IncludeMethod =
             typeof(ClientObjectQueryableExtension)

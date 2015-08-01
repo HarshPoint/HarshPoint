@@ -135,10 +135,10 @@
     <Compile Include="Provisioning\HarshRemoveContentTypeRef.cs" />
     <Compile Include="Provisioning\HarshFieldTaxonomy.cs" />
     <Compile Include="Provisioning\IDefaultFromContextTag.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectContextStateResolver`1.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectContextStateResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectResolveContext.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectResolveQueryProcessor.cs" />
-    <Compile Include="Provisioning\Implementation\ContextStateResolver.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor.cs" />
+    <Compile Include="Provisioning\Implementation\ContextStateResolveBuilder.cs" />
     <Compile Include="Provisioning\Implementation\HarshFieldSchemaXmlAttributeSetter.cs" />
     <Compile Include="ObjectModel\HarshObjectMetadataExceptionLoggerExtension.cs" />
     <Compile Include="ObjectModel\HarshObjectMetadataException.cs" />
@@ -175,7 +175,7 @@
     <Compile Include="Provisioning\HarshDeployUserSolution.cs" />
     <Compile Include="Provisioning\HarshDesignPackage.cs" />
     <Compile Include="Provisioning\HarshSiteGroup.cs" />
-    <Compile Include="Provisioning\Implementation\ContextStateResolver`1.cs" />
+    <Compile Include="Provisioning\Implementation\ContextStateResolveBuilder`1.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerContextBase`1.cs" />
     <Compile Include="HarshGrouping`2.cs" />
     <Compile Include="Provisioning\IResolve`1.cs" />

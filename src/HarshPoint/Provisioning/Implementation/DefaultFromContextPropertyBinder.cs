@@ -98,7 +98,7 @@ namespace HarshPoint.Provisioning.Implementation
                     prop.ResolvedPropertyInfo.ResolvedType
                 );
 
-                return ContextStateResolver.Create(
+                return ContextStateResolveBuilder.Create(
                     prop.ResolvedPropertyInfo.ResolvedType
                 );
             }

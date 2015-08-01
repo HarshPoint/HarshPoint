@@ -27,7 +27,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var mr = new ClientObjectManualResolver(() => resolveCtx);
             var resolver = mr.ResolveSingle(
-                new ClientObjectContextStateResolver<Web>()
+                new ClientObjectContextStateResolveBuilder<Web>()
             );
 
             await ClientContext.ExecuteQueryAsync();
@@ -49,7 +49,7 @@ namespace HarshPoint.Tests.Provisioning
 
             var mr = new ClientObjectManualResolver(() => resolveCtx);
             var resolver = mr.ResolveSingle(
-                new ClientObjectContextStateResolver<Web>()
+                new ClientObjectContextStateResolveBuilder<Web>()
             );
 
             await ClientContext.ExecuteQueryAsync();

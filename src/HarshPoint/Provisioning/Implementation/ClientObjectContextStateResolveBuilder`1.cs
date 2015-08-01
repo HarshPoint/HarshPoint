@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ClientObjectContextStateResolver<T> : ResolveBuilder<T, ClientObjectResolveContext>
+    internal sealed class ClientObjectContextStateResolveBuilder<T> : ResolveBuilder<T, ClientObjectResolveContext>
         where T : ClientObject
     {
         protected override void InitializeContext(ClientObjectResolveContext context)
@@ -42,6 +42,6 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectContextStateResolver<>));
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectContextStateResolveBuilder<>));
     }
 }

@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal static class ContextStateResolver
+    internal static class ContextStateResolveBuilder
     {
         public static Object Create(Type resolvedType)
         {
@@ -16,18 +16,18 @@ namespace HarshPoint.Provisioning.Implementation
             if (ClientObjectTypeInfo.IsAssignableFrom(resolvedType.GetTypeInfo()))
             {
                 return Activator.CreateInstance(
-                    typeof(ClientObjectContextStateResolver<>).MakeGenericType(resolvedType)
+                    typeof(ClientObjectContextStateResolveBuilder<>).MakeGenericType(resolvedType)
                 );
             }
 
             return Activator.CreateInstance(
-                typeof(ContextStateResolver<>).MakeGenericType(resolvedType)
+                typeof(ContextStateResolveBuilder<>).MakeGenericType(resolvedType)
             );
         }
 
         private static readonly TypeInfo ClientObjectTypeInfo =
             typeof(ClientObject).GetTypeInfo();
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ContextStateResolver));
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ContextStateResolveBuilder));
     }
 }

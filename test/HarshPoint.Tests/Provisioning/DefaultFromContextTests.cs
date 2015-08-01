@@ -70,7 +70,7 @@ namespace HarshPoint.Tests.Provisioning
             );
 
             Assert.NotNull(prov.Resolver);
-            Assert.IsType<ContextStateResolver<String>>(prov.Resolver);
+            Assert.IsType<ContextStateResolveBuilder<String>>(prov.Resolver);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace HarshPoint.Tests.Provisioning
             );
 
             Assert.NotNull(prov.SingleResolver);
-            Assert.IsType<ContextStateResolver<String>>(prov.SingleResolver);
+            Assert.IsType<ContextStateResolveBuilder<String>>(prov.SingleResolver);
         }
 
         [Fact]

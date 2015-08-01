@@ -39,7 +39,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
         }
 
-        protected abstract Object Initialize(TContext context);
+        protected virtual Object Initialize(TContext context) => null;
 
         protected abstract IEnumerable ToEnumerable(Object state, TContext context);
     }
