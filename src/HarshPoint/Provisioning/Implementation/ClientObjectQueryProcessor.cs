@@ -12,8 +12,8 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ClientObjectQueryProcessor
     {
-        private IImmutableDictionary<Type, IImmutableList<Expression>> _retrievals
-           = ImmutableDictionary<Type, IImmutableList<Expression>>.Empty;
+        private ImmutableDictionary<Type, ImmutableList<Expression>> _retrievals
+           = ImmutableDictionary<Type, ImmutableList<Expression>>.Empty;
 
         public void Include<T>(params Expression<Func<T, Object>>[] retrievals)
         {
@@ -70,7 +70,7 @@ namespace HarshPoint.Provisioning.Implementation
             return _retrievals
                 .GetValueOrDefault(
                     type,
-                    ImmutableArray<Expression>.Empty
+                    ImmutableList<Expression>.Empty
                 )
                 .Select(visitor.Visit)
                 .ToArray();
