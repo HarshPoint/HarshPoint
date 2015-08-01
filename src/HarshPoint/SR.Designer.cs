@@ -675,5 +675,14 @@ namespace HarshPoint {
                 return ResourceManager.GetString("ResolveResultFactory_PropertyTypeUnknownInterface", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified type &quot;{0}&quot; is not a generic interface definition..
+        /// </summary>
+        internal static string TypeInfoExtension_ArgNotInterfaceDefinition {
+            get {
+                return ResourceManager.GetString("TypeInfoExtension_ArgNotInterfaceDefinition", resourceCulture);
+            }
+        }
     }
 }

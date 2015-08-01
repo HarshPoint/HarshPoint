@@ -1,7 +1,7 @@
 ﻿using Serilog.Events;
 using System;
 
-namespace HarshPoint
+namespace HarshPoint.Diagnostics
 {
     public sealed class HarshLoggerError : HarshLoggerWrapper
     {

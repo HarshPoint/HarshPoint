@@ -330,4 +330,7 @@ Property: {0}.{1}</value>
   <data name="ResolveResultFactory_PropertyTypeUnknownInterface" xml:space="preserve">
     <value>The specified property type generic definition "{0}" is not one of the known interface types: {1}.</value>
   </data>
+  <data name="TypeInfoExtension_ArgNotInterfaceDefinition" xml:space="preserve">
+    <value>The specified type "{0}" is not a generic interface definition.</value>
+  </data>
 </root>

@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace HarshPoint
+namespace HarshPoint.Diagnostics
 {
     public sealed class HarshLoggerFatal : HarshLoggerWrapper
     {

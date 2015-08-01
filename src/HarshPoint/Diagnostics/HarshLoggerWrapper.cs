@@ -2,7 +2,7 @@
 using System;
 using System.Globalization;
 
-namespace HarshPoint
+namespace HarshPoint.Diagnostics
 {
     public abstract class HarshLoggerWrapper
     {

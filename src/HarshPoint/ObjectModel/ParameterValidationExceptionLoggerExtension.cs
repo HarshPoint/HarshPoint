@@ -1,4 +1,5 @@
-﻿using Serilog.Events;
+﻿using HarshPoint.Diagnostics;
+using Serilog.Events;
 using System;
 
 namespace HarshPoint.ObjectModel

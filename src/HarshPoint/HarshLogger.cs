@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Serilog.Core;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
+using HarshPoint.Diagnostics;
 
 namespace HarshPoint
 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.Diagnostics;
+using System;
 
 namespace HarshPoint.ObjectModel
 {
