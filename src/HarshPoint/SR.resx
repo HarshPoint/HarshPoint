@@ -134,6 +134,9 @@ Number of resolver elements {1}</value>
 
 {0}</value>
   </data>
+  <data name="ClientObjectResolveQueryProcessor_MaxRecursionDepthNegative" xml:space="preserve">
+    <value>MaxRecursionDepth cannot be a negative number.</value>
+  </data>
   <data name="ClientObject_IsNullNotLoaded" xml:space="preserve">
     <value>The specified object hasn't been loaded yet, cannot determine if it is null.</value>
   </data>
@@ -157,6 +160,9 @@ Number of resolver elements {1}</value>
   </data>
   <data name="Error_ArgumentNullOrWhitespace" xml:space="preserve">
     <value>Value cannot be null or whitespace-only string.</value>
+  </data>
+  <data name="Error_InvalidEnum" xml:space="preserve">
+    <value>The specified value "{0}" is not a valid {1} enumerated value.</value>
   </data>
   <data name="Error_ObjectNotAssignableToMany" xml:space="preserve">
     <value>The specified object '{0}' is not a subtype of any of the following types: {1}.</value>

@@ -1,6 +1,4 @@
-﻿using HarshPoint.Reflection;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,8 +8,27 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed partial class ClientObjectQueryProcessor
     {
+        private Int32 _maxRecursionDepth;
+
         private ImmutableDictionary<Type, ImmutableList<Expression>> _retrievals
            = ImmutableDictionary<Type, ImmutableList<Expression>>.Empty;
+
+        public Int32 MaxRecursionDepth
+        {
+            get { return _maxRecursionDepth; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw Logger.Fatal.ArgumentOutOfRange(
+                        nameof(value),
+                        SR.ClientObjectResolveQueryProcessor_MaxRecursionDepthNegative
+                    );
+                }
+
+                _maxRecursionDepth = value;
+            }
+        }
 
         public void Include<T>(params Expression<Func<T, Object>>[] retrievals)
         {
@@ -57,22 +74,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToArray();
 
         public Expression[] GetRetrievals(Type type)
-        {
-            if (type == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(type));
-            }
-
-            var visitor = new RetrievalAppendingVisitor(this);
-
-            return _retrievals
-                .GetValueOrDefault(
-                    type,
-                    ImmutableList<Expression>.Empty
-                )
-                .Select(visitor.Visit)
-                .ToArray();
-        }
+            => GetRetrievals(type, CreateDepthLimiter());
 
         public IQueryable<T> Process<T>(IQueryable<T> query)
         {
@@ -105,6 +107,30 @@ namespace HarshPoint.Provisioning.Implementation
             return result;
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext<ClientObjectQueryProcessor>();
+        private Expression[] GetRetrievals(Type type, DepthLimiter depthLimiter)
+        {
+            if (type == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(type));
+            }
+
+            if (depthLimiter == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(depthLimiter));
+            }
+
+            var visitor = new RetrievalAppendingVisitor(this, depthLimiter);
+
+            return _retrievals
+                .GetValueOrDefault(type, ImmutableList<Expression>.Empty)
+                .Select(visitor.Visit)
+                .ToArray();
+        }
+
+        private DepthLimiter CreateDepthLimiter()
+            => new DepthLimiter(MaxRecursionDepth);
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext<ClientObjectQueryProcessor>();
     }
 }

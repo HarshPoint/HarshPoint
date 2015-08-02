@@ -25,11 +25,17 @@ namespace HarshPoint
             _inner = inner;
         }
 
-        public HarshLoggerError Error 
+        public HarshLoggerError Error
             => HarshLazy.Initialize(ref _error, () => new HarshLoggerError(this));
 
         public HarshLoggerFatal Fatal
             => HarshLazy.Initialize(ref _fatal, () => new HarshLoggerFatal(this));
+
+        public MethodCallLogger MethodCall(LogEventLevel level, String methodName, params Object[] args)
+            => new MethodCallLogger(this, level, methodName, args);
+
+        public MethodCallLogger MethodCall(String methodName, params Object[] args)
+            => MethodCall(LogEventLevel.Debug, methodName, args);
 
         public void Debug(String messageTemplate, params Object[] propertyValues)
             => _inner.Debug(messageTemplate, propertyValues);
@@ -109,5 +115,81 @@ namespace HarshPoint
 
         ILogger ILogger.ForContext<TSource>()
             => ForContext<TSource>();
+
+        public struct MethodCallLogger
+        {
+            private readonly Object[] _args;
+            private readonly LogEventLevel _level;
+            private readonly HarshLogger _logger;
+            private readonly String _methodName;
+
+            public MethodCallLogger(HarshLogger logger, LogEventLevel level, String methodName, Object[] args)
+            {
+                if (logger == null)
+                {
+                    throw SelfLog.Fatal.ArgumentNull(nameof(logger));
+                }
+
+                if (Enum.IsDefined(typeof(LogEventLevel), level))
+                {
+                    throw SelfLog.Fatal.InvalidEnumArgument(
+                        nameof(level),
+                        typeof(LogEventLevel),
+                        level
+                    );
+                }
+
+                if (String.IsNullOrWhiteSpace(methodName))
+                {
+                    throw SelfLog.Fatal.ArgumentNullOrWhitespace(nameof(methodName));
+                }
+
+                if (args == null)
+                {
+                    throw SelfLog.Fatal.ArgumentNull(nameof(args));
+                }
+
+                _logger = logger;
+                _level = level;
+                _methodName = methodName;
+                _args = args;
+            }
+
+            public T Call<T>(Func<T> func)
+            {
+                if (func == null)
+                {
+                    throw SelfLog.Fatal.ArgumentNull(nameof(func));
+                }
+
+                Enter();
+                var result = func();
+                Leave(result);
+                return result;
+            }
+
+            public void Call(Action action)
+            {
+                if (action == null)
+                {
+                    throw SelfLog.Fatal.ArgumentNull(nameof(action));
+                }
+
+                Enter();
+                action();
+                Leave();
+            }
+
+            private void Enter()
+                => _logger.Write(_level, "{Method:l} called with {@Arguments}", _methodName, _args);
+
+            private void Leave()
+                => _logger.Write(_level, "{Method:l} returned.");
+
+            private void Leave(Object result)
+                => _logger.Write(_level, "{Method:l} returned {ReturnValue}", result);
+
+            private static readonly HarshLogger SelfLog = HarshLog.ForContext<MethodCallLogger>();
+        }
     }
 }

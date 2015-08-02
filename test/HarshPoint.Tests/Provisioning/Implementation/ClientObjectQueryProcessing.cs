@@ -186,22 +186,46 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             Assert.Equal(expected.ToString(), actual.ToString());
         }
 
-        [Fact(Skip = "It does crash nastily")]
-        public void Doesnt_loop_endlessly_with_a_recursive_expression()
+        [Fact]
+        public void Recursive_expression_doesnt_recurse()
         {
             var ctx = Fixture.CreateResolveContext();
             ctx.Include<Term>(t => t.Terms);
 
-            ctx.QueryProcessor.Process(
+            var expected = GetExpression<TermSet>(
+                ts => ts.Terms.Include(t => t.Terms)
+            );
+
+            var actual = ctx.QueryProcessor.Process(
                 GetExpression<TermSet>(ts => ts.Terms)
             );
 
+            Assert.Equal(expected.ToString(), actual.ToString());
         }
 
+        [Fact]
+        public void Recursive_expression_recurses_one_level_deep()
+        {
+            var ctx = Fixture.CreateResolveContext();
+            ctx.Include<Term>(t => t.Terms);
+            ctx.QueryProcessor.MaxRecursionDepth = 1;
+
+            var expected = GetExpression<TermSet>(
+                ts => ts.Terms.Include(
+                    t => t.Terms.Include(tt => tt.Terms)
+                )
+            );
+
+            var actual = ctx.QueryProcessor.Process(
+                GetExpression<TermSet>(ts => ts.Terms)
+            );
+
+            Assert.Equal(expected.ToString(), actual.ToString());
+        }
         private static Expression GetExpression<T>(Expression<Func<T, Object>> expr)
         {
             return expr;
         }
-        
+
     }
 }

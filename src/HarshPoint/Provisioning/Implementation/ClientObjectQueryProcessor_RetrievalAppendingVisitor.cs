@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.Diagnostics;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,10 +10,13 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private sealed class RetrievalAppendingVisitor : ExpressionVisitor
         {
-            public RetrievalAppendingVisitor(ClientObjectQueryProcessor owner)
+            public RetrievalAppendingVisitor(ClientObjectQueryProcessor owner, DepthLimiter depthLimiter = null)
             {
                 Owner = owner;
+                DepthLimiter = depthLimiter ?? owner.CreateDepthLimiter();
             }
+
+            public DepthLimiter DepthLimiter { get; private set; }
 
             public ClientObjectQueryProcessor Owner { get; private set; }
 
@@ -23,16 +27,74 @@ namespace HarshPoint.Provisioning.Implementation
                     throw Logger.Fatal.ArgumentNull(nameof(node));
                 }
 
-                var callInfo = new MethodCallInfo(node);
-
-                if (!callInfo.IsInclude)
+                return Logger.MethodCall(nameof(VisitMethodCall), node).Call(() =>
                 {
+                    var callInfo = new MethodCallInfo(node);
+
+                    if (callInfo.IsInclude)
+                    {
+                        return VisitIncludeCall(node, callInfo);
+                    }
+
                     return base.VisitMethodCall(node);
+                });
+
+            }
+
+            private Expression VisitIncludeCall(MethodCallExpression node, MethodCallInfo callInfo)
+            {
+                var retrievals = GetExistingRetrievals(node);
+                var canRecurse = DepthLimiter.CanRecurse(callInfo.ElementType);
+
+                using (DepthLimiter.Enter(callInfo.ElementType))
+                {
+                    if (canRecurse)
+                    {
+                        // TODO: remove duplicates
+                        retrievals = new ReadOnlyCollection<Expression>(
+                            retrievals
+                            .Concat(
+                                Owner.GetRetrievals(callInfo.ElementType, DepthLimiter)
+                            )
+                            .ToArray()
+                        );
+                    }
+
+                    Logger.Debug(
+                        "RetrievalAppendingVisitor retrievals to include: {Retrievals}",
+                        retrievals
+                    );
+
+                    if (retrievals.Any())
+                    {
+                        return CreateIncludeCall(node, callInfo, retrievals);
+                    }
+
+                    return Visit(node.Arguments[0]);
                 }
+            }
 
-                var retrievals = node.Arguments[1] as NewArrayExpression;
+            private Expression CreateIncludeCall(MethodCallExpression node, MethodCallInfo callInfo, ReadOnlyCollection<Expression> retrievals)
+                => node.Update(null, new[]
+                    {
+                        Visit(node.Arguments[0]),
+                        Expression.NewArrayInit(
+                            typeof(Expression<>).MakeGenericType(
+                                typeof(Func<,>).MakeGenericType(
+                                    callInfo.ElementType,
+                                    typeof(Object)
+                                )
+                            ),
+                            Visit(retrievals)
+                        )
+                    }
+                );
 
-                if (retrievals == null)
+            private ReadOnlyCollection<Expression> GetExistingRetrievals(MethodCallExpression node)
+            {
+                var newArray = node.Arguments[1] as NewArrayExpression;
+
+                if (newArray == null)
                 {
                     throw Logger.Fatal.ArgumentFormat(
                        nameof(node),
@@ -46,38 +108,7 @@ namespace HarshPoint.Provisioning.Implementation
                     node
                 );
 
-                var retrievalsCombined = new ReadOnlyCollection<Expression>(
-                    retrievals.Expressions
-                    .Concat(
-                        Owner.GetRetrievals(callInfo.ElementType)
-                    )
-                    .ToArray()
-                );
-
-                Logger.Debug(
-                    "RetrievalAppendingVisitor retrievals to include: {Retrievals}",
-                    retrievalsCombined
-                );
-
-                if (!retrievalsCombined.Any())
-                {
-                    return Visit(node.Arguments[0]);
-                }
-
-                return Expression.Call(
-                    null,
-                    node.Method,
-                    Visit(node.Arguments[0]),
-                    Expression.NewArrayInit(
-                        typeof(Expression<>).MakeGenericType(
-                            typeof(Func<,>).MakeGenericType(
-                                callInfo.ElementType,
-                                typeof(Object)
-                            )
-                        ),
-                        Visit(retrievalsCombined)
-                    )
-                );
+                return newArray.Expressions;
             }
         }
     }

@@ -112,6 +112,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MaxRecursionDepth cannot be a negative number..
+        /// </summary>
+        internal static string ClientObjectResolveQueryProcessor_MaxRecursionDepthNegative {
+            get {
+                return ResourceManager.GetString("ClientObjectResolveQueryProcessor_MaxRecursionDepthNegative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The content type ID could not be determined because no parent of the specified type &apos;{0}&apos; defines an absolute content type ID..
         /// </summary>
         internal static string ContentTypeIdBuilder_NoAbsoluteIDInHierarchy {
@@ -171,6 +180,15 @@ namespace HarshPoint {
         internal static string Error_ArgumentNullOrWhitespace {
             get {
                 return ResourceManager.GetString("Error_ArgumentNullOrWhitespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified value &quot;{0}&quot; is not a valid {1} enumerated value..
+        /// </summary>
+        internal static string Error_InvalidEnum {
+            get {
+                return ResourceManager.GetString("Error_InvalidEnum", resourceCulture);
             }
         }
         

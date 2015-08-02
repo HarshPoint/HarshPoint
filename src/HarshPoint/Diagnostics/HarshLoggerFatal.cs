@@ -129,6 +129,9 @@ namespace HarshPoint.Diagnostics
             );
         }
 
+        public ArgumentOutOfRangeException InvalidEnumArgument(String parameterName, Type enumType, Object value)
+            => ArgumentOutOfRangeFormat(parameterName, SR.Error_InvalidEnum, value, enumType);
+
         public InvalidOperationException InvalidOperation(String message)
         {
             if (message == null)
