@@ -107,7 +107,7 @@ namespace HarshPoint.Diagnostics
         }
 
         public ArgumentOutOfRangeException ArgumentOutOfRangeFormat(String parameterName, String format, params Object[] args)
-            => ArgumentOutOfRangeFormat(parameterName, FormatCurrentCulture(format, args));
+            => ArgumentOutOfRange(parameterName, FormatCurrentCulture(format, args));
 
         public ArgumentException ArgumentTypeNotAssignableTo(String parameterName, Type type, Type expectedBaseType)
         {

@@ -3,6 +3,7 @@ using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -216,16 +217,46 @@ namespace HarshPoint.Tests.Provisioning.Implementation
                 )
             );
 
+            expected = new RenameParamVisitor("tt", "t")
+                .VisitAndConvert(
+                    expected, 
+                    nameof(Recursive_expression_recurses_one_level_deep)
+                );
+
             var actual = ctx.QueryProcessor.Process(
                 GetExpression<TermSet>(ts => ts.Terms)
             );
 
             Assert.Equal(expected.ToString(), actual.ToString());
         }
-        private static Expression GetExpression<T>(Expression<Func<T, Object>> expr)
+        private static Expression<Func<T, Object>> GetExpression<T>(Expression<Func<T, Object>> expr)
         {
             return expr;
         }
 
+        private sealed class RenameParamVisitor : ExpressionVisitor
+        {
+            private readonly String _from;
+            private readonly String _to;
+
+            public RenameParamVisitor(String from, String to)
+            {
+                _from = from;
+                _to = to;
+            }
+
+            protected override Expression VisitParameter(ParameterExpression node)
+            {
+                if (node.Name == _from)
+                {
+                    node = Expression.Parameter(
+                        node.Type,
+                        _to
+                    );
+                }
+
+                return base.VisitParameter(node);
+            }
+        }
     }
 }

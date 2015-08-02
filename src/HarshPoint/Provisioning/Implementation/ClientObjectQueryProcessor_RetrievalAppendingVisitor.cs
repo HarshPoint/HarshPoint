@@ -1,6 +1,4 @@
-﻿using HarshPoint.Diagnostics;
-using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -10,10 +8,10 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private sealed class RetrievalAppendingVisitor : ExpressionVisitor
         {
-            public RetrievalAppendingVisitor(ClientObjectQueryProcessor owner, DepthLimiter depthLimiter = null)
+            public RetrievalAppendingVisitor(ClientObjectQueryProcessor owner)
             {
                 Owner = owner;
-                DepthLimiter = depthLimiter ?? owner.CreateDepthLimiter();
+                DepthLimiter = new DepthLimiter(owner);
             }
 
             public DepthLimiter DepthLimiter { get; private set; }
@@ -29,11 +27,11 @@ namespace HarshPoint.Provisioning.Implementation
 
                 return Logger.MethodCall(nameof(VisitMethodCall), node).Call(() =>
                 {
-                    var callInfo = new MethodCallInfo(node);
+                    var includeCall = IncludeMethodCallExpression.TryExtend(node);
 
-                    if (callInfo.IsInclude)
+                    if (includeCall != null)
                     {
-                        return VisitIncludeCall(node, callInfo);
+                        return VisitIncludeCall(includeCall);
                     }
 
                     return base.VisitMethodCall(node);
@@ -41,12 +39,12 @@ namespace HarshPoint.Provisioning.Implementation
 
             }
 
-            private Expression VisitIncludeCall(MethodCallExpression node, MethodCallInfo callInfo)
+            private Expression VisitIncludeCall(IncludeMethodCallExpression includeCall)
             {
-                var retrievals = GetExistingRetrievals(node);
-                var canRecurse = DepthLimiter.CanRecurse(callInfo.ElementType);
+                var retrievals = includeCall.Retrievals;
+                var canRecurse = DepthLimiter.CanRecurse(includeCall.ElementType);
 
-                using (DepthLimiter.Enter(callInfo.ElementType))
+                using (DepthLimiter.Enter(includeCall.ElementType))
                 {
                     if (canRecurse)
                     {
@@ -54,7 +52,7 @@ namespace HarshPoint.Provisioning.Implementation
                         retrievals = new ReadOnlyCollection<Expression>(
                             retrievals
                             .Concat(
-                                Owner.GetRetrievals(callInfo.ElementType, DepthLimiter)
+                                Owner.GetRetrievals(includeCall.ElementType)
                             )
                             .ToArray()
                         );
@@ -67,48 +65,16 @@ namespace HarshPoint.Provisioning.Implementation
 
                     if (retrievals.Any())
                     {
-                        return CreateIncludeCall(node, callInfo, retrievals);
-                    }
-
-                    return Visit(node.Arguments[0]);
-                }
-            }
-
-            private Expression CreateIncludeCall(MethodCallExpression node, MethodCallInfo callInfo, ReadOnlyCollection<Expression> retrievals)
-                => node.Update(null, new[]
-                    {
-                        Visit(node.Arguments[0]),
-                        Expression.NewArrayInit(
-                            typeof(Expression<>).MakeGenericType(
-                                typeof(Func<,>).MakeGenericType(
-                                    callInfo.ElementType,
-                                    typeof(Object)
-                                )
-                            ),
+                        var updated = includeCall.Update(
+                            Visit(includeCall.Object), 
                             Visit(retrievals)
-                        )
+                        );
+
+                        return updated.Reduce();
                     }
-                );
 
-            private ReadOnlyCollection<Expression> GetExistingRetrievals(MethodCallExpression node)
-            {
-                var newArray = node.Arguments[1] as NewArrayExpression;
-
-                if (newArray == null)
-                {
-                    throw Logger.Fatal.ArgumentFormat(
-                       nameof(node),
-                       SR.ClientObjectResolveQueryProcessor_IncludeArgNotArray,
-                       node
-                   );
+                    return Visit(includeCall.Object);
                 }
-
-                Logger.Debug(
-                    "RetrievalAppendingVisitor processing {Expression}",
-                    node
-                );
-
-                return newArray.Expressions;
             }
         }
     }

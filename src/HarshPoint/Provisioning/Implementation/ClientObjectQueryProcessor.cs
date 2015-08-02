@@ -10,8 +10,15 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private Int32 _maxRecursionDepth;
 
+        private RetrievalAppendingVisitor _retrievalAppender;
+
         private ImmutableDictionary<Type, ImmutableList<Expression>> _retrievals
            = ImmutableDictionary<Type, ImmutableList<Expression>>.Empty;
+
+        public ClientObjectQueryProcessor()
+        {
+            _retrievalAppender = new RetrievalAppendingVisitor(this);
+        }
 
         public Int32 MaxRecursionDepth
         {
@@ -74,7 +81,9 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToArray();
 
         public Expression[] GetRetrievals(Type type)
-            => GetRetrievals(type, CreateDepthLimiter());
+            => _retrievals
+                .GetValueOrDefault(type, ImmutableList<Expression>.Empty)
+                .ToArray();
 
         public IQueryable<T> Process<T>(IQueryable<T> query)
         {
@@ -100,35 +109,11 @@ namespace HarshPoint.Provisioning.Implementation
             var includesInjected = IncludeInjectingVisitor.Instance.Visit(expression);
             Logger.Debug("Includes injected: {Expression}", includesInjected);
 
-            var retrievalAppending = new RetrievalAppendingVisitor(this);
-            var result = retrievalAppending.Visit(includesInjected);
+            var result = _retrievalAppender.Visit(includesInjected);
             Logger.Debug("Retrievals appended: {Expression}", result);
 
             return result;
         }
-
-        private Expression[] GetRetrievals(Type type, DepthLimiter depthLimiter)
-        {
-            if (type == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(type));
-            }
-
-            if (depthLimiter == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(depthLimiter));
-            }
-
-            var visitor = new RetrievalAppendingVisitor(this, depthLimiter);
-
-            return _retrievals
-                .GetValueOrDefault(type, ImmutableList<Expression>.Empty)
-                .Select(visitor.Visit)
-                .ToArray();
-        }
-
-        private DepthLimiter CreateDepthLimiter()
-            => new DepthLimiter(MaxRecursionDepth);
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext<ClientObjectQueryProcessor>();

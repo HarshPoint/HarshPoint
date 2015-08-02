@@ -1,10 +1,6 @@
 ﻿using HarshPoint.Linq;
-using Microsoft.SharePoint.Client;
-using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -34,57 +30,23 @@ namespace HarshPoint.Provisioning.Implementation
                     return expression;
                 }
 
-                var instance = expression;
-                var retrievals = new ReadOnlyCollection<Expression>(new Expression[0]);
+                var includeCall = IncludeMethodCallExpression.TryExtend(expression);
 
-                var methodCall = expression as MethodCallExpression;
-                var includeCall = new MethodCallInfo(methodCall);
-
-                if (includeCall.IsInclude)
+                if (includeCall == null)
                 {
-                    var arrayInit = methodCall.Arguments[1] as NewArrayExpression;
-
-                    if (arrayInit == null)
-                    {
-                        throw Logger.Fatal.ArgumentFormat(
-                            nameof(expression),
-                            SR.ClientObjectResolveQueryProcessor_IncludeArgNotArray,
-                            methodCall
-                        );
-                    }
-
-                    instance = methodCall.Arguments[0];
-                    retrievals = Visit(arrayInit.Expressions);
+                    includeCall = new IncludeMethodCallExpression(elementType, expression);
                 }
 
-
-                return Expression.Call(
-                    null,
-                    IncludeMethod.MakeGenericMethod(elementType),
-                    instance,
-                    Expression.NewArrayInit(
-                        typeof(Expression<>).MakeGenericType(
-                            typeof(Func<,>).MakeGenericType(
-                                elementType,
-                                typeof(Object)
-                            )
-                        ),
-                        retrievals
-                    )
+                includeCall = includeCall.Update(
+                    includeCall.Object,
+                    Visit(includeCall.Retrievals)
                 );
+
+                return includeCall.Reduce();
             }
 
-            public static IncludeInjectingVisitor Instance { get; } = new IncludeInjectingVisitor();
-
-            private static readonly MethodInfo IncludeMethod =
-                typeof(ClientObjectQueryableExtension)
-                .GetTypeInfo()
-                .GetDeclaredMethods("Include")
-                .FirstOrDefault(m =>
-                    m.IsStatic &&
-                    m.IsGenericMethodDefinition &&
-                    m.GetParameters().Length == 2
-                );
+            public static IncludeInjectingVisitor Instance { get; }
+                = new IncludeInjectingVisitor();
         }
     }
 }

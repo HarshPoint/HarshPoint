@@ -7,15 +7,17 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private sealed class DepthLimiter
         {
-            private readonly Int32 _maxDepth;
-
-            private readonly Dictionary<Type, Int32> _remainingDepth
+            private readonly Dictionary<Type, Int32> _currentDepth
                 = new Dictionary<Type, Int32>();
 
-            public DepthLimiter(Int32 maxDepth)
+            private readonly ClientObjectQueryProcessor _owner;
+
+            public DepthLimiter(ClientObjectQueryProcessor owner)
             {
-                _maxDepth = maxDepth;
+                _owner = owner;
             }
+
+            public Int32 MaxDepth => _owner.MaxRecursionDepth;
 
             public Boolean CanRecurse(Type t)
             {
@@ -24,7 +26,7 @@ namespace HarshPoint.Provisioning.Implementation
                     throw Logger.Fatal.ArgumentNull(nameof(t));
                 }
 
-                return GetRemainingDepth(t) > 0;
+                return GetCurrentDepth(t) <= MaxDepth;
             }
 
             public IDisposable Enter(Type t)
@@ -34,24 +36,19 @@ namespace HarshPoint.Provisioning.Implementation
                     throw Logger.Fatal.ArgumentNull(nameof(t));
                 }
 
+                _currentDepth[t] = GetCurrentDepth(t) + 1;
 
-                _remainingDepth[t] = GetRemainingDepth(t) - 1;
-
-                return new HarshDisposableAction(
-                    () => _remainingDepth[t] = _remainingDepth[t] + 1
-                );
+                return new HarshDisposableAction(() =>
+                {
+                    _currentDepth[t] = _currentDepth[t] - 1;
+                });
             }
 
-            private Int32 GetRemainingDepth(Type t)
+            private Int32 GetCurrentDepth(Type t)
             {
-                var remaining = 0;
-
-                if (!_remainingDepth.TryGetValue(t, out remaining))
-                {
-                    remaining = _maxDepth + 1;
-                }
-
-                return remaining;
+                var current = 0;
+                _currentDepth.TryGetValue(t, out current);
+                return current;
             }
         }
     }

@@ -92,7 +92,8 @@
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectManualResolver.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_DepthLimiter.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_MethodCallInfo.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_RetrievalExpressionComparer.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_IncludeMethodCallExpression.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_RetrievalAppendingVisitor.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_IncludeInjectingVisitor.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryResolveBuilder`1.cs" />

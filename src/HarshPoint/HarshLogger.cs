@@ -130,7 +130,7 @@ namespace HarshPoint
                     throw SelfLog.Fatal.ArgumentNull(nameof(logger));
                 }
 
-                if (Enum.IsDefined(typeof(LogEventLevel), level))
+                if (!Enum.IsDefined(typeof(LogEventLevel), level))
                 {
                     throw SelfLog.Fatal.InvalidEnumArgument(
                         nameof(level),
