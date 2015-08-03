@@ -62,7 +62,7 @@ namespace HarshPoint.Provisioning.Implementation
             public ReadOnlyCollection<Expression> Retrievals { get; private set; }
 
             public override Expression Reduce()
-                => Expression.Call(
+                => Call(
                     null,
                     Method,
                     Object,
@@ -89,7 +89,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             private NewArrayExpression RetrievalsToNewArray()
-                => Expression.NewArrayInit(
+                => NewArrayInit(
                     typeof(Expression<>).MakeGenericType(
                         typeof(Func<,>).MakeGenericType(
                             ElementType,

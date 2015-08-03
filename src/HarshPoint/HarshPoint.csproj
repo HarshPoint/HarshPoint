@@ -69,10 +69,12 @@
     <Compile Include="HarshLog.cs" />
     <Compile Include="HarshLogger.cs" />
     <Compile Include="Diagnostics\HarshLoggerWrapper.cs" />
+    <Compile Include="HarshRecursiveEqualityComparer.cs" />
     <Compile Include="HarshScopedValue`1.cs" />
     <Compile Include="HarshTuple.cs" />
     <Compile Include="IHarshCloneable.cs" />
     <Compile Include="Linq\HarshEnumerable.cs" />
+    <Compile Include="Linq\HarshExpressionEqualityComparer.cs" />
     <Compile Include="Linq\HarshQueryable.cs" />
     <Compile Include="ObjectModel\HarshObjectMetadata.cs" />
     <Compile Include="ObjectModel\PropertyAccessor.cs" />
@@ -92,7 +94,6 @@
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectManualResolver.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_DepthLimiter.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_RetrievalExpressionComparer.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_IncludeMethodCallExpression.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_RetrievalAppendingVisitor.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_IncludeInjectingVisitor.cs" />

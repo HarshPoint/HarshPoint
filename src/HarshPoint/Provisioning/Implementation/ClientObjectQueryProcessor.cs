@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HarshPoint.Linq;
+using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,8 +14,8 @@ namespace HarshPoint.Provisioning.Implementation
 
         private RetrievalAppendingVisitor _retrievalAppender;
 
-        private ImmutableDictionary<Type, ImmutableList<Expression>> _retrievals
-           = ImmutableDictionary<Type, ImmutableList<Expression>>.Empty;
+        private ImmutableDictionary<Type, ImmutableHashSet<Expression>> _retrievals
+           = ImmutableDictionary<Type, ImmutableHashSet<Expression>>.Empty;
 
         public ClientObjectQueryProcessor()
         {
@@ -69,20 +71,19 @@ namespace HarshPoint.Provisioning.Implementation
                 typeof(T),
                 _retrievals.GetValueOrDefault(
                     typeof(T),
-                    ImmutableList<Expression>.Empty
+                    CreateExpressionHashSet()
                 )
-                .AddRange(retrievalsWithIncludes)
+                .Union(retrievalsWithIncludes)
             );
         }
 
         public Expression<Func<T, Object>>[] GetRetrievals<T>()
-            => GetRetrievals(typeof(T))
+            => GetRetrievalsRecursive(typeof(T))
                 .Cast<Expression<Func<T, Object>>>()
                 .ToArray();
 
         public Expression[] GetRetrievals(Type type)
-            => _retrievals
-                .GetValueOrDefault(type, ImmutableList<Expression>.Empty)
+            => GetRetrievalsRecursive(type)
                 .ToArray();
 
         public IQueryable<T> Process<T>(IQueryable<T> query)
@@ -114,6 +115,20 @@ namespace HarshPoint.Provisioning.Implementation
 
             return result;
         }
+
+        private IEnumerable<Expression> GetRetrievalsRecursive(Type type)
+            => GetRetrievalsCore(type).Select(_retrievalAppender.Visit);
+
+        private IEnumerable<Expression> GetRetrievalsCore(Type type)
+            => _retrievals.GetValueOrDefault(
+                type,
+                CreateExpressionHashSet()
+            );
+
+        private static ImmutableHashSet<Expression> CreateExpressionHashSet()
+            => ImmutableHashSet.Create<Expression>(
+                HarshExpressionEqualityComparer.Instance
+            );
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext<ClientObjectQueryProcessor>();

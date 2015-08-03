@@ -52,7 +52,7 @@ namespace HarshPoint.Provisioning.Implementation
                         retrievals = new ReadOnlyCollection<Expression>(
                             retrievals
                             .Concat(
-                                Owner.GetRetrievals(includeCall.ElementType)
+                                Owner.GetRetrievalsCore(includeCall.ElementType)
                             )
                             .ToArray()
                         );

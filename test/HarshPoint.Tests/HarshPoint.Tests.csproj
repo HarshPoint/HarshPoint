@@ -157,6 +157,7 @@
     <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
     <Compile Include="Extensions\TypeInfoExtensionsTests.cs" />
     <Compile Include="GroupingDynamicFactory.cs" />
+    <Compile Include="Linq\ExpressionComparing.cs" />
     <Compile Include="Provisioning\ClientObjectContextStateResolving.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessing.cs" />
     <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
@@ -193,6 +194,7 @@
     <Compile Include="Provisioning\Resolvers\TaxonomyResolving.cs" />
     <Compile Include="Provisioning\RetrievalResolving.cs" />
     <Compile Include="Provisioning\TestFieldBase.cs" />
+    <Compile Include="RecursiveComparisons.cs" />
     <Compile Include="Reflection\MethodInfoExtensionsTests.cs" />
     <Compile Include="HarshContentTypeIdTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
