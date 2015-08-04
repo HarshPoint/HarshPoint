@@ -2,44 +2,18 @@
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveTermSetById :
-        IdentifierResolveBuilder<TermSet, ClientObjectResolveContext, Guid>
+        ClientObjectIdentifierResolveBuilder<TermSet, Guid>
     {
-        public ResolveTermSetById(IResolveBuilder<TermSet> parent, IEnumerable<Guid> identifiers)
-            : base(parent, identifiers)
+        public ResolveTermSetById(
+            IResolveBuilder<TermSet> parent,
+            IEnumerable<Guid> identifiers
+        )
+            : base(parent, identifiers, ts => ts.Id)
         {
         }
-
-        protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
-        {
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
-            context.Include<TermSet>(
-                ts => ts.Id
-            );
-
-            base.InitializeContextBeforeParent(context);
-        }
-
-        protected override Guid GetIdentifier(TermSet result)
-        {
-            if (result == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(result));
-            }
-
-            return result.Id;
-        }
-
-        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveTermSetById>();
     }
 }

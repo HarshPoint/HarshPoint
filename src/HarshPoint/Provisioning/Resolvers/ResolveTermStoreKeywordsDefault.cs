@@ -1,7 +1,6 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System.Collections.Immutable;
-using Microsoft.SharePoint.Client;
 using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Resolvers

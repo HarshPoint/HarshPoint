@@ -93,6 +93,7 @@
     <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectIdentifierResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectManualResolver.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_DepthLimiter.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_IncludeMethodCallExpression.cs" />

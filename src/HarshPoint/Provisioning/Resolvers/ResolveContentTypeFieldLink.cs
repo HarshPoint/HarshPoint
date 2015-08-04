@@ -1,8 +1,6 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
@@ -24,6 +22,8 @@ namespace HarshPoint.Provisioning.Resolvers
             context.Include<ContentType>(
                 ct => ct.FieldLinks
             );
+
+            base.InitializeContextBeforeParent(context);
         }
 
         protected override IEnumerable<FieldLink> SelectChildren(ContentType parent)

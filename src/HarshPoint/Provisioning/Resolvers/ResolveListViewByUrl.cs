@@ -23,7 +23,7 @@ namespace HarshPoint.Provisioning.Resolvers
             }
 
             context.Include<List>(
-                l=>l.RootFolder.ServerRelativeUrl
+                l => l.RootFolder.ServerRelativeUrl
             );
 
             context.Include<View>(

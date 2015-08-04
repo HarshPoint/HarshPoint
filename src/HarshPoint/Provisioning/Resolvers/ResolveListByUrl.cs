@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public class ResolveListByUrl : IdentifierResolveBuilder<List, ClientObjectResolveContext, String>
+    public sealed class ResolveListByUrl : IdentifierResolveBuilder<List, ClientObjectResolveContext, String>
     {
         public ResolveListByUrl(
             IResolveBuilder<List> parent,
@@ -25,6 +25,8 @@ namespace HarshPoint.Provisioning.Implementation
                 list => list.ParentWebUrl,
                 list => list.RootFolder.ServerRelativeUrl
             );
+
+            base.InitializeContextBeforeParent(context);
         }
 
         protected override String GetIdentifier(List result)

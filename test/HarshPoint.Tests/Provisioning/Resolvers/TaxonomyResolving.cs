@@ -59,14 +59,13 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             var expected = await EnsureTestTermSet();
 
             var resolver = ManualResolver.ResolveSingle(
-                Resolve.TermStoreSiteCollectionDefault().TermSet().ById(TermSetId)
+                Resolve.TermStoreSiteCollectionDefault().TermSet().ById(TermSetId),
+                ts => ts.Id,
+                ts => ts.Name
             );
             await ClientContext.ExecuteQueryAsync();
 
             var actual = resolver.Value;
-
-            Fixture.ClientContext.Load(actual, ts => ts.Id, ts => ts.Name);
-            await Fixture.ClientContext.ExecuteQueryAsync();
 
             Assert.Equal(TermSetId, actual.Id);
             Assert.Equal(TermSetId.ToString("n"), actual.Name);
@@ -84,6 +83,8 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
                 group = store.CreateGroup(GroupId.ToString("n"), GroupId);
             }
 
+            await Fixture.ClientContext.ExecuteQueryAsync();
+        
             var termSet = group.TermSets.GetById(TermSetId);
 
             try
