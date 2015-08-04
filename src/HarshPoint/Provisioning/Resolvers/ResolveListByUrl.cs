@@ -28,7 +28,14 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         protected override String GetIdentifier(List result)
-            => HarshUrl.GetRelativeTo(result.RootFolder.ServerRelativeUrl, result.ParentWebUrl);
+        {
+            if (result == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(result));
+            }
+
+            return HarshUrl.GetRelativeTo(result.RootFolder.ServerRelativeUrl, result.ParentWebUrl);
+        }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveListByUrl>();
     }

@@ -48,7 +48,7 @@ namespace HarshPoint.Diagnostics
         public ArgumentException ArgumentNullOrEmpty(String parameterName)
             => Argument(parameterName, SR.Error_ArgumentNullOrEmpty);
 
-        public ArgumentException ArgumentNullOrWhitespace(String parameterName)
+        public ArgumentException ArgumentNullOrWhiteSpace(String parameterName)
             => Argument(parameterName, SR.Error_ArgumentNullOrWhitespace);
 
         public ArgumentException ArgumentEmptySequence(String parameterName)

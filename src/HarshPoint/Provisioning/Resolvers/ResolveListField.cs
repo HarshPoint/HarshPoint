@@ -26,7 +26,14 @@ namespace HarshPoint.Provisioning.Resolvers
         }
 
         protected override IEnumerable<Field> SelectChildren(List parent)
-            => parent.Fields;
+        {
+            if (parent == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(parent));
+            }
+
+            return parent.Fields;
+        }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveListField>();
     }

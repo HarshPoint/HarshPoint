@@ -23,8 +23,16 @@ namespace HarshPoint.Provisioning.Implementation
         public IResolveSingleOrDefault<T> ResolveSingleOrDefault<T>(IResolveSingleOrDefault<T> resolve)
             => Bind(resolve);
 
-        protected T Bind<T>(T obj, Func<IResolveContext> contextFactory = null)
+        protected T Bind<T>(T obj)
+            => Bind(obj, null);
+
+        protected T Bind<T>(T obj, Func<IResolveContext> contextFactory)
         {
+            if (obj == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(obj));
+            }
+
             var binder = new ResolvedPropertyBinder(typeof(Holder<T>));
             var holder = new Holder<T>() { Value = obj };
 

@@ -58,7 +58,5 @@ namespace HarshPoint.Provisioning
 
         public static ResolveTermStoreSiteCollectionDefault TermStoreSiteCollectionDefault()
             => new ResolveTermStoreSiteCollectionDefault();
-
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(Resolve));
     }
 }

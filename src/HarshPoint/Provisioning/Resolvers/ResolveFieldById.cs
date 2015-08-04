@@ -18,11 +18,26 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             context.Include<Field>(
                 f => f.Id
             );
         }
 
-        protected override Guid GetIdentifier(Field result) => result.Id;
+        protected override Guid GetIdentifier(Field result)
+        {
+            if (result == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(result));
+            }
+
+            return result.Id;
+        }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveFieldById>();
     }
 }

@@ -13,6 +13,11 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             context.Include<List>(
                 l => l.Views
             );
@@ -21,6 +26,15 @@ namespace HarshPoint.Provisioning.Resolvers
         }
 
         protected override IEnumerable<View> SelectChildren(List parent)
-            => parent.Views;
+        {
+            if (parent == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(parent));
+            }
+
+            return parent.Views;
+        }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveListView>();
     }
 }

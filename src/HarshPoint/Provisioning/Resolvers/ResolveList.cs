@@ -1,6 +1,5 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
-using System;
 using System.Linq;
 
 namespace HarshPoint.Provisioning.Resolvers
@@ -8,6 +7,15 @@ namespace HarshPoint.Provisioning.Resolvers
     public sealed class ResolveList : ClientObjectQueryResolveBuilder<List>
     {
         protected override IQueryable<List> CreateQuery(ClientObjectResolveContext context)
-            => context.ProvisionerContext.Web.Lists;
+        {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
+            return context.ProvisionerContext.Web.Lists;
+        }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveList>();
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace HarshPoint
 {
-    public struct HarshDependencyGraph<T>
+    public struct HarshDependencyGraph<T> : IEquatable<HarshDependencyGraph<T>>
     {
         private readonly ImmutableDictionary<T, ImmutableHashSet<T>> _graph;
 
@@ -53,6 +54,24 @@ namespace HarshPoint
             );
         }
 
+        public override Int32 GetHashCode()
+            => _graph?.GetHashCode() ?? 0;
+
+        public override Boolean Equals(Object obj)
+        {
+            if (obj is HarshDependencyGraph<T>)
+            {
+                return Equals((HarshDependencyGraph<T>)(obj));
+            }
+
+            return base.Equals(obj);
+        }
+
+        public Boolean Equals(HarshDependencyGraph<T> other)
+        {
+            return Equals(_graph, other._graph);
+        }
+
         public IEnumerable<T> Sort()
         {
             if (Graph.Count < 2)
@@ -86,6 +105,22 @@ namespace HarshPoint
             return results.ToImmutable();
         }
 
+        private IEqualityComparer<T> Comparer
+            => _graph?.KeyComparer ?? EqualityComparer<T>.Default;
+
+        private ImmutableDictionary<T, ImmutableHashSet<T>> Graph
+            => _graph ?? ImmutableDictionary<T, ImmutableHashSet<T>>.Empty;
+
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]
+        public static readonly HarshDependencyGraph<T> Empty
+            = new HarshDependencyGraph<T>();
+
+        public static Boolean operator== (HarshDependencyGraph<T> left, HarshDependencyGraph<T> right)
+            => left.Equals(right);
+
+        public static Boolean operator !=(HarshDependencyGraph<T> left, HarshDependencyGraph<T> right)
+            => !left.Equals(right);
+
         private static Boolean NextRootNode(ImmutableDictionary<T, ImmutableHashSet<T>> pending, out T result)
         {
             foreach (var item in pending)
@@ -100,15 +135,6 @@ namespace HarshPoint
             result = default(T);
             return false;
         }
-
-        private IEqualityComparer<T> Comparer
-            => _graph?.KeyComparer ?? EqualityComparer<T>.Default;
-
-        private ImmutableDictionary<T, ImmutableHashSet<T>> Graph
-            => _graph ?? ImmutableDictionary<T, ImmutableHashSet<T>>.Empty;
-
-        public static HarshDependencyGraph<T> Empty
-            => new HarshDependencyGraph<T>();
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(HarshDependencyGraph<>));

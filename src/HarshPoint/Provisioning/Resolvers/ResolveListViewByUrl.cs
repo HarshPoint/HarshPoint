@@ -17,6 +17,11 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             context.Include<List>(
                 l=>l.RootFolder.ServerRelativeUrl
             );
@@ -28,8 +33,13 @@ namespace HarshPoint.Provisioning.Resolvers
             base.InitializeContextBeforeParent(context);
         }
 
-        protected override string GetIdentifierFromNested(NestedResolveResult nested)
+        protected override String GetIdentifierFromNested(NestedResolveResult nested)
         {
+            if (nested == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(nested));
+            }
+
             var tuple = nested.ExtractComponents<List, View>();
 
             return HarshUrl.GetRelativeTo(
@@ -37,5 +47,7 @@ namespace HarshPoint.Provisioning.Resolvers
                 tuple.Item1.RootFolder.ServerRelativeUrl
             );
         }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveListViewByUrl>();
     }
 }

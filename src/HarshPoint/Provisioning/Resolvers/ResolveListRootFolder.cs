@@ -1,8 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System.Collections.Generic;
 using HarshPoint.Provisioning.Implementation;
-using System;
-using System.Linq;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
@@ -14,6 +12,15 @@ namespace HarshPoint.Provisioning.Resolvers
         }
 
         protected override IEnumerable<Folder> SelectChildren(List parent)
-            => new[] { parent.RootFolder };
+        {
+            if (parent == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(parent));
+            }
+
+            return new[] { parent.RootFolder };
+        }
+
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveListRootFolder>();
     }
 }

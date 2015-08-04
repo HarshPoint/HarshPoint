@@ -33,6 +33,11 @@ namespace HarshPoint.Provisioning
 
         protected override void InitializeResolveContext(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             context.Include<List>(
                 list => list.ContentTypes.Include(ct => ct.StringId)
             );

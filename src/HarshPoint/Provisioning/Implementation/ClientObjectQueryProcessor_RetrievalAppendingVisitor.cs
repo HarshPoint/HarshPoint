@@ -25,7 +25,7 @@ namespace HarshPoint.Provisioning.Implementation
                     throw Logger.Fatal.ArgumentNull(nameof(node));
                 }
 
-                return Logger.MethodCall(nameof(VisitMethodCall), node).Call(() =>
+                return Logger.Method(nameof(VisitMethodCall), node).Invoke(() =>
                 {
                     var includeCall = IncludeMethodCallExpression.TryExtend(node);
 

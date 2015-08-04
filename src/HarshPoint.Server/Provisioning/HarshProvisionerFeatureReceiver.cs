@@ -62,7 +62,5 @@ namespace HarshPoint.Server.Provisioning
                 return runOnUpgradeActions.Contains(UpgradeAction);
             }
         }
-
-        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshProvisionerFeatureReceiver>();
     }
 }

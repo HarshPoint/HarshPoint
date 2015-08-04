@@ -27,7 +27,14 @@ namespace HarshPoint.Provisioning.Resolvers
         }
 
         protected override IEnumerable<FieldLink> SelectChildren(ContentType parent)
-            => parent.FieldLinks;
+        {
+            if (parent == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(parent));
+            }
+
+            return parent.FieldLinks;
+        }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveContentTypeFieldLink>();
     }

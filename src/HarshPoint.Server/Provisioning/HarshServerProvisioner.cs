@@ -16,7 +16,7 @@ namespace HarshPoint.Server.Provisioning
         {
             if (String.IsNullOrWhiteSpace(action))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(action));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(action));
             }
 
             if (_runOnUpgradeActions == null)

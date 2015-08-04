@@ -18,6 +18,11 @@ namespace HarshPoint.Provisioning.Resolvers
 
         protected override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             context.Include<TermSet>(
                 ts => ts.Id
             );

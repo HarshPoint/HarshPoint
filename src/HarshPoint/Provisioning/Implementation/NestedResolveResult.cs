@@ -135,25 +135,25 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        public static Object Unpack(Object obj)
+        public static Object Unpack(Object value)
         {
-            if (obj == null)
+            if (value == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(obj));
+                throw Logger.Fatal.ArgumentNull(nameof(value));
             }
 
-            var nested = (obj as NestedResolveResult);
+            var nested = (value as NestedResolveResult);
 
             if (nested != null)
             {
                 return nested.Value;
             }
 
-            return obj;
+            return value;
         }
 
-        public static T Unpack<T>(Object obj)
-            => (T)Unpack(obj);
+        public static T Unpack<T>(Object value)
+            => (T)Unpack(value);
 
         public static NestedResolveResult FromComponents(IEnumerable<Object> components)
         {

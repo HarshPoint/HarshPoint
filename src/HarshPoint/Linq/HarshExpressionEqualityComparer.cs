@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace HarshPoint.Linq
@@ -24,6 +25,9 @@ namespace HarshPoint.Linq
         public static HarshExpressionEqualityComparer Instance { get; }
             = new HarshExpressionEqualityComparer();
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static HarshRecursiveEqualityComparer BuildComparer()
         {
             var comparer = new HarshRecursiveEqualityComparer();

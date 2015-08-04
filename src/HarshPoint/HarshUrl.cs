@@ -22,12 +22,12 @@ namespace HarshPoint
         {
             if (String.IsNullOrWhiteSpace(url))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(url));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(url));
             }
 
             if (String.IsNullOrWhiteSpace(relativeTo))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(relativeTo));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(relativeTo));
             }
 
             if (!relativeTo.EndsWith("/", StringComparison.Ordinal))
@@ -90,7 +90,7 @@ namespace HarshPoint
         {
             if (String.IsNullOrWhiteSpace(path))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(path));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(path));
             }
 
             return path
@@ -102,7 +102,7 @@ namespace HarshPoint
         {
             if (String.IsNullOrWhiteSpace(path))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(path));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(path));
             }
 
             var leaf = GetLeaf(path);
@@ -120,12 +120,12 @@ namespace HarshPoint
         {
             if (String.IsNullOrWhiteSpace(rootUrl))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(rootUrl));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(rootUrl));
             }
 
             if (String.IsNullOrWhiteSpace(url))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(url));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(url));
             }
 
             if (url.StartsWith("/", StringComparison.Ordinal))

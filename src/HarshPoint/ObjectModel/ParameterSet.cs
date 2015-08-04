@@ -13,7 +13,7 @@ namespace HarshPoint.ObjectModel
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(name));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
             }
 
             if (parameters == null)

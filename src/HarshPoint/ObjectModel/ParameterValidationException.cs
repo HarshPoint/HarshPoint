@@ -8,7 +8,7 @@ namespace HarshPoint.ObjectModel
         {
             if (String.IsNullOrWhiteSpace(parameterName))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(parameterName));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(parameterName));
             }
 
             ParameterName = parameterName;
@@ -19,7 +19,7 @@ namespace HarshPoint.ObjectModel
         {
             if (String.IsNullOrWhiteSpace(parameterName))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(parameterName));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(parameterName));
             }
 
             ParameterName = parameterName;
@@ -30,7 +30,7 @@ namespace HarshPoint.ObjectModel
         {
             if (String.IsNullOrWhiteSpace(parameterName))
             {
-                throw Logger.Fatal.ArgumentNullOrWhitespace(nameof(parameterName));
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(parameterName));
             }
 
             ParameterName = parameterName;
