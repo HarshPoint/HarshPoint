@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -41,16 +42,16 @@ namespace HarshPoint.Provisioning.Implementation
 
             Parent = parent;
 
-            Identifiers = new HashSet<TIdentifier>(
-                identifiers, identifierComparer
+            Identifiers = ImmutableHashSet.CreateRange(
+                identifierComparer, identifiers
             );
         }
 
         public IResolveBuilder<TResult> Parent { get; private set; }
 
-        public HashSet<TIdentifier> Identifiers { get; private set; }
+        public ImmutableHashSet<TIdentifier> Identifiers { get; private set; }
 
-        public IEqualityComparer<TIdentifier> IdentifierComparer => Identifiers.Comparer;
+        public IEqualityComparer<TIdentifier> IdentifierComparer => Identifiers.KeyComparer;
 
         protected sealed override void InitializeContext(TContext context)
         {
@@ -62,7 +63,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
         }
 
-        protected override Object Initialize(TContext context)
+        protected sealed override Object Initialize(TContext context)
             => Parent.Initialize(context);
 
         protected virtual TIdentifier GetIdentifier(TResult result)
@@ -97,7 +98,7 @@ namespace HarshPoint.Provisioning.Implementation
             return GetIdentifier((TResult)(item));
         }
 
-        protected override IEnumerable ToEnumerable(Object state, TContext context)
+        protected sealed override IEnumerable ToEnumerable(Object state, TContext context)
         {
             var items = Parent.ToEnumerable(context, state);
 

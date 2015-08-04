@@ -69,10 +69,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         public ResolveBuilder<TResult, TContext> And(Chain<IResolveBuilderElement<TContext>> other)
-        {
-            Append(other);
-            return this;
-        }
+            => (ResolveBuilder<TResult, TContext>)Append(other);
 
         private static TContext ValidateContext(IResolveContext context)
         {

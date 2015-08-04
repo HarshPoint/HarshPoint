@@ -8,7 +8,7 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext<Chain<TElement>>();
 
-        protected void Append(Chain<TElement> other)
+        protected Chain<TElement> Append(Chain<TElement> other)
         {
             if (other == null)
             {
@@ -16,8 +16,9 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             var thisElements = GetChainElements().ToImmutableHashSet();
+            var otherElements = other.GetChainElements();
 
-            if (other.GetChainElements().Any(el => thisElements.Contains(el)))
+            if (thisElements.Overlaps(otherElements))
             {
                 throw Logger.Fatal.Argument(
                     nameof(other),
@@ -25,16 +26,20 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
-            GetChainElements().Last().Next = other;
+            var clone = Clone();
+            clone.GetChainElements().Last().Next = other.Clone();
+            return clone;
         }
 
-        protected IEnumerable<TElement> Elements
-            => GetChainElements().Cast<TElement>();
+        protected IEnumerable<TElement> Elements => GetChainElements().Cast<TElement>();
 
-        private Chain<TElement> Next
+        private Chain<TElement> Next { get; set; }
+
+        private Chain<TElement> Clone()
         {
-            get;
-            set;
+            var clone = (Chain<TElement>)MemberwiseClone();
+            clone.Next = Next?.Clone();
+            return clone;
         }
 
         private IEnumerable<Chain<TElement>> GetChainElements()

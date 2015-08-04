@@ -2,6 +2,7 @@
 using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace HarshPoint.Provisioning.Resolvers
@@ -10,10 +11,15 @@ namespace HarshPoint.Provisioning.Resolvers
     {
         public ResolveCatalog(IEnumerable<ListTemplateType> identifiers)
         {
-            Identifiers = new HashSet<ListTemplateType>(identifiers);
+            if (identifiers == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(identifiers));
+            }
+
+            Identifiers = identifiers.ToImmutableHashSet();
         }
 
-        public HashSet<ListTemplateType> Identifiers { get; private set; }
+        public ImmutableHashSet<ListTemplateType> Identifiers { get; private set; }
 
         protected override IEnumerable<List> CreateObjects(ClientObjectResolveContext context)
         {

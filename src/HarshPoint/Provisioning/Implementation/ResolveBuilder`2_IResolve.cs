@@ -13,6 +13,5 @@ namespace HarshPoint.Provisioning.Implementation
 
         private static Exception CannotCall()
             => Logger.Fatal.InvalidOperation(SR.ResolveBuilder_CannotCallThisMethod);
-
     }
 }

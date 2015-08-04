@@ -17,7 +17,6 @@ namespace HarshPoint.Provisioning.Implementation
         )
             : this(parent, identifiers, null, identifierExpression)
         {
-
         }
 
         protected ClientObjectIdentifierResolveBuilder(
@@ -47,9 +46,6 @@ namespace HarshPoint.Provisioning.Implementation
         protected sealed override TIdentifier GetIdentifier(TResult result)
             => IdentifierSelector(result);
 
-        protected sealed override Object Initialize(ClientObjectResolveContext context)
-            => base.Initialize(context);
-
         protected sealed override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
             if (context == null)
@@ -63,9 +59,6 @@ namespace HarshPoint.Provisioning.Implementation
 
             base.InitializeContextBeforeParent(context);
         }
-
-        protected sealed override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
-            => base.ToEnumerable(state, context);
 
         private Expression<Func<TResult, Object>> IdentifierExpression
         {

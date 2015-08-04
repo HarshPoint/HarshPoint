@@ -32,9 +32,12 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var first = new TestChain("1").And(new TestChain("2"));
             var second = new TestChain("3").And(new TestChain("4"));
 
+            Assert.Equal(new[] { "1", "2" }, first.GetValues());
+            Assert.Equal(new[] { "3", "4" }, second.GetValues());
+
             var result = first.And(second);
 
-            Assert.Same(first, result);
+            Assert.NotSame(first, result);
             Assert.Equal(new[] { "1", "2", "3", "4" }, result.GetValues());
         }
 
@@ -57,7 +60,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var zero = new TestChain("0").And(one).And(two);
 
             Assert.Throws<ArgumentException>(
-                () => zero.And(two)
+                () => zero.And(zero.Next)
             );
         }
 
@@ -72,9 +75,10 @@ namespace HarshPoint.Tests.Provisioning.Implementation
 
             public TestChain And(TestChain other)
             {
-                Append(other);
-                return this;
+                return (TestChain)Append(other);
             }
+
+            public TestChain Next => (TestChain)Elements.Skip(1).FirstOrDefault();
 
             public IEnumerable<String> GetValues()
                 => Elements.Select(e => e.GetValue());

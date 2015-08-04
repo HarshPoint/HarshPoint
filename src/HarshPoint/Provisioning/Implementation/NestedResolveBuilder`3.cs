@@ -33,16 +33,15 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected abstract IEnumerable<TResult> SelectChildren(TParent parent);
 
-        protected override Object Initialize(TContext context)
+        protected sealed override Object Initialize(TContext context)
             => Parent.Initialize(context);
 
-        protected override IEnumerable ToEnumerable(Object state, TContext context)
+        protected sealed override IEnumerable ToEnumerable(Object state, TContext context)
             => from parent in Parent.ToEnumerable(context, state)
                let unpacked = NestedResolveResult.Unpack<TParent>(parent)
 
                from child in SelectChildren(unpacked)
                select NestedResolveResult.Pack(child, parent);
-
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(NestedResolveBuilder<,,>));
     }

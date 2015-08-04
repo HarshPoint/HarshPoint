@@ -44,9 +44,6 @@ namespace HarshPoint.Provisioning.Implementation
                 .Compile();
         }
 
-        protected sealed override Object Initialize(ClientObjectResolveContext context)
-            => base.Initialize(context);
-
         protected sealed override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {
             if (context == null)
@@ -58,9 +55,6 @@ namespace HarshPoint.Provisioning.Implementation
 
             base.InitializeContextBeforeParent(context);
         }
-
-        protected sealed override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
-            => base.ToEnumerable(state, context);
 
         protected sealed override IEnumerable<TResult> SelectChildren(TParent parent)
         {
