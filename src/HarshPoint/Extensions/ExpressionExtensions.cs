@@ -11,7 +11,9 @@ namespace HarshPoint
     public static class ExpressionExtensions
     {
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public static Expression<Func<T, Object>> ConvertToObject<T, TResult>(this Expression<Func<T, TResult>> expression)
+        public static Expression<Func<T, Object>> ConvertToObject<T, TResult>(
+            this Expression<Func<T, TResult>> expression
+        )
         {
             if (expression == null)
             {
@@ -22,6 +24,25 @@ namespace HarshPoint
                 Expression.Convert(
                     expression.Body, 
                     typeof(Object)
+                ),
+                expression.Parameters
+            );
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public static Expression<Func<T, IEnumerable<TResult>>> ConvertToSingleElementArray<T, TResult>(
+            this Expression<Func<T, TResult>> expression
+        )
+        {
+            if (expression == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
+            }
+
+            return Expression.Lambda<Func<T, IEnumerable<TResult>>>(
+                Expression.NewArrayInit(
+                    typeof(TResult),
+                    expression.Body
                 ),
                 expression.Parameters
             );
@@ -68,7 +89,6 @@ namespace HarshPoint
 
             return visitor.Members;
         }
-
 
         public static PropertyInfo ExtractSinglePropertyAccess(this Expression expression)
         {

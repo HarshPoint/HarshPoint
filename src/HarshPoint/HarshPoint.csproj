@@ -95,6 +95,7 @@
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectIdentifierResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectManualResolver.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectNestedResolveBuilder.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_DepthLimiter.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_IncludeMethodCallExpression.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessor_RetrievalAppendingVisitor.cs" />
