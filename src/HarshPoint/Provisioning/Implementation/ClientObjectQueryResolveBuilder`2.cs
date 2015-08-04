@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public abstract class ClientObjectResolveBuilder<TResult, TQueryResult> :
+    public abstract class ClientObjectQueryResolveBuilder<TResult, TQueryResult> :
         ResolveBuilder<TResult, ClientObjectResolveContext>
         where TResult : ClientObject
         where TQueryResult : ClientObject
@@ -73,6 +73,6 @@ namespace HarshPoint.Provisioning.Implementation
             throw Logger.Fatal.NotImplemented();
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectResolveBuilder<,>));
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectQueryResolveBuilder<,>));
     }
 }

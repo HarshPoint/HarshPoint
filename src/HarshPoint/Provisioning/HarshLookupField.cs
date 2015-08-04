@@ -1,13 +1,13 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using HarshPoint.Provisioning.Implementation;
 
 namespace HarshPoint.Provisioning
 {
-    public class HarshLookupField : HarshFieldProvisioner<FieldLookup>
+    public sealed class HarshLookupField : HarshFieldProvisioner<FieldLookup>
     {
+        [Parameter(Mandatory = true)]
         public IResolveSingle<Tuple<List, Field>> LookupTarget
         {
             get;

@@ -1,11 +1,7 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using HarshPoint.Reflection;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning
 {
@@ -37,16 +33,22 @@ namespace HarshPoint.Provisioning
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        protected void SetPropertyIfHasValue<T>(TField field, Nullable<T> value, Expression<Func<TField, T>> property)
+        protected void SetPropertyIfHasValue<T>(TField field, T? value, Expression<Func<TField, T>> property)
             where T : struct
         {
+            if (field == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(field));
+            }
+
+            if (property == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(property));
+            }
+
             if (value.HasValue)
             {
-                var setter = property
-                    .ExtractSinglePropertyAccess()
-                    .MakeSetter<TField, T>();
-
-                setter(field, value.Value);
+                property.ExtractSinglePropertyAccess().SetValue(field, value.Value);
             }
         }
     }

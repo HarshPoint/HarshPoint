@@ -14,7 +14,7 @@ namespace HarshPoint.Provisioning
 
             ExistingViews = DeferredResolveBuilder.Create(() =>
                 Lists
-                .AsClientObjectResolveBuilder()
+                .ValidateIsClientObjectResolveBuilder()
                 .View().ByUrl(Url)
                 .As<Tuple<List, View>>()
             );

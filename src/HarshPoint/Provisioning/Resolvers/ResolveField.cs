@@ -4,8 +4,7 @@ using System.Linq;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveField :
-        ClientObjectQueryResolveBuilder<Field>
+    public sealed class ResolveField : ClientObjectQueryResolveBuilder<Field>
     {
         protected override IQueryable<Field>[] CreateQueries(ClientObjectResolveContext context)
         {

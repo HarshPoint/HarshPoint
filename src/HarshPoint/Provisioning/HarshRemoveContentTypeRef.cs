@@ -10,13 +10,15 @@ namespace HarshPoint.Provisioning
     {
         public HarshRemoveContentTypeRef()
         {
-            ExistingContentTypes = DeferredResolveBuilder.Create(
-                () => Lists.AsClientObjectResolveBuilder()
-                .ContentType()
-                .As<IGrouping<List, ContentType>>()
+            ExistingContentTypes = DeferredResolveBuilder.Create(() =>
+               Lists
+               .ValidateIsClientObjectResolveBuilder()
+               .ContentType()
+               .As<IGrouping<List, ContentType>>()
             );
         }
 
+        [Parameter]
         public IResolve<ContentType> ContentTypes
         {
             get;
@@ -74,9 +76,6 @@ namespace HarshPoint.Provisioning
             await ClientContext.ExecuteQueryAsync();
         }
 
-        private IResolve<IGrouping<List,ContentType>> ExistingContentTypes
-        {
-            get; set;
-        }
+        private IResolve<IGrouping<List, ContentType>> ExistingContentTypes { get; set; }
     }
 }
