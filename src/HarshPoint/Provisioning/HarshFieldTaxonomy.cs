@@ -9,18 +9,21 @@ namespace HarshPoint.Provisioning
 #warning NOT_TESTED
     public sealed class HarshFieldTaxonomy : HarshFieldProvisioner<TaxonomyField>
     {
+        [Parameter]
         public Boolean? AllowMultipleValues
         {
             get;
             set;
         }
 
+        [Parameter]
         public Boolean? IsPathRendered
         {
             get;
             set;
         }
 
+        [Parameter]
         public IResolveSingle<TermSet> TermSet
         {
             get;

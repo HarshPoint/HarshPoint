@@ -71,11 +71,7 @@ namespace HarshPoint.Provisioning
         /// Gets or sets the <see cref="AddFieldOptions"/> value used when
         /// creating a new field.
         /// </summary>
-        public AddFieldOptions AddFieldOptions
-        {
-            get;
-            set;
-        }
+        public AddFieldOptions AddFieldOptions { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to add the newly created field to the default view.
@@ -83,11 +79,7 @@ namespace HarshPoint.Provisioning
         /// <value>
         /// <c>true</c> if add the newly created field to the default view; otherwise, <c>false</c>.
         /// </value>
-        public Boolean AddToDefaultView
-        {
-            get;
-            set;
-        }
+        public Boolean AddToDefaultView { get; set; }
 
         [Parameter]
         public String DisplayName { get; set; }

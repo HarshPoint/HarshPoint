@@ -46,7 +46,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (element == null)
             {
-                throw Logger.Fatal.ArgumentNull("element");
+                throw Logger.Fatal.ArgumentNull(nameof(element));
             }
 
             var value = ValueAccessor();
