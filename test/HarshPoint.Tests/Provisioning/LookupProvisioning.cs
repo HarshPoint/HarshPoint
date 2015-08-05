@@ -77,7 +77,7 @@ namespace HarshPoint.Tests.Provisioning
 
             await list.ProvisionAsync(Fixture.Context);
 
-            return list.List;
+            return FindOutput<List>()?.Object;
         }
     }
 }

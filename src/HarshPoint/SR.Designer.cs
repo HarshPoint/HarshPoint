@@ -445,6 +445,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This operation is valid only during a Provision/Unprovision call..
+        /// </summary>
+        internal static string HarshProvisionerBase_NoContext {
+            get {
+                return ResourceManager.GetString("HarshProvisionerBase_NoContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thr mandatory parameter &apos;{0}&apos; must be set..
         /// </summary>
         internal static string HarshProvisionerBase_ParameterMandatory {

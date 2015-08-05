@@ -1,4 +1,5 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Output;
 using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class ListProvisioning : SharePointClientTest
     {
-        public ListProvisioning(SharePointClientFixture fixture, ITestOutputHelper output) 
+        public ListProvisioning(SharePointClientFixture fixture, ITestOutputHelper output)
             : base(fixture, output)
         {
         }
@@ -28,18 +29,23 @@ namespace HarshPoint.Tests.Provisioning
 
             await prov.ProvisionAsync(Fixture.Context);
 
+            var output = Assert.Single(Output);
+            var alreadyExists = Assert.IsType<ObjectAlreadyExists<List>>(output);
+
+            var list = alreadyExists.Object;
+            Assert.NotNull(list);
+
             Fixture.ClientContext.Load(
-                prov.List,
+                list,
                 l => l.Title,
                 l => l.BaseTemplate
             );
 
             await Fixture.ClientContext.ExecuteQueryAsync();
 
-            Assert.False(prov.ListAdded);
-            Assert.NotNull(prov.List);
-            Assert.Equal(SharePointClientFixture.TestListTitle, prov.List.Title);
-            Assert.Equal((Int32)ListTemplateType.DocumentLibrary, prov.List.BaseTemplate);
+
+            Assert.Equal(SharePointClientFixture.TestListTitle, list.Title);
+            Assert.Equal((Int32)ListTemplateType.DocumentLibrary, list.BaseTemplate);
         }
 
         [Fact]
@@ -53,26 +59,33 @@ namespace HarshPoint.Tests.Provisioning
                 Url = "Lists/" + name,
             };
 
+            List list = null;
+
             try
             {
                 await prov.ProvisionAsync(Fixture.Context);
 
+                var objectCreated = FindOutput<List>();
+                Assert.IsType<ObjectCreated<List>>(objectCreated);
+
+                list = objectCreated.Object;
+                Assert.NotNull(list);
+
                 Fixture.ClientContext.Load(
-                    prov.List,
+                    list,
                     l => l.Title,
                     l => l.BaseTemplate
                 );
 
                 await Fixture.ClientContext.ExecuteQueryAsync();
 
-                Assert.True(prov.ListAdded);
-                Assert.NotNull(prov.List);
-                Assert.Equal(name, prov.List.Title);
-                Assert.Equal((Int32)ListTemplateType.GenericList, prov.List.BaseTemplate);
+                Assert.NotNull(list);
+                Assert.Equal(name, list.Title);
+                Assert.Equal((Int32)ListTemplateType.GenericList, list.BaseTemplate);
             }
             finally
             {
-                prov.List.DeleteObject();
+                list?.DeleteObject();
                 await Fixture.ClientContext.ExecuteQueryAsync();
             }
         }

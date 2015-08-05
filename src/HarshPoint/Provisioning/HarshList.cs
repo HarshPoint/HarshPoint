@@ -20,20 +20,7 @@ namespace HarshPoint.Provisioning
 
             TemplateType = ListTemplateType.GenericList;
         }
-
-        public List List
-        {
-            get;
-            private set;
-        }
-
-        [Obsolete]
-        public Boolean ListAdded
-        {
-            get;
-            private set;
-        }
-
+        
         [Parameter(ParameterSetName = "TemplateId")]
         public Int32? TemplateId
         {
@@ -67,7 +54,6 @@ namespace HarshPoint.Provisioning
         {
             if (ExistingList.Value.IsNull())
             {
-                ListAdded = true;
                 List = Web.Lists.Add(new ListCreationInformation()
                 {
                     TemplateType = TemplateId ?? (Int32)TemplateType,
@@ -75,18 +61,24 @@ namespace HarshPoint.Provisioning
                     Url = Url,
                 });
 
+                WriteOutput(
+                    Result.Created(Url, List)
+                );
+
                 await ClientContext.ExecuteQueryAsync();
             }
             else
             {
                 List = ExistingList.Value;
+
+                WriteOutput(
+                    Result.AlreadyExists<List>(Url, List)
+                );
             }
         }
 
-        private IResolveSingleOrDefault<List> ExistingList
-        {
-            get; set;
-        }
+        private IResolveSingleOrDefault<List> ExistingList { get; set; }
+        private List List { get; set; }
     }
 
 }

@@ -124,6 +124,23 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
+        protected void WriteOutput(HarshProvisionerOutput result)
+        {
+            if (result == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(result));
+            }
+
+            if (Context == null)
+            {
+                throw Logger.Fatal.InvalidOperation(
+                    SR.HarshProvisionerBase_NoContext
+                );
+            }
+
+            Context.WriteOutput(result);
+        }
+
         protected virtual Task InitializeAsync()
         {
             return HarshTask.Completed;

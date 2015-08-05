@@ -1,4 +1,5 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Output;
 using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
@@ -19,13 +20,13 @@ namespace HarshPoint.Tests.Provisioning
             var name = Guid.NewGuid().ToString("n");
             var ctid = HarshContentTypeId.Parse("0x01").Append(HarshContentTypeId.Parse(name));
 
-            var ct = new HarshContentType()
+            var ctProv = new HarshContentType()
             {
                 Id = ctid,
                 Name = name,
             };
 
-            var list = new HarshList()
+            var listProv = new HarshList()
             {
                 Title = name,
                 Url = "Lists/" + name,
@@ -39,19 +40,26 @@ namespace HarshPoint.Tests.Provisioning
                 }
             };
 
+            List list = null;
+
             try
             {
-                await ct.ProvisionAsync(Fixture.Context);
+                await ctProv.ProvisionAsync(Fixture.Context);
 
-                Assert.NotNull(ct.ContentType);
+                Assert.NotNull(ctProv.ContentType);
 
-                await list.ProvisionAsync(Fixture.Context);
+                await listProv.ProvisionAsync(Fixture.Context);
 
-                Assert.True(list.ListAdded);
-                Assert.NotNull(list.List);
+                var listResult = FindOutput<List>();
+                Assert.NotNull(listResult);
+
+                list = listResult.Object;
+
+                Assert.IsType<ObjectCreated<List>>(listResult);
+                Assert.NotNull(list);
 
                 Fixture.ClientContext.Load(
-                    list.List,
+                    list,
                     l => l.ContentTypesEnabled,
                     l => l.ContentTypes.Include(lct => lct.StringId),
                     l => l.Id
@@ -59,20 +67,20 @@ namespace HarshPoint.Tests.Provisioning
 
                 await Fixture.ClientContext.ExecuteQueryAsync();
 
-                Assert.True(list.List.ContentTypesEnabled);
-                Assert.Contains(list.List.ContentTypes, lct => lct.StringId.StartsWith(ctid.ToString() + "00"));
+                Assert.True(list.ContentTypesEnabled);
+                Assert.Contains(list.ContentTypes, lct => lct.StringId.StartsWith(ctid.ToString() + "00"));
             }
             finally
             {
-                if (list.List != null)
+                if (list != null)
                 {
-                    list.List.DeleteObject();
+                    list.DeleteObject();
                     await Fixture.ClientContext.ExecuteQueryAsync();
                 }
 
-                if (ct.ContentType != null)
+                if (ctProv.ContentType != null)
                 {
-                    ct.ContentType.DeleteObject();
+                    ctProv.ContentType.DeleteObject();
                     await Fixture.ClientContext.ExecuteQueryAsync();
                 }
             }

@@ -3,20 +3,33 @@ using System.Collections.Immutable;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public abstract class HarshProvisionerContextBase<TSelf>
-        : HarshProvisionerContextBase, IHarshCloneable
+    public abstract class HarshProvisionerContextBase<TSelf> :
+        HarshProvisionerContextBase, IHarshCloneable
         where TSelf : HarshProvisionerContextBase<TSelf>
     {
         private Boolean _mayDeleteUserData;
+        private HarshProvisionerOutputSink _outputSink;
         private IImmutableStack<Object> _stateStack = ImmutableStack<Object>.Empty;
 
-        public sealed override Boolean MayDeleteUserData => _mayDeleteUserData;
+        public sealed override Boolean MayDeleteUserData
+            => _mayDeleteUserData;
 
-        public TSelf AllowDeleteUserData() => (TSelf)this.With(c => c._mayDeleteUserData, true);
+        public TSelf AllowDeleteUserData()
+            => (TSelf)this.With(c => c._mayDeleteUserData, true);
 
-        public new TSelf PushState(Object state) => (TSelf)PushStateCore(state);
+        public TSelf WithOutputSink(HarshProvisionerOutputSink sink)
+            => (TSelf)this.With(c => c._outputSink, sink);
 
-        public virtual TSelf Clone() => (TSelf)MemberwiseClone();
+        public new TSelf PushState(Object state)
+            => (TSelf)PushStateCore(state);
+
+        public virtual TSelf Clone()
+            => (TSelf)MemberwiseClone();
+
+        public override void WriteOutput(HarshProvisionerOutput output)
+        {
+            _outputSink?.WriteOutput(this, output);
+        }
 
         internal sealed override IImmutableStack<Object> StateStack => _stateStack;
 
@@ -32,6 +45,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         Object IHarshCloneable.Clone() => Clone();
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshProvisionerContextBase<>));
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(HarshProvisionerContextBase<>));
     }
 }

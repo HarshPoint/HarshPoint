@@ -87,6 +87,9 @@ namespace HarshPoint.Server.Provisioning
             get { return _upgradeArgs; }
         }
 
+        public override String ToString()
+            => Web?.Url ?? WebApplication?.ToString() ?? Farm.ToString();
+
         private void SetWeb(SPWeb web)
         {
             Web = web;

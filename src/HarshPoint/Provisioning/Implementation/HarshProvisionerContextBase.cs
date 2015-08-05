@@ -8,10 +8,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class HarshProvisionerContextBase
     {
-        public abstract Boolean MayDeleteUserData
-        {
-            get;
-        }
+        public abstract Boolean MayDeleteUserData { get; }
 
         public HarshProvisionerContextBase PushState(Object state)
         {
@@ -53,6 +50,8 @@ namespace HarshPoint.Provisioning.Implementation
                     info.IsAssignableFrom(state.GetType().GetTypeInfo())
                 );
         }
+
+        public abstract void WriteOutput(HarshProvisionerOutput output);
 
         internal abstract IImmutableStack<Object> StateStack
         {

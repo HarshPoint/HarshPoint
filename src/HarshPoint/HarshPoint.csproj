@@ -92,6 +92,14 @@
     <Compile Include="Provisioning\HarshDateTimeField.cs" />
     <Compile Include="Provisioning\HarshLookupField.cs" />
     <Compile Include="Provisioning\HarshFieldMultilineText.cs" />
+    <Compile Include="Provisioning\HarshProvisionerOutputSink.cs" />
+    <Compile Include="Provisioning\HarshProvisionerOutput.cs" />
+    <Compile Include="Provisioning\Output\HarshProvisionerOutputSinkComposite.cs" />
+    <Compile Include="Provisioning\Output\HarshProvisionerOutputSinkList.cs" />
+    <Compile Include="Provisioning\Output\HarshProvisionerOutputSinkNull.cs" />
+    <Compile Include="Provisioning\Output\IdentifiedObjectOutputBase.cs" />
+    <Compile Include="Provisioning\Output\ObjectAlreadyExists.cs" />
+    <Compile Include="Provisioning\Output\ObjectCreated.cs" />
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectIdentifierResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectManualResolver.cs" />
@@ -112,6 +120,7 @@
     <Compile Include="Provisioning\Implementation\NestedResolveBuilder`3.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveResult.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveResult`1.cs" />
+    <Compile Include="Provisioning\Output\HarshProvisionerOutputSinkSerilog.cs" />
     <Compile Include="Provisioning\ResolveExtensions.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2_Element.cs" />
@@ -175,6 +184,7 @@
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreTermSet.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreKeywordsDefault.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreSiteCollectionDefault.cs" />
+    <Compile Include="Provisioning\Result.cs" />
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\TypeInfoExtensions.cs" />
     <Compile Include="HarshTask.cs" />

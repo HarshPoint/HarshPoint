@@ -248,6 +248,9 @@ Number of resolver elements {1}</value>
   <data name="HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace" xml:space="preserve">
     <value>The {0} cannot be null or a whitespace-only string.</value>
   </data>
+  <data name="HarshProvisionerBase_NoContext" xml:space="preserve">
+    <value>This operation is valid only during a Provision/Unprovision call.</value>
+  </data>
   <data name="HarshProvisionerBase_ParameterMandatory" xml:space="preserve">
     <value>Thr mandatory parameter '{0}' must be set.</value>
   </data>

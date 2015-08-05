@@ -1,8 +1,10 @@
 ﻿using HarshPoint.Provisioning;
 using HarshPoint.Provisioning.Implementation;
+using HarshPoint.Provisioning.Output;
 using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -45,11 +47,16 @@ namespace HarshPoint.Tests
                 }
             }
 
-            ClientContext.ExecutingWebRequest += (_, e) =>
-            {
-            };
+            var listSink = new HarshProvisionerOutputSinkList();
+            Output = listSink.Output;
 
-            Context = new HarshProvisionerContext(ClientContext);
+            Context = new HarshProvisionerContext(ClientContext)
+                .WithOutputSink(
+                    new HarshProvisionerOutputSinkComposite(
+                        new HarshProvisionerOutputSinkSerilog(HarshLog.ForContext("ProvisionerOutput", true)),
+                        listSink
+                    )
+                );
         }
 
         public async Task EnsureTestList()
@@ -94,6 +101,11 @@ namespace HarshPoint.Tests
         {
             get;
             set;
+        }
+
+        public IReadOnlyCollection<HarshProvisionerOutput> Output
+        {
+            get; private set;
         }
 
         public Site Site

@@ -1,10 +1,11 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using System;
+using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 
 namespace HarshPoint.Provisioning
 {
-    public sealed class HarshProvisionerContext 
-        : Implementation.HarshProvisionerContextBase<HarshProvisionerContext>
+    public sealed class HarshProvisionerContext : 
+        Implementation.HarshProvisionerContextBase<HarshProvisionerContext>
     {
         private TaxonomySession _taxonomySession;
 
@@ -33,6 +34,8 @@ namespace HarshPoint.Provisioning
             );
 
         public Web Web => ClientContext.Web;
+
+        public override String ToString() => ClientContext.Url;
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<HarshProvisionerContext>();
     }
