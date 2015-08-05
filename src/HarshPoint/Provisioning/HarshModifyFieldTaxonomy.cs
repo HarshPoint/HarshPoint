@@ -7,7 +7,7 @@ using HarshPoint.Provisioning.Implementation;
 namespace HarshPoint.Provisioning
 {
 #warning NOT_TESTED
-    public sealed class HarshFieldTaxonomy : HarshFieldProvisioner<TaxonomyField>
+    public sealed class HarshModifyFieldTaxonomy : HarshModifyField<TaxonomyField>
     {
         [Parameter]
         public Boolean? AllowMultipleValues

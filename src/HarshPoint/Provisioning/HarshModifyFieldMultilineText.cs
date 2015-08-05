@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-    public sealed class HarshFieldMultilineText : HarshFieldProvisioner<FieldMultiLineText>
+    public sealed class HarshModifyFieldMultilineText : HarshModifyField<FieldMultiLineText>
     {
         public Boolean? AllowHyperlink { get; set; }
 

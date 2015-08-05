@@ -9,7 +9,7 @@ namespace HarshPoint.Tests.Provisioning
     public abstract class TestFieldBase<TField, TProvisioner> :
         SharePointClientTest
         where TField : Field
-        where TProvisioner : HarshFieldProvisioner<TField>
+        where TProvisioner : HarshModifyField<TField>
     {
         protected TestFieldBase(FieldType fieldType, SharePointClientFixture fixture, ITestOutputHelper output)
             : base(fixture, output)
@@ -33,7 +33,7 @@ namespace HarshPoint.Tests.Provisioning
             var guid = Guid.NewGuid();
             var ctx = Fixture.CreateContext();
 
-            var field = new HarshField()
+            var field = new HarshFieldProvisioner()
             {
                 Type = FieldType,
                 DisplayName = guid.ToString("n"),

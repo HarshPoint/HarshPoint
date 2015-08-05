@@ -5,7 +5,7 @@ using HarshPoint.Provisioning.Implementation;
 
 namespace HarshPoint.Provisioning
 {
-    public sealed class HarshLookupField : HarshFieldProvisioner<FieldLookup>
+    public sealed class HarshModifyFieldLookup : HarshModifyField<FieldLookup>
     {
         [Parameter(Mandatory = true)]
         public IResolveSingle<Tuple<List, Field>> LookupTarget

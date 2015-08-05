@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning
 {
-    public abstract class HarshFieldProvisioner<TField> : HarshProvisioner
+    public abstract class HarshModifyField<TField> : HarshProvisioner
         where TField : Field
     {
         [Parameter]

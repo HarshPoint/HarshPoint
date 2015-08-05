@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-    public class HarshDateTimeField : HarshFieldProvisioner<FieldDateTime>
+    public class HarshModifyFieldDateTime : HarshModifyField<FieldDateTime>
     {
         public DateTimeFieldFormatType? DisplayFormat
         {
