@@ -31,6 +31,7 @@ namespace HarshPoint.Tests.Provisioning
         protected async Task RunWithField(TProvisioner provisioner, Func<TField, Task> action)
         {
             var guid = Guid.NewGuid();
+            var ctx = Fixture.CreateContext();
 
             var field = new HarshField()
             {
@@ -41,16 +42,19 @@ namespace HarshPoint.Tests.Provisioning
                 Children = { provisioner },
             };
 
-            await field.ProvisionAsync(Fixture.Context);
+            await field.ProvisionAsync(ctx);
+
+            var fo = FindOutput<Field>();
 
             try
             {
-                await action(Fixture.ClientContext.CastTo<TField>(field.Field));
+
+                await action(ctx.ClientContext.CastTo<TField>(fo.Object));
             }
             finally
             {
-                field.Field.DeleteObject();
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                fo.Object.DeleteObject();
+                await ctx.ClientContext.ExecuteQueryAsync();
             }
         }
     }

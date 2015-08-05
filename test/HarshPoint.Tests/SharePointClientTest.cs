@@ -28,6 +28,6 @@ namespace HarshPoint.Tests
         public ClientObjectManualResolver ManualResolver { get; private set; }
 
         protected IdentifiedObjectOutputBase<T> FindOutput<T>()
-            => Output.OfType<IdentifiedObjectOutputBase<T>>().LastOrDefault();
+            => Output.OfType<IdentifiedObjectOutputBase<T>>().Last();
     }
 }

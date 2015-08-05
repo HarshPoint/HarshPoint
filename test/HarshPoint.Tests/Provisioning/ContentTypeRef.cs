@@ -40,18 +40,19 @@ namespace HarshPoint.Tests.Provisioning
                 }
             };
 
+            ContentType ct = null;
             List list = null;
 
             try
             {
                 await ctProv.ProvisionAsync(Fixture.Context);
 
-                Assert.NotNull(ctProv.ContentType);
+                var ctResult = FindOutput<ContentType>();
+                ct = ctResult.Object;
 
                 await listProv.ProvisionAsync(Fixture.Context);
 
                 var listResult = FindOutput<List>();
-                Assert.NotNull(listResult);
 
                 list = listResult.Object;
 
@@ -78,9 +79,9 @@ namespace HarshPoint.Tests.Provisioning
                     await Fixture.ClientContext.ExecuteQueryAsync();
                 }
 
-                if (ctProv.ContentType != null)
+                if (ct != null)
                 {
-                    ctProv.ContentType.DeleteObject();
+                    ct.DeleteObject();
                     await Fixture.ClientContext.ExecuteQueryAsync();
                 }
             }

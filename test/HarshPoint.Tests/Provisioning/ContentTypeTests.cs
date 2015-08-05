@@ -21,16 +21,19 @@ namespace HarshPoint.Tests.Provisioning
             _id = HarshContentTypeId.Parse("0x01").Append(HarshContentTypeId.Parse(_guid));
         }
 
-        [Fact(Skip = "inconclusive")]
+        [Fact]
         public async Task Existing_content_type_is_not_provisioned()
         {
             var prov = new HarshContentType()
             {
+                Name = "Item",
                 Id = HarshContentTypeId.Parse("0x01"),
             };
 
             await prov.ProvisionAsync(Fixture.Context);
-            //Assert.False(prov.Result.ObjectAdded);
+
+            var output = FindOutput<ContentType>();
+            Assert.False(output.ObjectCreated);
         }
 
         [Fact]
@@ -44,31 +47,37 @@ namespace HarshPoint.Tests.Provisioning
                 Group = Group
             };
 
+            ContentType ct = null;
+
             try
             {
                 await prov.ProvisionAsync(Fixture.Context);
-                Assert.NotNull(prov.ContentType);
+
+                var output = FindOutput<ContentType>();
+                ct = output.Object;
+                Assert.True(output.ObjectCreated);
+                Assert.NotNull(ct);
 
                 Fixture.ClientContext.Load(
-                    prov.ContentType,
-                    ct => ct.Name,
-                    ct => ct.Description,
-                    ct => ct.Group,
-                    ct => ct.StringId
+                    ct,
+                    c => c.Name,
+                    c => c.Description,
+                    c => c.Group,
+                    c => c.StringId
                 );
 
                 await Fixture.ClientContext.ExecuteQueryAsync();
 
-                Assert.Equal(_guid, prov.ContentType.Name);
-                Assert.Equal(_guid, prov.ContentType.Description);
-                Assert.Equal(Group, prov.ContentType.Group);
-                Assert.Equal(_id.ToString(), prov.ContentType.StringId);
+                Assert.Equal(_guid, ct.Name);
+                Assert.Equal(_guid, ct.Description);
+                Assert.Equal(Group, ct.Group);
+                Assert.Equal(_id.ToString(), ct.StringId);
             }
             finally
             {
-                if (prov.ContentType != null)
+                if (ct != null)
                 {
-                    prov.ContentType.DeleteObject();
+                    ct.DeleteObject();
                     await Fixture.ClientContext.ExecuteQueryAsync();
                 }
             }
@@ -106,10 +115,13 @@ namespace HarshPoint.Tests.Provisioning
                 await field.ProvisionAsync(Fixture.Context);
                 await ct.ProvisionAsync(Fixture.Context);
 
-                Assert.False(ct.ContentType.IsNull());
+                var cto = FindOutput<ContentType>();
+
+                Assert.True(cto.ObjectCreated);
+                Assert.False(cto.Object.IsNull());
 
                 var links = Fixture.ClientContext.LoadQuery(
-                    ct.ContentType.FieldLinks
+                    cto.Object.FieldLinks
                     .Where(fl => fl.Id == fieldId)
                     .Include(
                         fl => fl.Name,
@@ -156,8 +168,10 @@ namespace HarshPoint.Tests.Provisioning
 
                 await prov.ProvisionAsync(ctx);
 
-                Assert.NotNull(prov.ContentType);
-                Assert.Equal(Group, prov.ContentType.Group);
+                var cto = FindOutput<ContentType>();
+                Assert.True(cto.ObjectCreated);
+                Assert.NotNull(cto.Object);
+                Assert.Equal(Group, cto.Object.Group);
             }
             finally
             {

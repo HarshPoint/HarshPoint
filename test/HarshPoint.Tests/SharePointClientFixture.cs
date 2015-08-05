@@ -26,7 +26,7 @@ namespace HarshPoint.Tests
             else
             {
                 ClientContext = new SeriloggedClientContext(url);
-                
+
                 var username = Environment.GetEnvironmentVariable("HarshPointTestUser");
                 var password = Environment.GetEnvironmentVariable("HarshPointTestPassword");
                 var authType = Environment.GetEnvironmentVariable("HarshPointTestAuth");
@@ -47,10 +47,15 @@ namespace HarshPoint.Tests
                 }
             }
 
+            Context = CreateContext();
+        }
+
+        public HarshProvisionerContext CreateContext()
+        {
             var listSink = new HarshProvisionerOutputSinkList();
             Output = listSink.Output;
 
-            Context = new HarshProvisionerContext(ClientContext)
+            return new HarshProvisionerContext(ClientContext)
                 .WithOutputSink(
                     new HarshProvisionerOutputSinkComposite(
                         new HarshProvisionerOutputSinkSerilog(HarshLog.ForContext("ProvisionerOutput", true)),
@@ -82,6 +87,7 @@ namespace HarshPoint.Tests
             }
         }
 
+        [Obsolete]
         public HarshProvisionerContext Context
         {
             get;

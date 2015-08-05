@@ -24,6 +24,8 @@ namespace HarshPoint.Provisioning.Output
 
         public T Object { get; private set; }
 
+        public Boolean ObjectCreated { get; protected set; }
+
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ObjectCreated<>));
     }
 }

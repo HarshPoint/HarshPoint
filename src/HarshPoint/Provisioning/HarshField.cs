@@ -92,8 +92,6 @@ namespace HarshPoint.Provisioning
         [Parameter]
         public String DisplayName { get; set; }
 
-        public Field Field { get; private set; }
-
         /// <summary>
         /// Gets or sets the name of the field type.
         /// </summary>
@@ -198,10 +196,18 @@ namespace HarshPoint.Provisioning
                 await ClientContext.ExecuteQueryAsync();
 
                 Field = reResolvedField.Value;
+
+                WriteOutput(
+                    Result.Created(InternalName ?? Id.ToString(), Field)
+                );
             }
             else
             {
                 Field = ExistingField.Value;
+
+                WriteOutput(
+                    Result.AlreadyExists(InternalName ?? Id.ToString(), Field)
+                );
 
                 var existingSchemaXml = XElement.Parse(
                     Field.SchemaXmlWithResourceTokens
@@ -232,23 +238,13 @@ namespace HarshPoint.Provisioning
             }
         }
 
-        internal HarshFieldSchemaXmlBuilder SchemaXmlBuilder
-        {
-            get;
-            private set;
-        }
+        internal HarshFieldSchemaXmlBuilder SchemaXmlBuilder { get; set; }
 
-        private FieldCollection TargetFieldCollection
-        {
-            get;
-            set;
-        }
+        private IResolveSingleOrDefault<Field> ExistingField { get; set; }
 
-        private IResolveSingleOrDefault<Field> ExistingField
-        {
-            get;
-            set;
-        }
+        private Field Field { get; set; }
+
+        private FieldCollection TargetFieldCollection { get; set; }
 
         private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
 

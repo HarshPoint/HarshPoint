@@ -20,6 +20,7 @@ namespace HarshPoint.Tests.Provisioning
         public async Task Lookup_has_correct_list_id()
         {
             var targetList = await EnsureTargetList();
+            var ctx = Fixture.CreateContext();
 
             var lookupField = new HarshLookupField()
             {
@@ -43,22 +44,25 @@ namespace HarshPoint.Tests.Provisioning
                 }
             };
 
-            await field.ProvisionAsync(Fixture.Context);
+            await field.ProvisionAsync(ctx);
 
-            Fixture.ClientContext.Load(
-                Fixture.ClientContext.CastTo<FieldLookup>(field.Field),
+            var fo = FindOutput<Field>();
+            Assert.True(fo.ObjectCreated);
+
+            ctx.ClientContext.Load(
+                ctx.ClientContext.CastTo<FieldLookup>(fo.Object),
                 f => f.FieldTypeKind,
                 f => f.LookupField,
                 f => f.LookupList,
                 f => f.LookupWebId
             );
 
-            Fixture.ClientContext.Load(Fixture.Web, w => w.Id);
-            Fixture.ClientContext.Load(targetList, l => l.Id);
+            ctx.ClientContext.Load(Fixture.Web, w => w.Id);
+            ctx.ClientContext.Load(targetList, l => l.Id);
 
-            await Fixture.ClientContext.ExecuteQueryAsync();
+            await ctx.ClientContext.ExecuteQueryAsync();
 
-            var provisioned = field.Field as FieldLookup;
+            var provisioned = fo.Object as FieldLookup;
 
             Assert.NotNull(provisioned);
             Assert.Equal(FieldType.Lookup, provisioned.FieldTypeKind);
@@ -69,13 +73,14 @@ namespace HarshPoint.Tests.Provisioning
 
         private async Task<List> EnsureTargetList()
         {
+            var ctx = Fixture.CreateContext();
             var list = new HarshList()
             {
                 Title = "HarshPoint Tests Lookup Target List",
                 Url = TargetListUrl,
             };
 
-            await list.ProvisionAsync(Fixture.Context);
+            await list.ProvisionAsync(ctx);
 
             return FindOutput<List>()?.Object;
         }

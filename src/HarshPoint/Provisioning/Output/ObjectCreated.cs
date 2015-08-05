@@ -7,6 +7,7 @@ namespace HarshPoint.Provisioning.Output
         public ObjectCreated(String identifier, T @object)
             : base(identifier, @object)
         {
+            ObjectCreated = true;
         }
     }
 }

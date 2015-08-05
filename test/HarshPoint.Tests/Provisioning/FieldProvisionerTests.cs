@@ -14,22 +14,28 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        [Fact(Skip = "inconclusive")]
+        [Fact]
         public async Task Existing_field_is_not_provisioned()
         {
+            var ctx = Fixture.CreateContext();
+
             var prov = new HarshField()
             {
                 Id = HarshBuiltInFieldId.Title,
                 DisplayName = "Title",
             };
 
-            await prov.ProvisionAsync(Fixture.Context);
-            //Assert.False(prov.Result.ObjectAdded);
+            await prov.ProvisionAsync(ctx);
+            var fo = FindOutput<Field>();
+
+            Assert.False(fo.ObjectCreated);
         }
 
         [Fact]
         public async Task Existing_field_DisplayName_gets_changed()
         {
+            var ctx = Fixture.CreateContext();
+
             var id = Guid.NewGuid();
             var internalName = id.ToString("n");
             try
@@ -41,12 +47,16 @@ namespace HarshPoint.Tests.Provisioning
                     DisplayName = internalName + "-before"
                 };
 
-                await prov.ProvisionAsync(Fixture.Context);
+                await prov.ProvisionAsync(ctx);
 
-                Fixture.ClientContext.Load(prov.Field, f => f.Title);
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                var fo = FindOutput<Field>();
 
-                Assert.Equal(prov.DisplayName, prov.Field.Title);
+                Assert.True(fo.ObjectCreated);
+
+                ctx.ClientContext.Load(fo.Object, f => f.Title);
+                await ctx.ClientContext.ExecuteQueryAsync();
+
+                Assert.Equal(prov.DisplayName, fo.Object.Title);
 
                 prov = new HarshField()
                 {
@@ -55,12 +65,15 @@ namespace HarshPoint.Tests.Provisioning
                     DisplayName = internalName + "-after"
                 };
 
-                await prov.ProvisionAsync(Fixture.Context);
+                await prov.ProvisionAsync(ctx);
 
-                Fixture.ClientContext.Load(prov.Field, f => f.Title);
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                fo = FindOutput<Field>();
+                Assert.False(fo.ObjectCreated);
 
-                Assert.Equal(prov.DisplayName, prov.Field.Title);
+                ctx.ClientContext.Load(fo.Object, f => f.Title);
+                await ctx.ClientContext.ExecuteQueryAsync();
+
+                Assert.Equal(prov.DisplayName, fo.Object.Title);
             }
             finally
             {
