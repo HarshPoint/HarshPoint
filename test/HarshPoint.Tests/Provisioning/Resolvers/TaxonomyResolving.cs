@@ -10,7 +10,9 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 {
     public class TaxonomyResolving : SharePointClientTest
     {
-        private static readonly Guid GroupId = new Guid("6e3c51c5-9199-4b0e-bb81-00b8ec433740");
+        //private static readonly Guid GroupId = new Guid("1e0f6683-bfc7-4fe4-bafd-b7c52f497aa2");
+        private static readonly String GroupName = "HarshPoint";
+
         private static readonly Guid TermSetId = new Guid("a5d59d30-10e8-4221-bf59-75a1d76f0be0");
 
         public TaxonomyResolving(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
@@ -74,17 +76,18 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         private async Task<TermSet> EnsureTestTermSet()
         {
             var store = Fixture.TaxonomySession.GetDefaultSiteCollectionTermStore();
-            var group = store.GetGroup(GroupId);
+            var groups = Fixture.ClientContext.LoadQuery(store.Groups);
 
             await Fixture.ClientContext.ExecuteQueryAsync();
 
-            if (group.IsNull())
+            var group = groups.FirstOrDefaultByProperty(x => x.Name, GroupName, StringComparer.Ordinal);
+
+            if (group == null)
             {
-                group = store.CreateGroup(GroupId.ToString("n"), GroupId);
+                group = store.CreateGroup(GroupName, Guid.NewGuid());
+                await Fixture.ClientContext.ExecuteQueryAsync();
             }
 
-            await Fixture.ClientContext.ExecuteQueryAsync();
-        
             var termSet = group.TermSets.GetById(TermSetId);
 
             try
