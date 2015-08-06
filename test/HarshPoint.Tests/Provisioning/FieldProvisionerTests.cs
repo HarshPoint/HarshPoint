@@ -83,6 +83,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Id = fieldId,
                 InternalName = fieldName,
+                Type = FieldType.Text,
             };
 
             await provisioner.ProvisionAsync(Context);
@@ -104,6 +105,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Id = fieldId,
                 InternalName = fieldName,
+                Type = FieldType.Text,
             };
 
             await provisioner.ProvisionAsync(Context);
@@ -127,6 +129,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Id = fieldId,
                 InternalName = fieldName,
+                Type = FieldType.Text,
             };
 
             await provisioner.ProvisionAsync(Context);
@@ -150,6 +153,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Id = fieldId,
                 InternalName = fieldName,
+                Type = FieldType.Text,
             };
 
             await provisioner.ProvisionAsync(Context);
@@ -176,6 +180,7 @@ namespace HarshPoint.Tests.Provisioning
                 Id = fieldId,
                 InternalName = fieldName,
                 StaticName = fieldNameStatic,
+                Type = FieldType.Text,
             };
 
             await provisioner.ProvisionAsync(Context);

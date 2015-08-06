@@ -454,7 +454,7 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Thr mandatory parameter &apos;{0}&apos; must be set..
+        ///   Looks up a localized string similar to The mandatory parameter &apos;{0}&apos; must be set..
         /// </summary>
         internal static string HarshProvisionerBase_ParameterMandatory {
             get {

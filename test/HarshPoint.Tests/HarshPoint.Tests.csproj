@@ -179,6 +179,7 @@
     <Compile Include="Provisioning\ListProvisioning.cs" />
     <Compile Include="Provisioning\LookupProvisioning.cs" />
     <Compile Include="Provisioning\MandatoryParameters.cs" />
+    <Compile Include="Provisioning\MandatoryWhenCreating.cs" />
     <Compile Include="Provisioning\MockResolve.cs" />
     <Compile Include="Provisioning\ParameterSetMetadataBuilding.cs" />
     <Compile Include="Provisioning\ParameterSetResolving.cs" />

@@ -252,7 +252,7 @@ Number of resolver elements {1}</value>
     <value>This operation is valid only during a Provision/Unprovision call.</value>
   </data>
   <data name="HarshProvisionerBase_ParameterMandatory" xml:space="preserve">
-    <value>Thr mandatory parameter '{0}' must be set.</value>
+    <value>The mandatory parameter '{0}' must be set.</value>
   </data>
   <data name="HarshProvisionerMetadata_DefaultParameterSetNotFound" xml:space="preserve">
     <value>Default parameter set '{0}' could not be found on type '{1}'.</value>

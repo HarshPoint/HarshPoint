@@ -24,8 +24,6 @@ namespace HarshPoint.Provisioning
             ExistingField = DeferredResolveBuilder.Create(
                 () => Resolve.Field().ById(Id)
             );
-
-            Type = FieldType.Text;
         }
 
         /// <summary>
@@ -45,11 +43,13 @@ namespace HarshPoint.Provisioning
         /// <summary>
         /// Gets or sets the name of the field type.
         /// </summary>
-        [Parameter]
+        [MandatoryWhenCreating]
+        [Parameter(ParameterSetName = "TypeName")]
         public String TypeName { get; set; }
 
-        [Parameter]
-        public FieldType Type { get; set; }
+        [MandatoryWhenCreating]
+        [Parameter(ParameterSetName = "Type")]
+        public FieldType? Type { get; set; }
 
         /// <summary>
         /// Gets or sets the field identifier.
@@ -57,7 +57,11 @@ namespace HarshPoint.Provisioning
         /// <value>
         /// The field identifier. Must not be an empty <see cref="Guid"/>.
         /// </value>
-        //[Parameter(Mandatory = true)]
+        [Parameter(
+#if false // fix when DefaultValuePolicy is implemented
+            Mandatory = true
+#endif
+        )]
         public Guid Id { get; set; }
 
         /// <summary>
@@ -65,6 +69,7 @@ namespace HarshPoint.Provisioning
         /// Only used when creating a new field.
         /// </summary>
         [Parameter]
+        [MandatoryWhenCreating]
         public String InternalName { get; set; }
 
         /// <summary>
@@ -85,6 +90,8 @@ namespace HarshPoint.Provisioning
         {
             if (ExistingField.Value.IsNull())
             {
+                ValidateMandatoryWhenCreatingParameters();
+
                 Logger.Information("Adding field {InternalName}, id {Id}", InternalName, Id);
 
                 var schemaXml = BuildSchemaXml();

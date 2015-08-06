@@ -92,6 +92,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Id = fieldId,
                 InternalName = fieldId.ToString("n"),
+                Type = FieldType.Text,
             };
 
             var ct = new HarshContentType()
@@ -158,6 +159,7 @@ namespace HarshPoint.Tests.Provisioning
                 Name = "44fbfdb9defa4244831062437d181c6f",
             };
 
+            ContentType ct = null;
             try
             {
                 var ctx = Context.PushState(new DefaultContentTypeGroup()
@@ -169,12 +171,14 @@ namespace HarshPoint.Tests.Provisioning
 
                 var cto = FindOutput<ContentType>();
                 Assert.True(cto.ObjectCreated);
-                Assert.NotNull(cto.Object);
-                Assert.Equal(Group, cto.Object.Group);
+
+                ct = cto.Object;
+                Assert.NotNull(ct);
+                Assert.Equal(Group, ct.Group);
             }
             finally
             {
-                Web.ContentTypes.GetById("0x010044fbfdb9defa4244831062437d181c6f").DeleteObject();
+                ct?.DeleteObject();
                 await Fixture.ClientContext.ExecuteQueryAsync();
             }
         }

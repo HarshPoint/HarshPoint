@@ -124,6 +124,18 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
+        protected void ValidateMandatoryWhenCreatingParameters()
+        {
+            var mandatory = ParameterSet
+                .Parameters
+                .Where(Metadata.IsMandatoryWhenCreating);
+
+            foreach (var param in mandatory)
+            {
+                ValidateHasNonDefaultValue(param);
+            }
+        }
+
         protected void WriteOutput(HarshProvisionerOutput result)
         {
             if (result == null)
@@ -195,19 +207,27 @@ namespace HarshPoint.Provisioning.Implementation
         {
             foreach (var parameter in ParameterSet.Parameters)
             {
-                if (parameter.IsMandatory && parameter.HasDefaultValue(this))
+                if (parameter.IsMandatory)
                 {
-                    throw Logger.Error.ParameterValidationFormat(
-                        parameter,
-                        SR.HarshProvisionerBase_ParameterMandatory,
-                        parameter
-                    );
+                    ValidateHasNonDefaultValue(parameter);
                 }
 
                 foreach (var attr in parameter.ValidationAttributes)
                 {
                     attr.Validate(parameter, parameter.Getter(this));
                 }
+            }
+        }
+
+        private void ValidateHasNonDefaultValue(Parameter parameter)
+        {
+            if (parameter.HasDefaultValue(this))
+            {
+                throw Logger.Error.ParameterValidationFormat(
+                    parameter,
+                    SR.HarshProvisionerBase_ParameterMandatory,
+                    parameter
+                );
             }
         }
 

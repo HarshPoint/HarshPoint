@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace HarshPoint.ObjectModel
 {
-    internal sealed class Parameter
+    public sealed class Parameter
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext<Parameter>();
 

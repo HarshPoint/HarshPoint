@@ -29,15 +29,18 @@ namespace HarshPoint.Provisioning.Implementation
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
 
             DefaultFromContextPropertyBinder = new DefaultFromContextPropertyBinder(
-                ReadableWritableInstancePropertiesWith<DefaultFromContextAttribute>(inherit: true).Select(
-                    t => new DefaultFromContextProperty(t.Item1, t.Item2)
-                )
+                ReadableWritableInstancePropertiesWith<DefaultFromContextAttribute>(inherit: true)
+                .Select(t => new DefaultFromContextProperty(t.Item1, t.Item2))
             );
 
+            ParametersMandatoryWhenCreating =
+                Parameters
+                .Where(p => IsMandatoryWhenCreating(p.PropertyInfo))
+                .ToImmutableHashSet();
+
             ResolvedPropertyBinder = new ResolvedPropertyBinder(
-                ReadableWritableInstanceProperties.Where(
-                    p => ResolvedPropertyTypeInfo.IsResolveType(p.PropertyTypeInfo)
-                )
+                ReadableWritableInstanceProperties
+                .Where(ResolvedPropertyTypeInfo.IsResolveType)
             );
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
@@ -58,7 +61,7 @@ namespace HarshPoint.Provisioning.Implementation
         public IEnumerable<Parameter> Parameters
             => ParameterSets.SelectMany(set => set.Parameters);
 
-        public IReadOnlyList<ParameterSet> ParameterSets
+        public IReadOnlyCollection<ParameterSet> ParameterSets
         {
             get;
             private set;
@@ -75,6 +78,18 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             private set;
         }
+
+        public Boolean IsMandatoryWhenCreating(Parameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(parameter));
+            }
+
+            return ParametersMandatoryWhenCreating.Contains(parameter);
+        }
+
+        private IReadOnlyCollection<Parameter> ParametersMandatoryWhenCreating { get; set; }
 
         private Boolean GetDeletesUserData(String methodName)
         {
@@ -106,7 +121,13 @@ namespace HarshPoint.Provisioning.Implementation
             return deletesUserData;
         }
 
-        private static readonly TypeInfo HarshProvisionerBaseTypeInfo = typeof(HarshProvisionerBase).GetTypeInfo();
-        private static readonly HarshLogger Logger = HarshLog.ForContext<HarshProvisionerMetadata>();
+        private static Boolean IsMandatoryWhenCreating(PropertyInfo property)
+            => property.GetCustomAttribute<MandatoryWhenCreatingAttribute>(inherit: true) != null;
+
+        private static readonly TypeInfo HarshProvisionerBaseTypeInfo
+            = typeof(HarshProvisionerBase).GetTypeInfo();
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext<HarshProvisionerMetadata>();
     }
 }

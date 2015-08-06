@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.ObjectModel;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
@@ -22,6 +23,16 @@ namespace HarshPoint.Provisioning.Implementation
 
         public static Boolean IsResolveType(TypeInfo propertyTypeInfo)
             => GetResolvedType(propertyTypeInfo) != null;
+
+        public static Boolean IsResolveType(PropertyAccessor property)
+        {
+            if (property == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(property));
+            }
+
+            return IsResolveType(property.PropertyTypeInfo);
+        }
 
         internal static Exception InvalidInterfaceType(String parameterName, Type interfaceType)
             => Logger.Fatal.ArgumentFormat(
