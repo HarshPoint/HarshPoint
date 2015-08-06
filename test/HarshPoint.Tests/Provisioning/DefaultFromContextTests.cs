@@ -66,7 +66,7 @@ namespace HarshPoint.Tests.Provisioning
 
             prov.Metadata.DefaultFromContextPropertyBinder.Bind(
                 prov,
-                Fixture.Context
+                Context
             );
 
             Assert.NotNull(prov.Resolver);
@@ -82,7 +82,7 @@ namespace HarshPoint.Tests.Provisioning
 
             prov.Metadata.DefaultFromContextPropertyBinder.Bind(
                 prov,
-                Fixture.Context
+                Context
             );
 
             Assert.NotNull(prov.SingleResolver);
@@ -98,7 +98,7 @@ namespace HarshPoint.Tests.Provisioning
 
             prov.Metadata.DefaultFromContextPropertyBinder.Bind(
                 prov,
-                Fixture.Context.PushState("42")
+                Context.PushState("42")
             );
 
             Assert.Equal("42", prov.StringProperty);
@@ -110,7 +110,7 @@ namespace HarshPoint.Tests.Provisioning
             var prov = new TaggedProvisioner();
             Assert.Null(prov.TaggedStringProperty);
 
-            var state = Fixture.Context
+            var state = Context
                 .PushState("red herring")
                 .PushState(new DummyTag() { Value = "424242" });
 
@@ -131,7 +131,7 @@ namespace HarshPoint.Tests.Provisioning
 
             prov.Metadata.DefaultFromContextPropertyBinder.Bind(
                 prov,
-                Fixture.Context
+                Context
             );
 
             Assert.Same(resolver, prov.Resolver);

@@ -28,7 +28,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             var termStore = resolver.Value;
             Assert.NotNull(termStore);
 
-            var expected = Fixture.TaxonomySession.GetDefaultSiteCollectionTermStore();
+            var expected = TaxonomySession.GetDefaultSiteCollectionTermStore();
 
             Fixture.ClientContext.Load(expected, ts => ts.Id);
             Fixture.ClientContext.Load(termStore, ts => ts.Id);
@@ -46,7 +46,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             var termStore = resolver.Value;
             Assert.NotNull(termStore);
 
-            var expected = Fixture.TaxonomySession.GetDefaultKeywordsTermStore();
+            var expected = TaxonomySession.GetDefaultKeywordsTermStore();
 
             Fixture.ClientContext.Load(expected, ts => ts.Id);
             Fixture.ClientContext.Load(termStore, ts => ts.Id);
@@ -75,7 +75,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 
         private async Task<TermSet> EnsureTestTermSet()
         {
-            var store = Fixture.TaxonomySession.GetDefaultSiteCollectionTermStore();
+            var store = TaxonomySession.GetDefaultSiteCollectionTermStore();
             var groups = Fixture.ClientContext.LoadQuery(store.Groups);
 
             await Fixture.ClientContext.ExecuteQueryAsync();

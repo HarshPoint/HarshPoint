@@ -51,7 +51,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         }
         private async Task<Tuple<List, View>> EnsureTestListAndView()
         {
-            var list = Fixture.Web.Lists.GetByTitle(ListTitle);
+            var list = Web.Lists.GetByTitle(ListTitle);
 
             try
             {
@@ -59,7 +59,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             }
             catch (ServerException)
             {
-                list = Fixture.Web.Lists.Add(new ListCreationInformation()
+                list = Web.Lists.Add(new ListCreationInformation()
                 {
                     Url = "Lists/" + ListTitle,
                     Title = ListTitle,

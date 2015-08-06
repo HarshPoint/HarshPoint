@@ -15,7 +15,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Resolves_String()
         {
-            var ctx = Fixture.Context.PushState("42");
+            var ctx = Context.PushState("42");
             var resolver = new ContextStateResolveBuilder<String>();
 
             var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>(ctx));
@@ -27,7 +27,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Resolves_most_recent_String()
         {
-            var ctx = Fixture.Context.PushState("4242").PushState("42");
+            var ctx = Context.PushState("4242").PushState("42");
             var resolver = new ContextStateResolveBuilder<String>();
 
             var mr = new ManualResolver(() => new ResolveContext<HarshProvisionerContext>(ctx));
@@ -39,7 +39,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Flattens_enumerable_states()
         {
-            var ctx = Fixture.Context
+            var ctx = Context
                 .PushState("123")
                 .PushState(new[] { "42", "4242" });
 

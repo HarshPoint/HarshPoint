@@ -20,7 +20,7 @@ namespace HarshPoint.Tests.Provisioning
             var web = Fixture.ClientContext.Web;
             Assert.False(web.IsPropertyAvailable(w => w.SiteLogoUrl));
 
-            var ctx = Fixture.Context.PushState(Fixture.ClientContext.Web);
+            var ctx = Context.PushState(Fixture.ClientContext.Web);
 
             var resolveCtx = new ClientObjectResolveContext(ctx);
             resolveCtx.Include<Web>(w => w.SiteLogoUrl);
@@ -42,7 +42,7 @@ namespace HarshPoint.Tests.Provisioning
             var web = Fixture.ClientContext.Web;
             Assert.False(web.Lists.ServerObjectIsNull.HasValue);
 
-            var ctx = Fixture.Context.PushState(Fixture.ClientContext.Web);
+            var ctx = Context.PushState(Fixture.ClientContext.Web);
 
             var resolveCtx = new ClientObjectResolveContext(ctx);
             resolveCtx.Include<Web>(w => w.Lists.Include(l => l.ItemCount));

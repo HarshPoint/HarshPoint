@@ -20,7 +20,7 @@ namespace HarshPoint.Tests.Provisioning
         public async Task Succeeds_string(String value)
         {
             var p = new SingleStringParam() { Param = value };
-            await p.ProvisionAsync(Fixture.Context);
+            await p.ProvisionAsync(Context);
         }
         
         [Theory]
@@ -31,7 +31,7 @@ namespace HarshPoint.Tests.Provisioning
             var p = new SingleStringParam() { Param = value };
 
             await Assert.ThrowsAsync<ParameterValidationException>(
-                () => p.ProvisionAsync(Fixture.Context)
+                () => p.ProvisionAsync(Context)
             );
         }
 
@@ -43,7 +43,7 @@ namespace HarshPoint.Tests.Provisioning
                 Param = 42
             };
 
-            await p.ProvisionAsync(Fixture.Context);
+            await p.ProvisionAsync(Context);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace HarshPoint.Tests.Provisioning
             };
 
             await Assert.ThrowsAsync<ParameterValidationException>(
-                () => p.ProvisionAsync(Fixture.Context)
+                () => p.ProvisionAsync(Context)
             );
         }
 

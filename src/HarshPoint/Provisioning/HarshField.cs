@@ -26,45 +26,6 @@ namespace HarshPoint.Provisioning
             );
 
             Type = FieldType.Text;
-
-            SchemaXmlBuilder = new HarshFieldSchemaXmlBuilder(
-
-                new HarshFieldSchemaXmlAttributeSetter(() => DisplayName)
-                {
-                    ValueValidator = ValidateNotNullOrWhitespace,
-                },
-
-                new HarshFieldSchemaXmlAttributeSetter(() => Group),
-
-                new HarshFieldSchemaXmlAttributeSetter(() => TypeName)
-                {
-                    Name = "Type",
-                    ValueValidator = ValidateNotNullOrWhitespace,
-                },
-
-                // only on create below
-
-                new HarshFieldSchemaXmlAttributeSetter(() => Id)
-                {
-                    Name = "ID",
-                    ValueValidator = ValidateNotEmptyGuid,
-                    OnlyOnCreate = true,
-                },
-
-                new HarshFieldSchemaXmlAttributeSetter(() => InternalName)
-                {
-                    Name = "Name",
-                    ValueValidator = ValidateNotNullOrWhitespace,
-                    OnlyOnCreate = true,
-                },
-
-                new HarshFieldSchemaXmlAttributeSetter(() => StaticName)
-                {
-                    ValueAccessor = () => StaticName ?? InternalName,
-                    ValueValidator = ValidateNotNullOrWhitespace,
-                    OnlyOnCreate = true
-                }
-            );
         }
 
         /// <summary>
@@ -81,9 +42,6 @@ namespace HarshPoint.Provisioning
         /// </value>
         public Boolean AddToDefaultView { get; set; }
 
-        [Parameter]
-        public String DisplayName { get; set; }
-
         /// <summary>
         /// Gets or sets the name of the field type.
         /// </summary>
@@ -91,28 +49,7 @@ namespace HarshPoint.Provisioning
         public String TypeName { get; set; }
 
         [Parameter]
-        public FieldType Type
-        {
-            get
-            {
-                FieldType result;
-
-                if (Enum.TryParse(TypeName, ignoreCase: true, result: out result))
-                {
-                    return result;
-                }
-
-                return FieldType.Invalid;
-            }
-            set
-            {
-                TypeName = value.ToString();
-            }
-        }
-
-        [Parameter]
-        [DefaultFromContext(typeof(DefaultFieldGroup))]
-        public String Group { get; set; }
+        public FieldType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the field identifier.
@@ -130,9 +67,6 @@ namespace HarshPoint.Provisioning
         [Parameter]
         public String InternalName { get; set; }
 
-        [Parameter]
-        public Boolean PushChangesToLists { get; set; }
-
         /// <summary>
         /// Gets or sets the StaticName of the field.
         /// Only used when creating a new field.
@@ -147,29 +81,13 @@ namespace HarshPoint.Provisioning
             TargetFieldCollection = Web.Fields;
         }
 
-        protected override void InitializeResolveContext(ClientObjectResolveContext context)
-        {
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
-            context.Include<Field>(
-                f => f.Id,
-                f => f.InternalName,
-                f => f.SchemaXmlWithResourceTokens
-            );
-
-            base.InitializeResolveContext(context);
-        }
-
         protected override async Task OnProvisioningAsync()
         {
             if (ExistingField.Value.IsNull())
             {
                 Logger.Information("Adding field {InternalName}, id {Id}", InternalName, Id);
 
-                var schemaXml = SchemaXmlBuilder.Create();
+                var schemaXml = BuildSchemaXml();
 
                 TargetFieldCollection.AddFieldAsXml(
                     schemaXml.ToString(),
@@ -200,25 +118,19 @@ namespace HarshPoint.Provisioning
                 WriteOutput(
                     Result.AlreadyExists(InternalName ?? Id.ToString(), Field)
                 );
-
-                var existingSchemaXml = XElement.Parse(
-                    Field.SchemaXmlWithResourceTokens
-                );
-
-                var updatedSchemaXml = SchemaXmlBuilder.Update(
-                    existingSchemaXml
-                );
-
-                if (SchemaXmlComparer.Equals(existingSchemaXml, updatedSchemaXml))
-                {
-                    return;
-                }
-
-                Field.SchemaXml = updatedSchemaXml.ToString();
-                Field.UpdateAndPushChanges(PushChangesToLists);
-
-                await ClientContext.ExecuteQueryAsync();
             }
+        }
+
+        private XElement BuildSchemaXml()
+        {
+            var type = TypeName ?? Type.ToString();
+
+            return new XElement("Field",
+                new XAttribute("ID", Id.ToString()),
+                new XAttribute("Name", InternalName),
+                new XAttribute("Type", type),
+                new XAttribute("StaticName", StaticName ?? InternalName)
+            );
         }
 
         protected override async Task OnUnprovisioningAsync()
@@ -230,38 +142,10 @@ namespace HarshPoint.Provisioning
             }
         }
 
-        internal HarshFieldSchemaXmlBuilder SchemaXmlBuilder { get; set; }
-
         private IResolveSingleOrDefault<Field> ExistingField { get; set; }
 
         private Field Field { get; set; }
 
         private FieldCollection TargetFieldCollection { get; set; }
-
-        private static readonly XNodeEqualityComparer SchemaXmlComparer = new XNodeEqualityComparer();
-
-        private void ValidateNotEmptyGuid(String propertyName, Object value)
-        {
-            if (Guid.Empty.Equals(value))
-            {
-                throw Logger.Fatal.InvalidOperationFormat(
-                    SR.HarshFieldSchemaXmlProvisioner_PropertyEmptyGuid,
-                    propertyName
-                );
-            }
-        }
-
-        private void ValidateNotNullOrWhitespace(String propertyName, Object value)
-        {
-            var asString = Convert.ToString(value, CultureInfo.InvariantCulture);
-
-            if (value == null || String.IsNullOrWhiteSpace(asString))
-            {
-                throw Logger.Fatal.InvalidOperationFormat(
-                    SR.HarshFieldSchemaXmlProvisioner_PropertyWhiteSpace,
-                    propertyName
-                );
-            }
-        }
     }
 }

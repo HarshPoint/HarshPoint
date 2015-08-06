@@ -20,9 +20,8 @@ namespace HarshPoint.Tests.Provisioning
         public async Task Lookup_has_correct_list_id()
         {
             var targetList = await EnsureTargetList();
-            var ctx = Fixture.CreateContext();
 
-            var lookupField = new HarshLookupField()
+            var lookupField = new HarshModifyFieldLookup()
             {
                 LookupTarget = Resolve
                     .List().ByUrl(TargetListUrl)
@@ -35,7 +34,6 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Id = fieldId,
                 InternalName = fieldId.ToString("n"),
-                DisplayName = "HarshLookupField",
                 Type = FieldType.Lookup,
 
                 Children =
@@ -44,23 +42,23 @@ namespace HarshPoint.Tests.Provisioning
                 }
             };
 
-            await field.ProvisionAsync(ctx);
+            await field.ProvisionAsync(Context);
 
             var fo = FindOutput<Field>();
             Assert.True(fo.ObjectCreated);
 
-            ctx.ClientContext.Load(
-                ctx.ClientContext.CastTo<FieldLookup>(fo.Object),
+            ClientContext.Load(
+                ClientContext.CastTo<FieldLookup>(fo.Object),
                 f => f.FieldTypeKind,
                 f => f.LookupField,
                 f => f.LookupList,
                 f => f.LookupWebId
             );
 
-            ctx.ClientContext.Load(Fixture.Web, w => w.Id);
-            ctx.ClientContext.Load(targetList, l => l.Id);
+            ClientContext.Load(Web, w => w.Id);
+            ClientContext.Load(targetList, l => l.Id);
 
-            await ctx.ClientContext.ExecuteQueryAsync();
+            await ClientContext.ExecuteQueryAsync();
 
             var provisioned = fo.Object as FieldLookup;
 
@@ -68,19 +66,18 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Equal(FieldType.Lookup, provisioned.FieldTypeKind);
             Assert.Equal(targetList.Id, Guid.Parse(provisioned.LookupList));
             Assert.Equal("Title", provisioned.LookupField);
-            Assert.Equal(Fixture.Web.Id, provisioned.LookupWebId);
+            Assert.Equal(Web.Id, provisioned.LookupWebId);
         }
 
         private async Task<List> EnsureTargetList()
         {
-            var ctx = Fixture.CreateContext();
             var list = new HarshList()
             {
                 Title = "HarshPoint Tests Lookup Target List",
                 Url = TargetListUrl,
             };
 
-            await list.ProvisionAsync(ctx);
+            await list.ProvisionAsync(Context);
 
             return FindOutput<List>()?.Object;
         }

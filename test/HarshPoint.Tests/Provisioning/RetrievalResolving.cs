@@ -18,14 +18,14 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Multiple_equal_includes_dont_fail()
         {
-            Fixture.ClientContext.Load(Fixture.Web, w => w.Id, w => w.Id);
+            Fixture.ClientContext.Load(Web, w => w.Id, w => w.Id);
             await Fixture.ClientContext.ExecuteQueryAsync();
         }
 
         [Fact]
         public async Task Title_gets_resolved_with_InternalName()
         {
-            var ctx = new ClientObjectResolveContext(Fixture.Context);
+            var ctx = new ClientObjectResolveContext(Context);
 
             ctx.Include<Field>(
                 f => f.InternalName,

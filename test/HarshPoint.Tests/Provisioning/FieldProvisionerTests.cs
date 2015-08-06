@@ -1,4 +1,5 @@
-﻿using HarshPoint.Provisioning;
+﻿using HarshPoint.ObjectModel;
+using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
@@ -7,216 +8,185 @@ using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class FieldProvisionerTests : SharePointClientTest
+
+    public class When_provisioning_existing_field : SharePointClientTest
     {
-        public FieldProvisionerTests(SharePointClientFixture fixture, ITestOutputHelper output)
+        public When_provisioning_existing_field(SharePointClientFixture fixture, ITestOutputHelper output)
             : base(fixture, output)
         {
         }
 
         [Fact]
-        public async Task Existing_field_is_not_provisioned()
+        public async Task Field_is_not_created()
         {
-            var ctx = Fixture.CreateContext();
-
             var prov = new HarshField()
             {
                 Id = HarshBuiltInFieldId.Title,
-                DisplayName = "Title",
             };
 
-            await prov.ProvisionAsync(ctx);
+            await prov.ProvisionAsync(Context);
             var fo = FindOutput<Field>();
 
             Assert.False(fo.ObjectCreated);
         }
+    }
 
-        [Fact]
-        public async Task Existing_field_DisplayName_gets_changed()
+
+    public class Provisioning_field_fails : SharePointClientTest
+    {
+        public Provisioning_field_fails(SharePointClientFixture fixture, ITestOutputHelper output)
+            : base(fixture, output)
         {
-            var ctx = Fixture.CreateContext();
-
-            var id = Guid.NewGuid();
-            var internalName = id.ToString("n");
-            try
-            {
-                var prov = new HarshField()
-                {
-                    Id = id,
-                    InternalName = internalName,
-                    DisplayName = internalName + "-before"
-                };
-
-                await prov.ProvisionAsync(ctx);
-
-                var fo = FindOutput<Field>();
-
-                Assert.True(fo.ObjectCreated);
-
-                ctx.ClientContext.Load(fo.Object, f => f.Title);
-                await ctx.ClientContext.ExecuteQueryAsync();
-
-                Assert.Equal(prov.DisplayName, fo.Object.Title);
-
-                prov = new HarshField()
-                {
-                    Id = id,
-                    InternalName = internalName,
-                    DisplayName = internalName + "-after"
-                };
-
-                await prov.ProvisionAsync(ctx);
-
-                fo = FindOutput<Field>();
-                Assert.False(fo.ObjectCreated);
-
-                ctx.ClientContext.Load(fo.Object, f => f.Title);
-                await ctx.ClientContext.ExecuteQueryAsync();
-
-                Assert.Equal(prov.DisplayName, fo.Object.Title);
-            }
-            finally
-            {
-                Fixture.Web.Fields.GetById(id).DeleteObject();
-
-                try
-                {
-                    await Fixture.ClientContext.ExecuteQueryAsync();
-                }
-                catch (ServerException)
-                {
-                }
-            }
-
         }
 
         [Fact]
-        public void Fails_if_id_missing()
+        public Task If_Id_empty()
         {
             var prov = new HarshField()
             {
-                InternalName = "DummyField"
+                InternalName = Guid.NewGuid().ToString("n")
             };
 
-            Assert.Throws<InvalidOperationException>(() => prov.SchemaXmlBuilder.Create());
+            return Assert.ThrowsAsync<ParameterValidationException>(
+                () => prov.ProvisionAsync(Context)
+            );
         }
 
         [Fact]
-        public void Fails_if_InternalName_missing()
+        public Task If_InternalName_null()
         {
             var prov = new HarshField()
             {
                 Id = Guid.NewGuid(),
-                DisplayName = "Dummy",
             };
 
-            Assert.Throws<InvalidOperationException>(() => prov.SchemaXmlBuilder.Create());
+            return Assert.ThrowsAsync<ParameterValidationException>(
+                () => prov.ProvisionAsync(Context)
+            );
+        }
+    }
+
+    public class When_provisioning_new_field : SharePointClientTest
+    {
+        public When_provisioning_new_field(SharePointClientFixture fixture, ITestOutputHelper output)
+            : base(fixture, output)
+        {
         }
 
         [Fact]
-        public void Field_id_is_generated_into_schema()
+        public async Task Field_is_created()
         {
             var fieldId = Guid.NewGuid();
-            var prov = new HarshField()
+            var fieldName = fieldId.ToString("n");
+
+            var provisioner = new HarshField()
             {
                 Id = fieldId,
-                InternalName = "DummyField",
-                DisplayName = "Dummy",
+                InternalName = fieldName,
             };
 
-            var schema = prov.SchemaXmlBuilder.Create();
+            await provisioner.ProvisionAsync(Context);
 
-            Assert.NotNull(schema);
-            Assert.Equal("Field", schema.Name);
-            Assert.Equal(fieldId, new Guid(schema.Attribute("ID").Value));
+            var fieldOutput = FindOutput<Field>();
+            Assert.True(fieldOutput.ObjectCreated);
+
+            var field = fieldOutput.Object;
+            Assert.NotNull(field);
         }
 
         [Fact]
-        public void Field_DisplayName_is_generated_into_schema()
-        {
-            var prov = new HarshField()
-            {
-                Id = Guid.NewGuid(),
-                InternalName = "DummyField",
-                DisplayName = "Dummy",
-            };
-
-            var schema = prov.SchemaXmlBuilder.Create();
-
-            Assert.NotNull(schema);
-            Assert.Equal("Field", schema.Name);
-            Assert.Equal("Dummy", schema.Attribute("DisplayName").Value);
-        }
-
-        [Fact]
-        public void Field_InternalName_is_generated_into_schema()
-        {
-            var prov = new HarshField()
-            {
-                Id = Guid.NewGuid(),
-                InternalName = "DummyField",
-                DisplayName = "Dummy",
-            };
-
-            var schema = prov.SchemaXmlBuilder.Create();
-
-            Assert.NotNull(schema);
-            Assert.Equal("Field", schema.Name);
-            Assert.Equal("DummyField", schema.Attribute("Name").Value);
-        }
-
-        [Fact]
-        public void Field_implicit_StaticName_is_generated_into_schema()
-        {
-            var prov = new HarshField()
-            {
-                Id = Guid.NewGuid(),
-                InternalName = "DummyField",
-                DisplayName = "Dummy",
-            };
-
-            var schema = prov.SchemaXmlBuilder.Create();
-
-            Assert.NotNull(schema);
-            Assert.Equal("Field", schema.Name);
-            Assert.Equal("DummyField", schema.Attribute("StaticName").Value);
-        }
-
-        [Fact]
-        public void Field_explicit_StaticName_is_generated_into_schema()
+        public async Task Id_is_set()
         {
             var fieldId = Guid.NewGuid();
-            var prov = new HarshField()
+            var fieldName = fieldId.ToString("n");
+
+            var provisioner = new HarshField()
             {
                 Id = fieldId,
-                InternalName = "DummyField",
-                DisplayName = "Dummy",
-                StaticName = "WhomDoYouCallDummy"
+                InternalName = fieldName,
             };
 
-            var schema = prov.SchemaXmlBuilder.Create();
+            await provisioner.ProvisionAsync(Context);
 
-            Assert.NotNull(schema);
-            Assert.Equal("WhomDoYouCallDummy", schema.Attribute("StaticName").Value);
+            var fieldOutput = FindOutput<Field>();
+            var field = fieldOutput.Object;
+
+            ClientContext.Load(field, f => f.Id);
+            await Context.ClientContext.ExecuteQueryAsync();
+
+            Assert.Equal(fieldId, field.Id);
         }
 
         [Fact]
-        public void Field_group_is_generated_into_schema()
+        public async Task InternalName_is_set()
         {
             var fieldId = Guid.NewGuid();
-            var prov = new HarshField()
+            var fieldName = fieldId.ToString("n");
+
+            var provisioner = new HarshField()
             {
                 Id = fieldId,
-                InternalName = "DummyField",
-                DisplayName = "Dummy",
-                Group = "GROO GROO GROO"
+                InternalName = fieldName,
             };
 
-            var schema = prov.SchemaXmlBuilder.Create();
+            await provisioner.ProvisionAsync(Context);
 
-            Assert.NotNull(schema);
-            Assert.Equal("GROO GROO GROO", schema.Attribute("Group").Value);
+            var fieldOutput = FindOutput<Field>();
+            var field = fieldOutput.Object;
+
+            ClientContext.Load(field, f => f.InternalName);
+            await Context.ClientContext.ExecuteQueryAsync();
+
+            Assert.Equal(fieldName, field.InternalName);
         }
 
+        [Fact]
+        public async Task Field_implicit_StaticName_is_set()
+        {
+            var fieldId = Guid.NewGuid();
+            var fieldName = fieldId.ToString("n");
+
+            var provisioner = new HarshField()
+            {
+                Id = fieldId,
+                InternalName = fieldName,
+            };
+
+            await provisioner.ProvisionAsync(Context);
+
+            var fieldOutput = FindOutput<Field>();
+            var field = fieldOutput.Object;
+
+            ClientContext.Load(field, f => f.StaticName);
+            await Context.ClientContext.ExecuteQueryAsync();
+
+            Assert.Equal(fieldName, field.StaticName);
+        }
+
+        [Fact]
+        public async Task Field_explicit_StaticName_is_set()
+        {
+
+            var fieldId = Guid.NewGuid();
+            var fieldName = fieldId.ToString("n");
+            var fieldNameStatic = $"{fieldName}Static";
+
+            var provisioner = new HarshField()
+            {
+                Id = fieldId,
+                InternalName = fieldName,
+                StaticName = fieldNameStatic,
+            };
+
+            await provisioner.ProvisionAsync(Context);
+
+            var fieldOutput = FindOutput<Field>();
+            var field = fieldOutput.Object;
+
+            ClientContext.Load(field, f => f.StaticName);
+            await Context.ClientContext.ExecuteQueryAsync();
+
+            Assert.Equal(fieldNameStatic, field.StaticName);
+        }
     }
 }

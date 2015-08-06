@@ -12,15 +12,15 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Context_StateStack_empty_by_default()
         {
-            Assert.Empty(Fixture.Context.StateStack);
+            Assert.Empty(Context.StateStack);
         }
 
         [Fact]
         public void Context_PushStack_adds_object()
         {
-            var ctx = Fixture.Context.PushState("42");
+            var ctx = Context.PushState("42");
 
-            Assert.Empty(Fixture.Context.StateStack);
+            Assert.Empty(Context.StateStack);
             Assert.Single(ctx.StateStack, "42");
         }
     }

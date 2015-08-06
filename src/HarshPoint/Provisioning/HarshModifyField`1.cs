@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
@@ -51,5 +52,23 @@ namespace HarshPoint.Provisioning
                 property.ExtractSinglePropertyAccess().SetValue(field, value.Value);
             }
         }
+
+#warning TODO
+#if false
+        protected override async Task OnProvisioningAsync()
+        {
+            foreach (var field in Fields)
+            {
+                ModifyField(field);
+            }
+
+            if (ClientContext.HasPendingRequest)
+            {
+                await ClientContext.ExecuteQueryAsync();
+            }
+        }
+
+        protected abstract void ModifyField(TField field);
+#endif
     }
 }

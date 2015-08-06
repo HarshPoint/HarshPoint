@@ -30,7 +30,7 @@ namespace HarshPoint.Tests.Provisioning
                 Id = HarshContentTypeId.Parse("0x01"),
             };
 
-            await prov.ProvisionAsync(Fixture.Context);
+            await prov.ProvisionAsync(Context);
 
             var output = FindOutput<ContentType>();
             Assert.False(output.ObjectCreated);
@@ -51,7 +51,7 @@ namespace HarshPoint.Tests.Provisioning
 
             try
             {
-                await prov.ProvisionAsync(Fixture.Context);
+                await prov.ProvisionAsync(Context);
 
                 var output = FindOutput<ContentType>();
                 ct = output.Object;
@@ -91,7 +91,6 @@ namespace HarshPoint.Tests.Provisioning
             var field = new HarshField()
             {
                 Id = fieldId,
-                DisplayName = fieldId.ToString("n"),
                 InternalName = fieldId.ToString("n"),
             };
 
@@ -112,8 +111,8 @@ namespace HarshPoint.Tests.Provisioning
 
             try
             {
-                await field.ProvisionAsync(Fixture.Context);
-                await ct.ProvisionAsync(Fixture.Context);
+                await field.ProvisionAsync(Context);
+                await ct.ProvisionAsync(Context);
 
                 var cto = FindOutput<ContentType>();
 
@@ -141,11 +140,11 @@ namespace HarshPoint.Tests.Provisioning
             {
                 try
                 {
-                    Fixture.Web.ContentTypes.GetById(_id.ToString()).DeleteObject();
+                    Web.ContentTypes.GetById(_id.ToString()).DeleteObject();
                 }
                 finally
                 {
-                    Fixture.Web.Fields.GetById(fieldId).DeleteObject();
+                    Web.Fields.GetById(fieldId).DeleteObject();
                 }
             }
         }
@@ -161,7 +160,7 @@ namespace HarshPoint.Tests.Provisioning
 
             try
             {
-                var ctx = Fixture.Context.PushState(new DefaultContentTypeGroup()
+                var ctx = Context.PushState(new DefaultContentTypeGroup()
                 {
                     Value = Group
                 });
@@ -175,7 +174,7 @@ namespace HarshPoint.Tests.Provisioning
             }
             finally
             {
-                Fixture.Web.ContentTypes.GetById("0x010044fbfdb9defa4244831062437d181c6f").DeleteObject();
+                Web.ContentTypes.GetById("0x010044fbfdb9defa4244831062437d181c6f").DeleteObject();
                 await Fixture.ClientContext.ExecuteQueryAsync();
             }
         }

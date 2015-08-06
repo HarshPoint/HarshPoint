@@ -19,7 +19,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         [Fact]
         public void Resolve_gets_resolved()
         {
-            var mr = new ManualResolver(Fixture.CreateResolveContext);
+            var mr = new ManualResolver(CreateResolveContext);
             var result = mr.Resolve(MockResolve.Build<String>("32", "42", "52"));
 
             Assert.Equal(new[] { "32", "42", "52" }, result);
@@ -28,7 +28,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         [Fact]
         public void ResolveSingle_gets_resolved()
         {
-            var mr = new ManualResolver(Fixture.CreateResolveContext);
+            var mr = new ManualResolver(CreateResolveContext);
             var result = mr.ResolveSingle(MockResolve.Build<String>("42"));
 
             Assert.Equal("42", result.Value);
@@ -37,7 +37,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         [Fact]
         public void ResolveSingleOrDefault_gets_resolved()
         {
-            var mr = new ManualResolver(Fixture.CreateResolveContext);
+            var mr = new ManualResolver(CreateResolveContext);
             var result = mr.ResolveSingleOrDefault(MockResolve.Build<String>("42"));
 
             Assert.Equal("42", result.Value);
@@ -46,7 +46,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         [Fact]
         public void Resolve_gets_resolved_with_retrievals()
         {
-            var mr = new ClientObjectManualResolver(Fixture.CreateResolveContext);
+            var mr = new ClientObjectManualResolver(CreateResolveContext);
 
             var field = Web.Fields.GetById(HarshBuiltInFieldId.Title);
             var mock = new Mock<IResolveBuilder>();

@@ -46,27 +46,12 @@ namespace HarshPoint.Tests
                     );
                 }
             }
-
-            Context = CreateContext();
         }
 
-        public HarshProvisionerContext CreateContext()
-        {
-            var listSink = new HarshProvisionerOutputSinkList();
-            Output = listSink.Output;
-
-            return new HarshProvisionerContext(ClientContext)
-                .WithOutputSink(
-                    new HarshProvisionerOutputSinkComposite(
-                        new HarshProvisionerOutputSinkSerilog(HarshLog.ForContext("ProvisionerOutput", true)),
-                        listSink
-                    )
-                );
-        }
-
+        [Obsolete]
         public async Task EnsureTestList()
         {
-            var list = Web.Lists.GetByTitle(TestListTitle);
+            var list = ClientContext.Web.Lists.GetByTitle(TestListTitle);
             ClientContext.Load(list);
 
             try
@@ -75,7 +60,7 @@ namespace HarshPoint.Tests
             }
             catch (ServerException)
             {
-                list = Web.Lists.Add(new ListCreationInformation()
+                list = ClientContext.Web.Lists.Add(new ListCreationInformation()
                 {
                     Url = TestListUrl,
                     Title = TestListTitle,
@@ -87,20 +72,10 @@ namespace HarshPoint.Tests
             }
         }
 
-        [Obsolete]
-        public HarshProvisionerContext Context
-        {
-            get;
-            private set;
-        }
-
-        public ClientObjectResolveContext CreateResolveContext()
-            => new ClientObjectResolveContext(Context);
-
         public void Dispose()
         {
-            Context = null;
             ClientContext?.Dispose();
+            ClientContext = null;
         }
 
         public ClientContext ClientContext
@@ -108,24 +83,6 @@ namespace HarshPoint.Tests
             get;
             set;
         }
-
-        public IReadOnlyCollection<HarshProvisionerOutput> Output
-        {
-            get; private set;
-        }
-
-        public Site Site
-        {
-            get { return ClientContext?.Site; }
-        }
-
-        public Web Web
-        {
-            get { return ClientContext?.Web; }
-        }
-
-        public TaxonomySession TaxonomySession
-            => Context?.TaxonomySession;
 
         private sealed class SeriloggedClientContext : ClientContext
         {

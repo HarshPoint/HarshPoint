@@ -45,12 +45,12 @@ namespace HarshPoint.Tests.Provisioning
 
             try
             {
-                await ctProv.ProvisionAsync(Fixture.Context);
+                await ctProv.ProvisionAsync(Context);
 
                 var ctResult = FindOutput<ContentType>();
                 ct = ctResult.Object;
 
-                await listProv.ProvisionAsync(Fixture.Context);
+                await listProv.ProvisionAsync(Context);
 
                 var listResult = FindOutput<List>();
 

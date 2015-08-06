@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning
 {
-    public class DateTimeFieldProvisioning : TestFieldBase<FieldDateTime, HarshDateTimeField>
+    public class DateTimeFieldProvisioning : TestFieldBase<FieldDateTime, HarshModifyFieldDateTime>
     {
         public DateTimeFieldProvisioning(SharePointClientFixture fixture, ITestOutputHelper output) 
             : base(FieldType.DateTime, fixture, output)
@@ -16,7 +16,7 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task DisplayFormat_is_set()
         {
-            var prov = new HarshDateTimeField()
+            var prov = new HarshModifyFieldDateTime()
             {
                 DisplayFormat = DateTimeFieldFormatType.DateOnly,
             };

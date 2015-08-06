@@ -31,30 +31,27 @@ namespace HarshPoint.Tests.Provisioning
         protected async Task RunWithField(TProvisioner provisioner, Func<TField, Task> action)
         {
             var guid = Guid.NewGuid();
-            var ctx = Fixture.CreateContext();
 
-            var field = new HarshFieldProvisioner()
+            var field = new HarshField()
             {
                 Type = FieldType,
-                DisplayName = guid.ToString("n"),
                 InternalName = guid.ToString("n"),
                 Id = guid,
                 Children = { provisioner },
             };
 
-            await field.ProvisionAsync(ctx);
+            await field.ProvisionAsync(Context);
 
             var fo = FindOutput<Field>();
 
             try
             {
-
-                await action(ctx.ClientContext.CastTo<TField>(fo.Object));
+                await action(ClientContext.CastTo<TField>(fo.Object));
             }
             finally
             {
                 fo.Object.DeleteObject();
-                await ctx.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
             }
         }
     }

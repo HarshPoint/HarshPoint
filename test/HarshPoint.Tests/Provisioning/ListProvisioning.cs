@@ -27,7 +27,7 @@ namespace HarshPoint.Tests.Provisioning
                 TemplateType = ListTemplateType.DocumentLibrary
             };
 
-            await prov.ProvisionAsync(Fixture.Context);
+            await prov.ProvisionAsync(Context);
 
             var output = Assert.Single(Output);
             var alreadyExists = Assert.IsType<ObjectAlreadyExists<List>>(output);
@@ -63,7 +63,7 @@ namespace HarshPoint.Tests.Provisioning
 
             try
             {
-                await prov.ProvisionAsync(Fixture.Context);
+                await prov.ProvisionAsync(Context);
 
                 var objectCreated = FindOutput<List>();
                 Assert.IsType<ObjectCreated<List>>(objectCreated);

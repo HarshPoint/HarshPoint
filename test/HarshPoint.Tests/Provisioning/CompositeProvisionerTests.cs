@@ -32,7 +32,7 @@ namespace HarshPoint.Tests.Provisioning
                 .Returns(HarshTask.Completed)
                 .Callback(() => seq += "2");
 
-            var ctx = Fixture.Context.AllowDeleteUserData();
+            var ctx = Context.AllowDeleteUserData();
 
             var composite = new HarshProvisioner()
             {
@@ -61,7 +61,7 @@ namespace HarshPoint.Tests.Provisioning
                 .Returns(HarshTask.Completed)
                 .Callback(() => seq += "2");
 
-            var ctx = Fixture.Context.AllowDeleteUserData();
+            var ctx = Context.AllowDeleteUserData();
 
             var composite = new HarshProvisioner()
             {
@@ -81,14 +81,14 @@ namespace HarshPoint.Tests.Provisioning
                 .Returns(HarshTask.Completed)
                 .Callback(() =>
                 {
-                    Assert.Equal(Fixture.Web, p.Object.Web);
+                    Assert.Equal(Web, p.Object.Web);
                 });
 
             var composite = new HarshProvisioner()
             {
                 Children = { p.Object }
             };
-            await composite.ProvisionAsync(Fixture.Context);
+            await composite.ProvisionAsync(Context);
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Children = { new ExpectsModifiedContext() }
             };
-            await composite.ProvisionAsync(Fixture.Context);
+            await composite.ProvisionAsync(Context);
         }
 
         [Fact]
@@ -108,7 +108,7 @@ namespace HarshPoint.Tests.Provisioning
             {
                 Children = { new ExpectsModifiedContext() }
             };
-            await composite.UnprovisionAsync(Fixture.Context);
+            await composite.UnprovisionAsync(Context);
         }
         
         private class ModifiesChildContextUsingModifier : HarshProvisioner

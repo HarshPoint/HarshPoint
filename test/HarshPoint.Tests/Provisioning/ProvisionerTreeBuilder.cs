@@ -36,7 +36,7 @@ namespace HarshPoint.Tests.Provisioning
 
             HarshProvisionerTreeBuilder.AddChild(parent, tag);
 
-            await parent.ProvisionAsync(Fixture.Context);
+            await parent.ProvisionAsync(Context);
         }
 
         private sealed class ExpectsTag : HarshProvisioner
