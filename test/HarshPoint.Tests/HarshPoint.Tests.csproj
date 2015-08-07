@@ -191,6 +191,7 @@
     <Compile Include="Provisioning\Resolvers\TaxonomyResolving.cs" />
     <Compile Include="Provisioning\RetrievalResolving.cs" />
     <Compile Include="Provisioning\TestFieldBase.cs" />
+    <Compile Include="Provisioning\TestProvisioningDefaultValuePolicy.cs" />
     <Compile Include="RecursiveComparisons.cs" />
     <Compile Include="Reflection\MethodInfoExtensionsTests.cs" />
     <Compile Include="HarshContentTypeIdTests.cs" />

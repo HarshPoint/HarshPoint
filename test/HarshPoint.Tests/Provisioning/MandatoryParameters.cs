@@ -16,7 +16,6 @@ namespace HarshPoint.Tests.Provisioning
 
         [Theory]
         [InlineData("test")]
-        [InlineData("   \t  ")]
         public async Task Succeeds_string(String value)
         {
             var p = new SingleStringParam() { Param = value };
@@ -26,6 +25,7 @@ namespace HarshPoint.Tests.Provisioning
         [Theory]
         [InlineData(null)]
         [InlineData("")]
+        [InlineData("   \t  ")]
         public async Task Fails_string(String value)
         {
             var p = new SingleStringParam() { Param = value };

@@ -22,8 +22,13 @@ namespace HarshPoint.Provisioning.Implementation
                 return true;
             }
 
-            var enumerable = (value as IEnumerable);
+            var str = (value as String);
+            if (str != null)
+            {
+                return String.IsNullOrWhiteSpace(str);
+            }
 
+            var enumerable = (value as IEnumerable);
             if (enumerable != null)
             {
                 return !enumerable.Any();

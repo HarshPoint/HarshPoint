@@ -27,6 +27,8 @@ namespace HarshPoint.ObjectModel
         public Type PropertyType => PropertyInfo.PropertyType;
         public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
 
+        public override String ToString() => PropertyInfo.ToString();
+
         private static readonly HarshLogger Logger = HarshLog.ForContext<PropertyAccessor>();
     }
 }
