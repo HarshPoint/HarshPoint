@@ -154,6 +154,7 @@
     <Compile Include="Extensions\TypeInfoExtensionsTests.cs" />
     <Compile Include="GroupingDynamicFactory.cs" />
     <Compile Include="Linq\ExpressionComparing.cs" />
+    <Compile Include="ObjectModel\TestNullDefaultValuePolicy.cs" />
     <Compile Include="Provisioning\ClientObjectContextStateResolving.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessing.cs" />
     <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
