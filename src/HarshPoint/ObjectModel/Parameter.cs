@@ -1,7 +1,5 @@
 ﻿using Destructurama.Attributed;
-using HarshPoint.Reflection;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
@@ -12,15 +10,15 @@ namespace HarshPoint.ObjectModel
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext<Parameter>();
 
-        public Parameter(
-            PropertyInfo propertyInfo,
+        internal Parameter(
+            PropertyAccessor propertyAccessor,
             ParameterAttribute parameterAttribute,
-            IEnumerable<ParameterValidationAttribute> validationAttributes
+            IDefaultValuePolicy defaultValuePolicy
         )
         {
-            if (propertyInfo == null)
+            if (propertyAccessor == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(propertyInfo));
+                throw Logger.Fatal.ArgumentNull(nameof(propertyAccessor));
             }
 
             if (parameterAttribute == null)
@@ -28,24 +26,27 @@ namespace HarshPoint.ObjectModel
                 throw Logger.Fatal.ArgumentNull(nameof(parameterAttribute));
             }
 
-            if (validationAttributes == null)
+            if (defaultValuePolicy == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(validationAttributes));
+                throw Logger.Fatal.ArgumentNull(nameof(defaultValuePolicy));
             }
 
-            PropertyInfo = propertyInfo;
+            PropertyAccessor = propertyAccessor;
             ParameterAttribute = parameterAttribute;
+            DefaultValuePolicy = defaultValuePolicy;
 
-            ValidationAttributes = validationAttributes.ToImmutableArray();
-
-            ValidateMandatoryIsNullable();
-
-            Getter = propertyInfo.MakeGetter();
-            Setter = propertyInfo.MakeSetter();
+            ValidationAttributes = PropertyAccessor.PropertyInfo
+                .GetCustomAttributes<ParameterValidationAttribute>(inherit: true)
+                .ToImmutableArray();
         }
 
         [NotLogged]
-        public Func<Object, Object> Getter
+        public IDefaultValuePolicy DefaultValuePolicy { get; private set; }
+
+        [NotLogged]
+        public PropertyAccessor PropertyAccessor { get; private set; }
+
+        public IReadOnlyList<ParameterValidationAttribute> ValidationAttributes
         {
             get;
             private set;
@@ -56,74 +57,58 @@ namespace HarshPoint.ObjectModel
 
         public Boolean IsMandatory => ParameterAttribute.Mandatory;
 
-        public String Name => PropertyInfo.Name;
+        public String Name => PropertyAccessor.Name;
 
         public String ParameterSetName => ParameterAttribute.ParameterSetName;
 
         [NotLogged]
-        public PropertyInfo PropertyInfo
-        {
-            get;
-            private set;
-        }
+        public PropertyInfo PropertyInfo => PropertyAccessor.PropertyInfo;
 
-        public Type PropertyType => PropertyInfo.PropertyType;
+        public Type PropertyType => PropertyAccessor.PropertyType;
 
         [NotLogged]
         public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
 
-        [NotLogged]
-        public Action<Object, Object> Setter
+        public Object Getter(Object target)
         {
-            get;
-            private set;
-        }
-
-        public IReadOnlyList<ParameterValidationAttribute> ValidationAttributes
-        {
-            get;
-            private set;
-        }
-
-        public Boolean HasDefaultValue(Object provisioner)
-        {
-            var value = Getter(provisioner);
-            if (value == null)
+            if (target == null)
             {
-                return true;
+                throw Logger.Fatal.ArgumentNull(nameof(target));
             }
 
-            var enumerable = value as IEnumerable;
-            if (enumerable != null)
+            return PropertyAccessor.Getter(target);
+        }
+
+        public Boolean HasCustomAttribute<TAttribute>(Boolean inherit)
+            where TAttribute : Attribute
+            => PropertyInfo.GetCustomAttribute<TAttribute>(inherit) != null;
+
+        public void Setter(Object target, Object value)
+        {
+            if (target == null)
             {
-                return !enumerable.Any();
+                throw Logger.Fatal.ArgumentNull(nameof(target));
             }
 
-            return false;
+            PropertyAccessor.Setter(target, value);
+        }
+
+        public Boolean HasDefaultValue(Object target)
+        {
+            if (target == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(target));
+            }
+
+            var value = Getter(target);
+            return DefaultValuePolicy.IsDefaultValue(value);
         }
 
         public override String ToString()
             => ParameterSetName == null ?
-                PropertyInfo.ToString() :
-                PropertyInfo.ToString() + " (" + ParameterSetName + ')';
+                PropertyAccessor.ToString() :
+                $"{PropertyAccessor} ParameterSetName={ParameterSetName})";
 
-        private ParameterAttribute ParameterAttribute
-        {
-            get;
-            set;
-        }
-
-        private void ValidateMandatoryIsNullable()
-        {
-            if (IsMandatory && !PropertyTypeInfo.IsNullable())
-            {
-                throw Logger.Fatal.ObjectMetadata(
-                    SR.HarshProvisionerMetadata_NoValueTypeMandatory,
-                    PropertyInfo.DeclaringType,
-                    PropertyInfo.Name,
-                    PropertyInfo.PropertyType
-                );
-            }
-        }
+        private ParameterAttribute ParameterAttribute { get; set; }
     }
 }

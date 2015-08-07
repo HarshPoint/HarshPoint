@@ -107,17 +107,11 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         [Fact]
-        public void Internal_writable_can_be_set_using_parameter()
+        public void Fails_internal_writable_param()
         {
-            var sets = Build<InternalWritableParam>();
-            var set = Assert.Single(sets);
-
-            var param = Assert.Single(set.Parameters);
-            Assert.Equal("InternalWritable", param.Name);
-
-            var target = new InternalWritableParam();
-            param.Setter(target, "42");
-            Assert.Equal("42", target.InternalWritable);
+            Assert.Throws<HarshObjectMetadataException>(
+                   () => Build<InternalWritableParam>()
+               );
         }
 
         [Fact]

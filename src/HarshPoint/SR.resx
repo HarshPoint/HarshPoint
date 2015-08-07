@@ -257,6 +257,12 @@ Number of resolver elements {1}</value>
   <data name="HarshProvisionerMetadata_DefaultParameterSetNotFound" xml:space="preserve">
     <value>Default parameter set '{0}' could not be found on type '{1}'.</value>
   </data>
+  <data name="HarshProvisionerMetadata_InvalidParameterProperty" xml:space="preserve">
+    <value>The specified property '{0} {1}.{2}' is not a valid parameter. Parameters must be read-write, public, instance, non-abstract, non-indexer properties.</value>
+  </data>
+  <data name="HarshProvisionerMetadata_MandatoryTypeNotSupportedByDefaultValuePolicy" xml:space="preserve">
+    <value>The mandatory parameter '{0}.{1}' is of type '{2}', which is not supported by the DefaultValuePolicy '{3}'.</value>
+  </data>
   <data name="HarshProvisionerMetadata_MoreParametersWithSameSet" xml:space="preserve">
     <value>Parameters cannot be members of the same parameter set multiple times.
 
@@ -269,16 +275,8 @@ Duplicate parameter sets: {2}</value>
   <data name="HarshProvisionerMetadata_NoValueTypeDefaultFromContext" xml:space="preserve">
     <value>DefaultFromContext properties must be reference types. The specified property '{0}.{1}' is of type '{2}'. </value>
   </data>
-  <data name="HarshProvisionerMetadata_NoValueTypeMandatory" xml:space="preserve">
-    <value>Mandatory parameters must be of reference or nullable type. The specified property '{0}.{1}' is of type '{2}'.</value>
-  </data>
   <data name="HarshProvisionerMetadata_ParameterBothCommonAndInSet" xml:space="preserve">
     <value>Parameters can either be shared by all parameter sets by having ParameterSetName equal to null, or belong to one or more named parameter sets.
-
-Property: {0}.{1}</value>
-  </data>
-  <data name="HarshProvisionerMetadata_ParameterMustBeReadWriteInstance" xml:space="preserve">
-    <value>Parameter properties must be readable and writable and cannot be static.
 
 Property: {0}.{1}</value>
   </data>

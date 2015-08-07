@@ -472,6 +472,24 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified property &apos;{0} {1}.{2}&apos; is not a valid parameter. Parameters must be read-write, public, instance, non-abstract, non-indexer properties..
+        /// </summary>
+        internal static string HarshProvisionerMetadata_InvalidParameterProperty {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadata_InvalidParameterProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The mandatory parameter &apos;{0}.{1}&apos; is of type &apos;{2}&apos;, which is not supported by the DefaultValuePolicy &apos;{3}&apos;..
+        /// </summary>
+        internal static string HarshProvisionerMetadata_MandatoryTypeNotSupportedByDefaultValuePolicy {
+            get {
+                return ResourceManager.GetString("HarshProvisionerMetadata_MandatoryTypeNotSupportedByDefaultValuePolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameters cannot be members of the same parameter set multiple times.
         ///
         ///Property: {0}.{1}
@@ -502,15 +520,6 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mandatory parameters must be of reference or nullable type. The specified property &apos;{0}.{1}&apos; is of type &apos;{2}&apos;..
-        /// </summary>
-        internal static string HarshProvisionerMetadata_NoValueTypeMandatory {
-            get {
-                return ResourceManager.GetString("HarshProvisionerMetadata_NoValueTypeMandatory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Parameters can either be shared by all parameter sets by having ParameterSetName equal to null, or belong to one or more named parameter sets.
         ///
         ///Property: {0}.{1}.
@@ -518,17 +527,6 @@ namespace HarshPoint {
         internal static string HarshProvisionerMetadata_ParameterBothCommonAndInSet {
             get {
                 return ResourceManager.GetString("HarshProvisionerMetadata_ParameterBothCommonAndInSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parameter properties must be readable and writable and cannot be static.
-        ///
-        ///Property: {0}.{1}.
-        /// </summary>
-        internal static string HarshProvisionerMetadata_ParameterMustBeReadWriteInstance {
-            get {
-                return ResourceManager.GetString("HarshProvisionerMetadata_ParameterMustBeReadWriteInstance", resourceCulture);
             }
         }
         

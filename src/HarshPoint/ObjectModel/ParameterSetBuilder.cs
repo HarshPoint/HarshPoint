@@ -10,42 +10,82 @@ namespace HarshPoint.ObjectModel
         private static readonly HarshLogger Logger = HarshLog.ForContext<ParameterSetBuilder>();
 
         public ParameterSetBuilder(Type type)
+            : this(type, null)
         {
-            if (type == null)
+        }
+
+        public ParameterSetBuilder(Type type, IDefaultValuePolicy defaultValuePolicy)
+            : this(new HarshObjectMetadata(type), defaultValuePolicy)
+        {
+        }
+
+        public ParameterSetBuilder(HarshObjectMetadata metadata, IDefaultValuePolicy defaultValuePolicy)
+        {
+            if (metadata == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(type));
+                throw Logger.Fatal.ArgumentNull(nameof(metadata));
             }
 
-            ProcessedType = type;
+            Metadata = metadata;
 
-            DefaultParameterSetName = type
-                .GetTypeInfo()
+            DefaultParameterSetName = metadata
+                .ObjectTypeInfo
                 .GetCustomAttribute<DefaultParameterSetAttribute>(inherit: true)?
                 .DefaultParameterSetName;
+
+            DefaultValuePolicy = defaultValuePolicy ?? new NullDefaultValuePolicy();
+
+            ValidateNoInvalidParameters();
         }
 
-        public String DefaultParameterSetName
+        private void ValidateNoInvalidParameters()
         {
-            get;
-            set;
+            var parameterProperties = Metadata.ObjectType
+                .GetRuntimeProperties()
+                .Where(p => p.IsDefined(typeof(ParameterAttribute)));
+
+            foreach (var property in parameterProperties)
+            {
+                var valid =
+                    property.CanRead &&
+                    property.CanWrite &&
+                    !property.GetIndexParameters().Any() &&
+
+                    property.GetMethod.IsPublic &&
+                    property.SetMethod.IsPublic &&
+
+                    !property.GetMethod.IsStatic &&
+                    !property.SetMethod.IsStatic &&
+
+                    !property.GetMethod.IsAbstract &&
+                    !property.SetMethod.IsAbstract;
+
+                if (!valid)
+                {
+                    throw Logger.Fatal.ObjectMetadata(
+                        SR.HarshProvisionerMetadata_InvalidParameterProperty,
+                        property.PropertyType,
+                        property.DeclaringType,
+                        property.Name
+                    );
+                }
+            }
         }
 
-        public Type ProcessedType
-        {
-            get;
-            private set;
-        }
+        public String DefaultParameterSetName { get; private set; }
+        public IDefaultValuePolicy DefaultValuePolicy { get; private set; }
+        public HarshObjectMetadata Metadata { get; private set; }
 
         public IEnumerable<ParameterSet> Build()
         {
             Logger.Debug(
                 "Building parameter set metadata for {ProcessedType}",
-                ProcessedType
+                Metadata
             );
 
             Logger.Debug(
                 "{ProcessedType}: Default parameter set name: {DefaultParameterSetName}",
-                ProcessedType,
+                Metadata,
                 DefaultParameterSetName
             );
 
@@ -53,7 +93,7 @@ namespace HarshPoint.ObjectModel
 
             Logger.Debug(
                 "{ProcessedType}: All parameters: {@Parameters}",
-                ProcessedType,
+                Metadata,
                 parameters
             );
 
@@ -63,7 +103,7 @@ namespace HarshPoint.ObjectModel
 
             Logger.Debug(
                 "{ProcessedType}: Common parameters: {@CommonParameters}",
-                ProcessedType,
+                Metadata,
                 commonParameters
             );
 
@@ -85,7 +125,7 @@ namespace HarshPoint.ObjectModel
                 throw Logger.Fatal.ObjectMetadata(
                     SR.HarshProvisionerMetadata_DefaultParameterSetNotFound,
                     DefaultParameterSetName,
-                    ProcessedType
+                    Metadata
                 );
             }
 
@@ -93,7 +133,7 @@ namespace HarshPoint.ObjectModel
             {
                 Logger.Debug(
                     "{ProcessedType}: Parameter sets: {@ParameterSets}",
-                    ProcessedType,
+                    Metadata,
                     parameterSets
                 );
 
@@ -108,7 +148,7 @@ namespace HarshPoint.ObjectModel
 
             Logger.Debug(
                 "{ProcessedType}: Implicit parameter set: {@ImplicitParameterSet}",
-                ProcessedType,
+                Metadata,
                 implicitParameterSet
             );
 
@@ -129,29 +169,40 @@ namespace HarshPoint.ObjectModel
         }
 
         private IEnumerable<Parameter> BuildParameterMetadata()
-            => from property in ProcessedType.GetRuntimeProperties()
+            => from paramAttrs in 
+                   Metadata.ReadableWritableInstancePropertiesWith<ParameterAttribute>(inherit: true)
 
-               let paramAttrs = property
-                  .GetCustomAttributes<ParameterAttribute>(inherit: true)
-                  .ToArray()
-
+               let property = paramAttrs.Key
                where
-                  paramAttrs.Any() &&
-                  IsReadableAndWritable(property) &&
                   !HasNonUniqueParameterSetNames(property, paramAttrs) &&
-                  !IsBothCommonParameterAndInParameterSet(property, paramAttrs)
-
-               let validationAttributes = property.GetCustomAttributes<ParameterValidationAttribute>(inherit: true)
+                  !IsBothCommonParameterAndInParameterSet(property, paramAttrs) &&
+                  !IsMandatoryAndUnsupportedByDefaultValuePolicy(property, paramAttrs)
 
                from attr in paramAttrs
-               select new Parameter(
-                   property,
-                   attr,
-                   validationAttributes
-               );
+               select new Parameter(property, attr, DefaultValuePolicy);
+
+        private Boolean IsMandatoryAndUnsupportedByDefaultValuePolicy(
+            PropertyAccessor property, 
+            IEnumerable<ParameterAttribute> attributes
+        )
+        {
+            if (!DefaultValuePolicy.SupportsType(property.PropertyTypeInfo) &&
+                attributes.Any(a => a.Mandatory))
+            {
+                throw Logger.Fatal.ObjectMetadata(
+                    SR.HarshProvisionerMetadata_MandatoryTypeNotSupportedByDefaultValuePolicy,
+                    property.DeclaringType,
+                    property.Name,
+                    property.PropertyType,
+                    DefaultValuePolicy.GetType()
+                );
+            }
+
+            return false;
+        }
 
         private static Boolean IsBothCommonParameterAndInParameterSet(
-            PropertyInfo property,
+            PropertyAccessor property, 
             IEnumerable<ParameterAttribute> attributes
         )
         {
@@ -161,7 +212,7 @@ namespace HarshPoint.ObjectModel
                 {
                     throw Logger.Fatal.ObjectMetadata(
                         SR.HarshProvisionerMetadata_ParameterBothCommonAndInSet,
-                        property.DeclaringType.FullName,
+                        property.DeclaringType,
                         property.Name
                     );
                 }
@@ -171,7 +222,7 @@ namespace HarshPoint.ObjectModel
         }
 
         private static Boolean HasNonUniqueParameterSetNames(
-            PropertyInfo property,
+            PropertyAccessor property,
             IEnumerable<ParameterAttribute> attributes
         )
         {
@@ -184,7 +235,7 @@ namespace HarshPoint.ObjectModel
             {
                 throw Logger.Fatal.ObjectMetadata(
                     SR.HarshProvisionerMetadata_MoreParametersWithSameSet,
-                    property.DeclaringType.FullName,
+                    property.DeclaringType,
                     property.Name,
                     String.Join(
                         ", ",
@@ -197,26 +248,5 @@ namespace HarshPoint.ObjectModel
 
             return false;
         }
-
-        private static Boolean IsReadableAndWritable(PropertyInfo property)
-        {
-            if (!property.CanRead ||
-                !property.CanWrite ||
-                !IsInstance(property.GetMethod) ||
-                !IsInstance(property.SetMethod)
-            )
-            {
-                throw Logger.Fatal.ObjectMetadata(
-                    SR.HarshProvisionerMetadata_ParameterMustBeReadWriteInstance,
-                    property.DeclaringType.FullName,
-                    property.Name
-                );
-            }
-
-            return true;
-        }
-
-        private static Boolean IsInstance(MethodBase method)
-            => !method.IsStatic;
     }
 }

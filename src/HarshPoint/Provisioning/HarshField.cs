@@ -57,11 +57,7 @@ namespace HarshPoint.Provisioning
         /// <value>
         /// The field identifier. Must not be an empty <see cref="Guid"/>.
         /// </value>
-        [Parameter(
-#if false // fix when DefaultValuePolicy is implemented
-            Mandatory = true
-#endif
-        )]
+        [Parameter(Mandatory = true)]
         public Guid Id { get; set; }
 
         /// <summary>

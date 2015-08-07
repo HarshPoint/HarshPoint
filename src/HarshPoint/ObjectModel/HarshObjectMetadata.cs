@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -52,13 +51,19 @@ namespace HarshPoint.ObjectModel
             get; private set;
         }
 
-        public IEnumerable<Tuple<PropertyAccessor, TAttribute>> ReadableWritableInstancePropertiesWith<TAttribute>(Boolean inherit)
+        public IEnumerable<IGrouping<PropertyAccessor, TAttribute>> ReadableWritableInstancePropertiesWith<TAttribute>(Boolean inherit)
             where TAttribute : Attribute
-        {
-            return ReadableWritableInstanceProperties
+            => ReadableWritableInstanceProperties
+                .Select(p => HarshGrouping.Create(p, p.PropertyInfo.GetCustomAttributes<TAttribute>(inherit).ToArray()))
+                .Where(g => g.Any())
+                .ToArray();
+
+        public IEnumerable<Tuple<PropertyAccessor, TAttribute>> ReadableWritableInstancePropertiesWithSingle<TAttribute>(Boolean inherit)
+            where TAttribute : Attribute
+            => ReadableWritableInstanceProperties
                 .Select(p => Tuple.Create(p, p.PropertyInfo.GetCustomAttribute<TAttribute>(inherit)))
-                .Where(t => t.Item2 != null);
-        }
+                .Where(t => t.Item2 != null)
+                .ToArray();
 
         private void InitReadableWritableInstanceProperties()
         {

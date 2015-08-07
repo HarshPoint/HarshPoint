@@ -22,20 +22,20 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
-            ParameterSets = new ParameterSetBuilder(ObjectType)
+            ParameterSets = new ParameterSetBuilder(this, ProvisioningDefaultValuePolicy.Instance)
                 .Build()
                 .ToImmutableArray();
 
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
 
             DefaultFromContextPropertyBinder = new DefaultFromContextPropertyBinder(
-                ReadableWritableInstancePropertiesWith<DefaultFromContextAttribute>(inherit: true)
+                ReadableWritableInstancePropertiesWithSingle<DefaultFromContextAttribute>(inherit: true)
                 .Select(t => new DefaultFromContextProperty(t.Item1, t.Item2))
             );
 
             ParametersMandatoryWhenCreating =
                 Parameters
-                .Where(p => IsMandatoryWhenCreating(p.PropertyInfo))
+                .Where(p => p.HasCustomAttribute<MandatoryWhenCreatingAttribute>(inherit: true))
                 .ToImmutableHashSet();
 
             ResolvedPropertyBinder = new ResolvedPropertyBinder(
@@ -48,20 +48,15 @@ namespace HarshPoint.Provisioning.Implementation
 
         public DefaultFromContextPropertyBinder DefaultFromContextPropertyBinder
         {
-            get;
-            private set;
+            get; private set;
         }
 
-        public ParameterSet DefaultParameterSet
-        {
-            get;
-            private set;
-        }
+        public ParameterSet DefaultParameterSet { get; private set; }
 
         public IEnumerable<Parameter> Parameters
             => ParameterSets.SelectMany(set => set.Parameters);
 
-        public IReadOnlyCollection<ParameterSet> ParameterSets
+        public IEnumerable<ParameterSet> ParameterSets
         {
             get;
             private set;
@@ -89,7 +84,7 @@ namespace HarshPoint.Provisioning.Implementation
             return ParametersMandatoryWhenCreating.Contains(parameter);
         }
 
-        private IReadOnlyCollection<Parameter> ParametersMandatoryWhenCreating { get; set; }
+        private IEnumerable<Parameter> ParametersMandatoryWhenCreating { get; set; }
 
         private Boolean GetDeletesUserData(String methodName)
         {
@@ -120,9 +115,6 @@ namespace HarshPoint.Provisioning.Implementation
 
             return deletesUserData;
         }
-
-        private static Boolean IsMandatoryWhenCreating(PropertyInfo property)
-            => property.GetCustomAttribute<MandatoryWhenCreatingAttribute>(inherit: true) != null;
 
         private static readonly TypeInfo HarshProvisionerBaseTypeInfo
             = typeof(HarshProvisionerBase).GetTypeInfo();
