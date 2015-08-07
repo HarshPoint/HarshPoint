@@ -1,9 +1,7 @@
-﻿using HarshPoint.Provisioning.Implementation;
-using Microsoft.SharePoint.Client;
+﻿using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
 

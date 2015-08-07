@@ -1,10 +1,5 @@
-﻿using HarshPoint.Provisioning;
-using HarshPoint.Provisioning.Implementation;
-using HarshPoint.Provisioning.Output;
-using Microsoft.SharePoint.Client;
-using Microsoft.SharePoint.Client.Taxonomy;
+﻿using Microsoft.SharePoint.Client;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 

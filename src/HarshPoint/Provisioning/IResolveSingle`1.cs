@@ -1,6 +1,4 @@
-﻿using HarshPoint.Provisioning.Implementation;
-
-namespace HarshPoint.Provisioning
+﻿namespace HarshPoint.Provisioning
 {
     public interface IResolveSingle<out T>
     {
