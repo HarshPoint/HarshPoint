@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.ShellployGenerat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.ShellployGenerator.Tests", "test\HarshPoint.Shellploy.Generator.Tests\HarshPoint.ShellployGenerator.Tests.csproj", "{02E3AED4-550C-4684-A3E2-E63E104606C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Shellploy.Tests", "test\HarshPoint.Shellploy.Tests\HarshPoint.Shellploy.Tests.csproj", "{C65D36BD-BA54-48FD-9DD8-B478FDA9BD6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{02E3AED4-550C-4684-A3E2-E63E104606C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02E3AED4-550C-4684-A3E2-E63E104606C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02E3AED4-550C-4684-A3E2-E63E104606C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C65D36BD-BA54-48FD-9DD8-B478FDA9BD6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C65D36BD-BA54-48FD-9DD8-B478FDA9BD6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C65D36BD-BA54-48FD-9DD8-B478FDA9BD6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C65D36BD-BA54-48FD-9DD8-B478FDA9BD6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

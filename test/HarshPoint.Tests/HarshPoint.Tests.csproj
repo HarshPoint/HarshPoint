@@ -183,7 +183,6 @@
     <Compile Include="Provisioning\ParameterSetMetadataBuilding.cs" />
     <Compile Include="Provisioning\ParameterSetResolving.cs" />
     <Compile Include="Provisioning\PotentiallyDestructiveTests.cs" />
-    <Compile Include="Provisioning\ProvisionerTreeBuilder.cs" />
     <Compile Include="Provisioning\Resolvers\CatalogResolving.cs" />
     <Compile Include="Provisioning\Resolvers\ContentTypeResolving.cs" />
     <Compile Include="Provisioning\Resolvers\FieldResolving.cs" />

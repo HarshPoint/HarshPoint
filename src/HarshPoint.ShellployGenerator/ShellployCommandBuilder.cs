@@ -234,7 +234,7 @@ namespace HarshPoint.ShellployGenerator
                 Namespace = _namespace,
                 Properties = properties.ToImmutableArray(),
                 HasChildren = _hasChildren,
-                Verb = verb,
+                Verb = Tuple.Create(typeof(VerbsCommon), nameof(VerbsCommon.New)),
                 Noun = noun,
                 ClassName = $"{verb}{noun}Command",
             };

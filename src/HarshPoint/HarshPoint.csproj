@@ -143,7 +143,6 @@
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2_Element.cs" />
     <Compile Include="Provisioning\Implementation\IdentifierResolveBuilder`3.cs" />
-    <Compile Include="Provisioning\Implementation\HarshProvisionerTreeBuilder.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyBinder.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\IResolveBuilder.cs" />

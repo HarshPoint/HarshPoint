@@ -30,11 +30,10 @@ namespace HarshPoint.ShellployGenerator
                 throw Logger.Fatal.Argument(nameof(outputDirectory), SR.SourceFileWriter_OutputDirectoryIsFile);
             }
 
-            if (!Directory.Exists(outputDirectory))
+            if (Directory.Exists(outputDirectory))
             {
                 Directory.Delete(outputDirectory, true);
             }
-
 
             Directory.CreateDirectory(outputDirectory);
 

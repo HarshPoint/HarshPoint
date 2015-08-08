@@ -31,18 +31,14 @@ namespace HarshPoint.ShellployGenerator
             {
                 CustomAttributes =
                 {
-                    { typeof(CmdletAttribute), command.Verb, command.Noun },
+                    { typeof(CmdletAttribute), new CodeFieldReferenceExpression(new CodeTypeReferenceExpression( command.Verb.Item1), command.Verb.Item2), command.Noun },
                     { typeof(OutputTypeAttribute), command.ProvisionerType },
                 },
                 IsClass = true,
                 TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed,
                 BaseTypes =
                 {
-                    new CodeTypeReference(
-                        "HarshProvisionerCmdlet",
-                        new CodeTypeReference(command.ProvisionerType),
-                        new CodeTypeReference(command.ContextType)
-                    ),
+                    typeof(PSCmdlet),
                 },
             };
 
@@ -133,8 +129,8 @@ namespace HarshPoint.ShellployGenerator
                 {
                     method.Statements.Add(
                         new CodeMethodInvokeExpression(
-                            new CodeTypeReferenceExpression(typeof(HarshProvisionerTreeBuilder)),
-                            nameof(HarshProvisionerTreeBuilder.AddChild),
+                            new CodeTypeReferenceExpression("HarshProvisionerTreeBuilder"),
+                            "AddChild",
                             resultVar, innerVar
                         )
                     );
@@ -143,8 +139,8 @@ namespace HarshPoint.ShellployGenerator
                 {
                     method.Statements.Add(
                         new CodeMethodInvokeExpression(
-                            new CodeTypeReferenceExpression(command.ClassName),
-                            "ProcessChildren",
+                            new CodeTypeReferenceExpression("HarshProvisionerTreeBuilder"),
+                            "AddChildren",
                             resultVar,
                             new CodePropertyReferenceExpression(
                                 This,
@@ -240,6 +236,13 @@ namespace HarshPoint.ShellployGenerator
 
         public static CodeExpression CreateLiteralExpression(Object value)
         {
+            var expressionValue = value as CodeExpression;
+
+            if (expressionValue != null)
+            {
+                return expressionValue;
+            }
+
             var typeValue = value as Type;
 
             if (typeValue != null)

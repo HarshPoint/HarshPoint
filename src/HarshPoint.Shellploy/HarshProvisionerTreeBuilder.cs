@@ -1,6 +1,11 @@
-﻿using System;
+﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Implementation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Management.Automation;
 
-namespace HarshPoint.Provisioning.Implementation
+namespace HarshPoint.Shellploy
 {
     /// <summary>
     /// Used by ShellPloy to dynamically add child provisioners and IDefaultFromContextTags.
@@ -8,6 +13,28 @@ namespace HarshPoint.Provisioning.Implementation
     public static class HarshProvisionerTreeBuilder
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshProvisionerTreeBuilder));
+
+        public static void AddChildren<TContext>(HarshProvisionerBase<TContext> parent, ScriptBlock children)
+            where TContext : HarshProvisionerContextBase
+        {
+            if (children != null)
+            {
+                AddChildren(
+                    parent,
+                    children.Invoke()
+                        .Select(c => c.BaseObject)
+                );
+            }
+        }
+
+        public static void AddChildren<TContext>(HarshProvisionerBase<TContext> parent, IEnumerable<Object> children)
+            where TContext : HarshProvisionerContextBase
+        {
+            foreach (var child in children)
+            {
+                AddChild(parent, child);
+            }
+        }
 
         public static void AddChild<TContext>(HarshProvisionerBase<TContext> parent, Object child)
             where TContext : HarshProvisionerContextBase

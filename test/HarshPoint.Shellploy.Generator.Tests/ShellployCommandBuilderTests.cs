@@ -62,7 +62,8 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.Equal(0, command.ParentProvisionerTypes.Count());
             Assert.Equal(nameof(HarshEmptyTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshEmptyTestProvisioner), command.ProvisionerType);
-            Assert.Equal("New", command.Verb);
+            Assert.Equal(typeof(VerbsCommon), command.Verb.Item1);
+            Assert.Equal(nameof(VerbsCommon.New), command.Verb.Item2);
             Assert.Equal(ns, command.Namespace);
             Assert.Empty(command.Properties);
         }
@@ -81,7 +82,8 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.Equal(0, command.ParentProvisionerTypes.Count());
             Assert.Equal(nameof(HarshEmptyTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshEmptyTestProvisioner), command.ProvisionerType);
-            Assert.Equal("New", command.Verb);
+            Assert.Equal(typeof(VerbsCommon), command.Verb.Item1);
+            Assert.Equal(nameof(VerbsCommon.New), command.Verb.Item2);
             Assert.Equal(ns, command.Namespace);
 
             Assert.Equal(1, command.Properties.Count);
@@ -109,7 +111,8 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.Equal(0, command.ParentProvisionerTypes.Count());
             Assert.Equal(nameof(HarshTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshTestProvisioner), command.ProvisionerType);
-            Assert.Equal("New", command.Verb);
+            Assert.Equal(typeof(VerbsCommon), command.Verb.Item1);
+            Assert.Equal(nameof(VerbsCommon.New), command.Verb.Item2);
             Assert.Equal(ns, command.Namespace);
 
             Assert.NotEmpty(command.Properties);
@@ -172,7 +175,8 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.Equal(0, command.ParentProvisionerTypes.Count());
             Assert.Equal(nameof(HarshCustomChildrenTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshCustomChildrenTestProvisioner), command.ProvisionerType);
-            Assert.Equal("New", command.Verb);
+            Assert.Equal(typeof(VerbsCommon), command.Verb.Item1);
+            Assert.Equal(nameof(VerbsCommon.New), command.Verb.Item2);
             Assert.Equal(ns, command.Namespace);
 
             Assert.NotEmpty(command.Properties);

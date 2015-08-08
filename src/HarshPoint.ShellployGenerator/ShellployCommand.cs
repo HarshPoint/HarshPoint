@@ -15,7 +15,7 @@ namespace HarshPoint.ShellployGenerator
         public IEnumerable<Type> ParentProvisionerTypes { get; set; }
         public String Noun { get; internal set; }
         public Type ProvisionerType { get; set; }
-        public String Verb { get; set; }
+        public Tuple<Type, String> Verb { get; set; }
         public String Namespace { get; set; }
         public IImmutableList<ShellployCommandProperty> Properties { get; set; }
         public Type ContextType { get; set; }

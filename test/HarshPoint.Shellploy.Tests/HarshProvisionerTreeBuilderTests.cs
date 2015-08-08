@@ -1,11 +1,11 @@
 ﻿using HarshPoint.Provisioning;
-using HarshPoint.Provisioning.Implementation;
+using HarshPoint.Tests;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace HarshPoint.Tests.Provisioning
+namespace HarshPoint.Shellploy.Tests
 {
     public class ProvisionerTreeBuilder : SharePointClientTest
     {

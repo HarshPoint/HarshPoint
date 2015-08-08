@@ -24,11 +24,11 @@ namespace HarshPoint.ShellployGenerator
 
             Map<HarshField>();
 
-            Map<HarshDateTimeField>()
+            Map<HarshModifyFieldDateTime>()
                 .AsChildOf<HarshField>()
                     .AddFixedParameter(x => x.Type, FieldType.DateTime);
 
-            Map<HarshFieldMultilineText>()
+            Map<HarshModifyFieldMultilineText>()
                 .AsChildOf<HarshField>()
                     .AddFixedParameter(x => x.Type, FieldType.Note);
         }
