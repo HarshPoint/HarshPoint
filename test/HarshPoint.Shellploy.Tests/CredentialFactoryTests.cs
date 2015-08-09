@@ -37,15 +37,16 @@ namespace HarshPoint.Shellploy.Tests
         [Fact]
         public void CredentialFactory_returns_sp_online_credential()
         {
-            var result = factory.CreateCredentials(CredentialType.SharePointOnline, "user", "pwd", new Uri("https://localhost/site"));
+            var result = factory.CreateCredentials(CredentialType.SharePointOnline, "user@example.org", "pwd", new Uri("https://localhost/site"));
             Assert.IsType<SharePointOnlineCredentials>(result);
         }
 
-        [Fact]
-        [InlineData(new object[] { CredentialType.Default, CredentialType.SharePointOnline})]
+        [Theory]
+        [InlineData(CredentialType.Default)]
+        [InlineData(CredentialType.SharePointOnline)]
         public void CredentialFactory_returns_sp_online_credential_default(CredentialType type)
         {
-            var result = factory.CreateCredentials(type, "user", "pwd", new Uri("https://test.SharePoint.com/site"));
+            var result = factory.CreateCredentials(type, "user@example.org", "pwd", new Uri("https://test.SharePoint.com/site"));
             Assert.IsType<SharePointOnlineCredentials>(result);
         }
 
