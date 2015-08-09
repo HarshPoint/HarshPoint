@@ -58,6 +58,8 @@ namespace HarshPoint.Provisioning.Implementation
             );
 
         protected String ParameterSetName => ParameterSet?.Name;
+        
+        internal HarshProvisionerBase<TContext> ForwardTarget { get; private set; }
 
         internal Boolean HasChildren
             => (_children != null) && _children.Any();
@@ -124,6 +126,11 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
+        protected void ForwardsTo(HarshProvisionerBase<TContext> target)
+        {
+            ForwardTarget = target;
+        }
+            
         protected void ValidateMandatoryWhenCreatingParameters()
         {
             var mandatory = ParameterSet
@@ -193,9 +200,9 @@ namespace HarshPoint.Provisioning.Implementation
             return HarshTask.Completed;
         }
 
-        internal abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
+        protected abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
 
-        internal abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
+        protected abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
 
         private ParameterSet ResolveParameterSet()
         {

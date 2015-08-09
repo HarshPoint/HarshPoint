@@ -1,81 +1,39 @@
 ﻿using Microsoft.SharePoint.Client;
-using System.Linq;
 using System.Threading.Tasks;
-using HarshPoint.Provisioning.Implementation;
 
 namespace HarshPoint.Provisioning
 {
 #warning NOT TESTED
     public sealed class HarshRemoveContentTypeRef : HarshProvisioner
     {
+        private readonly HarshContentTypeRef _inner = new HarshContentTypeRef()
+        {
+            MayDeleteUserData = true
+        };
+
         public HarshRemoveContentTypeRef()
         {
-            ExistingContentTypes = DeferredResolveBuilder.Create(() =>
-               Lists
-               .ValidateIsClientObjectResolveBuilder()
-               .ContentType()
-               .As<IGrouping<List, ContentType>>()
-            );
+            ForwardsTo(_inner);
         }
 
         [Parameter]
         public IResolve<ContentType> ContentTypes
         {
-            get;
-            set;
+            get { return _inner.ContentTypes; }
+            set { _inner.ContentTypes = value; }
         }
 
         [Parameter]
         [DefaultFromContext]
         public IResolve<List> Lists
         {
-            get;
-            set;
+            get { return _inner.Lists; }
+            set { _inner.Lists = value; }
         }
-
-        protected override void InitializeResolveContext(ClientObjectResolveContext context)
+        
+        protected override Task OnProvisioningAsync()
         {
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
-            context.Include<List>(
-                list => list.ContentTypes.Include(ct => ct.StringId)
-            );
-
-            base.InitializeResolveContext(context);
+            return _inner.UnprovisionAsync(Context);
         }
-
-        protected override async Task OnProvisioningAsync()
-        {
-            var removeCtIds =
-                ContentTypes
-                .Select(ct => HarshContentTypeId.Parse(ct.StringId))
-                .ToArray();
-
-            foreach (var listCts in ExistingContentTypes)
-            {
-                var list = listCts.Key;
-
-                list.ContentTypesEnabled = true;
-
-                var toRemove = from ct in listCts
-                               let id = HarshContentTypeId.Parse(ct.StringId)
-                               where removeCtIds.Any(remove => id.IsDirectChildOf(remove))
-                               select ct;
-
-                foreach (var ct in toRemove)
-                {
-                    ct.DeleteObject();
-                }
-
-                list.Update();
-            }
-
-            await ClientContext.ExecuteQueryAsync();
-        }
-
-        private IResolve<IGrouping<List, ContentType>> ExistingContentTypes { get; set; }
     }
 }

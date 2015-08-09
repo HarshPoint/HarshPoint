@@ -117,7 +117,6 @@ namespace HarshPoint.Provisioning.Implementation
         private static IResolveBuilder GetResolveBuilder(PropertyAccessor property, Object value)
         {
             var resolveBuilder = value as IResolveBuilder;
-
             if (resolveBuilder == null)
             {
                 Logger.Debug(

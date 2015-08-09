@@ -86,5 +86,112 @@ namespace HarshPoint.Tests.Provisioning
                 }
             }
         }
+
+        [Fact]
+        public async Task Content_type_gets_removed()
+        {
+            var guid = Guid.NewGuid().ToString("n");
+            var ctid = $"0x0100{guid}";
+
+            var ct = Web.ContentTypes.Add(new ContentTypeCreationInformation()
+            {
+                Id = ctid,
+                Name = guid,
+                Group = "HarshPoint"
+            });
+
+            await ClientContext.ExecuteQueryAsync();
+
+            var list = await Fixture.EnsureTestList();
+
+            var listCt = list.ContentTypes.AddExistingContentType(ct);
+            ClientContext.Load(listCt, c => c.StringId);
+
+            await ClientContext.ExecuteQueryAsync();
+
+            try
+            {
+                var prov = new HarshContentTypeRef()
+                {
+                    ContentTypes = Resolve.ContentType().ById(HarshContentTypeId.Parse(ctid)),
+                    Lists = Resolve.List().ByUrl(SharePointClientFixture.TestListUrl),
+                };
+
+                await prov.UnprovisionAsync(
+                    Context.AllowDeleteUserData()
+                );
+
+                var actualListCts = ClientContext.LoadQuery(list.ContentTypes);
+                await ClientContext.ExecuteQueryAsync();
+
+                Assert.DoesNotContain(actualListCts, c => c.StringId == listCt.StringId);
+            }
+            finally
+            {
+                list.DeleteObject();
+                await ClientContext.ExecuteQueryAsync();
+
+                ct.DeleteObject();
+                await ClientContext.ExecuteQueryAsync();
+            }
+        }
+
+        [Fact]
+        public async Task Content_type_gets_removed_using_RemoveContentTypeRef()
+        {
+            var guid = Guid.NewGuid().ToString("n");
+            var ctid = $"0x0100{guid}";
+
+            var ct = Web.ContentTypes.Add(new ContentTypeCreationInformation()
+            {
+                Id = ctid,
+                Name = guid,
+                Group = "HarshPoint"
+            });
+
+            await ClientContext.ExecuteQueryAsync();
+
+            var list = await Fixture.EnsureTestList();
+
+            var listCt = list.ContentTypes.AddExistingContentType(ct);
+            ClientContext.Load(listCt, c => c.StringId);
+
+            await ClientContext.ExecuteQueryAsync();
+
+            try
+            {
+                var actualListCts = ClientContext.LoadQuery(
+                    list.ContentTypes.Include(c => c.StringId)
+                );
+
+                await ClientContext.ExecuteQueryAsync();
+
+                Assert.Contains(actualListCts, c => c.StringId == listCt.StringId);
+
+                var prov = new HarshRemoveContentTypeRef()
+                {
+                    ContentTypes = Resolve.ContentType().ById(HarshContentTypeId.Parse(ctid)),
+                    Lists = Resolve.List().ByUrl(SharePointClientFixture.TestListUrl),
+                };
+
+                await prov.ProvisionAsync(Context);
+
+                actualListCts = ClientContext.LoadQuery(
+                    list.ContentTypes.Include(c => c.StringId)
+                );
+
+                await ClientContext.ExecuteQueryAsync();
+
+                Assert.DoesNotContain(actualListCts, c => c.StringId == listCt.StringId);
+            }
+            finally
+            {
+                list.DeleteObject();
+                await ClientContext.ExecuteQueryAsync();
+
+                ct.DeleteObject();
+                await ClientContext.ExecuteQueryAsync();
+            }
+        }
     }
 }

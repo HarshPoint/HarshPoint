@@ -1,5 +1,7 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,9 +9,6 @@ namespace HarshPoint.Provisioning
 {
     public sealed class HarshContentTypeRef : HarshProvisioner
     {
-        public HarshContentTypeRef()
-        {
-        }
 
         [Parameter(Mandatory = true)]
         public IResolve<ContentType> ContentTypes
@@ -41,23 +40,23 @@ namespace HarshPoint.Provisioning
             context.Include<List>(
                 list => list.ContentTypes
             );
+
+            base.InitializeResolveContext(context);
         }
 
-        protected override async Task OnProvisioningAsync()
+        protected override Task OnProvisioningAsync()
         {
             foreach (var list in Lists)
             {
                 list.ContentTypesEnabled = true;
                 list.Update();
 
-                var existingCtIds = list.ContentTypes.Select(
-                    ct => HarshContentTypeId.Parse(ct.StringId)
-                );
+                var existingCtIds = list.ContentTypes
+                    .Select(HarshContentTypeId.Get)
+                    .ToArray();
 
-                var toAdd = from ct in ContentTypes
-                            let id = HarshContentTypeId.Parse(ct.StringId)
-                            where !existingCtIds.Any(existing => existing.IsDirectChildOf(id))
-                            select ct;
+                var toAdd = ContentTypes
+                    .Where(ct => !ContainsContentType(existingCtIds, ct));
 
                 foreach (var ct in toAdd)
                 {
@@ -65,7 +64,36 @@ namespace HarshPoint.Provisioning
                 }
             }
 
-            await ClientContext.ExecuteQueryAsync();
+            return ClientContext.ExecuteQueryAsync();
+        }
+
+        protected override Task OnUnprovisioningAsync()
+        {
+            var idsToRemove = ContentTypes
+                .Select(HarshContentTypeId.Get)
+                .ToArray();
+
+            foreach (var list in Lists)
+            {
+                list.ContentTypesEnabled = true;
+                list.Update();
+
+                var toRemove = list.ContentTypes
+                    .Where(ct => ContainsContentType(idsToRemove, ct));
+
+                foreach (var ct in toRemove)
+                {
+                    ct.DeleteObject();
+                }
+            }
+
+            return ClientContext.ExecuteQueryAsync();
+        }
+
+        private static Boolean ContainsContentType(IEnumerable<HarshContentTypeId> ids, ContentType ct)
+        {
+            var ctid = HarshContentTypeId.Get(ct);
+            return ids.Any(id => ctid.IsDirectChildOf(id));
         }
     }
 }

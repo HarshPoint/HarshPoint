@@ -85,7 +85,7 @@ namespace HarshPoint.Server.Provisioning
             }
         }
 
-        internal sealed override async Task ProvisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
+        protected sealed override async Task ProvisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
         {
             if (provisioner == null)
             {
@@ -100,7 +100,7 @@ namespace HarshPoint.Server.Provisioning
             }
         }
 
-        internal sealed override async Task UnprovisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
+        protected sealed override async Task UnprovisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
         {
             if (provisioner == null)
             {

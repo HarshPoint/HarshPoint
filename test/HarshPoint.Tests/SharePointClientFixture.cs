@@ -16,7 +16,7 @@ namespace HarshPoint.Tests
 
             if (String.IsNullOrWhiteSpace(url))
             {
-                ClientContext = new SeriloggedClientContext("http://" + Environment.MachineName);
+                ClientContext = new SeriloggedClientContext($"http://{Environment.MachineName}");
             }
             else
             {
@@ -43,8 +43,7 @@ namespace HarshPoint.Tests
             }
         }
 
-        [Obsolete]
-        public async Task EnsureTestList()
+        public async Task<List> EnsureTestList()
         {
             var list = ClientContext.Web.Lists.GetByTitle(TestListTitle);
             ClientContext.Load(list);
@@ -53,7 +52,7 @@ namespace HarshPoint.Tests
             {
                 await ClientContext.ExecuteQueryAsync();
             }
-            catch (ServerException)
+            catch (ServerException) 
             {
                 list = ClientContext.Web.Lists.Add(new ListCreationInformation()
                 {
@@ -65,6 +64,8 @@ namespace HarshPoint.Tests
 
                 await ClientContext.ExecuteQueryAsync();
             }
+
+            return list;
         }
 
         public void Dispose()
@@ -100,7 +101,7 @@ namespace HarshPoint.Tests
             protected override void OnExecutingWebRequest(WebRequestEventArgs args)
             {
                 Serilog.Log.Information(
-                    "{Method:l} {Uri}\n{Body:l}",
+                    "{Method:l} {Uri:l}\n{Body:l}",
                     args.WebRequest.Method,
                     args.WebRequest.RequestUri,
                     _pendingRequestBody

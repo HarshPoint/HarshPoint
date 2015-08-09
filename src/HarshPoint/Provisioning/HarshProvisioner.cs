@@ -1,6 +1,7 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
@@ -35,31 +36,26 @@ namespace HarshPoint.Provisioning
             });
         }
 
-        protected virtual void InitializeResolveContext(ClientObjectResolveContext context)
-        {
-        }
-
-        internal sealed override ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
-            => new ClientObjectManualResolver(
-                () => (ClientObjectResolveContext)resolveContextFactory()
-            );
-
+        [EditorBrowsable(EditorBrowsableState.Never)]
         protected sealed override ResolveContext<HarshProvisionerContext> CreateResolveContext()
         {
             var ctx = new ClientObjectResolveContext(Context);
             InitializeResolveContext(ctx);
+
+            var target = (ForwardTarget as HarshProvisioner);
+            if (target != null)
+            {
+                target.InitializeResolveContext(ctx);
+            }
             return ctx;
         }
 
-        internal sealed override async Task OnResolvedParametersBound()
+        protected virtual void InitializeResolveContext(ClientObjectResolveContext context)
         {
-            if (ClientContext.HasPendingRequest)
-            {
-                await ClientContext.ExecuteQueryAsync();
-            }
         }
 
-        internal sealed override Task ProvisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected sealed override Task ProvisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
         {
             if (provisioner == null)
             {
@@ -69,7 +65,8 @@ namespace HarshPoint.Provisioning
             return ((HarshProvisioner)(provisioner)).ProvisionAsync(context);
         }
 
-        internal sealed override Task UnprovisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected sealed override Task UnprovisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
         {
             if (provisioner == null)
             {
@@ -77,6 +74,19 @@ namespace HarshPoint.Provisioning
             }
 
             return ((HarshProvisioner)(provisioner)).UnprovisionAsync(context);
+        }
+
+        internal sealed override ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
+            => new ClientObjectManualResolver(
+                () => (ClientObjectResolveContext)resolveContextFactory()
+            );
+
+        internal sealed override async Task OnResolvedParametersBound()
+        {
+            if (ClientContext.HasPendingRequest)
+            {
+                await ClientContext.ExecuteQueryAsync();
+            }
         }
     }
 }

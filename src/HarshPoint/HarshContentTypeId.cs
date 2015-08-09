@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.SharePoint.Client;
+using System;
 using System.Text.RegularExpressions;
 
 namespace HarshPoint
@@ -28,7 +29,7 @@ namespace HarshPoint
                 return false;
             }
 
-            return 
+            return
                 IsAbsolute.Equals(other.IsAbsolute) &&
                 _value.Equals(other._value);
         }
@@ -95,7 +96,7 @@ namespace HarshPoint
 
             var otherLength = parent._value.Length;
 
-            if (_value.Length == otherLength + 2 || 
+            if (_value.Length == otherLength + 2 ||
                 _value.Length == otherLength + 34)
             {
                 return true;
@@ -169,6 +170,16 @@ namespace HarshPoint
             }
 
             return ParseRelative(contentTypeId);
+        }
+
+        public static HarshContentTypeId Get(ContentType contentType)
+        {
+            if (contentType == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(contentType));
+            }
+
+            return Parse(contentType.StringId);
         }
 
         private static HarshContentTypeId ParseAbsolute(String contentTypeId)
