@@ -1,19 +1,24 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Management.Automation;
-using System.Reflection;
-using Microsoft.SharePoint.Client;
 
 namespace HarshPoint.ShellployGenerator
 {
     internal sealed class ShellployCommandBuilder<TProvisioner> : IShellployCommandBuilder
         where TProvisioner : HarshProvisionerBase
     {
-        private IEnumerable<String> _positionalParameters;
+        private List<String> _positionalParameters = new List<String>();
+        private Dictionary<String, Tuple<Type, ImmutableArray<ShellployCommandPropertyParameterAttribute>>> _customParameters =
+            new Dictionary<String, Tuple<Type, ImmutableArray<ShellployCommandPropertyParameterAttribute>>>();
+        private Dictionary<String, Object> _fixedParameters = new Dictionary<String, Object>();
+        private Dictionary<String, Object> _defaultValues = new Dictionary<String, Object>();
+        private HashSet<String> _ignoredParameters = new HashSet<String>();
+        private List<String> _usings = new List<String>();
         private IShellployCommandBuilderParent _parentProvisioner;
         private Boolean _hasChildren;
         private String _namespace;
@@ -32,17 +37,120 @@ namespace HarshPoint.ShellployGenerator
             return this;
         }
 
-        public ShellployCommandBuilder<TProvisioner> PositionalParameters(
-            params Expression<Func<TProvisioner, object>>[] parameters
+        public ShellployCommandBuilder<TProvisioner> AddPositionalParameter(
+            Expression<Func<TProvisioner, Object>> parameter
         )
         {
-            _positionalParameters = parameters.Select(x => x.ExtractSinglePropertyAccess().Name);
+            _positionalParameters.Add(parameter.ExtractSinglePropertyAccess().Name);
             return this;
         }
 
-        public ShellployCommandBuilder<TProvisioner> InNamespace(string commandNamespace)
+        public ShellployCommandBuilder<TProvisioner> AddPositionalParameter<TParameter>(
+            String name,
+            params ShellployCommandPropertyParameterAttribute[] parameterAttributes
+        )
         {
-            _namespace = commandNamespace;
+            AddCustomParameter<TParameter>(name, parameterAttributes);
+            _positionalParameters.Add(name);
+            return this;
+        }
+
+        public ShellployCommandBuilder<TProvisioner> AddNamedParameter<TParameter>(
+            String name,
+            params ShellployCommandPropertyParameterAttribute[] parameterAttributes
+        )
+        {
+            AddCustomParameter<TParameter>(name, parameterAttributes);
+            return this;
+        }
+
+        private void AddCustomParameter<TParameter>(
+            String name,
+            params ShellployCommandPropertyParameterAttribute[] parameterAttributes
+        )
+        {
+            if (!parameterAttributes.Any())
+            {
+                parameterAttributes = new ShellployCommandPropertyParameterAttribute[]
+                {
+                    new ShellployCommandPropertyParameterAttribute()
+                };
+            }
+
+            _customParameters.Add(
+                name,
+                Tuple.Create(
+                    typeof(TParameter),
+                    parameterAttributes.ToImmutableArray()
+                )
+            );
+        }
+
+        public ShellployCommandBuilder<TProvisioner> SetValue<TValue>(
+            Expression<Func<TProvisioner, TValue>> parameter,
+            TValue value
+        )
+        {
+            _fixedParameters[parameter.ExtractSinglePropertyAccess().Name] = value;
+            return this;
+        }
+
+        public ShellployCommandBuilder<TProvisioner> SetValue(
+            Expression<Func<TProvisioner, Object>> parameter,
+            CodeExpression value
+        )
+        {
+            _fixedParameters[parameter.ExtractSinglePropertyAccess().Name] = value;
+            return this;
+        }
+
+        public ShellployCommandBuilder<TProvisioner> SetDefaultValue<TValue>(
+            Expression<Func<TProvisioner, TValue>> parameter,
+            TValue value
+        )
+        {
+            _defaultValues[parameter.ExtractSinglePropertyAccess().Name] = value;
+            return this;
+        }
+
+        public ShellployCommandBuilder<TProvisioner> SetDefaultValue(
+            Expression<Func<TProvisioner, Object>> parameter,
+            CodeExpression value
+        )
+        {
+            _defaultValues[parameter.ExtractSinglePropertyAccess().Name] = value;
+            return this;
+        }
+
+        public ShellployCommandBuilder<TProvisioner> SetDefaultValue(
+            String parameterName,
+            Object value
+        )
+        {
+            _defaultValues[parameterName] = value;
+            return this;
+        }
+
+        public ShellployCommandBuilder<TProvisioner> IgnoreParameter(
+            Expression<Func<TProvisioner, Object>> parameter
+        )
+        {
+            _ignoredParameters.Add(parameter.ExtractSinglePropertyAccess().Name);
+            return this;
+        }
+
+        public ShellployCommandBuilder<TProvisioner> InNamespace(String ns)
+        {
+            _namespace = ns;
+            return this;
+        }
+
+        public ShellployCommandBuilder<TProvisioner> AddUsing(String ns)
+        {
+            if (!_usings.Contains(ns))
+            {
+                _usings.Add(ns);
+            }
             return this;
         }
 
@@ -93,7 +201,7 @@ namespace HarshPoint.ShellployGenerator
             }
 
             return parentPositionalParameters
-                .Concat(_positionalParameters ?? new String[] { })
+                .Concat(_positionalParameters)
                 .Concat(childrenParameterNameArray);
         }
 
@@ -123,7 +231,7 @@ namespace HarshPoint.ShellployGenerator
                 };
             }
 
-            var properties = _provisionerMetadata.Parameters
+            IEnumerable<ShellployCommandProperty> properties = _provisionerMetadata.Parameters
                 .GroupBy(
                     param => param.Name,
                     (key, group) => new ShellployCommandProperty()
@@ -141,7 +249,13 @@ namespace HarshPoint.ShellployGenerator
                             })
                             .ToImmutableArray(),
                     }
-                );
+                )
+                .Where(prop => !_ignoredParameters.Contains(prop.Name))
+                .ToArray();
+            SetFixedParameters(properties, _fixedParameters);
+
+            properties = properties
+                .Concat(childrenPropertyArray);
 
             var parentProperties = new ShellployCommandProperty[] { };
             var parentBuilder = GetParentBuilder(builders);
@@ -152,16 +266,9 @@ namespace HarshPoint.ShellployGenerator
                     positionalParametersIndices,
                     hasChildren = false
                 )
+                .Where(prop => !_parentProvisioner.IgnoredParameters.Contains(prop.Name))
                 .ToArray();
-                foreach (var prop in parentProperties)
-                {
-                    object fixedValue;
-                    if (_parentProvisioner.FixedParameters.TryGetValue(prop.Name, out fixedValue))
-                    {
-                        prop.UseFixedValue = true;
-                        prop.FixedValue = fixedValue;
-                    }
-                }
+                SetFixedParameters(parentProperties, _parentProvisioner.FixedParameters);
             }
 
             if (
@@ -176,9 +283,76 @@ namespace HarshPoint.ShellployGenerator
             }
 
             properties = parentProperties
-                .Concat(properties)
-                .Concat(childrenPropertyArray);
+                .Concat(properties);
+
+            var customProperties = _customParameters
+                .Select(kvp => new ShellployCommandProperty()
+                {
+                    Name = kvp.Key,
+                    Type = kvp.Value.Item1,
+                    AssignmentOnType = ProvisionerType,
+                    ParameterAttributes = kvp.Value.Item2
+                        .Select(attr => {
+                            attr.Position = positionalParametersIndices.GetValueOrDefault(kvp.Key, null);
+                            return attr;
+                        })
+                        .ToImmutableArray(),
+                    Custom = true,
+                });
+
+            if (
+                new HashSet<ShellployCommandProperty>(
+                    customProperties,
+                    new HarshEqualityComparer<ShellployCommandProperty, String>(p => p.Name)
+                )
+                .Overlaps(properties)
+            )
+            {
+                throw Logger.Fatal.InvalidOperation(SR.ShellployCommandBuilder_Overlaps);
+            }
+
+            properties = properties
+                .Concat(customProperties)
+                .ToArray();
+
+            SetDefaultValues(properties, _defaultValues);
             return properties;
+        }
+
+        private void SetFixedParameters(
+            IEnumerable<ShellployCommandProperty> properties,
+            IDictionary<String, Object> fixedParameters
+        )
+        {
+            foreach (var prop in properties)
+            {
+                object fixedValue;
+                if (fixedParameters.TryGetValue(prop.Name, out fixedValue))
+                {
+                    prop.UseFixedValue = true;
+                    prop.FixedValue = fixedValue;
+                }
+            }
+        }
+
+        private void SetDefaultValues(
+            IEnumerable<ShellployCommandProperty> properties,
+            IDictionary<String, Object> defaultParameters
+        )
+        {
+            foreach (var prop in properties)
+            {
+                object defaultValue;
+                if (defaultParameters.TryGetValue(prop.Name, out defaultValue))
+                {
+                    if (prop.UseFixedValue)
+                    {
+                        throw Logger.Fatal.InvalidOperationFormat(SR.ShellployCommandBuilder_Fixed_and_default, prop.Name);
+                    }
+
+                    prop.DefaultValue = defaultValue;
+                }
+            }
         }
 
         public IEnumerable<Type> GetParentProvisionerTypes(
@@ -232,6 +406,7 @@ namespace HarshPoint.ShellployGenerator
                 ContextType = _provisionerMetadata.ContextType,
                 ParentProvisionerTypes = GetParentProvisionerTypes(builders),
                 Namespace = _namespace,
+                Usings = _usings.ToImmutableArray(),
                 Properties = properties.ToImmutableArray(),
                 HasChildren = _hasChildren,
                 Verb = Tuple.Create(typeof(VerbsCommon), nameof(VerbsCommon.New)),

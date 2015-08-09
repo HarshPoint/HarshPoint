@@ -1,17 +1,18 @@
 ﻿using HarshPoint.Provisioning;
 using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Taxonomy;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HarshPoint.ShellployGenerator
 {
     internal class ShellployMetadata
     {
         private const String CommandNamespace = "HarshPoint.Shellploy";
+        private const String ProvisioningNamespace = "HarshPoint.Provisioning";
 
         private Dictionary<Type, IShellployCommandBuilder> builders
             = new Dictionary<Type, IShellployCommandBuilder>();
@@ -19,18 +20,93 @@ namespace HarshPoint.ShellployGenerator
         public ShellployMetadata()
         {
             Map<HarshContentType>()
-                 .PositionalParameters(x => x.Id, x => x.Name)
-                 .HasChildren();
+                .AddPositionalParameter(x => x.Id)
+                .AddPositionalParameter(x => x.Name)
+                .HasChildren();
+
+            Map<HarshContentTypeRef>()
+                .AddPositionalParameter<HarshContentTypeId[]>(
+                    "ContentTypeId",
+                    new ShellployCommandPropertyParameterAttribute()
+                    {
+                        Mandatory = true,
+                    }
+                )
+                .SetValue(x => x.ContentTypes,
+                    new CodeTypeReferenceExpression(typeof(Resolve))
+                        .Call(nameof(Resolve.ContentType))
+                        .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("ContentTypeId"))
+                        .Call(nameof(ResolveBuilderExtensions.As), typeof(ContentType))
+                );
+
+            Map<HarshRemoveContentTypeRef>()
+                .AddPositionalParameter<HarshContentTypeId[]>(
+                    "ContentTypeId",
+                    new ShellployCommandPropertyParameterAttribute()
+                    {
+                        Mandatory = true,
+                    }
+                )
+                .SetValue(x => x.ContentTypes,
+                    new CodeTypeReferenceExpression(typeof(Resolve))
+                        .Call(nameof(Resolve.ContentType))
+                        .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("ContentTypeId"))
+                        .Call(nameof(ResolveBuilderExtensions.As), typeof(ContentType))
+                );
 
             Map<HarshField>();
 
             Map<HarshModifyFieldDateTime>()
                 .AsChildOf<HarshField>()
-                    .AddFixedParameter(x => x.Type, FieldType.DateTime);
+                    .SetValue(x => x.Type, FieldType.DateTime);
 
             Map<HarshModifyFieldMultilineText>()
                 .AsChildOf<HarshField>()
-                    .AddFixedParameter(x => x.Type, FieldType.Note);
+                    .SetValue(x => x.Type, FieldType.Note);
+
+            Map<HarshModifyFieldTaxonomy>()
+                .AddNamedParameter<Guid>("TermSetId")
+                .SetValue(x => x.TermSet,
+                    new CodeTypeReferenceExpression(typeof(Resolve))
+                        .Call(nameof(Resolve.TermStoreSiteCollectionDefault))
+                        .Call(nameof(Resolve.TermSet))
+                        .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("TermSetId"))
+                        .Call(nameof(ResolveBuilderExtensions.As), typeof(TermSet))
+                )
+                .AsChildOf<HarshField>()
+                    .SetValue(x => x.TypeName, "TaxonomyFieldType")
+                    .IgnoreParameter(x => x.Type);
+
+            Map<HarshModifyFieldLookup>()
+                .AddNamedParameter<String>("TargetListUrl")
+                .AddNamedParameter<String>("TargetField")
+                .SetDefaultValue("TargetField", "Title")
+                .SetValue(x => x.LookupTarget,
+                    new CodeTypeReferenceExpression(typeof(Resolve))
+                        .Call(nameof(Resolve.List))
+                        .Call(nameof(Resolve.ByUrl), new CodeVariableReferenceExpression("TargetListUrl"))
+                        .Call(nameof(Resolve.Field))
+                        .Call(nameof(Resolve.ByInternalName), new CodeVariableReferenceExpression("TargetField"))
+                        .Call(nameof(ResolveBuilderExtensions.As), typeof(Tuple<List, Field>))
+                )
+                .AsChildOf<HarshField>()
+                    .SetValue(x => x.Type, FieldType.Lookup)
+                    .IgnoreParameter(x => x.TypeName);
+
+            Map<HarshFieldRef>()
+                .AddNamedParameter<String>("InternalName")
+                .SetValue(x => x.Fields,
+                    new CodeTypeReferenceExpression(typeof(Resolve))
+                        .Call(nameof(Resolve.Field))
+                        .Call(nameof(Resolve.ByInternalName), new CodeVariableReferenceExpression("InternalName"))
+                        .Call(nameof(ResolveBuilderExtensions.As), typeof(Field))
+                );
+
+            Map<HarshList>()
+                .AddPositionalParameter(x => x.Title)
+                .AddPositionalParameter(x => x.Url)
+                .SetDefaultValue(x => x.TemplateType, ListTemplateType.GenericList)
+                .HasChildren();
         }
 
         private ShellployCommandBuilder<TProvisioner> Map<TProvisioner>()
@@ -38,7 +114,9 @@ namespace HarshPoint.ShellployGenerator
         {
             var builder = new ShellployCommandBuilder<TProvisioner>();
             builders.Add(typeof(TProvisioner), builder);
-            return builder.InNamespace(CommandNamespace);
+            return builder
+                .InNamespace(CommandNamespace)
+                .AddUsing(ProvisioningNamespace);
         }
 
         public IEnumerable<ShellployCommand> GetCommands()

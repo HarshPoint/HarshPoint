@@ -17,12 +17,25 @@ namespace HarshPoint.ShellployGenerator
             {
                 Namespaces =
                 {
-                    new CodeNamespace(command.Namespace)
-                    {
-                        Types = { CreateClass(command) },
-                    },
-                },
+                    CreateNamespace(command)
+                }
             };
+        }
+
+        private static CodeNamespace CreateNamespace(ShellployCommand command)
+        {
+            var ns = new CodeNamespace(command.Namespace)
+            {
+                Types = { CreateClass(command) },
+            };
+
+            ns.Imports.AddRange(
+                command.Usings
+                    .Select(n => new CodeNamespaceImport(n))
+                    .ToArray()
+            );
+
+            return ns;
         }
 
         private static CodeTypeDeclaration CreateClass(ShellployCommand command)
@@ -121,6 +134,7 @@ namespace HarshPoint.ShellployGenerator
                 method.Statements.AddRange(
                     command.Properties
                     .Where(prop => prop.AssignmentOnType == type)
+                    .Where(prop => !prop.Custom)
                     .Select(prop => CreatePropertyAssignment(prop, resultVar))
                     .ToArray()
                 );
@@ -221,7 +235,7 @@ namespace HarshPoint.ShellployGenerator
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
             };
 
-            codeProperty.GenerateBackingField(targetClass);
+            codeProperty.GenerateBackingField(targetClass, property.DefaultValue);
 
             foreach (var parameterAttribute in property.ParameterAttributes)
             {
@@ -250,8 +264,8 @@ namespace HarshPoint.ShellployGenerator
                 return new CodeTypeOfExpression(typeValue);
             }
 
-            var type = value.GetType();
-            if (type.IsEnum)
+            var type = value?.GetType();
+            if (type?.IsEnum == true)
             {
                 return new CodeFieldReferenceExpression(
                     new CodeTypeReferenceExpression(type),

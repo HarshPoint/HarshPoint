@@ -44,7 +44,75 @@ namespace HarshPoint.ShellployGenerator
             );
         }
 
-        public static void GenerateBackingField(this CodeMemberProperty property, CodeTypeDeclaration containingType)
+        public static CodeExpression Call(
+            this CodeExpression targetObject,
+            String methodName
+        )
+        {
+            return targetObject.Call(methodName, new Type[] { }, new CodeExpression[] { });
+        }
+
+        public static CodeExpression Call(
+            this CodeExpression targetObject,
+            String methodName,
+            params CodeExpression[] parameters
+        )
+        {
+            return targetObject.Call(methodName, new Type[] { }, parameters);
+        }
+
+        public static CodeExpression Call(
+            this CodeExpression targetObject,
+            String methodName,
+            params Type[] typeParameters
+        )
+        {
+            return targetObject.Call(methodName, typeParameters, new CodeExpression[] { });
+        }
+
+        public static CodeExpression Call(
+                    this CodeExpression targetObject,
+                    String methodName,
+                    Type[] typeParameters,
+                    params CodeExpression[] parameters
+                )
+        {
+            if (targetObject == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(targetObject));
+            }
+
+            if (methodName == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(methodName));
+            }
+
+            if (typeParameters == null)
+            {
+                typeParameters = new Type[] { };
+            }
+
+            if (parameters == null)
+            {
+                parameters = new CodeExpression[] { };
+            }
+
+            var method = new CodeMethodReferenceExpression(
+                targetObject,
+                methodName,
+                typeParameters.Select(
+                    t => new CodeTypeReference(t)
+                ).ToArray()
+            );
+
+            return new CodeMethodInvokeExpression(method, parameters);
+        }
+
+        public static void GenerateBackingField(
+            this CodeMemberProperty property,
+            CodeTypeDeclaration containingType,
+            Object defaultValue
+        )
         {
             if (containingType == null)
             {
@@ -93,6 +161,11 @@ namespace HarshPoint.ShellployGenerator
                 Type = property.Type,
                 Attributes = MemberAttributes.Private | (isStatic ? MemberAttributes.Static : 0),
             };
+
+            if (defaultValue != null)
+            {
+                codeField.InitExpression = CommandCodeGenerator.CreateLiteralExpression(defaultValue);
+            }
 
             CreatePropertyGetterAndSetter(property, codeField.Name, CreateThisExpression(containingType, isStatic));
 

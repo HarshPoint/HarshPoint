@@ -12,7 +12,9 @@ namespace HarshPoint.ShellployGenerator
         public Type Type { get; set; }
         public IImmutableList<ShellployCommandPropertyParameterAttribute> ParameterAttributes { get; set; }
         public Type AssignmentOnType { get; set; }
-        public bool UseFixedValue { get; set; }
-        public object FixedValue { get; set; }
+        public Boolean UseFixedValue { get; set; }
+        public Object FixedValue { get; set; }
+        public Object DefaultValue { get; set; }
+        public Boolean Custom { get; set; }
     }
 }

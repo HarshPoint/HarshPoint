@@ -97,7 +97,16 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The parent and child properties contains item with the same name..
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; is set to use both fixed and default value..
+        /// </summary>
+        internal static string ShellployCommandBuilder_Fixed_and_default {
+            get {
+                return ResourceManager.GetString("ShellployCommandBuilder_Fixed_and_default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate properties defined..
         /// </summary>
         internal static string ShellployCommandBuilder_Overlaps {
             get {

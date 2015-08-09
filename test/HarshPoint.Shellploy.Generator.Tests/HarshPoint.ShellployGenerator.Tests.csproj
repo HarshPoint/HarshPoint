@@ -88,10 +88,6 @@
       <Project>{b2a9f7b4-4307-46f0-ac60-bf9965629953}</Project>
       <Name>HarshPoint.ShellployGenerator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\HarshPoint.Shellploy\HarshPoint.Shellploy.csproj">
-      <Project>{6b9395cf-6b77-4ae0-85e0-eec08584356b}</Project>
-      <Name>HarshPoint.Shellploy</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\HarshPoint\HarshPoint.csproj">
       <Project>{5d981a8f-a98e-43f2-a112-2cfd50455447}</Project>
       <Name>HarshPoint</Name>

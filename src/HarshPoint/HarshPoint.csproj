@@ -160,6 +160,7 @@
     <Compile Include="Provisioning\Resolvers\ResolveContentTypeById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveContentTypeFieldLink.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveField.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />

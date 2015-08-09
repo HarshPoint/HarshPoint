@@ -1,6 +1,7 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq.Expressions;
 
 namespace HarshPoint.ShellployGenerator
@@ -9,14 +10,23 @@ namespace HarshPoint.ShellployGenerator
         where TProvisioner : HarshProvisionerBase
         where TParentProvisioner : HarshProvisionerBase
     {
-        private Dictionary<String, object> _fixedParameters
-            = new Dictionary<String, object>();
+        private Dictionary<String, Object> _fixedParameters
+            = new Dictionary<String, Object>();
+        private HashSet<String> _ignoredParameters = new HashSet<String>();
 
-        public Dictionary<String, object> FixedParameters
+        public ImmutableDictionary<String, Object> FixedParameters
         {
             get
             {
-                return _fixedParameters;
+                return _fixedParameters.ToImmutableDictionary();
+            }
+        }
+
+        public ImmutableHashSet<String> IgnoredParameters
+        {
+            get
+            {
+                return _ignoredParameters.ToImmutableHashSet();
             }
         }
 
@@ -28,7 +38,7 @@ namespace HarshPoint.ShellployGenerator
             }
         }
 
-        public ShellployCommandBuilderParent<TProvisioner, TParentProvisioner> AddFixedParameter<TValue>(
+        public ShellployCommandBuilderParent<TProvisioner, TParentProvisioner> SetValue<TValue>(
             Expression<Func<TParentProvisioner, TValue>> parameter,
             TValue value
         )
@@ -38,5 +48,12 @@ namespace HarshPoint.ShellployGenerator
             return this;
         }
 
+        public ShellployCommandBuilderParent<TProvisioner, TParentProvisioner> IgnoreParameter(
+            Expression<Func<TParentProvisioner, Object>> parameter
+        )
+        {
+            _ignoredParameters.Add(parameter.ExtractSinglePropertyAccess().Name);
+            return this;
+        }
     }
 }
