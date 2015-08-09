@@ -15,19 +15,19 @@ namespace HarshPoint.Shellploy
 {
     public abstract class SharePointContextCmdlet : PSCmdlet
     {
-        [SMA.Parameter(Mandatory = true, Position = 0)]
+        [SMA.Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true)]
         public Uri Url { get; set; }
 
-        [SMA.Parameter(ParameterSetName = "DefaultCrendetial")]
+        [SMA.Parameter(ParameterSetName = "DefaultCrendetial", ValueFromPipelineByPropertyName = true)]
         public CredentialType CredentialType { get; set; } = CredentialType.Default;
 
-        [SMA.Parameter(ParameterSetName = "DefaultCrendetial")]
+        [SMA.Parameter(ParameterSetName = "DefaultCrendetial", ValueFromPipelineByPropertyName = true)]
         public String UserName { get; set; }
 
-        [SMA.Parameter(ParameterSetName = "DefaultCrendetial")]
+        [SMA.Parameter(ParameterSetName = "DefaultCrendetial", ValueFromPipelineByPropertyName = true)]
         public String Password { get; set; }
 
-        [SMA.Parameter(ParameterSetName = "ExplicitCredential")]
+        [SMA.Parameter(ParameterSetName = "ExplicitCredential", ValueFromPipelineByPropertyName = true)]
         public PSCredential Credential { get; set; }
 
         private static CredentialFactory _credentialFactory = new CredentialFactory();

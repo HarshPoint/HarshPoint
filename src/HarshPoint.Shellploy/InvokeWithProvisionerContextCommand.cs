@@ -16,7 +16,7 @@ namespace HarshPoint.Shellploy
     [CmdletAttribute(VerbsLifecycle.Invoke, "WithProvisionerContext", DefaultParameterSetName = "NoAuth")]
     public sealed class InvokeWithProvisionerContextCommand : SharePointContextCmdlet
     {
-        [SMA.Parameter(Mandatory = true, Position = 1)]
+        [SMA.Parameter(Mandatory = true, Position = 1, ValueFromPipelineByPropertyName = true)]
         public ScriptBlock ScriptBlock { get; set; }
 
         protected override void ProcessRecord()
