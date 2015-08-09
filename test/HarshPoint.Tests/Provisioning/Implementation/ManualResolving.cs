@@ -12,7 +12,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
 {
     public class ManualResolving : SharePointClientTest
     {
-        public ManualResolving(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public ManualResolving(ITestOutputHelper output) : base(output)
         {
         }
 

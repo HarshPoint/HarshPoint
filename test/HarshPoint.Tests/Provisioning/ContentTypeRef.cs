@@ -10,7 +10,7 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class ContentTypeRef : SharePointClientTest
     {
-        public ContentTypeRef(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public ContentTypeRef(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -59,14 +59,14 @@ namespace HarshPoint.Tests.Provisioning
                 Assert.IsType<ObjectCreated<List>>(listResult);
                 Assert.NotNull(list);
 
-                Fixture.ClientContext.Load(
+                ClientContext.Load(
                     list,
                     l => l.ContentTypesEnabled,
                     l => l.ContentTypes.Include(lct => lct.StringId),
                     l => l.Id
                 );
 
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
 
                 Assert.True(list.ContentTypesEnabled);
                 Assert.Contains(list.ContentTypes, lct => lct.StringId.StartsWith(ctid.ToString() + "00"));
@@ -76,13 +76,13 @@ namespace HarshPoint.Tests.Provisioning
                 if (list != null)
                 {
                     list.DeleteObject();
-                    await Fixture.ClientContext.ExecuteQueryAsync();
+                    await ClientContext.ExecuteQueryAsync();
                 }
 
                 if (ct != null)
                 {
                     ct.DeleteObject();
-                    await Fixture.ClientContext.ExecuteQueryAsync();
+                    await ClientContext.ExecuteQueryAsync();
                 }
             }
         }

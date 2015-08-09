@@ -11,19 +11,18 @@ using Xunit.Abstractions;
 namespace HarshPoint.Tests
 {
     public abstract class SharePointClientTest :
-        SeriloggedTest,
-        IClassFixture<SharePointClientFixture>
+        SeriloggedTest
     {
-        public SharePointClientTest(SharePointClientFixture fixture, ITestOutputHelper output)
+        public SharePointClientTest(ITestOutputHelper output)
             : base(output)
         {
-            Fixture = fixture;
+            Fixture = new SharePointClientFixture();
             ManualResolver = new ClientObjectManualResolver(CreateResolveContext);
 
             var listSink = new HarshProvisionerOutputSinkList();
             Output = listSink.Output;
 
-            Context = new HarshProvisionerContext(fixture.ClientContext)
+            Context = new HarshProvisionerContext(ClientContext)
                 .WithOutputSink(
                     new HarshProvisionerOutputSinkComposite(
                         new HarshProvisionerOutputSinkSerilog(HarshLog.ForContext("ProvisionerOutput", true)),
@@ -32,6 +31,11 @@ namespace HarshPoint.Tests
                 );
         }
 
+        public override void Dispose()
+        {
+            Fixture.Dispose();
+            base.Dispose();
+        }
 
         public HarshProvisionerContext Context { get; set; }
         public ClientContext ClientContext => Fixture.ClientContext;

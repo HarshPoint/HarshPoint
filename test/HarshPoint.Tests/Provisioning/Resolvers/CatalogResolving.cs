@@ -9,8 +9,8 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 {
     public class CatalogResolving : ResolverTestBase
     {
-        public CatalogResolving(SharePointClientFixture fixture, ITestOutputHelper output)
-            : base(fixture, output)
+        public CatalogResolving(ITestOutputHelper output)
+            : base(output)
         {
         }
 

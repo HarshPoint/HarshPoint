@@ -8,8 +8,8 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 {
     public class ListResolving : ResolverTestBase
     {
-        public ListResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
-            : base(fixture, output)
+        public ListResolving(ITestOutputHelper output) 
+            : base(output)
         {
         }
 

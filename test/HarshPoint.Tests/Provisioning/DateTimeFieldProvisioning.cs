@@ -8,8 +8,8 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class DateTimeFieldProvisioning : TestFieldBase<FieldDateTime, HarshModifyFieldDateTime>
     {
-        public DateTimeFieldProvisioning(SharePointClientFixture fixture, ITestOutputHelper output) 
-            : base(FieldType.DateTime, fixture, output)
+        public DateTimeFieldProvisioning(ITestOutputHelper output) 
+            : base(FieldType.DateTime, output)
         {
         }
 

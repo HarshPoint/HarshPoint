@@ -9,7 +9,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
 {
     public class ClientObjectQueryProcessing : SharePointClientTest
     {
-        public ClientObjectQueryProcessing(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public ClientObjectQueryProcessing(ITestOutputHelper output) : base(output)
         {
         }
 

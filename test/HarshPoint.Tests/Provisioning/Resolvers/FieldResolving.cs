@@ -8,8 +8,8 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 {
     public class FieldResolving : SharePointClientTest
     {
-        public FieldResolving(SharePointClientFixture fixture, ITestOutputHelper output) 
-            : base(fixture, output)
+        public FieldResolving(ITestOutputHelper output) 
+            : base(output)
         {
         }
 

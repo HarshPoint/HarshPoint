@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(propertyTypeInfo));
             }
 
-            if (enumerable == null)
+            if (enumerable == null) 
             {
                 throw Logger.Fatal.ArgumentNull(nameof(enumerable));
             }

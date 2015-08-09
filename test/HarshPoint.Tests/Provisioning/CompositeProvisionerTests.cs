@@ -10,7 +10,7 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class HarshCompositeProvisionerTests : SharePointClientTest
     {
-        public HarshCompositeProvisionerTests(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public HarshCompositeProvisionerTests(ITestOutputHelper output) : base(output)
         {
         }
 

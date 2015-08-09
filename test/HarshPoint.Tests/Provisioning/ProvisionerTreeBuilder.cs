@@ -9,7 +9,7 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class ProvisionerTreeBuilder : SharePointClientTest
     {
-        public ProvisionerTreeBuilder(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public ProvisionerTreeBuilder(ITestOutputHelper output) : base(output)
         {
         }
 

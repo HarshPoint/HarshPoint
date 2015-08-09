@@ -11,8 +11,8 @@ namespace HarshPoint.Tests.Provisioning
 
     public class When_provisioning_existing_field : SharePointClientTest
     {
-        public When_provisioning_existing_field(SharePointClientFixture fixture, ITestOutputHelper output)
-            : base(fixture, output)
+        public When_provisioning_existing_field(ITestOutputHelper output)
+            : base(output)
         {
         }
 
@@ -34,8 +34,8 @@ namespace HarshPoint.Tests.Provisioning
 
     public class Provisioning_field_fails : SharePointClientTest
     {
-        public Provisioning_field_fails(SharePointClientFixture fixture, ITestOutputHelper output)
-            : base(fixture, output)
+        public Provisioning_field_fails(ITestOutputHelper output)
+            : base(output)
         {
         }
 
@@ -68,8 +68,8 @@ namespace HarshPoint.Tests.Provisioning
 
     public class When_provisioning_new_field : SharePointClientTest
     {
-        public When_provisioning_new_field(SharePointClientFixture fixture, ITestOutputHelper output)
-            : base(fixture, output)
+        public When_provisioning_new_field(ITestOutputHelper output)
+            : base(output)
         {
         }
 

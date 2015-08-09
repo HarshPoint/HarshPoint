@@ -9,8 +9,8 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class MandatoryParameters : SharePointClientTest
     {
-        public MandatoryParameters(SharePointClientFixture fixture, ITestOutputHelper output)
-            : base(fixture, output)
+        public MandatoryParameters(ITestOutputHelper output)
+            : base(output)
         {
         }
 

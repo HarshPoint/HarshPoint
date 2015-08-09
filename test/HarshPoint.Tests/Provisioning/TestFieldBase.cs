@@ -11,8 +11,8 @@ namespace HarshPoint.Tests.Provisioning
         where TField : Field
         where TProvisioner : HarshModifyField<TField>
     {
-        protected TestFieldBase(FieldType fieldType, SharePointClientFixture fixture, ITestOutputHelper output)
-            : base(fixture, output)
+        protected TestFieldBase(FieldType fieldType, ITestOutputHelper output)
+            : base(output)
         {
             FieldType = fieldType;
         }

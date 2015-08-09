@@ -10,8 +10,8 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class ListProvisioning : SharePointClientTest
     {
-        public ListProvisioning(SharePointClientFixture fixture, ITestOutputHelper output)
-            : base(fixture, output)
+        public ListProvisioning(ITestOutputHelper output)
+            : base(output)
         {
         }
 
@@ -35,13 +35,13 @@ namespace HarshPoint.Tests.Provisioning
             var list = alreadyExists.Object;
             Assert.NotNull(list);
 
-            Fixture.ClientContext.Load(
+            ClientContext.Load(
                 list,
                 l => l.Title,
                 l => l.BaseTemplate
             );
 
-            await Fixture.ClientContext.ExecuteQueryAsync();
+            await ClientContext.ExecuteQueryAsync();
 
 
             Assert.Equal(SharePointClientFixture.TestListTitle, list.Title);
@@ -71,13 +71,13 @@ namespace HarshPoint.Tests.Provisioning
                 list = objectCreated.Object;
                 Assert.NotNull(list);
 
-                Fixture.ClientContext.Load(
+                ClientContext.Load(
                     list,
                     l => l.Title,
                     l => l.BaseTemplate
                 );
 
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
 
                 Assert.NotNull(list);
                 Assert.Equal(name, list.Title);
@@ -86,7 +86,7 @@ namespace HarshPoint.Tests.Provisioning
             finally
             {
                 list?.DeleteObject();
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
             }
         }
     }

@@ -15,7 +15,7 @@ namespace HarshPoint.Tests.Provisioning
 
         private const String Group = "HarshPoint Unit Tests";
 
-        public ContentTypeTests(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public ContentTypeTests(ITestOutputHelper output) : base(output)
         {
             _guid = Guid.NewGuid().ToString("n");
             _id = HarshContentTypeId.Parse("0x01").Append(HarshContentTypeId.Parse(_guid));
@@ -58,7 +58,7 @@ namespace HarshPoint.Tests.Provisioning
                 Assert.True(output.ObjectCreated);
                 Assert.NotNull(ct);
 
-                Fixture.ClientContext.Load(
+                ClientContext.Load(
                     ct,
                     c => c.Name,
                     c => c.Description,
@@ -66,7 +66,7 @@ namespace HarshPoint.Tests.Provisioning
                     c => c.StringId
                 );
 
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
 
                 Assert.Equal(_guid, ct.Name);
                 Assert.Equal(_guid, ct.Description);
@@ -78,7 +78,7 @@ namespace HarshPoint.Tests.Provisioning
                 if (ct != null)
                 {
                     ct.DeleteObject();
-                    await Fixture.ClientContext.ExecuteQueryAsync();
+                    await ClientContext.ExecuteQueryAsync();
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace HarshPoint.Tests.Provisioning
                 Assert.True(cto.ObjectCreated);
                 Assert.False(cto.Object.IsNull());
 
-                var links = Fixture.ClientContext.LoadQuery(
+                var links = ClientContext.LoadQuery(
                     cto.Object.FieldLinks
                     .Where(fl => fl.Id == fieldId)
                     .Include(
@@ -129,7 +129,7 @@ namespace HarshPoint.Tests.Provisioning
                     )
                 );
 
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
 
                 var link = Assert.Single(links);
 
@@ -179,7 +179,7 @@ namespace HarshPoint.Tests.Provisioning
             finally
             {
                 ct?.DeleteObject();
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
             }
         }
     }

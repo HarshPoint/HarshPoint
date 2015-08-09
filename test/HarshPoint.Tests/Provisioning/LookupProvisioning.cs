@@ -11,8 +11,8 @@ namespace HarshPoint.Tests.Provisioning
     {
         private const String TargetListUrl = "Lists/2c6280a9273e441abecf2909379712be";
 
-        public LookupProvisioning(SharePointClientFixture fixture, ITestOutputHelper output) 
-            : base(fixture, output)
+        public LookupProvisioning(ITestOutputHelper output) 
+            : base(output)
         {
         }
 

@@ -5,7 +5,7 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class ContextStateStack : SharePointClientTest
     {
-        public ContextStateStack(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public ContextStateStack(ITestOutputHelper output) : base(output)
         {
         }
 

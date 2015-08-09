@@ -8,18 +8,17 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class ClientObjectContextStateResolving : SharePointClientTest
     {
-        public ClientObjectContextStateResolving(SharePointClientFixture fixture, ITestOutputHelper output)
-            : base(fixture, output)
+        public ClientObjectContextStateResolving(ITestOutputHelper output)
+            : base(output)
         {
         }
 
         [Fact]
         public async Task Resolves_object_ensures_retrievals()
         {
-            var web = Fixture.ClientContext.Web;
-            Assert.False(web.IsPropertyAvailable(w => w.SiteLogoUrl));
+            Assert.False(Web.IsPropertyAvailable(w => w.SiteLogoUrl));
 
-            var ctx = Context.PushState(Fixture.ClientContext.Web);
+            var ctx = Context.PushState(ClientContext.Web);
 
             var resolveCtx = new ClientObjectResolveContext(ctx);
             resolveCtx.Include<Web>(w => w.SiteLogoUrl);
@@ -38,10 +37,9 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Resolves_object_ensures_collection_retrieval()
         {
-            var web = Fixture.ClientContext.Web;
-            Assert.False(web.Lists.ServerObjectIsNull.HasValue);
+            Assert.False(Web.Lists.ServerObjectIsNull.HasValue);
 
-            var ctx = Context.PushState(Fixture.ClientContext.Web);
+            var ctx = Context.PushState(base.Web);
 
             var resolveCtx = new ClientObjectResolveContext(ctx);
             resolveCtx.Include<Web>(w => w.Lists.Include(l => l.ItemCount));

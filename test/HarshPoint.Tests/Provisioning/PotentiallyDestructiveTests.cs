@@ -9,8 +9,8 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class PotentiallyDestructiveTests : SharePointClientTest
     {
-        public PotentiallyDestructiveTests(SharePointClientFixture fixture, ITestOutputHelper output) 
-            : base(fixture, output)
+        public PotentiallyDestructiveTests(ITestOutputHelper output) 
+            : base(output)
         {
         }
 

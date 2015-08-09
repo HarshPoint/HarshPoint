@@ -12,7 +12,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         private const String ListTitle = "e156d2d63e5941b69e97f05ee1f92a13";
         private const String ViewTitle = "TestView";
 
-        public ListViewResolving(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public ListViewResolving(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -55,7 +55,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 
             try
             {
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
             }
             catch (ServerException)
             {
@@ -66,15 +66,15 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
                     TemplateType = (Int32)ListTemplateType.GenericList,
                 });
 
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
             }
 
             var view = list.Views.GetByTitle(ViewTitle);
-            Fixture.ClientContext.Load(view, v => v.Id);
+            ClientContext.Load(view, v => v.Id);
 
             try
             {
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
             }
             catch (ServerException)
             {
@@ -83,9 +83,9 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
                     Title = ViewTitle
                 });
 
-                Fixture.ClientContext.Load(view, v => v.Id);
+                ClientContext.Load(view, v => v.Id);
 
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
             }
 
             return Tuple.Create(list, view);

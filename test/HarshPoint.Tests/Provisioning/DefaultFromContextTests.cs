@@ -10,8 +10,8 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class DefaultFromContextTests : SharePointClientTest
     {
-        public DefaultFromContextTests(SharePointClientFixture fixture, ITestOutputHelper output)
-            : base(fixture, output)
+        public DefaultFromContextTests(ITestOutputHelper output)
+            : base(output)
         {
         }
 

@@ -11,7 +11,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
 {
     public class ResolvedPropertyBinding : SharePointClientTest
     {
-        public ResolvedPropertyBinding(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public ResolvedPropertyBinding(ITestOutputHelper output) : base(output)
         {
             Binder = new ResolvedPropertyBinder(GetType());
         }

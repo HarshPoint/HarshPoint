@@ -15,7 +15,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 
         private static readonly Guid TermSetId = new Guid("a5d59d30-10e8-4221-bf59-75a1d76f0be0");
 
-        public TaxonomyResolving(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public TaxonomyResolving(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -30,9 +30,9 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 
             var expected = TaxonomySession.GetDefaultSiteCollectionTermStore();
 
-            Fixture.ClientContext.Load(expected, ts => ts.Id);
-            Fixture.ClientContext.Load(termStore, ts => ts.Id);
-            await Fixture.ClientContext.ExecuteQueryAsync();
+            ClientContext.Load(expected, ts => ts.Id);
+            ClientContext.Load(termStore, ts => ts.Id);
+            await ClientContext.ExecuteQueryAsync();
 
             Assert.Equal(expected.Id, termStore.Id);
         }
@@ -48,9 +48,9 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
 
             var expected = TaxonomySession.GetDefaultKeywordsTermStore();
 
-            Fixture.ClientContext.Load(expected, ts => ts.Id);
-            Fixture.ClientContext.Load(termStore, ts => ts.Id);
-            await Fixture.ClientContext.ExecuteQueryAsync();
+            ClientContext.Load(expected, ts => ts.Id);
+            ClientContext.Load(termStore, ts => ts.Id);
+            await ClientContext.ExecuteQueryAsync();
 
             Assert.Equal(expected.Id, termStore.Id);
         }
@@ -76,28 +76,28 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         private async Task<TermSet> EnsureTestTermSet()
         {
             var store = TaxonomySession.GetDefaultSiteCollectionTermStore();
-            var groups = Fixture.ClientContext.LoadQuery(store.Groups);
+            var groups = ClientContext.LoadQuery(store.Groups);
 
-            await Fixture.ClientContext.ExecuteQueryAsync();
+            await ClientContext.ExecuteQueryAsync();
 
             var group = groups.FirstOrDefaultByProperty(x => x.Name, GroupName, StringComparer.Ordinal);
 
             if (group == null)
             {
                 group = store.CreateGroup(GroupName, Guid.NewGuid());
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
             }
 
             var termSet = group.TermSets.GetById(TermSetId);
 
             try
             {
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
             }
             catch (ServerException)
             {
                 termSet = group.CreateTermSet(TermSetId.ToString("n"), TermSetId, 1033);
-                await Fixture.ClientContext.ExecuteQueryAsync();
+                await ClientContext.ExecuteQueryAsync();
             }
 
             return termSet;

@@ -9,7 +9,7 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class MandatoryWhenCreating : SharePointClientTest
     {
-        public MandatoryWhenCreating(SharePointClientFixture fixture, ITestOutputHelper output) : base(fixture, output)
+        public MandatoryWhenCreating(ITestOutputHelper output) : base(output)
         {
         }
 

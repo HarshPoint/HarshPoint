@@ -9,8 +9,8 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class RetrievalResolving : SharePointClientTest
     {
-        public RetrievalResolving(SharePointClientFixture fixture, ITestOutputHelper output)
-            : base(fixture, output)
+        public RetrievalResolving(ITestOutputHelper output)
+            : base(output)
         {
             Binder = new ResolvedPropertyBinder(GetType());
         }
@@ -18,8 +18,8 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Multiple_equal_includes_dont_fail()
         {
-            Fixture.ClientContext.Load(Web, w => w.Id, w => w.Id);
-            await Fixture.ClientContext.ExecuteQueryAsync();
+            ClientContext.Load(Web, w => w.Id, w => w.Id);
+            await ClientContext.ExecuteQueryAsync();
         }
 
         [Fact]
