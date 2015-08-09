@@ -34,6 +34,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugNoGenerate|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugNoGenerate\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\CodeAnalysisRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Client.Policy.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\HarshPirate.SharePointOnline.CSOM.16.0.4002.1211\lib\net45\Microsoft.Office.Client.Policy.Portable.dll</HintPath>
@@ -155,6 +165,9 @@
   <Target Name="BeforeBuild">
     <CallTarget Targets="FixNugetConfig" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>if not $(ConfigurationName) == DebugNoGenerate (  $(TargetPath) $(SolutionDir)src\HarshPoint.Shellploy\Generated )</PostBuildEvent>
+  </PropertyGroup>
   <!--
   <Target Name="AfterBuild">
   </Target>
