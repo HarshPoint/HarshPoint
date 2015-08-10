@@ -71,6 +71,11 @@ namespace HarshPoint.Tests
                 {
                     // most likely another test created the list between our 
                     // attempt to load it and the exception being caught
+
+                    list = ClientContext.Web.Lists.GetByTitle(TestListTitle);
+                    ClientContext.Load(list);
+
+                    await ClientContext.ExecuteQueryAsync();
                 }
             }
 
@@ -103,13 +108,21 @@ namespace HarshPoint.Tests
 
             public override Task ExecuteQueryAsync()
             {
-                _pendingRequestBody = PendingRequest.ToDiagnosticString();
+                try
+                {
+                    _pendingRequestBody = PendingRequest.ToDiagnosticString();
+                }
+                catch(Exception exc)
+                {
+                    Logger.Error.Write(exc);
+                }
+
                 return base.ExecuteQueryAsync();
             }
 
             protected override void OnExecutingWebRequest(WebRequestEventArgs args)
             {
-                Serilog.Log.Information(
+                Logger.Information(
                     "{Method:l} {Uri:l}\n{Body:l}",
                     args.WebRequest.Method,
                     args.WebRequest.RequestUri,
@@ -119,6 +132,8 @@ namespace HarshPoint.Tests
                 _pendingRequestBody = null;
                 base.OnExecutingWebRequest(args);
             }
+
+            private static readonly HarshLogger Logger = HarshLog.ForContext<SeriloggedClientContext>();
         }
     }
 }
