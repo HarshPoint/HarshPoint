@@ -1,4 +1,5 @@
 ﻿using HarshPoint.Provisioning.Implementation;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,26 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         }
 
         [Fact]
+        public void ResolveResult_throws_on_failures()
+        {
+            var expected = new ResolveFailure(Mock.Of<IResolveBuilder>(), "4242");
+
+            var result = new ResolveResult<Int32>()
+            {
+                Results = new[] { 42 },
+                ResolveFailures = new[]
+                {
+                     expected
+                }
+            };
+
+            var exc = Assert.Throws<ResolveFailedException>(() => result.ToArray());
+            var rf = Assert.Single(exc.Failures);
+            Assert.Same(expected, rf);
+        }
+
+
+        [Fact]
         public void ResolveResultSingle_returns_single_result()
         {
             var result = new ResolveResultSingle<Int32>() { Results = Enumerable.Repeat(42, 1) };
@@ -50,11 +71,32 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             Assert.Throws<InvalidOperationException>(() => result.Value);
         }
 
+
+        [Fact]
+        public void ResolveResultSingle_throws_on_failures()
+        {
+            var expected = new ResolveFailure(Mock.Of<IResolveBuilder>(), "4242");
+
+            var result = new ResolveResultSingle<Int32>()
+            {
+                Results = new[] { 42 },
+                ResolveFailures = new[]
+                {
+                     expected
+                }
+            };
+
+            var exc = Assert.Throws<ResolveFailedException>(() => result.Value);
+            var rf = Assert.Single(exc.Failures);
+            Assert.Same(expected, rf);
+        }
+
         [Fact]
         public void ResolveResultSingleOrDefault_returns_no_results()
         {
             var result = new ResolveResultSingleOrDefault<Int32>() { Results = new Int32[0] };
             Assert.Equal(0, result.Value);
+            Assert.False(result.HasValue);
         }
 
         [Fact]
@@ -62,6 +104,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         {
             var result = new ResolveResultSingleOrDefault<Int32>() { Results = Enumerable.Repeat(42, 1) };
             Assert.Equal(42, result.Value);
+            Assert.True(result.HasValue);
         }
 
         [Fact]
@@ -69,6 +112,26 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         {
             var result = new ResolveResultSingleOrDefault<Char>() { Results = "1234" };
             Assert.Throws<InvalidOperationException>(() => result.Value);
+            Assert.Throws<InvalidOperationException>(() => result.HasValue);
+        }
+
+
+        [Fact]
+        public void ResolveResultSingleOrDefault_ignores_failures()
+        {
+            var expected = new ResolveFailure(Mock.Of<IResolveBuilder>(), "4242");
+
+            var result = new ResolveResultSingleOrDefault<Int32>()
+            {
+                Results = new[] { 42 },
+                ResolveFailures = new[]
+                {
+                     expected
+                }
+            };
+
+            Assert.Equal(42, result.Value);
+            Assert.True(result.HasValue);
         }
     }
 }

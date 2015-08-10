@@ -8,6 +8,8 @@
         {
             get
             {
+                ValidateNoFailures();
+
                 var array = EnumerateResults<T>();
 
                 switch (array.Count)

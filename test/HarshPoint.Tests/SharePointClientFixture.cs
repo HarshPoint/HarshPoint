@@ -43,6 +43,7 @@ namespace HarshPoint.Tests
             }
         }
 
+        [Obsolete("tests run in parallel, dependencies suck")]
         public async Task<List> EnsureTestList()
         {
             var list = ClientContext.Web.Lists.GetByTitle(TestListTitle);
@@ -62,7 +63,15 @@ namespace HarshPoint.Tests
                     DocumentTemplateType = (Int32)DocumentTemplateType.Word,
                 });
 
-                await ClientContext.ExecuteQueryAsync();
+                try
+                {
+                    await ClientContext.ExecuteQueryAsync();
+                }
+                catch (ServerException)
+                {
+                    // most likely another test created the list between our 
+                    // attempt to load it and the exception being caught
+                }
             }
 
             return list;

@@ -35,7 +35,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             ParametersMandatoryWhenCreating =
                 Parameters
-                .Where(p => p.HasCustomAttribute<MandatoryWhenCreatingAttribute>(inherit: true))
+                .Where(p => p.IsDefined(typeof(MandatoryWhenCreatingAttribute), inherit: true))
                 .ToImmutableHashSet();
 
             ResolvedPropertyBinder = new ResolvedPropertyBinder(

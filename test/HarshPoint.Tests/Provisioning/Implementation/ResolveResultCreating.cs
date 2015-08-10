@@ -4,6 +4,7 @@ using Moq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
@@ -25,7 +26,8 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var result = ResolveResultFactory.CreateResult(
                 interfaceType.GetTypeInfo(),
                 new[] { "42" },
-                Mock.Of<IResolveBuilder>()
+                Mock.Of<IResolveBuilder>(),
+                Enumerable.Empty<ResolveFailure>()
             );
             Assert.IsType(resultType, result);
         }
@@ -38,7 +40,8 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var result = (IEnumerable)ResolveResultFactory.CreateResult(
                 typeof(IResolve<DerivedClass>).GetTypeInfo(),
                 new BaseClass[] { expected },
-                Mock.Of<IResolveBuilder>()
+                Mock.Of<IResolveBuilder>(),
+                Enumerable.Empty<ResolveFailure>()
             );
 
             Assert.IsType(typeof(ResolveResult<DerivedClass>), result);
@@ -57,7 +60,8 @@ namespace HarshPoint.Tests.Provisioning.Implementation
                 () => ResolveResultFactory.CreateResult(
                     invalidType.GetTypeInfo(),
                     new[] { "42" },
-                    Mock.Of<IResolveBuilder>()
+                    Mock.Of<IResolveBuilder>(),
+                Enumerable.Empty<ResolveFailure>()
                 )
             );
         }
@@ -68,7 +72,8 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             var result = (ResolveResultSingle<Int32>)ResolveResultFactory.CreateResult(
                 typeof(IResolveSingle<Int32>).GetTypeInfo(),
                 new[] { "42" },
-                Mock.Of<IResolveBuilder>()
+                Mock.Of<IResolveBuilder>(),
+                Enumerable.Empty<ResolveFailure>()
             );
 
             Assert.Throws<InvalidCastException>(

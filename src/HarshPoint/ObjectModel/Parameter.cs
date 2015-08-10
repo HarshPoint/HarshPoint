@@ -2,10 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Reflection;
+
 
 namespace HarshPoint.ObjectModel
 {
+    using static HarshFormattable;
+
     public sealed class Parameter
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext<Parameter>();
@@ -79,9 +83,8 @@ namespace HarshPoint.ObjectModel
             return PropertyAccessor.Getter(target);
         }
 
-        public Boolean HasCustomAttribute<TAttribute>(Boolean inherit)
-            where TAttribute : Attribute
-            => PropertyInfo.GetCustomAttribute<TAttribute>(inherit) != null;
+        public Boolean IsDefined(Type attributeType, Boolean inherit)
+            => PropertyInfo.IsDefined(attributeType, inherit);
 
         public void Setter(Object target, Object value)
         {
@@ -107,7 +110,7 @@ namespace HarshPoint.ObjectModel
         public override String ToString()
             => ParameterSetName == null ?
                 PropertyAccessor.ToString() :
-                $"{PropertyAccessor} ParameterSetName={ParameterSetName})";
+                Invariant($"{PropertyAccessor} ParameterSetName={ParameterSetName}");
 
         private ParameterAttribute ParameterAttribute { get; set; }
     }

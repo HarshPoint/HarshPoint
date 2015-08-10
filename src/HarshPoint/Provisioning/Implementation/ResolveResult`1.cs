@@ -7,6 +7,7 @@ namespace HarshPoint.Provisioning.Implementation
     {
         public IEnumerator<T> GetEnumerator()
         {
+            ValidateNoFailures();
             return EnumerateResults<T>().GetEnumerator();
         }
 

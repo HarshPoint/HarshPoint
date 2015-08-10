@@ -48,7 +48,12 @@ namespace HarshPoint.Tests.Provisioning.Implementation
 
         private void BindResolves()
         {
-            Binder.Bind(this, () => Mock.Of<IResolveContext>());
+            Binder.Bind(this, () => {
+                var mock = new Mock<IResolveContext>();
+                mock.Setup<IReadOnlyCollection<ResolveFailure>>(x => x.Failures)
+                    .Returns(new ResolveFailure[0]);
+                return mock.Object;
+            });
         }
 
         private ResolvedPropertyBinder Binder { get; set; }

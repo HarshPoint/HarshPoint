@@ -4,19 +4,19 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public sealed class ResolveFailure
     {
-        public ResolveFailure(Object resolvable)
-            : this(resolvable, null)
+        public ResolveFailure(IResolveBuilder resolveBuilder)
+            : this(resolveBuilder, null)
         {
         }
 
-        public ResolveFailure(Object resolvable, Object identifier)
+        public ResolveFailure(IResolveBuilder resolveBuilder, Object identifier)
         {
-            if (resolvable == null)
+            if (resolveBuilder == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(resolvable));
+                throw Logger.Fatal.ArgumentNull(nameof(resolveBuilder));
             }
 
-            Resolvable = resolvable;
+            ResolveBuilder = resolveBuilder;
             Identifier = identifier;
         }
 
@@ -24,10 +24,10 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (Identifier != null)
             {
-                return String.Concat(Resolvable, ": ", Identifier);
+                return String.Concat(ResolveBuilder, ": ", Identifier);
             }
 
-            return Resolvable.ToString();
+            return ResolveBuilder.ToString();
         }
 
         public Object Identifier
@@ -35,7 +35,8 @@ namespace HarshPoint.Provisioning.Implementation
             get;
             private set;
         }
-        public Object Resolvable
+
+        public Object ResolveBuilder
         {
             get;
             private set;

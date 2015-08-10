@@ -8,6 +8,7 @@ namespace HarshPoint.Provisioning.Implementation
     {
         TResult IResolveSingle<TResult>.Value { get { throw CannotCall(); } }
         TResult IResolveSingleOrDefault<TResult>.Value { get { throw CannotCall(); } }
+        Boolean IResolveSingleOrDefault<TResult>.HasValue { get { throw CannotCall(); } }
         IEnumerator<TResult> IEnumerable<TResult>.GetEnumerator() { throw CannotCall(); }
         IEnumerator IEnumerable.GetEnumerator() { throw CannotCall(); }
 

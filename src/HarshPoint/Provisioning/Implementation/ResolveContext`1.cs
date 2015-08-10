@@ -14,11 +14,11 @@ namespace HarshPoint.Provisioning
             ProvisionerContext = provisionerContext;
         }
 
-        public void AddFailure(Object resolvable, Object identifier)
+        public void AddFailure(IResolveBuilder resolveBuilder, Object identifier)
         {
-            if (resolvable == null)
+            if (resolveBuilder == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(resolvable));
+                throw Logger.Fatal.ArgumentNull(nameof(resolveBuilder));
             }
 
 
@@ -27,19 +27,12 @@ namespace HarshPoint.Provisioning
                 _failures = new List<ResolveFailure>();
             }
 
-            _failures.Add(new ResolveFailure(resolvable, identifier));
+            _failures.Add(new ResolveFailure(resolveBuilder, identifier));
         }
 
-        public void ValidateNoFailures()
-        {
-            if (_failures != null && _failures.Any())
-            {
-                throw new ResolveFailedException(_failures);
-            }
-        }
 
         public IReadOnlyCollection<ResolveFailure> Failures
-            => _failures;
+            => _failures ?? NoFailures;
 
         public TProvisionerContext ProvisionerContext
         {
@@ -50,5 +43,7 @@ namespace HarshPoint.Provisioning
         HarshProvisionerContextBase IResolveContext.ProvisionerContext => ProvisionerContext;
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveContext<>));
+
+        private static readonly IReadOnlyCollection<ResolveFailure> NoFailures = new ResolveFailure[0];
     }
 }

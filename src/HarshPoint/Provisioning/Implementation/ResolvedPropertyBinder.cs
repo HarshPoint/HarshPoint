@@ -90,9 +90,10 @@ namespace HarshPoint.Provisioning.Implementation
                                 )
                                 select new
                                 {
+                                    Failures = x.ResolveContext.Failures,
                                     x.Property,
                                     x.ResolveBuilder,
-                                    ResultSource = resultSource
+                                    ResultSource = resultSource,
                                 };
 
             // save into array to force enumeration, so that all result sources 
@@ -107,7 +108,8 @@ namespace HarshPoint.Provisioning.Implementation
                 var result = CreateResult(
                     x.Property,
                     x.ResolveBuilder,
-                    x.ResultSource
+                    x.ResultSource,
+                    x.Failures
                 );
 
                 x.Property.Setter(target, result);
@@ -179,7 +181,12 @@ namespace HarshPoint.Provisioning.Implementation
             return resultSource;
         }
 
-        private static Object CreateResult(PropertyAccessor property, IResolveBuilder resolveBuilder, IEnumerable resultSource)
+        private static Object CreateResult(
+            PropertyAccessor property,
+            IResolveBuilder resolveBuilder,
+            IEnumerable resultSource,
+            IEnumerable<ResolveFailure> failureSource
+        )
         {
             if (resultSource == null)
             {
@@ -195,7 +202,8 @@ namespace HarshPoint.Provisioning.Implementation
             var result = ResolveResultFactory.CreateResult(
                 property.PropertyTypeInfo,
                 resultSource,
-                resolveBuilder
+                resolveBuilder,
+                failureSource
             );
 
             Logger.Debug(

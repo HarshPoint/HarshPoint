@@ -157,7 +157,8 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             => (IEnumerable<T>)ResolveResultFactory.CreateResult(
                 typeof(IResolve<T>).GetTypeInfo(),
                 source,
-                Mock.Of<IResolveBuilder>()
+                Mock.Of<IResolveBuilder>(),
+                Enumerable.Empty<ResolveFailure>()
             );
     }
 }

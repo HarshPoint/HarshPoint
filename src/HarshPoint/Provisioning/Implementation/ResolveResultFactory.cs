@@ -12,7 +12,12 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveResultFactory));
 
-        public static Object CreateResult(TypeInfo propertyTypeInfo, IEnumerable enumerable, IResolveBuilder builder)
+        public static Object CreateResult(
+            TypeInfo propertyTypeInfo, 
+            IEnumerable enumerable, 
+            IResolveBuilder builder,
+            IEnumerable<ResolveFailure> failures
+        )
         {
             if (propertyTypeInfo == null)
             {
@@ -29,6 +34,11 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(builder));
             }
 
+            if (failures == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(failures));
+            }
+
             var property = ResolvedPropertyTypeInfo.Parse(propertyTypeInfo);
 
             var enumerableTypes =
@@ -42,6 +52,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             var result = CreateResult(property);
             result.ResolveBuilder = builder;
+            result.ResolveFailures = failures;
             result.Results = enumerable;
             return result;
         }
