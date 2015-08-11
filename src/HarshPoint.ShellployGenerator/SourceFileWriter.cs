@@ -16,11 +16,11 @@ namespace HarshPoint.ShellployGenerator
             BracingStyle = "C",
         };
 
-        private string _outputDirectory;
+        private String _outputDirectory;
 
         public SourceFileWriter(String outputDirectory)
         {
-            if (string.IsNullOrEmpty(outputDirectory))
+            if (String.IsNullOrEmpty(outputDirectory))
             {
                 throw Logger.Fatal.ArgumentNullOrEmpty(nameof(outputDirectory));
             }
@@ -32,7 +32,7 @@ namespace HarshPoint.ShellployGenerator
 
             if (Directory.Exists(outputDirectory))
             {
-                Directory.Delete(outputDirectory, true);
+                Directory.Delete(outputDirectory, recursive: true);
             }
 
             Directory.CreateDirectory(outputDirectory);

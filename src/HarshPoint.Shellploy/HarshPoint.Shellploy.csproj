@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -111,7 +112,7 @@
     <Compile Include="CredentialType.cs" />
     <Compile Include="InvokeProvisionerCommand.cs" />
     <Compile Include="InvokeWithProvisionerContextCommand.cs" />
-    <Compile Include="SharePointContextCmdlet.cs" />
+    <Compile Include="ClientContextCmdlet.cs" />
     <Compile Include="Generated\*.cs" />
     <Compile Include="HarshProvisionerTreeBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

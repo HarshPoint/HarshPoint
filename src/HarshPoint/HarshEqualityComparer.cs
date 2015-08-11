@@ -27,12 +27,12 @@ namespace HarshPoint
             _resultComparer = resultComparer ?? EqualityComparer<TResult>.Default;
         }
 
-        public bool Equals(TSource x, TSource y)
+        public Boolean Equals(TSource x, TSource y)
         {
             return _resultComparer.Equals(_selector.Invoke(x), _selector.Invoke(y));
         }
 
-        public int GetHashCode(TSource obj)
+        public Int32 GetHashCode(TSource obj)
         {
             return _resultComparer.GetHashCode(_selector.Invoke(obj));
         }

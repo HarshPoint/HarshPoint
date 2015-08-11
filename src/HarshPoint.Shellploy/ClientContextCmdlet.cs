@@ -13,37 +13,35 @@ using System.Net;
 
 namespace HarshPoint.Shellploy
 {
-    public abstract class SharePointContextCmdlet : PSCmdlet
+    public abstract class ClientContextCmdlet : PSCmdlet
     {
         [SMA.Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true)]
         public Uri Url { get; set; }
 
-        [SMA.Parameter(ParameterSetName = "DefaultCrendetial", ValueFromPipelineByPropertyName = true)]
+        [SMA.Parameter(ParameterSetName = "DefaultCredential", ValueFromPipelineByPropertyName = true)]
         public CredentialType CredentialType { get; set; } = CredentialType.Default;
 
-        [SMA.Parameter(ParameterSetName = "DefaultCrendetial", ValueFromPipelineByPropertyName = true)]
+        [SMA.Parameter(ParameterSetName = "DefaultCredential", ValueFromPipelineByPropertyName = true)]
         public String UserName { get; set; }
 
-        [SMA.Parameter(ParameterSetName = "DefaultCrendetial", ValueFromPipelineByPropertyName = true)]
+        [SMA.Parameter(ParameterSetName = "DefaultCredential", ValueFromPipelineByPropertyName = true)]
         public String Password { get; set; }
 
         [SMA.Parameter(ParameterSetName = "ExplicitCredential", ValueFromPipelineByPropertyName = true)]
         public PSCredential Credential { get; set; }
 
-        private static CredentialFactory _credentialFactory = new CredentialFactory();
-
         protected ClientContext CreateClientContext()
         {
             var clientContext = new ClientContext(Url);
 
-            if (ParameterSetName == "ExplicitCredential")
+            if (Credential != null)
             {
                 clientContext.Credentials = Credential.GetNetworkCredential();
             }
             else
             {
                 clientContext.Credentials =
-                    _credentialFactory.CreateCredentials(CredentialType, UserName, Password, Url);
+                    CredentialFactory.CreateCredentials(CredentialType, UserName, Password, Url);
             }
 
             return clientContext;

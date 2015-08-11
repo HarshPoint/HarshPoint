@@ -14,7 +14,7 @@ using System.Net;
 namespace HarshPoint.Shellploy
 {
     [CmdletAttribute(VerbsLifecycle.Invoke, "Provisioner")]
-    public sealed class InvokeProvisionerCommand : SharePointContextCmdlet
+    public sealed class InvokeProvisionerCommand : ClientContextCmdlet
     {
         [SMA.Parameter(Mandatory = true, Position = 1, ValueFromPipelineByPropertyName = true)]
         public ScriptBlock Children { get; set; }

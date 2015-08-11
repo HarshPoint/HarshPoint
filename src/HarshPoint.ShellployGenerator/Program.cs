@@ -27,14 +27,17 @@ namespace HarshPoint.ShellployGenerator
                 return;
             }
 
-            var generator = new CommandCodeGenerator();
             var writer = new SourceFileWriter(args[0]);
 
             foreach (var command in new ShellployMetadata().GetCommands())
             {
-                var targetUnit = generator.GenerateCompileUnit(command);
+                Console.WriteLine($"Generating {command.ClassName}...");
+                var targetUnit = new CommandCodeGenerator(command)
+                    .GenerateCompileUnit();
                 writer.Write(targetUnit);
             }
+
+            Console.WriteLine("Done.");
         }
     }
 }

@@ -91,7 +91,7 @@ namespace HarshPoint
             var source = sequence.ToArray();
             var results = new TResult[source.Length];
 
-            for (int i = 0; i < results.Length; i++)
+            for (var i = 0; i < results.Length; i++)
             {
                 results[i] = await selector(source[i]);
             }

@@ -8,16 +8,19 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Shellploy
 {
-    internal sealed class CredentialFactory
+    internal static class CredentialFactory
     {
-        public ICredentials CreateCredentials(CredentialType credentialType, string userName, string password, Uri url)
+        public static ICredentials CreateCredentials(
+            CredentialType credentialType,
+            String userName,
+            String password,
+            Uri url
+        )
         {
-            if (credentialType == CredentialType.Default
-                && url != null
-                && url.HostNameType == UriHostNameType.Dns
-                && url.Host.EndsWith(".sharepoint.com", true, System.Globalization.CultureInfo.InvariantCulture))
+            if (credentialType == CredentialType.Default 
+                && IsSharePointOnline(url)
+            )
             {
-
                 credentialType = CredentialType.SharePointOnline;
             }
 
@@ -36,6 +39,14 @@ namespace HarshPoint.Shellploy
             }
 
             return null;
+        }
+
+        private static Boolean IsSharePointOnline(Uri url)
+        {
+            return
+                url != null
+                && url.HostNameType == UriHostNameType.Dns
+                && url.Host.EndsWith(".sharepoint.com", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

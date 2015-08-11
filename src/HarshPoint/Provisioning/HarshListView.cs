@@ -28,18 +28,21 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        [Parameter]
         public String Title
         {
             get;
             set;
         }
 
+        [Parameter]
         public String Url
         {
             get;
             set;
         }
 
+        [Parameter]
         public Collection<String> ViewFields
         {
             get;

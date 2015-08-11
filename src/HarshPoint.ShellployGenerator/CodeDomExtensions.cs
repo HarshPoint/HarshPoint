@@ -49,7 +49,7 @@ namespace HarshPoint.ShellployGenerator
             String methodName
         )
         {
-            return targetObject.Call(methodName, new Type[] { }, new CodeExpression[] { });
+            return targetObject.Call(methodName, new Type[0], new CodeExpression[0]);
         }
 
         public static CodeExpression Call(
@@ -58,7 +58,7 @@ namespace HarshPoint.ShellployGenerator
             params CodeExpression[] parameters
         )
         {
-            return targetObject.Call(methodName, new Type[] { }, parameters);
+            return targetObject.Call(methodName, new Type[0], parameters);
         }
 
         public static CodeExpression Call(
@@ -67,7 +67,7 @@ namespace HarshPoint.ShellployGenerator
             params Type[] typeParameters
         )
         {
-            return targetObject.Call(methodName, typeParameters, new CodeExpression[] { });
+            return targetObject.Call(methodName, typeParameters, new CodeExpression[0]);
         }
 
         public static CodeExpression Call(
@@ -89,12 +89,12 @@ namespace HarshPoint.ShellployGenerator
 
             if (typeParameters == null)
             {
-                typeParameters = new Type[] { };
+                typeParameters = new Type[0];
             }
 
             if (parameters == null)
             {
-                parameters = new CodeExpression[] { };
+                parameters = new CodeExpression[0];
             }
 
             var method = new CodeMethodReferenceExpression(
@@ -191,7 +191,7 @@ namespace HarshPoint.ShellployGenerator
             );
         }
 
-        private static CodeExpression CreateThisExpression(CodeTypeDeclaration containingType, bool isStatic)
+        private static CodeExpression CreateThisExpression(CodeTypeDeclaration containingType, Boolean isStatic)
         {
             if (isStatic)
             {

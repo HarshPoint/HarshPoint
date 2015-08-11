@@ -32,7 +32,7 @@ namespace HarshPoint.ShellployGenerator
                         Mandatory = true,
                     }
                 )
-                .SetValue(x => x.ContentTypes,
+                .SetParameterValue(x => x.ContentTypes,
                     new CodeTypeReferenceExpression(typeof(Resolve))
                         .Call(nameof(Resolve.ContentType))
                         .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("ContentTypeId"))
@@ -47,7 +47,7 @@ namespace HarshPoint.ShellployGenerator
                         Mandatory = true,
                     }
                 )
-                .SetValue(x => x.ContentTypes,
+                .SetParameterValue(x => x.ContentTypes,
                     new CodeTypeReferenceExpression(typeof(Resolve))
                         .Call(nameof(Resolve.ContentType))
                         .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("ContentTypeId"))
@@ -66,7 +66,7 @@ namespace HarshPoint.ShellployGenerator
 
             Map<HarshModifyFieldTaxonomy>()
                 .AddNamedParameter<Guid>("TermSetId")
-                .SetValue(x => x.TermSet,
+                .SetParameterValue(x => x.TermSet,
                     new CodeTypeReferenceExpression(typeof(Resolve))
                         .Call(nameof(Resolve.TermStoreSiteCollectionDefault))
                         .Call(nameof(Resolve.TermSet))
@@ -81,7 +81,7 @@ namespace HarshPoint.ShellployGenerator
                 .AddNamedParameter<String>("TargetListUrl")
                 .AddNamedParameter<String>("TargetField")
                 .SetDefaultValue("TargetField", "Title")
-                .SetValue(x => x.LookupTarget,
+                .SetParameterValue(x => x.LookupTarget,
                     new CodeTypeReferenceExpression(typeof(Resolve))
                         .Call(nameof(Resolve.List))
                         .Call(nameof(Resolve.ByUrl), new CodeVariableReferenceExpression("TargetListUrl"))
@@ -95,7 +95,7 @@ namespace HarshPoint.ShellployGenerator
 
             Map<HarshFieldRef>()
                 .AddNamedParameter<String>("InternalName")
-                .SetValue(x => x.Fields,
+                .SetParameterValue(x => x.Fields,
                     new CodeTypeReferenceExpression(typeof(Resolve))
                         .Call(nameof(Resolve.Field))
                         .Call(nameof(Resolve.ByInternalName), new CodeVariableReferenceExpression("InternalName"))
@@ -105,8 +105,11 @@ namespace HarshPoint.ShellployGenerator
             Map<HarshList>()
                 .AddPositionalParameter(x => x.Title)
                 .AddPositionalParameter(x => x.Url)
-                .SetDefaultValue(x => x.TemplateType, ListTemplateType.GenericList)
+                .SetDefaultParameterValue(x => x.TemplateType, ListTemplateType.GenericList)
                 .HasChildren();
+
+            Map<HarshEnableWebFeature>()
+                .AddPositionalParameter(x => x.FeatureId);
         }
 
         private ShellployCommandBuilder<TProvisioner> Map<TProvisioner>()

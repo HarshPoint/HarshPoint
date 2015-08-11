@@ -20,12 +20,12 @@ namespace HarshPoint.ShellployGenerator
 
             if (Mandatory)
             {
-                Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.Mandatory), Mandatory);
+                result.Add(Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.Mandatory), Mandatory));
             }
 
             if (ParameterSet != null)
             {
-                Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.ParameterSetName), ParameterSet);
+                result.Add(Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.ParameterSetName), ParameterSet));
             }
 
             if (Position != null)

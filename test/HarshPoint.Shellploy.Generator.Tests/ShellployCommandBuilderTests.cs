@@ -58,8 +58,8 @@ namespace HarshPoint.ShellployGenerator.Tests
                 .ToCommand();
 
             Assert.Equal("New" + nameof(HarshEmptyTestProvisioner) + "Command", command.ClassName);
-            Assert.Equal(false, command.HasChildren);
-            Assert.Equal(0, command.ParentProvisionerTypes.Count());
+            Assert.False(command.HasChildren);
+            Assert.Empty(command.ParentProvisionerTypes);
             Assert.Equal(nameof(HarshEmptyTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshEmptyTestProvisioner), command.ProvisionerType);
             Assert.Equal(typeof(VerbsCommon), command.Verb.Item1);
@@ -78,8 +78,8 @@ namespace HarshPoint.ShellployGenerator.Tests
                 .ToCommand();
 
             Assert.Equal("New" + nameof(HarshEmptyTestProvisioner) + "Command", command.ClassName);
-            Assert.Equal(true, command.HasChildren);
-            Assert.Equal(0, command.ParentProvisionerTypes.Count());
+            Assert.True(command.HasChildren);
+            Assert.Empty(command.ParentProvisionerTypes);
             Assert.Equal(nameof(HarshEmptyTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshEmptyTestProvisioner), command.ProvisionerType);
             Assert.Equal(typeof(VerbsCommon), command.Verb.Item1);
@@ -91,10 +91,10 @@ namespace HarshPoint.ShellployGenerator.Tests
 
             var propName = ShellployCommand.ChildrenPropertyName;
             Assert.Equal(typeof(ScriptBlock), properties[propName].Type);
-            Assert.Equal(null, properties[propName].AssignmentOnType);
+            Assert.Null(properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Equal(0, properties[propName].ParameterAttributes[0].Position);
         }
 
@@ -107,8 +107,8 @@ namespace HarshPoint.ShellployGenerator.Tests
                 .ToCommand();
 
             Assert.Equal("New" + nameof(HarshTestProvisioner) + "Command", command.ClassName);
-            Assert.Equal(false, command.HasChildren);
-            Assert.Equal(0, command.ParentProvisionerTypes.Count());
+            Assert.False(command.HasChildren);
+            Assert.Empty(command.ParentProvisionerTypes);
             Assert.Equal(nameof(HarshTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshTestProvisioner), command.ProvisionerType);
             Assert.Equal(typeof(VerbsCommon), command.Verb.Item1);
@@ -122,44 +122,44 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
 
             propName = nameof(HarshTestProvisioner.MandatoryParam);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(true, properties[propName].ParameterAttributes[0].Mandatory);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
+            Assert.True(properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
 
             propName = nameof(HarshTestProvisioner.ParamSetA);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("A", properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
 
             propName = nameof(HarshTestProvisioner.ParamSetB);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("B", properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
 
             propName = nameof(HarshTestProvisioner.ParamSetA_BMandatory);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(2, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("A", properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
-            Assert.Equal(true, properties[propName].ParameterAttributes[1].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
+            Assert.True(properties[propName].ParameterAttributes[1].Mandatory);
             Assert.Equal("B", properties[propName].ParameterAttributes[1].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[1].Position);
+            Assert.Null(properties[propName].ParameterAttributes[1].Position);
         }
 
         [Fact]
@@ -188,8 +188,8 @@ namespace HarshPoint.ShellployGenerator.Tests
                 .ToCommand();
 
             Assert.Equal("New" + nameof(HarshTestProvisioner) + "Command", command.ClassName);
-            Assert.Equal(true, command.HasChildren);
-            Assert.Equal(0, command.ParentProvisionerTypes.Count());
+            Assert.True(command.HasChildren);
+            Assert.Empty(command.ParentProvisionerTypes);
             Assert.Equal(nameof(HarshTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshTestProvisioner), command.ProvisionerType);
             Assert.Equal(typeof(VerbsCommon), command.Verb.Item1);
@@ -203,31 +203,31 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Equal(0, properties[propName].ParameterAttributes[0].Position);
 
             propName = nameof(HarshTestProvisioner.MandatoryParam);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(true, properties[propName].ParameterAttributes[0].Mandatory);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
+            Assert.True(properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
 
             propName = nameof(HarshTestProvisioner.ParamSetA);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("A", properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
 
             propName = nameof(HarshTestProvisioner.ParamSetB);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("B", properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Equal(3, properties[propName].ParameterAttributes[0].Position);
 
@@ -235,38 +235,38 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(2, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("A", properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
-            Assert.Equal(true, properties[propName].ParameterAttributes[1].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
+            Assert.True(properties[propName].ParameterAttributes[1].Mandatory);
             Assert.Equal("B", properties[propName].ParameterAttributes[1].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[1].Position);
+            Assert.Null(properties[propName].ParameterAttributes[1].Position);
 
             propName = "CustomParameter1";
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Equal(1, properties[propName].ParameterAttributes[0].Position);
 
             propName = "CustomParameter2";
             Assert.Equal(typeof(Int32), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(2, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(true, properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.True(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("asdf", properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Equal(2, properties[propName].ParameterAttributes[0].Position);
-            Assert.Equal(false, properties[propName].ParameterAttributes[1].Mandatory);
+            Assert.False(properties[propName].ParameterAttributes[1].Mandatory);
             Assert.Equal("qwer", properties[propName].ParameterAttributes[1].ParameterSet);
             Assert.Equal(2, properties[propName].ParameterAttributes[1].Position);
 
             propName = ShellployCommand.ChildrenPropertyName;
             Assert.Equal(typeof(ScriptBlock), properties[propName].Type);
-            Assert.Equal(null, properties[propName].AssignmentOnType);
+            Assert.Null(properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Equal(4, properties[propName].ParameterAttributes[0].Position);
         }
 
@@ -279,8 +279,8 @@ namespace HarshPoint.ShellployGenerator.Tests
                 .ToCommand();
 
             Assert.Equal("New" + nameof(HarshCustomChildrenTestProvisioner) + "Command", command.ClassName);
-            Assert.Equal(false, command.HasChildren);
-            Assert.Equal(0, command.ParentProvisionerTypes.Count());
+            Assert.False(command.HasChildren);
+            Assert.Empty(command.ParentProvisionerTypes);
             Assert.Equal(nameof(HarshCustomChildrenTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshCustomChildrenTestProvisioner), command.ProvisionerType);
             Assert.Equal(typeof(VerbsCommon), command.Verb.Item1);
@@ -294,9 +294,9 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshCustomChildrenTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
         }
 
         [Fact]
@@ -321,8 +321,8 @@ namespace HarshPoint.ShellployGenerator.Tests
                 .ToCommand();
 
             Assert.Equal("New" + nameof(HarshTestProvisioner) + "Command", command.ClassName);
-            Assert.Equal(false, command.HasChildren);
-            Assert.Equal(0, command.ParentProvisionerTypes.Count());
+            Assert.False(command.HasChildren);
+            Assert.Empty(command.ParentProvisionerTypes);
             Assert.Equal(nameof(HarshTestProvisioner), command.Noun);
             Assert.Equal(typeof(HarshTestProvisioner), command.ProvisionerType);
             Assert.Equal(typeof(VerbsCommon), command.Verb.Item1);
@@ -333,34 +333,34 @@ namespace HarshPoint.ShellployGenerator.Tests
             var properties = command.Properties.ToImmutableDictionary(prop => prop.Name);
 
             var propName = nameof(HarshTestProvisioner.BasicParam);
-            Assert.False(properties.ContainsKey(propName));
+            Assert.DoesNotContain(propName, properties.Keys);
 
             propName = nameof(HarshTestProvisioner.MandatoryParam);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(true, properties[propName].ParameterAttributes[0].Mandatory);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
+            Assert.True(properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
 
             propName = nameof(HarshTestProvisioner.ParamSetA);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("A", properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
 
             propName = nameof(HarshTestProvisioner.ParamSetB);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
-            Assert.Equal(false, properties[propName].ParameterAttributes[0].Mandatory);
+            Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("B", properties[propName].ParameterAttributes[0].ParameterSet);
-            Assert.Equal(null, properties[propName].ParameterAttributes[0].Position);
+            Assert.Null(properties[propName].ParameterAttributes[0].Position);
 
             propName = nameof(HarshTestProvisioner.ParamSetA_BMandatory);
-            Assert.False(properties.ContainsKey(propName));
+            Assert.DoesNotContain(propName, properties.Keys);
         }
     }
 }

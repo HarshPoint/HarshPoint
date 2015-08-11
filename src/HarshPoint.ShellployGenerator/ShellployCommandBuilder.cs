@@ -71,7 +71,7 @@ namespace HarshPoint.ShellployGenerator
         {
             if (!parameterAttributes.Any())
             {
-                parameterAttributes = new ShellployCommandPropertyParameterAttribute[]
+                parameterAttributes = new []
                 {
                     new ShellployCommandPropertyParameterAttribute()
                 };
@@ -86,7 +86,7 @@ namespace HarshPoint.ShellployGenerator
             );
         }
 
-        public ShellployCommandBuilder<TProvisioner> SetValue<TValue>(
+        public ShellployCommandBuilder<TProvisioner> SetParameterValue<TValue>(
             Expression<Func<TProvisioner, TValue>> parameter,
             TValue value
         )
@@ -95,7 +95,7 @@ namespace HarshPoint.ShellployGenerator
             return this;
         }
 
-        public ShellployCommandBuilder<TProvisioner> SetValue(
+        public ShellployCommandBuilder<TProvisioner> SetParameterValue(
             Expression<Func<TProvisioner, Object>> parameter,
             CodeExpression value
         )
@@ -104,7 +104,7 @@ namespace HarshPoint.ShellployGenerator
             return this;
         }
 
-        public ShellployCommandBuilder<TProvisioner> SetDefaultValue<TValue>(
+        public ShellployCommandBuilder<TProvisioner> SetDefaultParameterValue<TValue>(
             Expression<Func<TProvisioner, TValue>> parameter,
             TValue value
         )
@@ -187,13 +187,13 @@ namespace HarshPoint.ShellployGenerator
             Boolean hasChildren
         )
         {
-            var childrenParameterNameArray = new String[] { };
+            var childrenParameterNameArray = new String[0];
             if (hasChildren)
             {
-                childrenParameterNameArray = new String[] { ShellployCommand.ChildrenPropertyName };
+                childrenParameterNameArray = new [] { ShellployCommand.ChildrenPropertyName };
             }
 
-            var parentPositionalParameters = new String[] { };
+            var parentPositionalParameters = new String[0];
             var parentBuilder = GetParentBuilder(builders);
             if (parentBuilder != null)
             {
@@ -211,10 +211,10 @@ namespace HarshPoint.ShellployGenerator
             Boolean hasChildren
         )
         {
-            var childrenPropertyArray = new ShellployCommandProperty[] { };
+            var childrenPropertyArray = new ShellployCommandProperty[0];
             if (_hasChildren)
             {
-                childrenPropertyArray = new ShellployCommandProperty[]
+                childrenPropertyArray = new []
                 {
                     new ShellployCommandProperty{
                         Name = ShellployCommand.ChildrenPropertyName,
@@ -257,7 +257,7 @@ namespace HarshPoint.ShellployGenerator
             properties = properties
                 .Concat(childrenPropertyArray);
 
-            var parentProperties = new ShellployCommandProperty[] { };
+            var parentProperties = new ShellployCommandProperty[0];
             var parentBuilder = GetParentBuilder(builders);
             if (parentBuilder != null)
             {
@@ -326,7 +326,7 @@ namespace HarshPoint.ShellployGenerator
         {
             foreach (var prop in properties)
             {
-                object fixedValue;
+                Object fixedValue;
                 if (fixedParameters.TryGetValue(prop.Name, out fixedValue))
                 {
                     prop.UseFixedValue = true;
@@ -342,7 +342,7 @@ namespace HarshPoint.ShellployGenerator
         {
             foreach (var prop in properties)
             {
-                object defaultValue;
+                Object defaultValue;
                 if (defaultParameters.TryGetValue(prop.Name, out defaultValue))
                 {
                     if (prop.UseFixedValue)
@@ -363,10 +363,10 @@ namespace HarshPoint.ShellployGenerator
             if (parentBuilder != null)
             {
                 return parentBuilder.GetParentProvisionerTypes(builders)
-                    .Concat(new Type[] { parentBuilder.ProvisionerType });
+                    .Concat(new [] { parentBuilder.ProvisionerType });
             }
 
-            return new Type[] { };
+            return new Type[0];
         }
 
         public ShellployCommand ToCommand(

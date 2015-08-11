@@ -10,7 +10,7 @@ namespace HarshPoint.Shellploy
     /// <summary>
     /// Used by ShellPloy to dynamically add child provisioners and IDefaultFromContextTags.
     /// </summary>
-    public static class HarshProvisionerTreeBuilder
+    internal static class HarshProvisionerTreeBuilder
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshProvisionerTreeBuilder));
 

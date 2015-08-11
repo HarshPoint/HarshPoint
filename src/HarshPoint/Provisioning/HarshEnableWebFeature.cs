@@ -6,18 +6,21 @@ namespace HarshPoint.Provisioning
 {
     public sealed class HarshEnableWebFeature : HarshProvisioner
     {
+        [Parameter(Mandatory = true)]
         public Guid FeatureId
         {
             get;
             set;
         }
 
+        [Parameter]
         public FeatureDefinitionScope FeatureDefinitionScope
         {
             get;
             set;
         }
 
+        [Parameter]
         public Boolean Force
         {
             get;
