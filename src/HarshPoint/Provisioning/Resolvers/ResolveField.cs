@@ -15,8 +15,13 @@ namespace HarshPoint.Provisioning.Resolvers
 
             return new[]
             {
-                context.ProvisionerContext.Web.Fields,
-                context.ProvisionerContext.Web.AvailableFields,
+                // need to make sure at least one include is specified,
+                // otherwise CSOM helpfully selects default properties
+                // and crashes when running against v15
+
+
+                context.ProvisionerContext.Web.Fields.Include(ct=>ct.Id),
+                context.ProvisionerContext.Web.AvailableFields.Include(ct=>ct.Id),
             };
         }
 

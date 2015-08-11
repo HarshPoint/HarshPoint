@@ -7,9 +7,6 @@ namespace HarshPoint.Tests
 {
     public class SharePointClientFixture : IDisposable
     {
-        public const String TestListUrl = "HarshPoint Tests";
-        public const String TestListTitle = "HarshPoint Tests";
-
         public SharePointClientFixture()
         {
             var url = Environment.GetEnvironmentVariable("HarshPointTestUrl");
@@ -41,45 +38,6 @@ namespace HarshPoint.Tests
                     );
                 }
             }
-        }
-
-        [Obsolete("tests run in parallel, dependencies suck")]
-        public async Task<List> EnsureTestList()
-        {
-            var list = ClientContext.Web.Lists.GetByTitle(TestListTitle);
-            ClientContext.Load(list);
-
-            try
-            {
-                await ClientContext.ExecuteQueryAsync();
-            }
-            catch (ServerException) 
-            {
-                list = ClientContext.Web.Lists.Add(new ListCreationInformation()
-                {
-                    Url = TestListUrl,
-                    Title = TestListTitle,
-                    TemplateType = (Int32)ListTemplateType.DocumentLibrary,
-                    DocumentTemplateType = (Int32)DocumentTemplateType.Word,
-                });
-
-                try
-                {
-                    await ClientContext.ExecuteQueryAsync();
-                }
-                catch (ServerException)
-                {
-                    // most likely another test created the list between our 
-                    // attempt to load it and the exception being caught
-
-                    list = ClientContext.Web.Lists.GetByTitle(TestListTitle);
-                    ClientContext.Load(list);
-
-                    await ClientContext.ExecuteQueryAsync();
-                }
-            }
-
-            return list;
         }
 
         public void Dispose()

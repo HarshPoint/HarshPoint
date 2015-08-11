@@ -18,34 +18,34 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Existing_list_is_not_added()
         {
-            await Fixture.EnsureTestList();
+            ClientContext.Load(Web, w => w.ServerRelativeUrl);
+
+            var list = await CreateList(
+                l => l.Title,
+                l => l.RootFolder.ServerRelativeUrl
+            );
 
             var prov = new HarshList()
             {
-                Title = SharePointClientFixture.TestListTitle,
-                Url = SharePointClientFixture.TestListUrl,
-                TemplateType = ListTemplateType.DocumentLibrary
+                Title = list.Title,
+                Url = HarshUrl.GetRelativeTo(list.RootFolder.ServerRelativeUrl, Web.ServerRelativeUrl),
             };
 
             await prov.ProvisionAsync(Context);
 
-            var output = Assert.Single(Output);
-            var alreadyExists = Assert.IsType<ObjectAlreadyExists<List>>(output);
+            var output = FindOutput<List>();
+            Assert.False(output.ObjectCreated);
 
-            var list = alreadyExists.Object;
-            Assert.NotNull(list);
+            var outputList = output.Object;
+            Assert.NotNull(outputList);
 
             ClientContext.Load(
-                list,
-                l => l.Title,
-                l => l.BaseTemplate
+                outputList,
+                l => l.Title
             );
 
             await ClientContext.ExecuteQueryAsync();
-
-
-            Assert.Equal(SharePointClientFixture.TestListTitle, list.Title);
-            Assert.Equal((Int32)ListTemplateType.DocumentLibrary, list.BaseTemplate);
+            Assert.Equal(list.Title, outputList.Title);
         }
 
         [Fact]
@@ -59,35 +59,28 @@ namespace HarshPoint.Tests.Provisioning
                 Url = "Lists/" + name,
             };
 
-            List list = null;
+            await prov.ProvisionAsync(Context);
 
-            try
-            {
-                await prov.ProvisionAsync(Context);
+            var objectCreated = FindOutput<List>();
+            Assert.IsType<ObjectCreated<List>>(objectCreated);
 
-                var objectCreated = FindOutput<List>();
-                Assert.IsType<ObjectCreated<List>>(objectCreated);
+            var list = objectCreated.Object;
+            Assert.NotNull(list);
 
-                list = objectCreated.Object;
-                Assert.NotNull(list);
+            RegisterForDeletion(list);
 
-                ClientContext.Load(
-                    list,
-                    l => l.Title,
-                    l => l.BaseTemplate
-                );
+            ClientContext.Load(
+                list,
+                l => l.Title,
+                l => l.BaseTemplate
+            );
 
-                await ClientContext.ExecuteQueryAsync();
+            await ClientContext.ExecuteQueryAsync();
 
-                Assert.NotNull(list);
-                Assert.Equal(name, list.Title);
-                Assert.Equal((Int32)ListTemplateType.GenericList, list.BaseTemplate);
-            }
-            finally
-            {
-                list?.DeleteObject();
-                await ClientContext.ExecuteQueryAsync();
-            }
+            Assert.NotNull(list);
+            Assert.Equal(name, list.Title);
+            Assert.Equal((Int32)ListTemplateType.GenericList, list.BaseTemplate);
+
         }
     }
 }

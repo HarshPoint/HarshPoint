@@ -13,7 +13,11 @@ namespace HarshPoint.Provisioning.Resolvers
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            return context.ProvisionerContext.Web.Lists;
+            // need to make sure at least one include is specified,
+            // otherwise CSOM helpfully selects default properties
+            // and crashes when running against v15
+
+            return context.ProvisionerContext.Web.Lists.Include(l => l.Id);
         }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveList>();

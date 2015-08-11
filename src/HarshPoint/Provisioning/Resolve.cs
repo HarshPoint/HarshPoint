@@ -14,6 +14,10 @@ namespace HarshPoint.Provisioning
         public static ResolveFieldById ById(this IResolveBuilder<Field> parent, params Guid[] ids)
             => new ResolveFieldById(parent, ids);
 
+        public static ResolveListById ById(this IResolveBuilder<List> parent, params Guid[] ids)
+            => new ResolveListById(parent, ids);
+
+
         public static ResolveTermSetById ById(this IResolveBuilder<TermSet> parent, params Guid[] ids)
             => new ResolveTermSetById(parent, ids);
 

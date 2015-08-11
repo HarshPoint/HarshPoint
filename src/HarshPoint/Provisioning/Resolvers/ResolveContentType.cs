@@ -15,8 +15,12 @@ namespace HarshPoint.Provisioning.Resolvers
 
             return new[]
             {
-                context.ProvisionerContext.Web.ContentTypes,
-                context.ProvisionerContext.Web.AvailableContentTypes,
+                // need to make sure at least one include is specified,
+                // otherwise CSOM helpfully selects default properties
+                // and crashes when running against v15
+
+                context.ProvisionerContext.Web.ContentTypes.Include(ct=>ct.StringId),
+                context.ProvisionerContext.Web.AvailableContentTypes.Include(ct=>ct.StringId),
             };
         }
 

@@ -62,6 +62,7 @@
     <Compile Include="HarshDependencyGraph.cs" />
     <Compile Include="HarshDependencyGraphCycleException.cs" />
     <Compile Include="HarshDisposableAction.cs" />
+    <Compile Include="HarshDisposableBag.cs" />
     <Compile Include="HarshFormattable.cs" />
     <Compile Include="HarshGrouping.cs" />
     <Compile Include="HarshGroupingDynamicFactory.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Provisioning\Resolvers\ResolveContentTypeFieldLink.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveField.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveListById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultSingleOrDefault`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResult`1.cs" />

@@ -16,11 +16,11 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         [Fact]
         public async Task Documents_Title_field_gets_resolved_by_id()
         {
-            await Fixture.EnsureTestList();
+            var list = await CreateList();
 
             var resolver = ManualResolver.ResolveSingleOrDefault(
                 Resolve
-                .List().ByUrl(SharePointClientFixture.TestListUrl)
+                .List().ById(list.Id)
                 .Field().ById(HarshBuiltInFieldId.Title)
             );
 

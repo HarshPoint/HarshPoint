@@ -120,6 +120,11 @@
   <data name="Chain_ElementAlreadyContained" xml:space="preserve">
     <value>The specified argument contains elements already contained in this chain.</value>
   </data>
+  <data name="ClientObjectQueryResolveBuilder_CollectionQuery" xml:space="preserve">
+    <value>The {0}.{1} method may not return any objects of type {2}.
+
+All queries must be results of Include() calls. Otherwise, CSOM automatically loads default properties which might be missing on an on-premises SharePoint 2013.</value>
+  </data>
   <data name="ClientObjectResolveBuilder_CreateQueriesReturnedNull" xml:space="preserve">
     <value>The "{0}" implementation of CreateQueries resulted in a null value.</value>
   </data>
@@ -329,15 +334,15 @@ Property: {0}.{1}</value>
     <value>Tuples of IGroupings are not supported: {0}.</value>
   </data>
   <data name="ResolveResultFactory_ObjectNotConvertable" xml:space="preserve">
-    <value>The specified object "{0}" cannot be converted to "{1}".</value>
+    <value>The specified object '{0}' cannot be converted to '{1}'.</value>
   </data>
   <data name="ResolveResultFactory_PropertyTypeNotGeneric" xml:space="preserve">
-    <value>The specified property type "{0}" is not a generic type.</value>
+    <value>The specified property type '{0}' is not a generic type.</value>
   </data>
   <data name="ResolveResultFactory_PropertyTypeUnknownInterface" xml:space="preserve">
-    <value>The specified property type generic definition "{0}" is not one of the known interface types: {1}.</value>
+    <value>The specified property type generic definition '{0}' is not one of the known interface types: {1}.</value>
   </data>
   <data name="TypeInfoExtension_ArgNotInterfaceDefinition" xml:space="preserve">
-    <value>The specified type "{0}" is not a generic interface definition.</value>
+    <value>The specified type '{0}' is not a generic interface definition.</value>
   </data>
 </root>

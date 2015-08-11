@@ -2,6 +2,7 @@
 using HarshPoint.Provisioning.Output;
 using Microsoft.SharePoint.Client;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -40,51 +41,33 @@ namespace HarshPoint.Tests.Provisioning
                 }
             };
 
-            ContentType ct = null;
-            List list = null;
+            await ctProv.ProvisionAsync(Context);
 
-            try
-            {
-                await ctProv.ProvisionAsync(Context);
+            var ctResult = FindOutput<ContentType>();
+            var ct = ctResult.Object;
+            RegisterForDeletion(ct);
 
-                var ctResult = FindOutput<ContentType>();
-                ct = ctResult.Object;
+            await listProv.ProvisionAsync(Context);
 
-                await listProv.ProvisionAsync(Context);
+            var listResult = FindOutput<List>();
+            var list = listResult.Object;
+            RegisterForDeletion(list);
 
-                var listResult = FindOutput<List>();
+            Assert.IsType<ObjectCreated<List>>(listResult);
+            Assert.NotNull(list);
 
-                list = listResult.Object;
+            ClientContext.Load(
+                list,
+                l => l.ContentTypesEnabled,
+                l => l.ContentTypes.Include(lct => lct.StringId),
+                l => l.Id
+            );
 
-                Assert.IsType<ObjectCreated<List>>(listResult);
-                Assert.NotNull(list);
+            await ClientContext.ExecuteQueryAsync();
 
-                ClientContext.Load(
-                    list,
-                    l => l.ContentTypesEnabled,
-                    l => l.ContentTypes.Include(lct => lct.StringId),
-                    l => l.Id
-                );
+            Assert.True(list.ContentTypesEnabled);
+            Assert.Contains(list.ContentTypes, lct => lct.StringId.StartsWith(ctid.ToString() + "00"));
 
-                await ClientContext.ExecuteQueryAsync();
-
-                Assert.True(list.ContentTypesEnabled);
-                Assert.Contains(list.ContentTypes, lct => lct.StringId.StartsWith(ctid.ToString() + "00"));
-            }
-            finally
-            {
-                if (list != null)
-                {
-                    list.DeleteObject();
-                    await ClientContext.ExecuteQueryAsync();
-                }
-
-                if (ct != null)
-                {
-                    ct.DeleteObject();
-                    await ClientContext.ExecuteQueryAsync();
-                }
-            }
         }
 
         [Fact]
@@ -101,39 +84,36 @@ namespace HarshPoint.Tests.Provisioning
             });
 
             await ClientContext.ExecuteQueryAsync();
+            RegisterForDeletion(ct);
 
-            var list = await Fixture.EnsureTestList();
+            var list = await CreateList();
 
             var listCt = list.ContentTypes.AddExistingContentType(ct);
             ClientContext.Load(listCt, c => c.StringId);
 
             await ClientContext.ExecuteQueryAsync();
 
-            try
+            var prov = new HarshContentTypeRef()
             {
-                var prov = new HarshContentTypeRef()
-                {
-                    ContentTypes = Resolve.ContentType().ById(HarshContentTypeId.Parse(ctid)),
-                    Lists = Resolve.List().ByUrl(SharePointClientFixture.TestListUrl),
-                };
+                ContentTypes = Resolve.ContentType().ById(HarshContentTypeId.Parse(ctid)),
+                Lists = Resolve.List().ById(list.Id),
+            };
 
-                await prov.UnprovisionAsync(
-                    Context.AllowDeleteUserData()
-                );
+            await prov.UnprovisionAsync(
+                Context.AllowDeleteUserData()
+            );
 
-                var actualListCts = ClientContext.LoadQuery(list.ContentTypes);
-                await ClientContext.ExecuteQueryAsync();
+            var actualListCts = ClientContext.LoadQuery(
+                list.ContentTypes.Include(c => c.StringId)
+            );
 
-                Assert.DoesNotContain(actualListCts, c => c.StringId == listCt.StringId);
-            }
-            finally
-            {
-                list.DeleteObject();
-                await ClientContext.ExecuteQueryAsync();
+            await ClientContext.ExecuteQueryAsync();
 
-                ct.DeleteObject();
-                await ClientContext.ExecuteQueryAsync();
-            }
+            Assert.DoesNotContain(
+                listCt.StringId,
+                actualListCts.Select(c => c.StringId),
+                StringComparer.InvariantCultureIgnoreCase
+            );
         }
 
         [Fact]
@@ -149,49 +129,36 @@ namespace HarshPoint.Tests.Provisioning
                 Group = "HarshPoint"
             });
 
-            await ClientContext.ExecuteQueryAsync();
+            RegisterForDeletion(ct);
 
-            var list = await Fixture.EnsureTestList();
+            var list = await CreateList();
 
             var listCt = list.ContentTypes.AddExistingContentType(ct);
             ClientContext.Load(listCt, c => c.StringId);
 
+            var actualListCts = ClientContext.LoadQuery(
+                list.ContentTypes.Include(c => c.StringId)
+            );
+
             await ClientContext.ExecuteQueryAsync();
 
-            try
+            Assert.Contains(actualListCts, c => c.StringId == listCt.StringId);
+
+            var prov = new HarshRemoveContentTypeRef()
             {
-                var actualListCts = ClientContext.LoadQuery(
-                    list.ContentTypes.Include(c => c.StringId)
-                );
+                ContentTypes = Resolve.ContentType().ById(HarshContentTypeId.Parse(ctid)),
+                Lists = Resolve.List().ById(list.Id),
+            };
 
-                await ClientContext.ExecuteQueryAsync();
+            await prov.ProvisionAsync(Context);
 
-                Assert.Contains(actualListCts, c => c.StringId == listCt.StringId);
+            actualListCts = ClientContext.LoadQuery(
+                list.ContentTypes.Include(c => c.StringId)
+            );
 
-                var prov = new HarshRemoveContentTypeRef()
-                {
-                    ContentTypes = Resolve.ContentType().ById(HarshContentTypeId.Parse(ctid)),
-                    Lists = Resolve.List().ByUrl(SharePointClientFixture.TestListUrl),
-                };
+            await ClientContext.ExecuteQueryAsync();
 
-                await prov.ProvisionAsync(Context);
-
-                actualListCts = ClientContext.LoadQuery(
-                    list.ContentTypes.Include(c => c.StringId)
-                );
-
-                await ClientContext.ExecuteQueryAsync();
-
-                Assert.DoesNotContain(actualListCts, c => c.StringId == listCt.StringId);
-            }
-            finally
-            {
-                list.DeleteObject();
-                await ClientContext.ExecuteQueryAsync();
-
-                ct.DeleteObject();
-                await ClientContext.ExecuteQueryAsync();
-            }
+            Assert.DoesNotContain(actualListCts, c => c.StringId == listCt.StringId);
         }
     }
 }

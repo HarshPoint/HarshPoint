@@ -80,6 +80,17 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0}.{1} method may not return any objects of type {2}.
+        ///
+        ///All queries must be results of Include() calls. Otherwise, CSOM automatically loads default properties which might be missing on an on-premises SharePoint 2013..
+        /// </summary>
+        internal static string ClientObjectQueryResolveBuilder_CollectionQuery {
+            get {
+                return ResourceManager.GetString("ClientObjectQueryResolveBuilder_CollectionQuery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The &quot;{0}&quot; implementation of CreateQueries resulted in a null value..
         /// </summary>
         internal static string ClientObjectResolveBuilder_CreateQueriesReturnedNull {
@@ -675,7 +686,7 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified object &quot;{0}&quot; cannot be converted to &quot;{1}&quot;..
+        ///   Looks up a localized string similar to The specified object &apos;{0}&apos; cannot be converted to &apos;{1}&apos;..
         /// </summary>
         internal static string ResolveResultFactory_ObjectNotConvertable {
             get {
@@ -684,7 +695,7 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified property type &quot;{0}&quot; is not a generic type..
+        ///   Looks up a localized string similar to The specified property type &apos;{0}&apos; is not a generic type..
         /// </summary>
         internal static string ResolveResultFactory_PropertyTypeNotGeneric {
             get {
@@ -693,7 +704,7 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified property type generic definition &quot;{0}&quot; is not one of the known interface types: {1}..
+        ///   Looks up a localized string similar to The specified property type generic definition &apos;{0}&apos; is not one of the known interface types: {1}..
         /// </summary>
         internal static string ResolveResultFactory_PropertyTypeUnknownInterface {
             get {
@@ -702,7 +713,7 @@ namespace HarshPoint {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified type &quot;{0}&quot; is not a generic interface definition..
+        ///   Looks up a localized string similar to The specified type &apos;{0}&apos; is not a generic interface definition..
         /// </summary>
         internal static string TypeInfoExtension_ArgNotInterfaceDefinition {
             get {

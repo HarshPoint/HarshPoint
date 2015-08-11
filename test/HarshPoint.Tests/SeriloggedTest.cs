@@ -33,15 +33,13 @@ namespace HarshPoint.Tests
                 .CreateLogger();
         }
 
-        private readonly Guid _captureId;
-        private readonly IDisposable _subscription;
-        private readonly IDisposable _pushProperty;
+        private readonly Guid _captureId = Guid.NewGuid();
+        private readonly HarshDisposableBag _disposables = new HarshDisposableBag();
 
         public SeriloggedTest(ITestOutputHelper output)
         {
-            _captureId = Guid.NewGuid();
-
-            _subscription = LogEventSubject
+            _disposables.Add(
+                LogEventSubject
                 .Where(IsMyCorrelationId)
                 .Subscribe(logEvent =>
                 {
@@ -50,16 +48,16 @@ namespace HarshPoint.Tests
                         Formatter.Format(logEvent, writer);
                         output.WriteLine(writer.ToString());
                     }
-                });
+                })
+            );
 
-            _pushProperty = LogContext.PushProperty(CaptureCorrelationIdKey, _captureId);
+            _disposables.Add(
+                LogContext.PushProperty(CaptureCorrelationIdKey, _captureId)
+            );
         }
 
         public virtual void Dispose()
-        {
-            _pushProperty.Dispose();
-            _subscription.Dispose();
-        }
+            => _disposables.Dispose();
 
         private Boolean IsMyCorrelationId(LogEvent logEvent)
         {

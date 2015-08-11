@@ -17,7 +17,21 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (queries == null)
             {
-                return new IEnumerable<TQueryResult>[0];
+                return Enumerable.Empty<TQueryResult>();
+            }
+
+            var collections = queries
+                .OfType<ClientObjectCollection>()
+                .ToArray();
+
+            if (collections.Any())
+            {
+                throw Logger.Fatal.InvalidOperationFormat(
+                    SR.ClientObjectQueryResolveBuilder_CollectionQuery,
+                    GetType(),
+                    nameof(CreateQueries),
+                    typeof(ClientObjectCollection)
+                );
             }
 
             return queries
