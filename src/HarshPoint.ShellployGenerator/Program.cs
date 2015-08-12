@@ -29,7 +29,7 @@ namespace HarshPoint.ShellployGenerator
 
             var writer = new SourceFileWriter(args[0]);
 
-            foreach (var command in new ShellployMetadata().GetCommands())
+            foreach (var command in ShellployMetadata.GetCommands())
             {
                 Console.WriteLine($"Generating {command.ClassName}...");
                 var targetUnit = new CommandCodeGenerator(command)

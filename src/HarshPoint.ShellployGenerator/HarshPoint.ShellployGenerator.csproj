@@ -128,6 +128,16 @@
     <Compile Include="CodeDomExtensions.cs" />
     <Compile Include="IShellployCommandBuilder.cs" />
     <Compile Include="IShellployCommandBuilderParent.cs" />
+    <Compile Include="Metadata\HarshEnableWebFeatureMetadata.cs" />
+    <Compile Include="Metadata\HarshListMetadata.cs" />
+    <Compile Include="Metadata\HarshFieldRefMetadata.cs" />
+    <Compile Include="Metadata\HarshModifyFieldLookupMetadata.cs" />
+    <Compile Include="Metadata\HarshModifyFieldTaxonomyMetadata.cs" />
+    <Compile Include="Metadata\HarshModifyFieldMultilineTextMetadata.cs" />
+    <Compile Include="Metadata\HarshModifyFieldDateTimeMetadata.cs" />
+    <Compile Include="Metadata\HarshFieldMetadata.cs" />
+    <Compile Include="Metadata\HarshRemoveContentTypeRefMetadata.cs" />
+    <Compile Include="Metadata\HarshContentTypeRefMetadata.cs" />
     <Compile Include="ShellployCommand.cs" />
     <Compile Include="ShellployCommandBuilder.cs" />
     <Compile Include="Program.cs" />
@@ -135,6 +145,9 @@
     <Compile Include="ShellployCommandBuilderParent.cs" />
     <Compile Include="ShellployCommandProperty.cs" />
     <Compile Include="ShellployCommandPropertyParameterAttribute.cs" />
+    <Compile Include="Metadata\HarshContentTypeMetadata.cs" />
+    <Compile Include="IShellployMetadataObject.cs" />
+    <Compile Include="ShellployMetadataObject.cs" />
     <Compile Include="ShellployMetadata.cs" />
     <Compile Include="SourceFileWriter.cs" />
     <Compile Include="SR.Designer.cs">

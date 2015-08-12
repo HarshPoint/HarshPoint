@@ -26,7 +26,7 @@ namespace HarshPoint.ShellployGenerator
         public ShellployCommandBuilderParent<TProvisioner, TParentProvisioner> AsChildOf<TParentProvisioner>()
             where TParentProvisioner : HarshProvisionerBase
         {
-            var result = new ShellployCommandBuilderParent<TProvisioner, TParentProvisioner>();
+            var result = new ShellployCommandBuilderParent<TProvisioner, TParentProvisioner>(this);
             _parentProvisioner = result;
             return result;
         }

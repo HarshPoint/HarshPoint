@@ -10,9 +10,20 @@ namespace HarshPoint.ShellployGenerator
         where TProvisioner : HarshProvisionerBase
         where TParentProvisioner : HarshProvisionerBase
     {
+        private ShellployCommandBuilder<TProvisioner> _builder;
         private Dictionary<String, Object> _fixedParameters
             = new Dictionary<String, Object>();
         private HashSet<String> _ignoredParameters = new HashSet<String>();
+
+        public ShellployCommandBuilderParent(ShellployCommandBuilder<TProvisioner> builder)
+        {
+            _builder = builder;
+        }
+
+        public ShellployCommandBuilder<TProvisioner> End()
+        {
+            return _builder;
+        }
 
         public ImmutableDictionary<String, Object> FixedParameters
         {

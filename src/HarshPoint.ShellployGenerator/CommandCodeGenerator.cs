@@ -27,7 +27,7 @@ namespace HarshPoint.ShellployGenerator
                 Namespaces =
                 {
                     CreateNamespace()
-                }
+                },
             };
         }
 
