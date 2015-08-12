@@ -27,7 +27,7 @@ namespace HarshPoint.Shellploy
                 try
                 {
                     var provisioner = new HarshProvisioner();
-                    HarshProvisionerTreeBuilder.AddChildren(provisioner, Children);
+                    AddChildren(provisioner, Children);
 
                     provisioner.ProvisionAsync(context).Wait();
                 }

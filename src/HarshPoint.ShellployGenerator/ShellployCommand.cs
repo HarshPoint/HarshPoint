@@ -8,17 +8,17 @@ namespace HarshPoint.ShellployGenerator
 {
     internal class ShellployCommand
     {
-        public const String ChildrenPropertyName = "Children";
+        public const String ChildrenPropertyName = "InputObject";
 
         public String ClassName { get; set; }
         public Boolean HasChildren { get; set; }
         public IEnumerable<Type> ParentProvisionerTypes { get; set; }
-        public String Noun { get; internal set; }
+        public String Noun { get; set; }
         public Type ProvisionerType { get; set; }
         public Tuple<Type, String> Verb { get; set; }
         public String Namespace { get; set; }
         public IImmutableList<ShellployCommandProperty> Properties { get; set; }
         public Type ContextType { get; set; }
-        public IImmutableList<String> Usings { get; internal set; }
+        public IImmutableList<String> Usings { get; set; }
     }
 }

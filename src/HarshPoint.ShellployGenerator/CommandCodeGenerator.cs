@@ -11,8 +11,7 @@ namespace HarshPoint.ShellployGenerator
 {
     internal class CommandCodeGenerator
     {
-        private static readonly CodeTypeReferenceExpression TreeBuilderTypeExpression
-            = new CodeTypeReferenceExpression("HarshProvisionerTreeBuilder");
+        private static readonly String BaseTypeName= "HarshProvisionerCmdlet";
 
         private ShellployCommand _command;
 
@@ -70,7 +69,7 @@ namespace HarshPoint.ShellployGenerator
                 TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed,
                 BaseTypes =
                 {
-                    typeof(PSCmdlet),
+                    new CodeTypeReference(BaseTypeName),
                 },
             };
 
@@ -163,7 +162,7 @@ namespace HarshPoint.ShellployGenerator
                 {
                     method.Statements.Add(
                         new CodeMethodInvokeExpression(
-                            TreeBuilderTypeExpression,
+                            null,
                             "AddChild",
                             resultVar, innerVar
                         )
@@ -173,7 +172,7 @@ namespace HarshPoint.ShellployGenerator
                 {
                     method.Statements.Add(
                         new CodeMethodInvokeExpression(
-                            TreeBuilderTypeExpression,
+                            null,
                             "AddChildren",
                             resultVar,
                             new CodePropertyReferenceExpression(

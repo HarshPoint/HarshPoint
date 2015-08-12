@@ -19,7 +19,7 @@ namespace HarshPoint.Shellploy.Tests
             var parent = new HarshProvisioner();
             var child = new HarshProvisioner();
 
-            HarshProvisionerTreeBuilder.AddChild(parent, child);
+            HarshProvisionerCmdlet.AddChild(parent, child);
 
             Assert.Contains(child, parent.Children);
         }
@@ -34,7 +34,7 @@ namespace HarshPoint.Shellploy.Tests
 
             var tag = new Tag() { Value = 42 };
 
-            HarshProvisionerTreeBuilder.AddChild(parent, tag);
+            HarshProvisionerCmdlet.AddChild(parent, tag);
 
             await parent.ProvisionAsync(Context);
         }

@@ -96,6 +96,7 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Equal(0, properties[propName].ParameterAttributes[0].Position);
+            Assert.True(properties[propName].ParameterAttributes[0].ValueFromPipeline);
         }
 
         [Fact]
@@ -125,6 +126,7 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Null(properties[propName].ParameterAttributes[0].Position);
+            Assert.False(properties[propName].ParameterAttributes[0].ValueFromPipeline);
 
             propName = nameof(HarshTestProvisioner.MandatoryParam);
             Assert.Equal(typeof(String), properties[propName].Type);
@@ -133,6 +135,7 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.True(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Null(properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Null(properties[propName].ParameterAttributes[0].Position);
+            Assert.False(properties[propName].ParameterAttributes[0].ValueFromPipeline);
 
             propName = nameof(HarshTestProvisioner.ParamSetA);
             Assert.Equal(typeof(String), properties[propName].Type);
@@ -141,6 +144,7 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("A", properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Null(properties[propName].ParameterAttributes[0].Position);
+            Assert.False(properties[propName].ParameterAttributes[0].ValueFromPipeline);
 
             propName = nameof(HarshTestProvisioner.ParamSetB);
             Assert.Equal(typeof(String), properties[propName].Type);
@@ -149,6 +153,7 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("B", properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Null(properties[propName].ParameterAttributes[0].Position);
+            Assert.False(properties[propName].ParameterAttributes[0].ValueFromPipeline);
 
             propName = nameof(HarshTestProvisioner.ParamSetA_BMandatory);
             Assert.Equal(typeof(String), properties[propName].Type);
@@ -157,9 +162,11 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
             Assert.Equal("A", properties[propName].ParameterAttributes[0].ParameterSet);
             Assert.Null(properties[propName].ParameterAttributes[0].Position);
+            Assert.False(properties[propName].ParameterAttributes[0].ValueFromPipeline);
             Assert.True(properties[propName].ParameterAttributes[1].Mandatory);
             Assert.Equal("B", properties[propName].ParameterAttributes[1].ParameterSet);
             Assert.Null(properties[propName].ParameterAttributes[1].Position);
+            Assert.False(properties[propName].ParameterAttributes[1].ValueFromPipeline);
         }
 
         [Fact]

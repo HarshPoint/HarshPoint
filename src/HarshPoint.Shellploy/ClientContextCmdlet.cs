@@ -13,7 +13,7 @@ using System.Net;
 
 namespace HarshPoint.Shellploy
 {
-    public abstract class ClientContextCmdlet : PSCmdlet
+    public abstract class ClientContextCmdlet : HarshProvisionerCmdlet 
     {
         [SMA.Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true)]
         public Uri Url { get; set; }

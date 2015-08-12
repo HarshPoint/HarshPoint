@@ -71,7 +71,7 @@ namespace HarshPoint.ShellployGenerator
         {
             if (!parameterAttributes.Any())
             {
-                parameterAttributes = new []
+                parameterAttributes = new[]
                 {
                     new ShellployCommandPropertyParameterAttribute()
                 };
@@ -190,7 +190,7 @@ namespace HarshPoint.ShellployGenerator
             var childrenParameterNameArray = new String[0];
             if (hasChildren)
             {
-                childrenParameterNameArray = new [] { ShellployCommand.ChildrenPropertyName };
+                childrenParameterNameArray = new[] { ShellployCommand.ChildrenPropertyName };
             }
 
             var parentPositionalParameters = new String[0];
@@ -214,17 +214,18 @@ namespace HarshPoint.ShellployGenerator
             var childrenPropertyArray = new ShellployCommandProperty[0];
             if (_hasChildren)
             {
-                childrenPropertyArray = new []
+                childrenPropertyArray = new[]
                 {
                     new ShellployCommandProperty{
                         Name = ShellployCommand.ChildrenPropertyName,
-                        Type = typeof(ScriptBlock),
+                        Type = typeof(Object),
                         AssignmentOnType = null,
                         ParameterAttributes = new List<ShellployCommandPropertyParameterAttribute>()
                         {
                             new ShellployCommandPropertyParameterAttribute()
                             {
                                 Position = positionalParametersIndices.GetValueOrDefault(ShellployCommand.ChildrenPropertyName, null),
+                                ValueFromPipeline = true,
                             },
                         }.ToImmutableList(),
                     },
@@ -292,7 +293,8 @@ namespace HarshPoint.ShellployGenerator
                     Type = kvp.Value.Item1,
                     AssignmentOnType = ProvisionerType,
                     ParameterAttributes = kvp.Value.Item2
-                        .Select(attr => {
+                        .Select(attr =>
+                        {
                             attr.Position = positionalParametersIndices.GetValueOrDefault(kvp.Key, null);
                             return attr;
                         })
@@ -363,7 +365,7 @@ namespace HarshPoint.ShellployGenerator
             if (parentBuilder != null)
             {
                 return parentBuilder.GetParentProvisionerTypes(builders)
-                    .Concat(new [] { parentBuilder.ProvisionerType });
+                    .Concat(new[] { parentBuilder.ProvisionerType });
             }
 
             return new Type[0];

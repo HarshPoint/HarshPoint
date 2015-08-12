@@ -7,9 +7,10 @@ namespace HarshPoint.ShellployGenerator
 {
     internal class ShellployCommandPropertyParameterAttribute
     {
-        public Boolean Mandatory { get; internal set; }
-        public String ParameterSet { get; internal set; }
-        public Int32? Position { get; internal set; }
+        public Boolean Mandatory { get; set; }
+        public String ParameterSet { get; set; }
+        public Int32? Position { get; set; }
+        public Boolean ValueFromPipeline { get; set; }
 
         public Tuple<String, Object>[] GetAttributeArguments()
         {
@@ -17,6 +18,11 @@ namespace HarshPoint.ShellployGenerator
             {
                 Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.ValueFromPipelineByPropertyName), true),
             };
+
+            if (ValueFromPipeline)
+            {
+                result.Add(Tuple.Create<String, Object>(nameof(SMA.ParameterAttribute.ValueFromPipeline), ValueFromPipeline));
+            }
 
             if (Mandatory)
             {
