@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint.Provisioning
 {
@@ -19,6 +20,7 @@ namespace HarshPoint.Provisioning
         public String TypeName { get; set; }
 
         [Parameter(ParameterSetName = "Type")]
+        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
         public FieldType? Type { get; set; }
     }
 }

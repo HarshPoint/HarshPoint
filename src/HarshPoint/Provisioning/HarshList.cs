@@ -62,7 +62,7 @@ namespace HarshPoint.Provisioning
                 });
 
                 WriteOutput(
-                    Result.Created(Url, List)
+                    Result.Added(Url, List)
                 );
 
                 await ClientContext.ExecuteQueryAsync();

@@ -61,7 +61,7 @@ namespace HarshPoint.Provisioning
                 });
 
                 WriteOutput(
-                    Result.Created(
+                    Result.Added(
                         Id?.ToString() ?? Name,
                         ContentType
                     )

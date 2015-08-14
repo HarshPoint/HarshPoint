@@ -48,7 +48,6 @@ namespace HarshPoint.Provisioning.Implementation
                 {
                     if (canRecurse)
                     {
-                        // TODO: remove duplicates
                         retrievals = new ReadOnlyCollection<Expression>(
                             retrievals
                             .Concat(

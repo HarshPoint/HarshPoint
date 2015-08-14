@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-#warning NOT TESTED
     public sealed class HarshRemoveContentTypeRef : HarshProvisioner
     {
         private readonly HarshContentTypeRef _inner = new HarshContentTypeRef()

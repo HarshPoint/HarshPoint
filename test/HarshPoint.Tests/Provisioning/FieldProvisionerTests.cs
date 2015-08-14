@@ -2,6 +2,7 @@
 using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -25,9 +26,9 @@ namespace HarshPoint.Tests.Provisioning
             };
 
             await prov.ProvisionAsync(Context);
-            var fo = FindOutput<Field>();
+            var fo = LastObjectOutput<Field>();
 
-            Assert.False(fo.ObjectCreated);
+            Assert.False(fo.ObjectAdded);
         }
     }
 
@@ -88,8 +89,8 @@ namespace HarshPoint.Tests.Provisioning
 
             await provisioner.ProvisionAsync(Context);
 
-            var fieldOutput = FindOutput<Field>();
-            Assert.True(fieldOutput.ObjectCreated);
+            var fieldOutput = LastObjectOutput<Field>();
+            Assert.True(fieldOutput.ObjectAdded);
 
             var field = fieldOutput.Object;
             Assert.NotNull(field);
@@ -110,7 +111,7 @@ namespace HarshPoint.Tests.Provisioning
 
             await provisioner.ProvisionAsync(Context);
 
-            var fieldOutput = FindOutput<Field>();
+            var fieldOutput = LastObjectOutput<Field>();
             var field = fieldOutput.Object;
 
             ClientContext.Load(field, f => f.Id);
@@ -134,7 +135,7 @@ namespace HarshPoint.Tests.Provisioning
 
             await provisioner.ProvisionAsync(Context);
 
-            var fieldOutput = FindOutput<Field>();
+            var fieldOutput = LastObjectOutput<Field>();
             var field = fieldOutput.Object;
 
             ClientContext.Load(field, f => f.InternalName);
@@ -158,7 +159,7 @@ namespace HarshPoint.Tests.Provisioning
 
             await provisioner.ProvisionAsync(Context);
 
-            var fieldOutput = FindOutput<Field>();
+            var fieldOutput = LastObjectOutput<Field>();
             var field = fieldOutput.Object;
 
             ClientContext.Load(field, f => f.StaticName);
@@ -185,13 +186,61 @@ namespace HarshPoint.Tests.Provisioning
 
             await provisioner.ProvisionAsync(Context);
 
-            var fieldOutput = FindOutput<Field>();
+            var fieldOutput = LastObjectOutput<Field>();
             var field = fieldOutput.Object;
 
             ClientContext.Load(field, f => f.StaticName);
             await Context.ClientContext.ExecuteQueryAsync();
 
             Assert.Equal(fieldNameStatic, field.StaticName);
+        }
+    }
+
+    public class When_unprovisioning : SharePointClientTest
+    {
+        public When_unprovisioning(ITestOutputHelper output) : base(output)
+        {
+        }
+
+        [Fact]
+        public async Task Nonexistent_field_is_not_removed()
+        {
+            var prov = new HarshField()
+            {
+                MayDeleteUserData = true,
+                Id = Guid.NewGuid()
+            };
+
+            await prov.UnprovisionAsync(Context);
+
+            var output = LastIdentifiedOutput();
+            Assert.Equal(prov.Id.ToStringInvariant(), output.Identifier);
+            Assert.False(output.ObjectAdded);
+            Assert.False(output.ObjectRemoved);
+        }
+
+        [Fact]
+        public async Task Field_is_removed_by_id()
+        {
+            var field = await CreateField(f => f.Id);
+
+            var prov = new HarshField()
+            {
+                MayDeleteUserData = true,
+                Id = field.Id,
+            };
+
+            await prov.UnprovisionAsync(Context);
+
+            var output = LastIdentifiedOutput();
+            Assert.Equal(prov.Id.ToStringInvariant(), output.Identifier);
+            Assert.False(output.ObjectAdded);
+            Assert.True(output.ObjectRemoved);
+
+            var fields = ClientContext.LoadQuery(Web.Fields.Include(f => f.Id));
+            await ClientContext.ExecuteQueryAsync();
+
+            Assert.DoesNotContain(field.Id, fields.Select(f => f.Id));
         }
     }
 }

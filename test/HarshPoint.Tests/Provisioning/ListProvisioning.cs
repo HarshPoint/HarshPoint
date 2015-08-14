@@ -33,8 +33,8 @@ namespace HarshPoint.Tests.Provisioning
 
             await prov.ProvisionAsync(Context);
 
-            var output = FindOutput<List>();
-            Assert.False(output.ObjectCreated);
+            var output = LastObjectOutput<List>();
+            Assert.False(output.ObjectAdded);
 
             var outputList = output.Object;
             Assert.NotNull(outputList);
@@ -61,8 +61,8 @@ namespace HarshPoint.Tests.Provisioning
 
             await prov.ProvisionAsync(Context);
 
-            var objectCreated = FindOutput<List>();
-            Assert.IsType<ObjectCreated<List>>(objectCreated);
+            var objectCreated = LastObjectOutput<List>();
+            Assert.IsType<ObjectAdded<List>>(objectCreated);
 
             var list = objectCreated.Object;
             Assert.NotNull(list);

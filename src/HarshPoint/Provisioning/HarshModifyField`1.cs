@@ -16,6 +16,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        [Parameter]
         public Boolean NoPushChangesToLists
         {
             get;

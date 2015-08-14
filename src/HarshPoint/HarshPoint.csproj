@@ -106,8 +106,9 @@
     <Compile Include="Provisioning\Output\HarshProvisionerOutputSinkList.cs" />
     <Compile Include="Provisioning\Output\HarshProvisionerOutputSinkNull.cs" />
     <Compile Include="Provisioning\Output\IdentifiedObjectOutputBase.cs" />
+    <Compile Include="Provisioning\Output\IdentifiedOutputBase.cs" />
     <Compile Include="Provisioning\Output\ObjectAlreadyExists.cs" />
-    <Compile Include="Provisioning\Output\ObjectCreated.cs" />
+    <Compile Include="Provisioning\Output\ObjectAdded.cs" />
     <Compile Include="Provisioning\Implementation\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectIdentifierResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectManualResolver.cs" />
@@ -129,6 +130,8 @@
     <Compile Include="Provisioning\Implementation\NestedResolveResult.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveResult`1.cs" />
     <Compile Include="Provisioning\Output\HarshProvisionerOutputSinkSerilog.cs" />
+    <Compile Include="Provisioning\Output\ObjectDidNotExist.cs" />
+    <Compile Include="Provisioning\Output\ObjectRemoved.cs" />
     <Compile Include="Provisioning\ResolveExtensions.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2_Element.cs" />

@@ -14,27 +14,27 @@ namespace HarshPoint.Provisioning.Implementation
             ResolveContextFactory = resolveContextFactory;
         }
 
-        public IResolve<T> Resolve<T>(IResolve<T> resolve)
-            => Bind(resolve);
+        public IResolve<T> Resolve<T>(IResolve<T> value)
+            => Bind(value);
 
-        public IResolveSingle<T> ResolveSingle<T>(IResolveSingle<T> resolve)
-            => Bind(resolve);
+        public IResolveSingle<T> ResolveSingle<T>(IResolveSingle<T> value)
+            => Bind(value);
 
-        public IResolveSingleOrDefault<T> ResolveSingleOrDefault<T>(IResolveSingleOrDefault<T> resolve)
-            => Bind(resolve);
+        public IResolveSingleOrDefault<T> ResolveSingleOrDefault<T>(IResolveSingleOrDefault<T> value)
+            => Bind(value);
 
-        protected T Bind<T>(T obj)
-            => Bind(obj, null);
+        protected T Bind<T>(T value)
+            => Bind(value, null);
 
-        protected T Bind<T>(T obj, Func<IResolveContext> contextFactory)
+        protected T Bind<T>(T value , Func<IResolveContext> contextFactory)
         {
-            if (obj == null)
+            if (value == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(obj));
+                throw Logger.Fatal.ArgumentNull(nameof(value));
             }
 
             var binder = new ResolvedPropertyBinder(typeof(Holder<T>));
-            var holder = new Holder<T>() { Value = obj };
+            var holder = new Holder<T>() { Value = value };
 
             binder.Bind(
                 holder, 

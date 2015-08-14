@@ -74,6 +74,25 @@ namespace HarshPoint.Tests
             base.Dispose();
         }
 
+        protected async Task<Field> CreateField(params Expression<Func<Field, Object>>[] retrievals)
+        {
+            var guid = Guid.NewGuid();
+
+            Web.Fields.AddFieldAsXml(
+                $"<Field ID='{guid}' Name='{guid:n}' Type='Text' />",
+                addToDefaultView: false,
+                options: AddFieldOptions.DefaultValue
+            );
+
+            var field = Web.Fields.GetById(guid);
+
+            ClientContext.Load(field, retrievals);
+            await ClientContext.ExecuteQueryAsync();
+
+            RegisterForDeletion(field);
+            return field;
+        }
+
         protected async Task<List> CreateList(params Expression<Func<List, Object>>[] retrievals)
         {
             var guid = Guid.NewGuid();
@@ -99,6 +118,7 @@ namespace HarshPoint.Tests
             return list;
         }
 
+
         protected void RegisterForDeletion(ContentType ct)
         {
             if (ct == null)
@@ -107,6 +127,15 @@ namespace HarshPoint.Tests
             }
 
             AddDisposable(ct.DeleteObject);
+        }
+        protected void RegisterForDeletion(Field f)
+        {
+            if (f==null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(f));
+            }
+
+            AddDisposable(f.DeleteObject);
         }
         protected void RegisterForDeletion(List list)
         {
@@ -118,7 +147,10 @@ namespace HarshPoint.Tests
             AddDisposable(list.DeleteObject);
         }
 
-        protected IdentifiedObjectOutputBase<T> FindOutput<T>()
+        protected IdentifiedOutputBase LastIdentifiedOutput()
+            => Output.OfType<IdentifiedOutputBase>().Last();
+
+        protected IdentifiedObjectOutputBase<T> LastObjectOutput<T>()
             => Output.OfType<IdentifiedObjectOutputBase<T>>().Last();
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<SharePointClientTest>();

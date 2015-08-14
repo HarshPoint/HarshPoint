@@ -4,14 +4,15 @@ namespace HarshPoint.ObjectModel
 {
     public class ParameterValidationException : Exception
     {
-        public ParameterValidationException(String parameterName)
-        {
-            if (String.IsNullOrWhiteSpace(parameterName))
-            {
-                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(parameterName));
-            }
+        public ParameterValidationException() { }
 
-            ParameterName = parameterName;
+        public ParameterValidationException(String message)
+            : base(message)
+        {
+        }
+        public ParameterValidationException(String message, Exception innerException)
+            : base(message, innerException)
+        {
         }
 
         public ParameterValidationException(String parameterName, String message) 

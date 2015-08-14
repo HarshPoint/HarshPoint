@@ -44,8 +44,8 @@ namespace HarshPoint.Tests.Provisioning
 
             await field.ProvisionAsync(Context);
 
-            var fo = FindOutput<Field>();
-            Assert.True(fo.ObjectCreated);
+            var fo = LastObjectOutput<Field>();
+            Assert.True(fo.ObjectAdded);
 
             ClientContext.Load(
                 ClientContext.CastTo<FieldLookup>(fo.Object),
@@ -79,7 +79,7 @@ namespace HarshPoint.Tests.Provisioning
 
             await list.ProvisionAsync(Context);
 
-            return FindOutput<List>()?.Object;
+            return LastObjectOutput<List>()?.Object;
         }
     }
 }

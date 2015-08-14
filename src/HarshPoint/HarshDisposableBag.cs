@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint
 {
@@ -7,6 +8,7 @@ namespace HarshPoint
     {
         private ImmutableStack<IDisposable> _disposables = ImmutableStack<IDisposable>.Empty;
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public void Add(Action action)
         {
             if (action == null)
@@ -40,6 +42,7 @@ namespace HarshPoint
         /// <summary>
         /// Not intended for production code.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public void TryDispose()
         {
             foreach (var item in _disposables)

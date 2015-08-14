@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -26,6 +27,7 @@ namespace HarshPoint.Provisioning
         /// Gets or sets the <see cref="AddFieldOptions"/> value used when
         /// creating a new field.
         /// </summary>
+        [Parameter]
         public AddFieldOptions AddFieldOptions { get; set; }
 
         /// <summary>
@@ -34,6 +36,7 @@ namespace HarshPoint.Provisioning
         /// <value>
         /// <c>true</c> if add the newly created field to the default view; otherwise, <c>false</c>.
         /// </value>
+        [Parameter]
         public Boolean AddToDefaultView { get; set; }
 
         /// <summary>
@@ -45,6 +48,7 @@ namespace HarshPoint.Provisioning
 
         [MandatoryWhenCreating]
         [Parameter(ParameterSetName = "Type")]
+        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
         public FieldType? Type { get; set; }
 
         /// <summary>
@@ -107,7 +111,7 @@ namespace HarshPoint.Provisioning
                 Field = reResolvedField.Value;
 
                 WriteOutput(
-                    Result.Created(InternalName ?? Id.ToString(), Field)
+                    Result.Added(FieldIdentifier, Field)
                 );
             }
             else
@@ -115,7 +119,27 @@ namespace HarshPoint.Provisioning
                 Field = ExistingField.Value;
 
                 WriteOutput(
-                    Result.AlreadyExists(InternalName ?? Id.ToString(), Field)
+                    Result.AlreadyExists(FieldIdentifier, Field)
+                );
+            }
+        }
+
+        protected override async Task OnUnprovisioningAsync()
+        {
+            if (ExistingField.HasValue)
+            {
+                ExistingField.Value.DeleteObject();
+
+                await ClientContext.ExecuteQueryAsync();
+
+                WriteOutput(
+                    Result.Removed(FieldIdentifier)
+                );
+            }
+            else
+            {
+                WriteOutput(
+                    Result.DidNotExist(FieldIdentifier)
                 );
             }
         }
@@ -132,18 +156,11 @@ namespace HarshPoint.Provisioning
             );
         }
 
-        protected override async Task OnUnprovisioningAsync()
-        {
-            if (!ExistingField.Value.IsNull())
-            {
-                ExistingField.Value.DeleteObject();
-                await ClientContext.ExecuteQueryAsync();
-            }
-        }
-
         private IResolveSingleOrDefault<Field> ExistingField { get; set; }
 
         private Field Field { get; set; }
+
+        private String FieldIdentifier => InternalName ?? Id.ToStringInvariant();
 
         private FieldCollection TargetFieldCollection { get; set; }
     }

@@ -32,8 +32,8 @@ namespace HarshPoint.Tests.Provisioning
 
             await prov.ProvisionAsync(Context);
 
-            var output = FindOutput<ContentType>();
-            Assert.False(output.ObjectCreated);
+            var output = LastObjectOutput<ContentType>();
+            Assert.False(output.ObjectAdded);
         }
 
         [Fact]
@@ -53,9 +53,9 @@ namespace HarshPoint.Tests.Provisioning
             {
                 await prov.ProvisionAsync(Context);
 
-                var output = FindOutput<ContentType>();
+                var output = LastObjectOutput<ContentType>();
                 ct = output.Object;
-                Assert.True(output.ObjectCreated);
+                Assert.True(output.ObjectAdded);
                 Assert.NotNull(ct);
 
                 ClientContext.Load(
@@ -115,9 +115,9 @@ namespace HarshPoint.Tests.Provisioning
                 await field.ProvisionAsync(Context);
                 await ct.ProvisionAsync(Context);
 
-                var cto = FindOutput<ContentType>();
+                var cto = LastObjectOutput<ContentType>();
 
-                Assert.True(cto.ObjectCreated);
+                Assert.True(cto.ObjectAdded);
                 Assert.False(cto.Object.IsNull());
 
                 var links = ClientContext.LoadQuery(
@@ -169,8 +169,8 @@ namespace HarshPoint.Tests.Provisioning
 
                 await prov.ProvisionAsync(ctx);
 
-                var cto = FindOutput<ContentType>();
-                Assert.True(cto.ObjectCreated);
+                var cto = LastObjectOutput<ContentType>();
+                Assert.True(cto.ObjectAdded);
 
                 ct = cto.Object;
                 Assert.NotNull(ct);

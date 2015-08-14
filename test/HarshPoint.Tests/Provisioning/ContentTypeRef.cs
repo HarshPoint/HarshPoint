@@ -43,17 +43,17 @@ namespace HarshPoint.Tests.Provisioning
 
             await ctProv.ProvisionAsync(Context);
 
-            var ctResult = FindOutput<ContentType>();
+            var ctResult = LastObjectOutput<ContentType>();
             var ct = ctResult.Object;
             RegisterForDeletion(ct);
 
             await listProv.ProvisionAsync(Context);
 
-            var listResult = FindOutput<List>();
+            var listResult = LastObjectOutput<List>();
             var list = listResult.Object;
             RegisterForDeletion(list);
 
-            Assert.IsType<ObjectCreated<List>>(listResult);
+            Assert.IsType<ObjectAdded<List>>(listResult);
             Assert.NotNull(list);
 
             ClientContext.Load(

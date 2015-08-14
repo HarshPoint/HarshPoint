@@ -42,7 +42,7 @@ namespace HarshPoint.Tests.Provisioning
 
             await field.ProvisionAsync(Context);
 
-            var fo = FindOutput<Field>();
+            var fo = LastObjectOutput<Field>();
 
             try
             {

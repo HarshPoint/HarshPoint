@@ -2,30 +2,21 @@
 
 namespace HarshPoint.Provisioning.Output
 {
-    public abstract class IdentifiedObjectOutputBase<T> : HarshProvisionerOutput
+    public abstract class IdentifiedObjectOutputBase<T> : IdentifiedOutputBase
     {
-        protected IdentifiedObjectOutputBase(String identifier, T @object)
+        protected IdentifiedObjectOutputBase(String identifier, Object parent, T @object)
+            : base(identifier, parent)
         {
-            if (String.IsNullOrWhiteSpace(identifier))
-            {
-                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(identifier));
-            }
-
             if (@object == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(@object));
             }
 
-            Identifier = identifier;
             Object = @object;
         }
 
-        public String Identifier { get; private set; }
-
         public T Object { get; private set; }
 
-        public Boolean ObjectCreated { get; protected set; }
-
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ObjectCreated<>));
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IdentifiedObjectOutputBase<>));
     }
 }
