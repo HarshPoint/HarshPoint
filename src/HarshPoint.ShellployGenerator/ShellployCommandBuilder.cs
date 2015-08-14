@@ -18,6 +18,7 @@ namespace HarshPoint.ShellployGenerator
         private Dictionary<String, Object> _fixedParameters = new Dictionary<String, Object>();
         private Dictionary<String, Object> _defaultValues = new Dictionary<String, Object>();
         private HashSet<String> _ignoredParameters = new HashSet<String>();
+        private Dictionary<String, String> _renamedParameters = new Dictionary<String, String>();
         private List<String> _usings = new List<String>();
         private IShellployCommandBuilderParent _parentProvisioner;
         private Boolean _hasChildren;
@@ -84,6 +85,15 @@ namespace HarshPoint.ShellployGenerator
                     parameterAttributes.ToImmutableArray()
                 )
             );
+        }
+
+        public ShellployCommandBuilder<TProvisioner> RenameParameter(
+            Expression<Func<TProvisioner, Object>> parameter, 
+            String newName
+        )
+        {
+            _renamedParameters[parameter.ExtractSinglePropertyAccess().Name] = newName;
+            return this;
         }
 
         public ShellployCommandBuilder<TProvisioner> SetParameterValue<TValue>(
@@ -238,6 +248,7 @@ namespace HarshPoint.ShellployGenerator
                     (key, group) => new ShellployCommandProperty()
                     {
                         Name = key,
+                        PropertyName = GetPropertyName(key, _renamedParameters),
                         Type = group.First().PropertyType,
                         AssignmentOnType = ProvisionerType,
                         ParameterAttributes = group
@@ -337,7 +348,7 @@ namespace HarshPoint.ShellployGenerator
             }
         }
 
-        private void SetDefaultValues(
+        private static void SetDefaultValues(
             IEnumerable<ShellployCommandProperty> properties,
             IDictionary<String, Object> defaultParameters
         )
@@ -355,6 +366,17 @@ namespace HarshPoint.ShellployGenerator
                     prop.DefaultValue = defaultValue;
                 }
             }
+        }
+
+        private static String GetPropertyName(String name, Dictionary<String, String> renamedParameters)
+        {
+            String newName;
+            if (renamedParameters.TryGetValue(name, out newName))
+            {
+                return newName;
+            }
+
+            return name;
         }
 
         public IEnumerable<Type> GetParentProvisionerTypes(

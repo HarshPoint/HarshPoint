@@ -17,6 +17,7 @@ namespace HarshPoint.ShellployGenerator
                         Mandatory = true,
                     }
                 )
+                .RenameParameter(x => x.Lists, "List")
                 .SetParameterValue(x => x.ContentTypes,
                     new CodeTypeReferenceExpression(typeof(Resolve))
                         .Call(nameof(Resolve.ContentType))

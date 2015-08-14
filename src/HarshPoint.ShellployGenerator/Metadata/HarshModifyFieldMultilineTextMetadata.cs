@@ -9,6 +9,7 @@ namespace HarshPoint.ShellployGenerator
         protected override ShellployCommandBuilder<HarshModifyFieldMultilineText> CreateCommandBuilder()
         {
             return base.CreateCommandBuilder()
+                .RenameParameter(x => x.Fields, "Field")
                 .AsChildOf<HarshField>()
                     .SetValue(x => x.Type, FieldType.Note)
                 .End();

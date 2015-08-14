@@ -22,6 +22,7 @@ namespace HarshPoint.ShellployGenerator
                         .Call(nameof(Resolve.ByInternalName), new CodeVariableReferenceExpression("TargetField"))
                         .Call(nameof(ResolveBuilderExtensions.As), typeof(Tuple<List, Field>))
                 )
+                .RenameParameter(x => x.Fields, "Field")
                 .AsChildOf<HarshField>()
                     .SetValue(x => x.Type, FieldType.Lookup)
                     .IgnoreParameter(x => x.TypeName)

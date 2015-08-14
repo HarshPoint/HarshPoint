@@ -9,6 +9,7 @@ namespace HarshPoint.ShellployGenerator
     internal class ShellployCommandProperty
     {
         public String Name { get; set; }
+        public String PropertyName { get; set; }
         public Type Type { get; set; }
         public IImmutableList<ShellployCommandPropertyParameterAttribute> ParameterAttributes { get; set; }
         public Type AssignmentOnType { get; set; }

@@ -216,7 +216,7 @@ namespace HarshPoint.ShellployGenerator
         {
             CodeExpression valueExpression = new CodePropertyReferenceExpression(
                 This,
-                property.Name
+                property.PropertyName ?? property.Name
             );
 
             if (property.UseFixedValue)
@@ -249,7 +249,7 @@ namespace HarshPoint.ShellployGenerator
 
             var codeProperty = new CodeMemberProperty()
             {
-                Name = property.Name,
+                Name = property.PropertyName ?? property.Name,
                 Type = new CodeTypeReference(type),
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
             };

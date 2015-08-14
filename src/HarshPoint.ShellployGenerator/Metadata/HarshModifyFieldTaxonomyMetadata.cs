@@ -19,6 +19,7 @@ namespace HarshPoint.ShellployGenerator
                         .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("TermSetId"))
                         .Call(nameof(ResolveBuilderExtensions.As), typeof(TermSet))
                 )
+                .RenameParameter(x => x.Fields, "Field")
                 .AsChildOf<HarshField>()
                     .SetValue(x => x.TypeName, "TaxonomyFieldType")
                     .IgnoreParameter(x => x.Type)
