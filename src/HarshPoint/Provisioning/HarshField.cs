@@ -156,7 +156,7 @@ namespace HarshPoint.Provisioning
             );
         }
 
-        private IResolveSingleOrDefault<Field> ExistingField { get; set; }
+        internal IResolveSingleOrDefault<Field> ExistingField { get; set; }
 
         private Field Field { get; set; }
 

@@ -15,10 +15,10 @@ namespace HarshPoint.Provisioning.Output
             Parent = parent;
         }
 
-        public String Identifier { get; private set; }
+        public String Identifier { get; }
         public Boolean ObjectAdded { get; protected set; }
         public Boolean ObjectRemoved { get; protected set; }
-        public Object Parent { get; private set; }
+        public Object Parent { get; }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IdentifiedOutputBase));
     }
