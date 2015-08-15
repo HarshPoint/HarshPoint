@@ -49,7 +49,7 @@ namespace HarshPoint.Provisioning
 
             if (value.HasValue)
             {
-                property.ExtractSinglePropertyAccess().SetValue(field, value.Value);
+                property.ExtractLastPropertyAccess().SetValue(field, value.Value);
             }
         }
 

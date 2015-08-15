@@ -81,7 +81,7 @@ namespace HarshPoint.Provisioning
                 () => (ClientObjectResolveContext)resolveContextFactory()
             );
 
-        internal sealed override async Task OnResolvedParametersBound()
+        internal sealed override async Task OnResolvedPropertiesBound()
         {
             if (ClientContext.HasPendingRequest)
             {

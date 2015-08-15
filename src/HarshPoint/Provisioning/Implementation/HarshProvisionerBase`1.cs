@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Reflection;
+using System.Linq.Expressions;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -14,7 +16,7 @@ namespace HarshPoint.Provisioning.Implementation
     /// Provides common initialization and completion logic for 
     /// classes provisioning SharePoint artifacts.
     /// </summary>
-    public abstract class HarshProvisionerBase<TContext> : HarshProvisionerBase
+    public abstract class HarshProvisionerBase<TContext> : HarshProvisionerBase, ITrackValueSource
         where TContext : HarshProvisionerContextBase
     {
         private readonly HarshScopedValue<TContext> _context;
@@ -25,6 +27,7 @@ namespace HarshPoint.Provisioning.Implementation
         private ICollection<Func<Object>> _childrenContextStateModifiers;
         private ManualResolver _manualResolver;
         private HarshProvisionerMetadata _metadata;
+        private PropertyValueSourceTracker _valueSourceTracker;
 
         protected HarshProvisionerBase()
         {
@@ -63,6 +66,9 @@ namespace HarshPoint.Provisioning.Implementation
 
         internal HarshProvisionerMetadata Metadata
             => HarshLazy.Initialize(ref _metadata, () => new HarshProvisionerMetadata(GetType()));
+
+        internal PropertyValueSourceTracker ValueSourceTracker
+            => HarshLazy.Initialize(ref _valueSourceTracker);
 
         public void ModifyChildrenContextState(Func<Object> modifier)
         {
@@ -120,6 +126,9 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
+        protected internal Boolean IsValueDefaultFromContext(Expression<Func<Object>> expression)
+            => _valueSourceTracker?.GetValueSource(expression) == DefaultFromContextPropertyValueSource.Instance;
+
         protected void ForwardsTo(HarshProvisionerBase<TContext> target)
         {
             ForwardTarget = target;
@@ -174,7 +183,7 @@ namespace HarshPoint.Provisioning.Implementation
         internal virtual ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
             => new ManualResolver(resolveContextFactory);
 
-        internal virtual Task OnResolvedParametersBound() => HarshTask.Completed;
+        internal virtual Task OnResolvedPropertiesBound() => HarshTask.Completed;
 
         protected abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
 
@@ -268,9 +277,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         private Task RunSelfAndChildren(
-            TContext context,
-            Func<Task> action,
-            Func<Task> childAction
+            TContext context, Func<Task> action, Func<Task> childAction
         )
             => RunWithContext(context, async delegate
             {
@@ -284,7 +291,7 @@ namespace HarshPoint.Provisioning.Implementation
                     CreateResolveContext
                 );
 
-                await OnResolvedParametersBound();
+                await OnResolvedPropertiesBound();
 
                 // parameter set resolving depends on values
                 // from context being already set
@@ -307,6 +314,12 @@ namespace HarshPoint.Provisioning.Implementation
 
                 await childAction();
             });
+
+        PropertyValueSource ITrackValueSource.GetValueSource(PropertyInfo property)
+            => _valueSourceTracker?.GetValueSource(property);
+
+        void ITrackValueSource.SetValueSource(PropertyInfo property, PropertyValueSource source)
+            => ValueSourceTracker.SetValueSource(property, source);
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         protected static readonly ICollection<HarshProvisionerBase> NoChildren =

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.ObjectModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace HarshPoint.Provisioning.Implementation
             Properties = properties.ToImmutableArray();
         }
 
-        public void Bind(Object target, HarshProvisionerContextBase context)
+        public void Bind(ITrackValueSource target, HarshProvisionerContextBase context)
         {
             if (target == null)
             {
@@ -33,7 +34,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             foreach (var prop in Properties)
             {
-                var value = prop.Accessor.Getter(target);
+                var value = prop.Accessor.GetValue(target);
 
                 if (value != null)
                 {
@@ -55,7 +56,7 @@ namespace HarshPoint.Provisioning.Implementation
                         value
                     );
 
-                    prop.Accessor.Setter(target, value);
+                    prop.Accessor.SetValue(target, value, DefaultFromContextPropertyValueSource.Instance);
                 }
                 else
                 {

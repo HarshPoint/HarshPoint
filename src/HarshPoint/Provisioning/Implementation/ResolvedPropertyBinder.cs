@@ -112,7 +112,7 @@ namespace HarshPoint.Provisioning.Implementation
                     x.Failures
                 );
 
-                x.Property.Setter(target, result);
+                x.Property.SetValue(target, result);
             }
         }
 
@@ -133,7 +133,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         private static Object GetValue(PropertyAccessor property, Object target)
         {
-            var value = property.Getter(target);
+            var value = property.GetValue(target);
 
             if (value == null)
             {

@@ -74,27 +74,19 @@ namespace HarshPoint.ObjectModel
         public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
 
         public Object GetValue(Object target)
-        {
-            if (target == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(target));
-            }
+            => PropertyAccessor.GetValue(target);
 
-            return PropertyAccessor.Getter(target);
-        }
+        public PropertyValueSource GetValueSource(ITrackValueSource target)
+            => PropertyAccessor.GetValueSource(target);
 
         public Boolean IsDefined(Type attributeType, Boolean inherit)
             => PropertyInfo.IsDefined(attributeType, inherit);
 
         public void SetValue(Object target, Object value)
-        {
-            if (target == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(target));
-            }
+            => PropertyAccessor.SetValue(target, value);
 
-            PropertyAccessor.Setter(target, value);
-        }
+        public void SetValue(ITrackValueSource target, Object value, PropertyValueSource source)
+            => PropertyAccessor.SetValue(target, value, source);
 
         public Boolean HasDefaultValue(Object target)
         {

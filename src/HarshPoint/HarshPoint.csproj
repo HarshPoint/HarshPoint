@@ -82,8 +82,11 @@
     <Compile Include="Linq\HarshQueryable.cs" />
     <Compile Include="ObjectModel\HarshObjectMetadata.cs" />
     <Compile Include="ObjectModel\IDefaultValuePolicy.cs" />
+    <Compile Include="ObjectModel\ITrackValueSource.cs" />
     <Compile Include="ObjectModel\NullDefaultValuePolicy.cs" />
+    <Compile Include="ObjectModel\PropertyValueSource.cs" />
     <Compile Include="ObjectModel\PropertyAccessor.cs" />
+    <Compile Include="ObjectModel\PropertyValueSourceTracker.cs" />
     <Compile Include="Provisioning\DefaultContentTypeGroup.cs" />
     <Compile Include="Provisioning\DefaultFieldGroup.cs" />
     <Compile Include="Provisioning\DefaultFromContextTag`1.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="Provisioning\HarshModifyFieldMultilineText.cs" />
     <Compile Include="Provisioning\HarshProvisionerOutputSink.cs" />
     <Compile Include="Provisioning\HarshProvisionerOutput.cs" />
+    <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyValueSource.cs" />
     <Compile Include="Provisioning\Implementation\ProvisioningDefaultValuePolicy.cs" />
     <Compile Include="Provisioning\MandatoryWhenCreatingAttribute.cs" />
     <Compile Include="Provisioning\Output\HarshProvisionerOutputSinkComposite.cs" />

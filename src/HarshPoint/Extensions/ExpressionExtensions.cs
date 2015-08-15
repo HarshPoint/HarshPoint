@@ -86,14 +86,14 @@ namespace HarshPoint
             return visitor.Members;
         }
 
-        public static PropertyInfo ExtractSinglePropertyAccess(this Expression expression)
+        public static PropertyInfo ExtractLastPropertyAccess(this Expression expression)
         {
             if (expression == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(expression));
             }
 
-            return (PropertyInfo)ExtractMemberAccess(expression).First();
+            return (PropertyInfo)ExtractMemberAccess(expression).Last();
         }
 
         public static FieldInfo TryExtractSingleFieldAccess(this Expression expression)

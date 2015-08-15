@@ -143,6 +143,19 @@ namespace HarshPoint.Tests.Provisioning
             );
         }
 
+        [Fact]
+        public void ValueSource_is_retrievable()
+        {
+            var prov = new TaggedProvisioner();
+            Assert.Null(prov.TaggedStringProperty);
+
+            var ctx = Context.PushState(new DummyTag() { Value = "424242" });
+
+            prov.Metadata.DefaultFromContextPropertyBinder.Bind(prov, ctx);
+
+            Assert.True(prov.IsValueDefaultFromContext(() => prov.TaggedStringProperty));
+        }
+
         private class StringProvisioner : HarshProvisioner
         {
             [Parameter]
