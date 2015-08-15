@@ -197,7 +197,7 @@ namespace HarshPoint.Provisioning.Implementation
 
                 foreach (var attr in parameter.ValidationAttributes)
                 {
-                    attr.Validate(parameter, parameter.Getter(this));
+                    attr.Validate(parameter, parameter.GetValue(this));
                 }
             }
         }

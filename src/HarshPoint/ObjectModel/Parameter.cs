@@ -73,7 +73,7 @@ namespace HarshPoint.ObjectModel
         [NotLogged]
         public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
 
-        public Object Getter(Object target)
+        public Object GetValue(Object target)
         {
             if (target == null)
             {
@@ -86,7 +86,7 @@ namespace HarshPoint.ObjectModel
         public Boolean IsDefined(Type attributeType, Boolean inherit)
             => PropertyInfo.IsDefined(attributeType, inherit);
 
-        public void Setter(Object target, Object value)
+        public void SetValue(Object target, Object value)
         {
             if (target == null)
             {
@@ -103,7 +103,7 @@ namespace HarshPoint.ObjectModel
                 throw Logger.Fatal.ArgumentNull(nameof(target));
             }
 
-            var value = Getter(target);
+            var value = GetValue(target);
             return DefaultValuePolicy.IsDefaultValue(value);
         }
 
