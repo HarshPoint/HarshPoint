@@ -15,11 +15,7 @@ namespace HarshPoint
             DefaultParameterSetName = defaultParameterSetName;
         }
 
-        public String DefaultParameterSetName
-        {
-            get;
-            private set;
-        }
+        public String DefaultParameterSetName { get; }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<DefaultParameterSetAttribute>();
     }

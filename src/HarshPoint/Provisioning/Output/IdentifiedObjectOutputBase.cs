@@ -15,7 +15,7 @@ namespace HarshPoint.Provisioning.Output
             Object = @object;
         }
 
-        public T Object { get; private set; }
+        public T Object { get; set; }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IdentifiedObjectOutputBase<>));
     }

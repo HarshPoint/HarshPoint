@@ -44,7 +44,7 @@ namespace HarshPoint.Provisioning.Implementation
             return holder.Value;
         }
 
-        private Func<IResolveContext> ResolveContextFactory { get; set; }
+        private Func<IResolveContext> ResolveContextFactory { get; }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ManualResolver));
 

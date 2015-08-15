@@ -81,6 +81,6 @@ namespace HarshPoint.Provisioning
 
 
         private ContentType ContentType { get; set; }
-        private IResolveSingleOrDefault<ContentType> ExistingContentType { get; set; }
+        internal IResolveSingleOrDefault<ContentType> ExistingContentType { get; set; }
     }
 }

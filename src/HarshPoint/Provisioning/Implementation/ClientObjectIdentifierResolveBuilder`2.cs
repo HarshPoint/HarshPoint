@@ -61,12 +61,12 @@ namespace HarshPoint.Provisioning.Implementation
 
         private Expression<Func<TResult, Object>> IdentifierExpression
         {
-            get; set;
+            get;
         }
 
         private Func<TResult, TIdentifier> IdentifierSelector
         {
-            get; set;
+            get;
         }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectIdentifierResolveBuilder<,>));

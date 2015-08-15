@@ -91,10 +91,7 @@ namespace HarshPoint.Tests
                 set;
             }
 
-            public object Clone()
-            {
-                return MemberwiseClone();
-            }
+            public Object Clone() => MemberwiseClone();
         }
     }
 }

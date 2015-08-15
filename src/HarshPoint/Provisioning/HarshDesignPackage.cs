@@ -53,7 +53,7 @@ namespace HarshPoint.Provisioning
         private IResolveSingle<Folder> CatalogFolder
         {
             get;
-            set;
+
         }
 
         private DesignPackageInfo PackageInfo

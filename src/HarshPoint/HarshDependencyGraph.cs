@@ -68,9 +68,7 @@ namespace HarshPoint
         }
 
         public Boolean Equals(HarshDependencyGraph<T> other)
-        {
-            return Equals(_graph, other._graph);
-        }
+            => Equals(_graph, other._graph);
 
         public IEnumerable<T> Sort()
         {
@@ -115,7 +113,7 @@ namespace HarshPoint
         public static readonly HarshDependencyGraph<T> Empty
             = new HarshDependencyGraph<T>();
 
-        public static Boolean operator== (HarshDependencyGraph<T> left, HarshDependencyGraph<T> right)
+        public static Boolean operator ==(HarshDependencyGraph<T> left, HarshDependencyGraph<T> right)
             => left.Equals(right);
 
         public static Boolean operator !=(HarshDependencyGraph<T> left, HarshDependencyGraph<T> right)

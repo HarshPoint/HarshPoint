@@ -18,9 +18,9 @@ namespace HarshPoint.ObjectModel
             Setter = propertyInfo.MakeSetter();
         }
 
-        public PropertyInfo PropertyInfo { get; private set; }
-        public Action<Object, Object> Setter { get; private set; }
-        public Func<Object, Object> Getter { get; private set; }
+        public PropertyInfo PropertyInfo { get; }
+        public Action<Object, Object> Setter { get; }
+        public Func<Object, Object> Getter { get; }
 
         public Type DeclaringType => PropertyInfo.DeclaringType;
         public String Name => PropertyInfo.Name;

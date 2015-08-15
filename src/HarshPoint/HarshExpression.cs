@@ -9,8 +9,6 @@ namespace HarshPoint
     {
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static PropertyInfo TryExtractSinglePropertyAccess(Expression<Func<Object>> expression)
-        {
-            return expression.TryExtractSinglePropertyAccess();
-        }
+            => expression.TryExtractSinglePropertyAccess();
     }
 }

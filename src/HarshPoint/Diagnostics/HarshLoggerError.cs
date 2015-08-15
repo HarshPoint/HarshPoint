@@ -12,8 +12,6 @@ namespace HarshPoint.Diagnostics
 
         public TException Write<TException>(TException exception)
             where TException : Exception
-        {
-            return Write(LogEventLevel.Error, exception);
-        }
+            => Write(LogEventLevel.Error, exception);
     }
 }

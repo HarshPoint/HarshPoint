@@ -20,7 +20,7 @@ namespace HarshPoint.Provisioning
 
             TemplateType = ListTemplateType.GenericList;
         }
-        
+
         [Parameter(ParameterSetName = "TemplateId")]
         public Int32? TemplateId
         {
@@ -77,7 +77,7 @@ namespace HarshPoint.Provisioning
             }
         }
 
-        private IResolveSingleOrDefault<List> ExistingList { get; set; }
+        internal IResolveSingleOrDefault<List> ExistingList { get; set; }
         private List List { get; set; }
     }
 

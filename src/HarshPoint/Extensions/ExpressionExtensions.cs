@@ -22,7 +22,7 @@ namespace HarshPoint
 
             return Expression.Lambda<Func<T, Object>>(
                 Expression.Convert(
-                    expression.Body, 
+                    expression.Body,
                     typeof(Object)
                 ),
                 expression.Parameters
@@ -50,19 +50,15 @@ namespace HarshPoint
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static String GetMemberName<T, TResult>(this Expression<Func<T, TResult>> expression)
-        {
-            return GetMemberName((Expression)expression);
-        }
+            => GetMemberName((Expression)expression);
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static String GetMemberName<T>(this Expression<Func<T>> expression)
-        {
-            return GetMemberName((Expression)expression);
-        }
+            => GetMemberName((Expression)expression);
 
         public static String GetMemberName(this Expression expression)
         {
-            var memberNames = 
+            var memberNames =
                 ExtractMemberAccess(expression)
                 .Select(m => m.Name);
 

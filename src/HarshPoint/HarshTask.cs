@@ -4,9 +4,6 @@ namespace HarshPoint
 {
     public static class HarshTask
     {
-        public static Task Completed
-        {
-            get { return Task.FromResult(false); }
-        }
+        public static Task Completed => Task.FromResult(false);
     }
 }

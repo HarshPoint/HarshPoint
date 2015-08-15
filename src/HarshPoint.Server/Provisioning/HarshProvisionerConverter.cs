@@ -57,7 +57,6 @@ namespace HarshPoint.Server.Provisioning
             private HarshProvisioner Provisioner
             {
                 get;
-                set;
             }
 
             protected override async Task InitializeAsync()
@@ -87,19 +86,13 @@ namespace HarshPoint.Server.Provisioning
             }
 
             protected override ICollection<HarshProvisionerBase> CreateChildrenCollection()
-            {
-                return NoChildren;
-            }
+                => NoChildren;
 
             protected override Task OnProvisioningAsync()
-            {
-                return Provisioner.ProvisionAsync(ProvisionerContext);
-            }
+                => Provisioner.ProvisionAsync(ProvisionerContext);
 
             protected override Task OnUnprovisioningAsync()
-            {
-                return Provisioner.UnprovisionAsync(ProvisionerContext);
-            }
+                => Provisioner.UnprovisionAsync(ProvisionerContext);
         }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshProvisionerConverter));

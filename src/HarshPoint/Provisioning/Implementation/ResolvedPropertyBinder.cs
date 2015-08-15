@@ -9,7 +9,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class ResolvedPropertyBinder
     {
-        public IReadOnlyCollection<PropertyAccessor> Properties { get; private set; }
+        public IReadOnlyCollection<PropertyAccessor> Properties { get; }
 
         public ResolvedPropertyBinder(IEnumerable<PropertyAccessor> properties)
         {

@@ -47,6 +47,6 @@ namespace HarshPoint.Tests.Provisioning
         }
 
         public IResolveSingle<Field> Field { get; set; }
-        private ResolvedPropertyBinder Binder { get; set; }
+        private ResolvedPropertyBinder Binder { get; }
     }
 }

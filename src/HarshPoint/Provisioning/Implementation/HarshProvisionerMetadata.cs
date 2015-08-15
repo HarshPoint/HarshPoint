@@ -1,10 +1,10 @@
-﻿using HarshPoint.Reflection;
+﻿using HarshPoint.ObjectModel;
+using HarshPoint.Reflection;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using System.Collections.Generic;
-using HarshPoint.ObjectModel;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -46,33 +46,18 @@ namespace HarshPoint.Provisioning.Implementation
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
         }
 
-        public DefaultFromContextPropertyBinder DefaultFromContextPropertyBinder
-        {
-            get; private set;
-        }
+        public DefaultFromContextPropertyBinder DefaultFromContextPropertyBinder { get; }
 
-        public ParameterSet DefaultParameterSet { get; private set; }
+        public ParameterSet DefaultParameterSet { get; }
 
         public IEnumerable<Parameter> Parameters
             => ParameterSets.SelectMany(set => set.Parameters);
 
-        public IEnumerable<ParameterSet> ParameterSets
-        {
-            get;
-            private set;
-        }
+        public IEnumerable<ParameterSet> ParameterSets { get; }
 
-        public ResolvedPropertyBinder ResolvedPropertyBinder
-        {
-            get;
-            private set;
-        }
+        public ResolvedPropertyBinder ResolvedPropertyBinder { get; }
 
-        public Boolean UnprovisionDeletesUserData
-        {
-            get;
-            private set;
-        }
+        public Boolean UnprovisionDeletesUserData { get; }
 
         public Boolean IsMandatoryWhenCreating(Parameter parameter)
         {
@@ -84,7 +69,7 @@ namespace HarshPoint.Provisioning.Implementation
             return ParametersMandatoryWhenCreating.Contains(parameter);
         }
 
-        private IEnumerable<Parameter> ParametersMandatoryWhenCreating { get; set; }
+        private IEnumerable<Parameter> ParametersMandatoryWhenCreating { get; }
 
         private Boolean GetDeletesUserData(String methodName)
         {

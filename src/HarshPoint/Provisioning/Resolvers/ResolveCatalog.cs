@@ -19,7 +19,7 @@ namespace HarshPoint.Provisioning.Resolvers
             Identifiers = identifiers.ToImmutableHashSet();
         }
 
-        public ImmutableHashSet<ListTemplateType> Identifiers { get; private set; }
+        public ImmutableHashSet<ListTemplateType> Identifiers { get; }
 
         protected override IEnumerable<List> CreateObjects(ClientObjectResolveContext context)
         {

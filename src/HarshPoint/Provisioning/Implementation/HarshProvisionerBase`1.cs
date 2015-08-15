@@ -36,20 +36,14 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        public TContext Context
-            => _context.Value;
+        public TContext Context => _context.Value;
 
         public ICollection<HarshProvisionerBase> Children
             => HarshLazy.Initialize(ref _children, CreateChildrenCollection);
 
-        public HarshLogger Logger
-            => _logger.Value;
+        public HarshLogger Logger => _logger.Value;
 
-        public Boolean MayDeleteUserData
-        {
-            get;
-            set;
-        }
+        public Boolean MayDeleteUserData { get; set; }
 
         protected ManualResolver ManualResolver
             => HarshLazy.Initialize(
@@ -58,7 +52,7 @@ namespace HarshPoint.Provisioning.Implementation
             );
 
         protected String ParameterSetName => ParameterSet?.Name;
-        
+
         internal HarshProvisionerBase<TContext> ForwardTarget { get; private set; }
 
         internal Boolean HasChildren
@@ -130,7 +124,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             ForwardTarget = target;
         }
-            
+
         protected void ValidateMandatoryWhenCreatingParameters()
         {
             var mandatory = ParameterSet
@@ -160,34 +154,19 @@ namespace HarshPoint.Provisioning.Implementation
             Context.WriteOutput(result);
         }
 
-        protected virtual Task InitializeAsync()
-        {
-            return HarshTask.Completed;
-        }
+        protected virtual Task InitializeAsync() => HarshTask.Completed;
 
-        protected virtual void Complete()
-        {
-        }
+        protected virtual void Complete() { }
 
-        protected virtual Task OnProvisioningAsync()
-        {
-            return HarshTask.Completed;
-        }
+        protected virtual Task OnProvisioningAsync() => HarshTask.Completed;
 
-        protected virtual void OnValidating()
-        {
-        }
+        protected virtual void OnValidating() { }
 
         [NeverDeletesUserData]
-        protected virtual Task OnUnprovisioningAsync()
-        {
-            return HarshTask.Completed;
-        }
+        protected virtual Task OnUnprovisioningAsync() => HarshTask.Completed;
 
         protected virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
-        {
-            return new Collection<HarshProvisionerBase>();
-        }
+            => new Collection<HarshProvisionerBase>();
 
         protected virtual ResolveContext<TContext> CreateResolveContext()
             => new ResolveContext<TContext>(Context);
@@ -195,10 +174,7 @@ namespace HarshPoint.Provisioning.Implementation
         internal virtual ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
             => new ManualResolver(resolveContextFactory);
 
-        internal virtual Task OnResolvedParametersBound()
-        {
-            return HarshTask.Completed;
-        }
+        internal virtual Task OnResolvedParametersBound() => HarshTask.Completed;
 
         protected abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
 
@@ -254,14 +230,10 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         private Task ProvisionChildrenAsync()
-        {
-            return RunChildren(ProvisionChild);
-        }
+            => RunChildren(ProvisionChild);
 
         private Task UnprovisionChildrenAsync()
-        {
-            return RunChildren(UnprovisionChild, reverse: true);
-        }
+            => RunChildren(UnprovisionChild, reverse: true);
 
         private async Task RunChildren(
             Func<HarshProvisionerBase, TContext, Task> action,
@@ -298,9 +270,9 @@ namespace HarshPoint.Provisioning.Implementation
         private Task RunSelfAndChildren(
             TContext context,
             Func<Task> action,
-            Func<Task> childAction)
-        {
-            return RunWithContext(context, async delegate
+            Func<Task> childAction
+        )
+            => RunWithContext(context, async delegate
             {
                 Metadata.DefaultFromContextPropertyBinder.Bind(
                     this,
@@ -335,7 +307,6 @@ namespace HarshPoint.Provisioning.Implementation
 
                 await childAction();
             });
-        }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         protected static readonly ICollection<HarshProvisionerBase> NoChildren =

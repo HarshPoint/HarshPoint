@@ -29,7 +29,7 @@ namespace HarshPoint.Provisioning.Implementation
         public IReadOnlyCollection<ResolveFailure> Failures
         {
             get;
-            private set;
+
         }
 
         private static String FormatFailures(IEnumerable<ResolveFailure> failures)

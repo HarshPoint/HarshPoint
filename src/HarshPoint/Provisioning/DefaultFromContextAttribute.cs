@@ -17,7 +17,7 @@ namespace HarshPoint.Provisioning
         public Type TagType
         {
             get;
-            private set;
+
         }
     }
 }

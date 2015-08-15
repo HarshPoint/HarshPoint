@@ -45,15 +45,15 @@ namespace HarshPoint.ObjectModel
         }
 
         [NotLogged]
-        public IDefaultValuePolicy DefaultValuePolicy { get; private set; }
+        public IDefaultValuePolicy DefaultValuePolicy { get; }
 
         [NotLogged]
-        public PropertyAccessor PropertyAccessor { get; private set; }
+        public PropertyAccessor PropertyAccessor { get; }
 
         public IReadOnlyList<ParameterValidationAttribute> ValidationAttributes
         {
             get;
-            private set;
+
         }
 
         [NotLogged]
@@ -112,6 +112,6 @@ namespace HarshPoint.ObjectModel
                 PropertyAccessor.ToString() :
                 Invariant($"{PropertyAccessor} ParameterSetName={ParameterSetName}");
 
-        private ParameterAttribute ParameterAttribute { get; set; }
+        private ParameterAttribute ParameterAttribute { get; }
     }
 }

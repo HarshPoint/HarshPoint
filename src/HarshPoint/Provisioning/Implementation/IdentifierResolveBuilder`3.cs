@@ -47,9 +47,9 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        public IResolveBuilder<TResult> Parent { get; private set; }
+        public IResolveBuilder<TResult> Parent { get; }
 
-        public ImmutableHashSet<TIdentifier> Identifiers { get; private set; }
+        public ImmutableHashSet<TIdentifier> Identifiers { get; }
 
         public IEqualityComparer<TIdentifier> IdentifierComparer => Identifiers.KeyComparer;
 

@@ -48,8 +48,8 @@ namespace HarshPoint.Tests
         public Site Site => ClientContext.Site;
         public TaxonomySession TaxonomySession => Context.TaxonomySession;
         public Web Web => ClientContext.Web;
-        public SharePointClientFixture Fixture { get; private set; }
-        public ClientObjectManualResolver ManualResolver { get; private set; }
+        public SharePointClientFixture Fixture { get; }
+        public ClientObjectManualResolver ManualResolver { get; }
 
 
         protected virtual ClientObjectResolveContext CreateResolveContext()

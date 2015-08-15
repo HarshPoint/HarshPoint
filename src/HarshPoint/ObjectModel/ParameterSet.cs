@@ -29,19 +29,18 @@ namespace HarshPoint.ObjectModel
         public Boolean IsDefault
         {
             get;
-            private set;
+
         }
 
         public String Name
         {
             get;
-            private set;
+
         }
 
         public IReadOnlyList<Parameter> Parameters
         {
             get;
-            private set;
         }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ParameterSet>();

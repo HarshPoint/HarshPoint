@@ -70,7 +70,7 @@ namespace HarshPoint.Provisioning.Implementation
         public IImmutableList<DefaultFromContextProperty> Properties
         {
             get;
-            private set;
+
         }
 
         private static Object GetValueFromContext(DefaultFromContextProperty prop, HarshProvisionerContextBase context)

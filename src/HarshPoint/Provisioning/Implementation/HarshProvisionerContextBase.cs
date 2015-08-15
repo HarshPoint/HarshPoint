@@ -11,9 +11,7 @@ namespace HarshPoint.Provisioning.Implementation
         public abstract Boolean MayDeleteUserData { get; }
 
         public HarshProvisionerContextBase PushState(Object state)
-        {
-            return PushStateCore(state);
-        }
+            => PushStateCore(state);
 
         public IEnumerable<T> GetState<T>()
         {
@@ -35,7 +33,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             return results;
         }
-        
+
         public IEnumerable<Object> GetState(Type type)
         {
             if (type == null)
@@ -46,7 +44,7 @@ namespace HarshPoint.Provisioning.Implementation
             var info = type.GetTypeInfo();
 
             return GetState<Object>()
-                .Where(state => 
+                .Where(state =>
                     info.IsAssignableFrom(state.GetType().GetTypeInfo())
                 );
         }

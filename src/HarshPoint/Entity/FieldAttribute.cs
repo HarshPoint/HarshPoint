@@ -29,11 +29,7 @@ namespace HarshPoint.Entity
             FieldId = guid;
         }
 
-        public Guid FieldId
-        {
-            get;
-            private set;
-        }
+        public Guid FieldId { get; }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<FieldAttribute>();
     }

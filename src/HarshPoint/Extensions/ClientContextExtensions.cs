@@ -12,7 +12,7 @@ namespace HarshPoint
     {
         private static readonly MethodInfo LoadQueryMethod = typeof(ClientContext)
             .GetRuntimeMethods()
-            .First(m => 
+            .First(m =>
                 m.Name == "LoadQuery" &&
                 m.IsGenericMethodDefinition &&
                 m.GetParameters().Length == 1
@@ -45,16 +45,14 @@ namespace HarshPoint
         }
 
         private static IEnumerable<Type> GetQueryableElementTypes(Type type)
-        {
-            return from baseType in type.GetRuntimeBaseTypeChain()
+            => from baseType in type.GetRuntimeBaseTypeChain()
 
-                   from interfaceType in baseType.ImplementedInterfaces
-                   where interfaceType.IsConstructedGenericType
+               from interfaceType in baseType.ImplementedInterfaces
+               where interfaceType.IsConstructedGenericType
 
-                   let interfaceTypeDef = interfaceType.GetGenericTypeDefinition()
-                   where interfaceTypeDef == typeof(IQueryable<>)
+               let interfaceTypeDef = interfaceType.GetGenericTypeDefinition()
+               where interfaceTypeDef == typeof(IQueryable<>)
 
-                   select interfaceType.GenericTypeArguments[0];
-        }
+               select interfaceType.GenericTypeArguments[0];
     }
 }

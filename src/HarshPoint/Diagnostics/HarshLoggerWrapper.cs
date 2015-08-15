@@ -39,7 +39,7 @@ namespace HarshPoint.Diagnostics
             return exception;
         }
 
-        public HarshLogger InnerLogger { get; private set; }
+        public HarshLogger InnerLogger { get; }
 
         internal static String FormatCurrentCulture(String format, Object[] args)
         {

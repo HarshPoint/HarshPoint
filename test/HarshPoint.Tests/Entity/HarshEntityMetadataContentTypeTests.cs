@@ -10,7 +10,7 @@ namespace HarshPoint.Tests.Entity
     public class HarshEntityMetadataContentTypeTests
     {
         private const String DummyId = "0x0100a15a2839db44414a86489b400d47a319";
-        
+
         [Fact]
         public void Fails_without_a_ContentTypeAttribute()
         {
@@ -68,12 +68,10 @@ namespace HarshPoint.Tests.Entity
         }
 
         private static HarshEntityMetadataContentType CreateMetadata(Type type)
-        {
-            return new HarshEntityMetadataContentType(
+            => new HarshEntityMetadataContentType(
                 HarshEntityMetadataRepository.Current,
                 type.GetTypeInfo()
             );
-        }
 
         private sealed class NotAContentType
         {
@@ -102,14 +100,11 @@ namespace HarshPoint.Tests.Entity
             public String WritePrivate
             {
                 get;
-                private set;
+
             }
 
             [Field("6bab39f8-8979-4f47-a5d5-56785eb45d4f")]
-            public String ReadOnly
-            {
-                get { return null; }
-            }
+            public String ReadOnly => null;
 
             [Field("6bab39f9-8979-4f47-a5d5-56785eb45d4f")]
             public String ReadPrivate

@@ -35,9 +35,7 @@ namespace HarshPoint
         }
 
         public override Int32 GetHashCode()
-        {
-            return _value.GetHashCode();
-        }
+            => _value.GetHashCode();
 
         public override String ToString()
         {
@@ -226,10 +224,7 @@ namespace HarshPoint
             return new HarshContentTypeId(contentTypeId);
         }
 
-        private static Boolean IsEven(Int32 value)
-        {
-            return (value % 2) == 0;
-        }
+        private static Boolean IsEven(Int32 value) => (value % 2) == 0;
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<HarshContentTypeId>();
     }

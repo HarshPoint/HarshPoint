@@ -17,16 +17,14 @@ namespace HarshPoint.Tests.Provisioning
             FieldType = fieldType;
         }
 
-        public FieldType FieldType { get; private set; }
+        public FieldType FieldType { get; }
 
         protected Task RunWithField(TProvisioner provisioner, Action<TField> action)
-        {
-            return RunWithField(provisioner, f =>
+            => RunWithField(provisioner, f =>
             {
                 action(f);
                 return HarshTask.Completed;
             });
-        }
 
         protected async Task RunWithField(TProvisioner provisioner, Func<TField, Task> action)
         {

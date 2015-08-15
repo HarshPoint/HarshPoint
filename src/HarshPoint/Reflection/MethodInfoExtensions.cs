@@ -10,9 +10,7 @@ namespace HarshPoint.Reflection
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(MethodInfoExtensions));
 
         public static IEnumerable<MethodInfo> GetRuntimeBaseMethodChain(this MethodInfo methodInfo)
-        {
-            return GetRuntimeBaseMethodChain(methodInfo, null);
-        }
+            => GetRuntimeBaseMethodChain(methodInfo, null);
 
         public static IEnumerable<MethodInfo> GetRuntimeBaseMethodChain(this MethodInfo methodInfo, Type subtype)
         {
@@ -57,8 +55,6 @@ namespace HarshPoint.Reflection
         }
 
         public static MethodInfo GetOverrideIn(this MethodInfo methodInfo, Type subtype)
-        {
-            return GetRuntimeBaseMethodChain(methodInfo, subtype).FirstOrDefault();
-        }
+            => GetRuntimeBaseMethodChain(methodInfo, subtype).FirstOrDefault();
     }
 }

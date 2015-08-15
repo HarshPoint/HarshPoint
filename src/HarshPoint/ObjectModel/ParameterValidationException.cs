@@ -15,7 +15,7 @@ namespace HarshPoint.ObjectModel
         {
         }
 
-        public ParameterValidationException(String parameterName, String message) 
+        public ParameterValidationException(String parameterName, String message)
             : base(message)
         {
             if (String.IsNullOrWhiteSpace(parameterName))
@@ -26,7 +26,7 @@ namespace HarshPoint.ObjectModel
             ParameterName = parameterName;
         }
 
-        public ParameterValidationException(String parameterName, String message, Exception inner) 
+        public ParameterValidationException(String parameterName, String message, Exception inner)
             : base(message, inner)
         {
             if (String.IsNullOrWhiteSpace(parameterName))
@@ -37,7 +37,7 @@ namespace HarshPoint.ObjectModel
             ParameterName = parameterName;
         }
 
-        public String ParameterName { get; private set; }
+        public String ParameterName { get; }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ParameterValidationException>();
     }

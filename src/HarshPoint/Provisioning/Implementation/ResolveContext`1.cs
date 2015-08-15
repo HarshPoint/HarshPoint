@@ -37,7 +37,7 @@ namespace HarshPoint.Provisioning
         public TProvisionerContext ProvisionerContext
         {
             get;
-            private set;
+
         }
 
         HarshProvisionerContextBase IResolveContext.ProvisionerContext => ProvisionerContext;

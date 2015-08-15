@@ -73,10 +73,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
                 _value = value;
             }
 
-            public TestChain And(TestChain other)
-            {
-                return (TestChain)Append(other);
-            }
+            public TestChain And(TestChain other) => (TestChain)Append(other);
 
             public TestChain Next => (TestChain)Elements.Skip(1).FirstOrDefault();
 

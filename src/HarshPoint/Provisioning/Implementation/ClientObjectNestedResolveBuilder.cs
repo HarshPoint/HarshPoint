@@ -67,12 +67,12 @@ namespace HarshPoint.Provisioning.Implementation
 
         private Expression<Func<TParent, Object>> ChildrenExpression
         {
-            get; set;
+            get;
         }
 
         private Func<TParent, IEnumerable<TResult>> ChildrenSelector
         {
-            get; set;
+            get;
         }
 
         private static readonly HarshLogger Logger

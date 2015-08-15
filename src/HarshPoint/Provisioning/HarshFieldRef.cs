@@ -84,9 +84,6 @@ namespace HarshPoint.Provisioning
             await ClientContext.ExecuteQueryAsync();
         }
 
-        private IResolve<FieldLink> ExistingFieldLinks
-        {
-            get; set;
-        }
+        internal IResolve<FieldLink> ExistingFieldLinks { get; set; }
     }
 }

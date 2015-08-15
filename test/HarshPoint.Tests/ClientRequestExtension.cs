@@ -9,9 +9,7 @@ namespace HarshPoint.Tests
     internal static class ClientRequestExtension
     {
         public static String ToDiagnosticString(this ClientRequest request)
-        {
-            return ToDiagnosticXml(request).ToString(SaveOptions.OmitDuplicateNamespaces);
-        }
+            => ToDiagnosticXml(request).ToString(SaveOptions.OmitDuplicateNamespaces);
 
         public static XDocument ToDiagnosticXml(this ClientRequest request)
         {

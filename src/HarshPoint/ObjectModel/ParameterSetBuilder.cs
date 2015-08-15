@@ -72,9 +72,9 @@ namespace HarshPoint.ObjectModel
             }
         }
 
-        public String DefaultParameterSetName { get; private set; }
-        public IDefaultValuePolicy DefaultValuePolicy { get; private set; }
-        public HarshObjectMetadata Metadata { get; private set; }
+        public String DefaultParameterSetName { get; }
+        public IDefaultValuePolicy DefaultValuePolicy { get; }
+        public HarshObjectMetadata Metadata { get; }
 
         public IEnumerable<ParameterSet> Build()
         {

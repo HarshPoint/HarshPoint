@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning.Implementation
     /// <remarks>Does not inherit from <see cref="ResolveBuilder{TResult, TContext}" />
     /// because that one inherits from <see cref="Chain{TElement}"/> and we don't want
     /// that functionality here.</remarks>
-    internal sealed partial class DeferredResolveBuilder<TResult> : 
+    internal sealed partial class DeferredResolveBuilder<TResult> :
         IResolveBuilder<TResult>
     {
         private readonly Func<IResolveBuilder<TResult>> _factory;
@@ -22,11 +22,9 @@ namespace HarshPoint.Provisioning.Implementation
 
             _factory = factory;
         }
-       
+
         Object IResolveBuilder.Initialize(IResolveContext context)
-        {
-            return Inner.Initialize(context);
-        }
+            => Inner.Initialize(context);
 
         void IResolveBuilder.InitializeContext(IResolveContext context)
         {
@@ -34,9 +32,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         IEnumerable<Object> IResolveBuilder.ToEnumerable(IResolveContext context, Object state)
-        {
-            return Inner.ToEnumerable(context, state);
-        }
+            => Inner.ToEnumerable(context, state);
 
         private void InitializeInner(IResolveContext context)
         {

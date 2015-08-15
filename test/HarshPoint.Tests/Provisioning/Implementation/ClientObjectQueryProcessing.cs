@@ -217,7 +217,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
 
             expected = new RenameParamVisitor("tt", "t")
                 .VisitAndConvert(
-                    expected, 
+                    expected,
                     nameof(Recursive_expression_recurses_one_level_deep)
                 );
 
@@ -227,10 +227,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
 
             Assert.Equal(expected.ToString(), actual.ToString());
         }
-        private static Expression<Func<T, Object>> GetExpression<T>(Expression<Func<T, Object>> expr)
-        {
-            return expr;
-        }
+        private static Expression<Func<T, Object>> GetExpression<T>(Expression<Func<T, Object>> expr) => expr;
 
         private sealed class RenameParamVisitor : ExpressionVisitor
         {

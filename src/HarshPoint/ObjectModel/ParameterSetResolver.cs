@@ -83,19 +83,19 @@ namespace HarshPoint.ObjectModel
         public ImmutableDictionary<String, ParameterSet> ParameterSets
         {
             get;
-            private set;
+
         }
 
         public Object Target
         {
             get;
-            private set;
+
         }
 
         private ParameterSet DefaultParameterSet
         {
             get;
-            set;
+
         }
 
         private IEnumerable<Parameter> Parameters

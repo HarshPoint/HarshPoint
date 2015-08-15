@@ -31,13 +31,13 @@ namespace HarshPoint.Provisioning.Implementation
             ValidateWithTagNotResolvable();
         }
 
-        public PropertyAccessor Accessor { get; private set; }
-        public DefaultFromContextAttribute Attribute { get; private set; }
+        public PropertyAccessor Accessor { get; }
+        public DefaultFromContextAttribute Attribute { get; }
         public String Name => PropertyInfo.Name;
         public PropertyInfo PropertyInfo => Accessor.PropertyInfo;
         public Type PropertyType => PropertyInfo.PropertyType;
         public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
-        public ResolvedPropertyTypeInfo ResolvedPropertyInfo { get; private set; }
+        public ResolvedPropertyTypeInfo ResolvedPropertyInfo { get; }
         public Type TagType => Attribute.TagType;
 
         private void ValidateIsNullable()

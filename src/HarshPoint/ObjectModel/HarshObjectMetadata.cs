@@ -18,7 +18,8 @@ namespace HarshPoint.ObjectModel
             ObjectType = type;
             ObjectTypeInfo = type.GetTypeInfo();
 
-            InitReadableWritableInstanceProperties();
+            ReadableWritableInstanceProperties =
+                InitReadableWritableInstanceProperties();
         }
 
         public HarshObjectMetadata(TypeInfo typeInfo)
@@ -31,24 +32,24 @@ namespace HarshPoint.ObjectModel
             ObjectType = typeInfo.AsType();
             ObjectTypeInfo = typeInfo;
 
-            InitReadableWritableInstanceProperties();
+            ReadableWritableInstanceProperties =
+                InitReadableWritableInstanceProperties();
         }
 
         public Type ObjectType
         {
             get;
-            private set;
+
         }
 
         public TypeInfo ObjectTypeInfo
         {
             get;
-            private set;
         }
 
-        public IReadOnlyCollection<PropertyAccessor> ReadableWritableInstanceProperties
+        public IEnumerable<PropertyAccessor> ReadableWritableInstanceProperties
         {
-            get; private set;
+            get;
         }
 
         public IEnumerable<IGrouping<PropertyAccessor, TAttribute>> ReadableWritableInstancePropertiesWith<TAttribute>(Boolean inherit)
@@ -65,14 +66,12 @@ namespace HarshPoint.ObjectModel
                 .Where(t => t.Item2 != null)
                 .ToArray();
 
-        private void InitReadableWritableInstanceProperties()
-        {
-            ReadableWritableInstanceProperties = ObjectType
+        private IEnumerable<PropertyAccessor> InitReadableWritableInstanceProperties()
+            => ObjectType
                 .GetRuntimeProperties()
                 .Where(p => p.CanRead && p.CanWrite && !p.GetMethod.IsStatic && !p.SetMethod.IsStatic)
                 .Select(p => new PropertyAccessor(p))
                 .ToImmutableArray();
-        }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<HarshObjectMetadata>();
     }

@@ -14,9 +14,9 @@ namespace HarshPoint.Provisioning.Implementation
                 DepthLimiter = new DepthLimiter(owner);
             }
 
-            public DepthLimiter DepthLimiter { get; private set; }
+            public DepthLimiter DepthLimiter { get; }
 
-            public ClientObjectQueryProcessor Owner { get; private set; }
+            public ClientObjectQueryProcessor Owner { get; }
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {

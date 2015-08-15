@@ -33,13 +33,13 @@ namespace HarshPoint.Provisioning.Implementation
         public Object Identifier
         {
             get;
-            private set;
+
         }
 
         public Object ResolveBuilder
         {
             get;
-            private set;
+
         }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveFailure>();

@@ -51,15 +51,15 @@ namespace HarshPoint.Provisioning.Implementation
 
             public Type ElementType => Method.GetGenericArguments()[0];
 
-            public MethodInfo Method { get; private set; }
+            public MethodInfo Method { get; }
 
             public override ExpressionType NodeType => ExpressionType.Extension;
 
-            public Expression Object { get; private set; }
+            public Expression Object { get; }
 
             public override Type Type => Method.ReturnType;
 
-            public ReadOnlyCollection<Expression> Retrievals { get; private set; }
+            public ReadOnlyCollection<Expression> Retrievals { get; }
 
             public override Expression Reduce()
                 => Call(

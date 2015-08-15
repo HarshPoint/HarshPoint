@@ -40,10 +40,7 @@ namespace HarshPoint.Entity.Metadata
             );
         }
 
-        public static HarshEntityMetadataRepository Current
-        {
-            get { return _singleton; }
-        }
+        public static HarshEntityMetadataRepository Current => _singleton;
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<HarshEntityMetadataRepository>();
     }

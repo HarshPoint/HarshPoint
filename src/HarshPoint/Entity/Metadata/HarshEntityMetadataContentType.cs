@@ -22,17 +22,8 @@ namespace HarshPoint.Entity.Metadata
             ContentTypeId = new ContentTypeIdBuilder(ObjectTypeInfo).ToString();
         }
 
-        public ContentTypeAttribute ContentTypeAttribute
-        {
-            get;
-            private set;
-        }
-
-        public String ContentTypeId
-        {
-            get;
-            private set;
-        }
+        public ContentTypeAttribute ContentTypeAttribute { get; }
+        public String ContentTypeId { get; }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<HarshEntityMetadataContentType>();
     }

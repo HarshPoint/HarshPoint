@@ -51,6 +51,6 @@ namespace HarshPoint.Provisioning.Implementation
             return Bind(obj, factory);
         }
 
-        private Func<ClientObjectResolveContext> ResolveContextFactory { get; set; }
+        private Func<ClientObjectResolveContext> ResolveContextFactory { get; }
     }
 }

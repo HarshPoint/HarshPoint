@@ -101,9 +101,9 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
-        public Object Value { get; private set; }
+        public Object Value { get; }
 
-        public IImmutableList<Object> Parents { get; private set; }
+        public IImmutableList<Object> Parents { get; }
 
         public virtual Type ValueType => Value.GetType();
 

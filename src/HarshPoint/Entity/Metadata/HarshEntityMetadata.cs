@@ -46,7 +46,7 @@ namespace HarshPoint.Entity.Metadata
         internal HarshEntityMetadataRepository Repository
         {
             get;
-            private set;
+
         }
 
         private void GetBaseEntity()
@@ -105,7 +105,7 @@ namespace HarshPoint.Entity.Metadata
 
         internal static HarshEntityMetadata Create(HarshEntityMetadataRepository repository, TypeInfo typeInfo)
         {
-            if (repository== null)
+            if (repository == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(repository));
             }

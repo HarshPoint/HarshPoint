@@ -28,35 +28,17 @@ namespace HarshPoint.Server.Provisioning
             return this;
         }
 
-        public SPFarm Farm
-        {
-            get { return Context?.Farm; }
-        }
+        public SPFarm Farm => Context?.Farm;
 
-        public SPSite Site
-        {
-            get { return Context?.Site; }
-        }
+        public SPSite Site => Context?.Site;
 
-        public String UpgradeAction
-        {
-            get { return Context?.UpgradeAction; }
-        }
+        public String UpgradeAction => Context?.UpgradeAction;
 
-        public IReadOnlyDictionary<String, String> UpgradeArguments
-        {
-            get { return Context?.UpgradeArguments; }
-        }
+        public IReadOnlyDictionary<String, String> UpgradeArguments => Context?.UpgradeArguments;
 
-        public SPWeb Web
-        {
-            get { return Context?.Web; }
-        }
+        public SPWeb Web => Context?.Web;
 
-        public SPWebApplication WebApplication
-        {
-            get { return Context?.WebApplication; }
-        }
+        public SPWebApplication WebApplication => Context?.WebApplication;
 
         protected virtual Boolean ShouldProvisionChild(HarshServerProvisioner provisioner) => true;
 

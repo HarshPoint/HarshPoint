@@ -56,7 +56,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
             });
         }
 
-        private ResolvedPropertyBinder Binder { get; set; }
+        private ResolvedPropertyBinder Binder { get; }
 
         private IResolveSingleOrDefault<Int32> MockSingleOrDefaultResolve()
             => MockResolveBuilder(new Object[] { 42 }).As<IResolveSingleOrDefault<Int32>>().Object;

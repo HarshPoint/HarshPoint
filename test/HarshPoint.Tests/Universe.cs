@@ -8,8 +8,7 @@ namespace HarshPoint.Tests
         public String Name { get; set; }
 
         public static ImmutableArray<Tuple<Planet, Continent, Country, City, Street, Building>> Create()
-        {
-            return ImmutableArray.Create(
+            => ImmutableArray.Create(
                 Create("Earth", "Europe", "CZ", "Prague", "Americka", "1234"),
                 Create("Earth", "Europe", "CZ", "Prague", "Belgicka", "1234"),
                 Create("Earth", "Europe", "CZ", "Prague", "Londynska", "1234"),
@@ -20,7 +19,6 @@ namespace HarshPoint.Tests
                 Create("Earth", "North America", "USA", "Seattle", "Microsoft Way", "1"),
                 Create("Earth", "North America", "USA", "Cupertino", "Infinte Loop", "1")
             );
-        }
 
         public static Tuple<Planet, Continent, Country, City, Street, Building> Create(
             String planet,
@@ -30,14 +28,14 @@ namespace HarshPoint.Tests
             String street,
             String building
         )
-        => Tuple.Create(
-            Create<Planet>(planet),
-            Create<Continent>(continent),
-            Create<Country>(country),
-            Create<City>(city),
-            Create<Street>(street),
-            Create<Building>(building)
-        );
+            => Tuple.Create(
+                Create<Planet>(planet),
+                Create<Continent>(continent),
+                Create<Country>(country),
+                Create<City>(city),
+                Create<Street>(street),
+                Create<Building>(building)
+            );
 
         public static T Create<T>(String name)
             where T : Universe, new()

@@ -13,7 +13,6 @@ namespace HarshPoint.Entity
         public String ContentTypeId
         {
             get;
-            private set;
         }
     }
 }

@@ -41,10 +41,7 @@ namespace System
         /// Format to a string using the given culture.
         /// </summary>
         public abstract string ToString(IFormatProvider formatProvider);
-        string IFormattable.ToString(string ignored, IFormatProvider formatProvider)
-        {
-            return ToString(formatProvider);
-        }
+        string IFormattable.ToString(string ignored, IFormatProvider formatProvider) => ToString(formatProvider);
         /// <summary>
         /// Format the given object in the invariant culture. This static method may be
         /// imported in C# by
@@ -62,14 +59,14 @@ namespace System
         {
             if (formattable == null)
             {
-                throw new ArgumentNullException("formattable");
+                throw new ArgumentNullException(nameof(formattable));
             }
+
             return formattable.ToString(Globalization.CultureInfo.InvariantCulture);
         }
-        public override string ToString()
-        {
-            return ToString(Globalization.CultureInfo.CurrentCulture);
-        }
+
+        public override String ToString()
+            => ToString(Globalization.CultureInfo.CurrentCulture);
     }
 }
 // ==++==
@@ -101,12 +98,14 @@ namespace System.Runtime.CompilerServices
         {
             if (format == null)
             {
-                throw new ArgumentNullException("format");
+                throw new ArgumentNullException(nameof(format));
             }
+
             if (arguments == null)
             {
-                throw new ArgumentNullException("arguments");
+                throw new ArgumentNullException(nameof(arguments));
             }
+
             return new ConcreteFormattableString(format, arguments);
         }
         private sealed class ConcreteFormattableString : FormattableString
@@ -118,11 +117,11 @@ namespace System.Runtime.CompilerServices
                 _format = format;
                 _arguments = arguments;
             }
-            public override string Format { get { return _format; } }
-            public override object[] GetArguments() { return _arguments; }
-            public override int ArgumentCount { get { return _arguments.Length; } }
-            public override object GetArgument(int index) { return _arguments[index]; }
-            public override string ToString(IFormatProvider formatProvider) { return string.Format(formatProvider, Format, _arguments); }
+            public override string Format => _format;
+            public override object[] GetArguments() => _arguments;
+            public override int ArgumentCount => _arguments.Length;
+            public override object GetArgument(int index) => _arguments[index];
+            public override string ToString(IFormatProvider formatProvider) => string.Format(formatProvider, Format, _arguments);
         }
     }
 }

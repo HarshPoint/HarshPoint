@@ -57,7 +57,7 @@ namespace HarshPoint.Server.Provisioning
             get;
             private set;
         }
-        
+
         public SPSite Site
         {
             get;
@@ -82,10 +82,7 @@ namespace HarshPoint.Server.Provisioning
             private set;
         }
 
-        public IReadOnlyDictionary<String, String> UpgradeArguments
-        {
-            get { return _upgradeArgs; }
-        }
+        public IReadOnlyDictionary<String, String> UpgradeArguments => _upgradeArgs;
 
         public override String ToString()
             => Web?.Url ?? WebApplication?.ToString() ?? Farm.ToString();
@@ -99,13 +96,13 @@ namespace HarshPoint.Server.Provisioning
         }
 
         internal static HarshServerProvisionerContext FromProperties(
-            SPFeatureReceiverProperties properties, 
-            String upgradeAction, 
+            SPFeatureReceiverProperties properties,
+            String upgradeAction,
             IDictionary<String, String> upgradeArguments)
         {
             var result = FromProperties(properties);
 
-            if (upgradeArguments!= null)
+            if (upgradeArguments != null)
             {
                 result._upgradeArgs = upgradeArguments.ToImmutableDictionary(StringComparer.Ordinal);
             }

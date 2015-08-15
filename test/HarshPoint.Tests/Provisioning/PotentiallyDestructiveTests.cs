@@ -9,7 +9,7 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class PotentiallyDestructiveTests : SharePointClientTest
     {
-        public PotentiallyDestructiveTests(ITestOutputHelper output) 
+        public PotentiallyDestructiveTests(ITestOutputHelper output)
             : base(output)
         {
         }
@@ -93,10 +93,7 @@ namespace HarshPoint.Tests.Provisioning
 
         private class DestructiveUnprovisionSafeBase : NeverDeletesUnprovision
         {
-            protected override Task OnUnprovisioningAsync()
-            {
-                return base.OnUnprovisioningAsync();
-            }
+            protected override Task OnUnprovisioningAsync() => base.OnUnprovisioningAsync();
         }
     }
 }

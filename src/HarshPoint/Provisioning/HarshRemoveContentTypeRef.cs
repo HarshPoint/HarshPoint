@@ -29,10 +29,8 @@ namespace HarshPoint.Provisioning
             get { return _inner.Lists; }
             set { _inner.Lists = value; }
         }
-        
+
         protected override Task OnProvisioningAsync()
-        {
-            return _inner.UnprovisionAsync(Context);
-        }
+            => _inner.UnprovisionAsync(Context);
     }
 }

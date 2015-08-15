@@ -43,7 +43,7 @@ namespace HarshPoint.Provisioning
         public Collection<String> ViewFields
         {
             get;
-            private set;
+
         }
 
         protected override async Task OnProvisioningAsync()
@@ -71,13 +71,10 @@ namespace HarshPoint.Provisioning
 
         private IResolve<Tuple<List, View>> ExistingViews
         {
-            get; set;
+            get;
         }
 
-        private String InitialTitle
-        {
-            get { return HarshUrl.GetLeafWithoutExtension(Url); }
-        }
+        private String InitialTitle => HarshUrl.GetLeafWithoutExtension(Url);
 
     }
 }
