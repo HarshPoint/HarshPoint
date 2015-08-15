@@ -84,7 +84,15 @@ namespace HarshPoint.Provisioning
 
         protected override async Task OnProvisioningAsync()
         {
-            if (ExistingField.Value.IsNull())
+            if (ExistingField.HasValue)
+            {
+                Field = ExistingField.Value;
+
+                WriteOutput(
+                    Result.AlreadyExists(FieldIdentifier, Field)
+                );
+            }
+            else
             {
                 ValidateMandatoryWhenCreatingParameters();
 
@@ -112,14 +120,6 @@ namespace HarshPoint.Provisioning
 
                 WriteOutput(
                     Result.Added(FieldIdentifier, Field)
-                );
-            }
-            else
-            {
-                Field = ExistingField.Value;
-
-                WriteOutput(
-                    Result.AlreadyExists(FieldIdentifier, Field)
                 );
             }
         }
