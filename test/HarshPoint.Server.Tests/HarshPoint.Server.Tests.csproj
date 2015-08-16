@@ -122,13 +122,20 @@
       <HintPath>..\..\packages\xunit.extensibility.core.2.1.0-beta4-build3109\lib\portable-net45+netcore45+wp8+wpa81\xunit.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.1.0.3109, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.extensibility.execution.2.1.0-beta4-build3109\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FactNeedsFarmAttribute.cs" />
+    <Compile Include="FarmDependentTestCase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HarshProvisionerExtensionsTests.cs" />
     <Compile Include="HarshServerCompositeProvisionerTests.cs" />
     <Compile Include="HarshServerProvisionerTests.cs" />
     <Compile Include="SharePointServerFixture.cs" />
+    <Compile Include="FarmDependentTestCaseDiscoverer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

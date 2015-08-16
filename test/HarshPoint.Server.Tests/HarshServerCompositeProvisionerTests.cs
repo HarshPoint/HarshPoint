@@ -27,7 +27,7 @@ namespace HarshPoint.Server.Tests
             set;
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public async Task Calls_server_provision_in_correct_order()
         {
             var seq = String.Empty;
@@ -55,7 +55,7 @@ namespace HarshPoint.Server.Tests
             Assert.Equal("12", seq);
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public async Task Calls_server_unprovision_in_correct_order()
         {
             var seq = String.Empty;
@@ -84,7 +84,7 @@ namespace HarshPoint.Server.Tests
             Assert.Equal("21", seq);
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public async Task Adapts_client_provisioner_into_server()
         {
             var p = _mockRepo.Create<HarshProvisioner>();
@@ -106,8 +106,8 @@ namespace HarshPoint.Server.Tests
             {
                 Children = { p.Object }
             };
-            
+
             await composite.ProvisionAsync(ServerOM.WebContext);
-        }       
+        }
     }
 }

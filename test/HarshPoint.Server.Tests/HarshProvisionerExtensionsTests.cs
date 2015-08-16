@@ -23,7 +23,7 @@ namespace HarshPoint.Server.Tests
         }
 
 
-        [Fact]
+        [FactNeedsFarm]
         public async Task ToServerProvisioner_calls_Provision()
         {
             var prov = new Mock<HarshProvisioner>();
@@ -49,7 +49,7 @@ namespace HarshPoint.Server.Tests
             prov.Verify();
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public async Task ToServerProvisioner_calls_Unprovision()
         {
             var clientProv = new Mock<HarshProvisioner>();
@@ -77,7 +77,7 @@ namespace HarshPoint.Server.Tests
             clientProv.Verify();
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public void ToServerProvisioner_sets_correct_Web()
         {
             var clientProv = new Mock<HarshProvisioner>();
@@ -95,7 +95,7 @@ namespace HarshPoint.Server.Tests
             serverProv.ProvisionAsync(ServerOM.WebContext).Wait();
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public void ToServerProvisioner_sets_correct_Site()
         {
             var clientProv = new Mock<HarshProvisioner>();
@@ -113,7 +113,7 @@ namespace HarshPoint.Server.Tests
             serverProv.ProvisionAsync(ServerOM.WebContext).Wait();
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public void ToServerProvisioner_fails_with_WebApp()
         {
             var clientProv = Mock.Of<HarshProvisioner>();
@@ -123,7 +123,7 @@ namespace HarshPoint.Server.Tests
             Assert.ThrowsAsync<InvalidOperationException>(() => serverProv.ProvisionAsync(serverContext));
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public void ToServerProvisioner_fails_with_Farm()
         {
             var clientProv = Mock.Of<HarshProvisioner>();
@@ -133,7 +133,7 @@ namespace HarshPoint.Server.Tests
             Assert.ThrowsAsync<InvalidOperationException>(() => serverProv.ProvisionAsync(serverContext));
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public void ToServerProvisioner_cannot_have_children()
         {
             var clientProv = new HarshProvisioner();

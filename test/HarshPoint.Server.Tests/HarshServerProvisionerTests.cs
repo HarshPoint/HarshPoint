@@ -26,7 +26,7 @@ namespace HarshPoint.Server.Tests
             set;
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public async Task Provision_calls_Initialize()
         {
             var mock = _mockRepo.Create<HarshServerProvisioner>();
@@ -40,7 +40,7 @@ namespace HarshPoint.Server.Tests
             mock.Verify();
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public async Task Provision_calls_OnProvisioning()
         {
             var mock = _mockRepo.Create<HarshServerProvisioner>();
@@ -54,7 +54,7 @@ namespace HarshPoint.Server.Tests
             mock.Verify();
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public void Provision_always_calls_Complete()
         {
             var mock = _mockRepo.Create<HarshServerProvisioner>();
@@ -74,7 +74,7 @@ namespace HarshPoint.Server.Tests
             mock.Verify();
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public async Task Unprovision_calls_Initialize()
         {
             var mock = _mockRepo.Create<HarshServerProvisioner>();
@@ -88,7 +88,7 @@ namespace HarshPoint.Server.Tests
             mock.Verify();
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public async Task Unprovision_calls_OnUnprovisioning()
         {
             var mock = _mockRepo.Create<HarshServerProvisioner>();
@@ -102,7 +102,7 @@ namespace HarshPoint.Server.Tests
             mock.Verify();
         }
 
-        [Fact]
+        [FactNeedsFarm]
         public void Unprovision_always_calls_Complete()
         {
             var mock = _mockRepo.Create<HarshServerProvisioner>();

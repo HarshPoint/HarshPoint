@@ -19,7 +19,3 @@ environment:
     secure: /aPy/TNRcKlV67mllpvM6ZXAoCLkFaKR3HfBb5+n1gI=
 build:
   verbosity: minimal
-test:
-  categories:
-    except:
-    - HarshPoint.Server
