@@ -1,9 +1,9 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using HarshPoint.Provisioning.Resolvers;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using HarshPoint.Provisioning.Implementation;
-using HarshPoint.Provisioning.Resolvers;
 
 namespace HarshPoint.Provisioning
 {

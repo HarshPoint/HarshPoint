@@ -1,5 +1,5 @@
-﻿using System;
-using HarshPoint.Provisioning.Output;
+﻿using HarshPoint.Provisioning.Output;
+using System;
 
 namespace HarshPoint.Provisioning
 {

@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.SharePoint.Client;
+﻿using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
+using System;
 
 namespace HarshPoint.Provisioning
 {
-    public sealed class HarshProvisionerContext : 
+    public sealed class HarshProvisionerContext :
         Implementation.HarshProvisionerContextBase<HarshProvisionerContext>
     {
         private TaxonomySession _taxonomySession;
@@ -27,9 +27,9 @@ namespace HarshPoint.Provisioning
 
         public Site Site => ClientContext.Site;
 
-        public TaxonomySession TaxonomySession 
+        public TaxonomySession TaxonomySession
             => HarshLazy.Initialize(
-                ref _taxonomySession, 
+                ref _taxonomySession,
                 () => TaxonomySession.GetTaxonomySession(ClientContext)
             );
 

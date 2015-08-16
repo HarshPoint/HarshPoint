@@ -1,10 +1,10 @@
-﻿using System;
+﻿using HarshPoint.Reflection;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using HarshPoint.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -13,8 +13,8 @@ namespace HarshPoint.Provisioning.Implementation
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveResultFactory));
 
         public static Object CreateResult(
-            TypeInfo propertyTypeInfo, 
-            IEnumerable enumerable, 
+            TypeInfo propertyTypeInfo,
+            IEnumerable enumerable,
             IResolveBuilder builder,
             IEnumerable<ResolveFailure> failures
         )
@@ -24,7 +24,7 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(propertyTypeInfo));
             }
 
-            if (enumerable == null) 
+            if (enumerable == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(enumerable));
             }

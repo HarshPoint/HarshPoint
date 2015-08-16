@@ -1,5 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
-using HarshPoint.Provisioning.Implementation;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 
 namespace HarshPoint.Provisioning.Resolvers
 {

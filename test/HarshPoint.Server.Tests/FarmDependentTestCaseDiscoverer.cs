@@ -1,6 +1,6 @@
-﻿using Xunit.Abstractions;
+﻿using System.Collections.Generic;
+using Xunit.Abstractions;
 using Xunit.Sdk;
-using System.Collections.Generic;
 
 namespace HarshPoint.Server.Tests
 {

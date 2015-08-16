@@ -1,7 +1,7 @@
 ﻿using HarshPoint.Provisioning;
 using HarshPoint.Provisioning.Implementation;
-using System;
 using Moq;
+using System;
 using System.Linq;
 
 namespace HarshPoint.Tests.Provisioning

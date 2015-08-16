@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace HarshPoint.Tests
@@ -130,7 +129,7 @@ namespace HarshPoint.Tests
         }
         protected void RegisterForDeletion(Field f)
         {
-            if (f==null)
+            if (f == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(f));
             }

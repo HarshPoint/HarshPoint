@@ -1,10 +1,10 @@
-﻿using Serilog;
-using System;
-using System.Collections.Generic;
+﻿using HarshPoint.Diagnostics;
+using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using HarshPoint.Diagnostics;
 
 namespace HarshPoint
 {

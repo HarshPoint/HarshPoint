@@ -1,9 +1,9 @@
 ﻿using HarshPoint.ObjectModel;
 using System;
 using System.Linq;
-using Xunit.Abstractions;
 using System.Reflection;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.ObjectModel
 {

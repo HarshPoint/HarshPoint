@@ -1,8 +1,8 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.Threading.Tasks;
-using HarshPoint.Provisioning.Implementation;
 
 namespace HarshPoint.Provisioning
 {
