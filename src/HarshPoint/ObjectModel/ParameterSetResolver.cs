@@ -7,7 +7,11 @@ namespace HarshPoint.ObjectModel
 {
     internal sealed class ParameterSetResolver
     {
-        private static readonly HarshLogger Logger = HarshLog.ForContext<ParameterSetResolver>();
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext<ParameterSetResolver>();
+
+        private static readonly String ImplicitParameterSetName
+            = ParameterSet.ImplicitParameterSetName;
 
         public ParameterSetResolver(Object target, IEnumerable<ParameterSet> parameterSets)
         {
@@ -63,6 +67,12 @@ namespace HarshPoint.ObjectModel
                 );
 
                 return DefaultParameterSet;
+            }
+
+            if ((candidates.Count > 1) &&
+                 (candidates.ContainsKey(ImplicitParameterSetName)))
+            {
+                candidates = candidates.Remove(ImplicitParameterSetName);
             }
 
             if (candidates.Count == 1)

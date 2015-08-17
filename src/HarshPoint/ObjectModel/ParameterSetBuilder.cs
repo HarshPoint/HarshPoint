@@ -111,51 +111,50 @@ namespace HarshPoint.ObjectModel
                 .Where(p => !p.IsCommonParameter)
                 .GroupBy(p => p.ParameterSetName, ParameterSet.NameComparer)
                 .Select(
-                    (set, index) => new ParameterSet(
+                    set => new ParameterSet(
                         set.Key,
                         set.Concat(commonParameters),
-                        IsDefaultParameterSet(set.Key, index)
+                        IsDefaultParameterSet(set.Key)
                     )
                 )
-                .ToArray();
+                .ToList();
 
-            if ((DefaultParameterSetName != null) &&
-                !parameterSets.Any(set => set.IsDefault))
+            if (!parameterSets.Any(set => set.IsDefault))
             {
-                throw Logger.Fatal.ObjectMetadata(
-                    SR.HarshProvisionerMetadata_DefaultParameterSetNotFound,
-                    DefaultParameterSetName,
-                    Metadata
+                if (DefaultParameterSetName != null)
+                {
+                    throw Logger.Fatal.ObjectMetadata(
+                        SR.HarshProvisionerMetadata_DefaultParameterSetNotFound,
+                        DefaultParameterSetName,
+                        Metadata
+                    );
+                }
+
+                var implicitParameterSet = new ParameterSet(
+                    ParameterSet.ImplicitParameterSetName,
+                    commonParameters,
+                    isDefault: true
                 );
-            }
 
-            if (parameterSets.Any())
-            {
                 Logger.Debug(
-                    "{ProcessedType}: Parameter sets: {@ParameterSets}",
+                    "{ProcessedType}: Implicit parameter set: {@ImplicitParameterSet}",
                     Metadata,
-                    parameterSets
+                    implicitParameterSet
                 );
 
-                return parameterSets;
+                parameterSets.Add(implicitParameterSet);
             }
-
-            var implicitParameterSet = new ParameterSet(
-                ParameterSet.ImplicitParameterSetName,
-                commonParameters,
-                isDefault: true
-            );
 
             Logger.Debug(
-                "{ProcessedType}: Implicit parameter set: {@ImplicitParameterSet}",
+                "{ProcessedType}: Parameter sets: {@ParameterSets}",
                 Metadata,
-                implicitParameterSet
+                parameterSets
             );
 
-            return new[] { implicitParameterSet };
+            return parameterSets;
         }
 
-        private Boolean IsDefaultParameterSet(String name, Int32 index)
+        private Boolean IsDefaultParameterSet(String name)
         {
             if (DefaultParameterSetName != null)
             {
@@ -165,11 +164,11 @@ namespace HarshPoint.ObjectModel
                 );
             }
 
-            return (index == 0);
+            return false;
         }
 
         private IEnumerable<Parameter> BuildParameterMetadata()
-            => from paramAttrs in 
+            => from paramAttrs in
                    Metadata.ReadableWritableInstancePropertiesWith<ParameterAttribute>(inherit: true)
 
                let property = paramAttrs.Key
@@ -182,7 +181,7 @@ namespace HarshPoint.ObjectModel
                select new Parameter(property, attr, DefaultValuePolicy);
 
         private Boolean IsMandatoryAndUnsupportedByDefaultValuePolicy(
-            PropertyAccessor property, 
+            PropertyAccessor property,
             IEnumerable<ParameterAttribute> attributes
         )
         {
@@ -202,7 +201,7 @@ namespace HarshPoint.ObjectModel
         }
 
         private static Boolean IsBothCommonParameterAndInParameterSet(
-            PropertyAccessor property, 
+            PropertyAccessor property,
             IEnumerable<ParameterAttribute> attributes
         )
         {

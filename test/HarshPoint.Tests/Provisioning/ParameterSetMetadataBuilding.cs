@@ -46,13 +46,15 @@ namespace HarshPoint.Tests.Provisioning
         {
             var sets = Build<TwoSetsImplicitDefault>();
 
-            Assert.Equal(2, sets.Length);
+            Assert.Equal(3, sets.Length);
 
-            Assert.Equal("Set1", sets[0].Name);
-            Assert.Equal("Set2", sets[1].Name);
+            Assert.Equal("__DefaultParameterSet", sets[0].Name);
+            Assert.Equal("Set1", sets[1].Name);
+            Assert.Equal("Set2", sets[2].Name);
 
             Assert.True(sets[0].IsDefault);
             Assert.False(sets[1].IsDefault);
+            Assert.False(sets[2].IsDefault);
         }
 
         [Fact]
@@ -99,12 +101,16 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public void Implicit_named_set_is_default()
         {
-            var sets = Build<ImplicitNamedSetIsDefault>();
-            var set = Assert.Single(sets);
+            var sets = Build<ImplicitSetIsDefault>();
+            Assert.Equal(2, sets.Length);
 
-            Assert.Equal("Set1", set.Name);
-            Assert.True(set.IsDefault);
-            Assert.Equal(2, set.Parameters.Count);
+            Assert.Equal("__DefaultParameterSet", sets[0].Name);
+            Assert.True(sets[0].IsDefault);
+            Assert.Equal(1, sets[0].Parameters.Count);
+
+            Assert.Equal("Set1", sets[1].Name);
+            Assert.False(sets[1].IsDefault);
+            Assert.Equal(2, sets[1].Parameters.Count);
         }
 
         [Fact]
@@ -206,7 +212,7 @@ namespace HarshPoint.Tests.Provisioning
             public Object NotAParam { get; set; }
         }
 
-        private sealed class ImplicitNamedSetIsDefault
+        private sealed class ImplicitSetIsDefault
         {
             [Parameter(ParameterSetName = "Set1")]
             public String ParamInSet1 { get; set; }
