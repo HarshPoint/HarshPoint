@@ -1,5 +1,6 @@
 ﻿using HarshPoint.Reflection;
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace HarshPoint.ObjectModel
@@ -14,11 +15,18 @@ namespace HarshPoint.ObjectModel
             }
 
             PropertyInfo = propertyInfo;
+
+            Expression = propertyInfo.MakeGetterExpression(
+                resultType: typeof(Object)
+            );
+
             Getter = propertyInfo.MakeGetter();
             Setter = propertyInfo.MakeSetter();
         }
 
+        public Expression Expression { get; }
         public PropertyInfo PropertyInfo { get; }
+
         private Func<Object, Object> Getter { get; }
         private Action<Object, Object> Setter { get; }
 

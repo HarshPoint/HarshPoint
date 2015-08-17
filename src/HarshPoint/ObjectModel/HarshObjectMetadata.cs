@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace HarshPoint.ObjectModel
 {
     public class HarshObjectMetadata
     {
+        private readonly ImmutableDictionary<PropertyInfo, PropertyAccessor> _properties;
+
         public HarshObjectMetadata(Type type)
         {
             if (type == null)
@@ -18,8 +21,7 @@ namespace HarshPoint.ObjectModel
             ObjectType = type;
             ObjectTypeInfo = type.GetTypeInfo();
 
-            ReadableWritableInstanceProperties =
-                InitReadableWritableInstanceProperties();
+            _properties = InitReadableWritableInstanceProperties();
         }
 
         public HarshObjectMetadata(TypeInfo typeInfo)
@@ -32,24 +34,24 @@ namespace HarshPoint.ObjectModel
             ObjectType = typeInfo.AsType();
             ObjectTypeInfo = typeInfo;
 
-            ReadableWritableInstanceProperties =
-                InitReadableWritableInstanceProperties();
+            _properties = InitReadableWritableInstanceProperties();
         }
 
-        public Type ObjectType
-        {
-            get;
+        public Type ObjectType { get; }
 
-        }
-
-        public TypeInfo ObjectTypeInfo
-        {
-            get;
-        }
+        public TypeInfo ObjectTypeInfo { get; }
 
         public IEnumerable<PropertyAccessor> ReadableWritableInstanceProperties
+            => _properties.Values;
+
+        public PropertyAccessor GetPropertyAccessor(PropertyInfo propertyInfo)
         {
-            get;
+            if (propertyInfo == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(propertyInfo));
+            }
+
+            return _properties.GetValueOrDefault(propertyInfo);
         }
 
         public IEnumerable<IGrouping<PropertyAccessor, TAttribute>> ReadableWritableInstancePropertiesWith<TAttribute>(Boolean inherit)
@@ -66,12 +68,12 @@ namespace HarshPoint.ObjectModel
                 .Where(t => t.Item2 != null)
                 .ToArray();
 
-        private IEnumerable<PropertyAccessor> InitReadableWritableInstanceProperties()
+        private ImmutableDictionary<PropertyInfo, PropertyAccessor> InitReadableWritableInstanceProperties()
             => ObjectType
                 .GetRuntimeProperties()
                 .Where(p => p.CanRead && p.CanWrite && !p.GetMethod.IsStatic && !p.SetMethod.IsStatic)
                 .Select(p => new PropertyAccessor(p))
-                .ToImmutableArray();
+                .ToImmutableDictionary(p => p.PropertyInfo);
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<HarshObjectMetadata>();
     }

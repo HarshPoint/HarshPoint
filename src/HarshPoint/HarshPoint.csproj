@@ -103,6 +103,7 @@
     <Compile Include="Provisioning\HarshModifyFieldMultilineText.cs" />
     <Compile Include="Provisioning\HarshProvisionerOutputSink.cs" />
     <Compile Include="Provisioning\HarshProvisionerOutput.cs" />
+    <Compile Include="Provisioning\Implementation\ClientObjectUpdater.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyValueSource.cs" />
     <Compile Include="Provisioning\Implementation\ProvisioningDefaultValuePolicy.cs" />
     <Compile Include="Provisioning\MandatoryWhenCreatingAttribute.cs" />

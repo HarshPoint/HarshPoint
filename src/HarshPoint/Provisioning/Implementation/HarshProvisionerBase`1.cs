@@ -127,7 +127,8 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         protected internal Boolean IsValueDefaultFromContext(Expression<Func<Object>> expression)
-            => _valueSourceTracker?.GetValueSource(expression) == DefaultFromContextPropertyValueSource.Instance;
+            => _valueSourceTracker?.GetValueSource(expression)
+                == DefaultFromContextPropertyValueSource.Instance;
 
         protected void ForwardsTo(HarshProvisionerBase<TContext> target)
         {

@@ -45,6 +45,7 @@ namespace HarshPoint.Tests.Provisioning
         public void Two_sets_implicit_default()
         {
             var sets = Build<TwoSetsImplicitDefault>();
+
             Assert.Equal(2, sets.Length);
 
             Assert.Equal("Set1", sets[0].Name);
@@ -157,7 +158,7 @@ namespace HarshPoint.Tests.Provisioning
         private static ParameterSet[] Build<T>()
         {
             var builder = new ParameterSetBuilder(typeof(T));
-            return builder.Build().ToArray();
+            return builder.Build().OrderBy(s => s.Name).ToArray();
         }
 
         private sealed class OnlyDefaultParameterSet

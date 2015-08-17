@@ -11,6 +11,24 @@ namespace HarshPoint
     public static class ExpressionExtensions
     {
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public static Expression<Func<Object>> ConvertToObject<TResult>(
+            this Expression<Func<TResult>> expression
+        )
+        {
+            if (expression == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
+            }
+
+            return Expression.Lambda<Func<Object>>(
+                Expression.Convert(
+                    expression.Body,
+                    typeof(Object)
+                )
+            );
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static Expression<Func<T, Object>> ConvertToObject<T, TResult>(
             this Expression<Func<T, TResult>> expression
         )

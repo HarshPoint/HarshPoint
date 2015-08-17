@@ -26,6 +26,11 @@ namespace HarshPoint.Provisioning.Implementation
                 .Build()
                 .ToImmutableArray();
 
+            ParameterProperties = Parameters
+                .Select(p => p.PropertyAccessor)
+                .Distinct()
+                .ToImmutableArray();
+
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
 
             DefaultFromContextPropertyBinder = new DefaultFromContextPropertyBinder(
@@ -54,6 +59,7 @@ namespace HarshPoint.Provisioning.Implementation
             => ParameterSets.SelectMany(set => set.Parameters);
 
         public IEnumerable<ParameterSet> ParameterSets { get; }
+        public IEnumerable<PropertyAccessor> ParameterProperties { get; }
 
         public ResolvedPropertyBinder ResolvedPropertyBinder { get; }
 

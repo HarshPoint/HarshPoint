@@ -1,13 +1,25 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.ObjectModel;
+using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
     public abstract class HarshModifyField<TField> : HarshProvisioner
         where TField : Field
     {
+        private readonly ClientObjectUpdater<HarshModifyField<TField>, TField> _updater;
+
+        public HarshModifyField()
+        {
+            _updater = new ClientObjectUpdater<HarshModifyField<TField>, TField>(
+                Metadata
+            );
+        }
+
         [Parameter]
         [DefaultFromContext]
         public IResolve<TField> Fields
@@ -53,8 +65,16 @@ namespace HarshPoint.Provisioning
             }
         }
 
-#warning TODO
-#if false
+
+        protected override void InitializeResolveContext(ClientObjectResolveContext context)
+        {
+            context.Include(
+                _updater.GetRetrievals()
+            );
+
+            base.InitializeResolveContext(context);
+        }
+
         protected override async Task OnProvisioningAsync()
         {
             foreach (var field in Fields)
@@ -68,7 +88,8 @@ namespace HarshPoint.Provisioning
             }
         }
 
-        protected abstract void ModifyField(TField field);
-#endif
+        protected virtual void ModifyField(TField field)
+        {
+        }
     }
 }

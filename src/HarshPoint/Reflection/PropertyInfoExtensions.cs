@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -6,57 +7,106 @@ namespace HarshPoint.Reflection
 {
     public static class PropertyInfoExtensions
     {
-        public static Func<TTarget, TProperty> MakeGetter<TTarget, TProperty>(this PropertyInfo property)
+        public static Func<Object, Object> MakeGetter(this PropertyInfo property)
+            => MakeGetter<Object, Object>(property);
+
+        public static LambdaExpression MakeGetterExpression(this PropertyInfo property)
+            => MakeGetterExpression(property, null, null);
+
+        public static LambdaExpression MakeGetterExpression(
+            this PropertyInfo property,
+            Type targetType = null,
+            Type resultType = null
+        )
         {
             if (property == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(property));
             }
 
-            var target = Expression.Parameter(typeof(TTarget));
+            if (targetType == null)
+            {
+                targetType = property.DeclaringType;
+            }
 
-            var lambda = Expression.Lambda<Func<TTarget, TProperty>>(
-                Expression.Convert(
-                    Expression.Call(
-                        Expression.Convert(target, property.DeclaringType),
-                        property.GetMethod
-                    ),
-                    typeof(TProperty)
-                ),
+            if (resultType == null)
+            {
+                resultType = property.PropertyType;
+            }
+
+            var target = Expression.Parameter(targetType, "target");
+
+            var memberAccess = Expression.MakeMemberAccess(
+                ConvertIfNeeded(target, property.DeclaringType),
+                property
+            );
+
+            var delegateType = typeof(Func<,>).MakeGenericType(
+                targetType, resultType
+            );
+
+            var lambda = Expression.Lambda(
+                delegateType,
+                ConvertIfNeeded(memberAccess, resultType),
                 target
             );
 
-            return lambda.Compile();
+            return lambda;
         }
 
-        public static Func<Object, Object> MakeGetter(this PropertyInfo property)
-            => MakeGetter<Object, Object>(property);
-    
+        public static Func<TTarget, TResult> MakeGetter<TTarget, TResult>(this PropertyInfo property)
+            => MakeGetterExpression<TTarget, TResult>(property).Compile();
+
+        public static Expression<Func<TTarget, TResult>> MakeGetterExpression<TTarget, TResult>(this PropertyInfo property)
+            => (Expression<Func<TTarget, TResult>>)MakeGetterExpression(
+                property,
+                typeof(TTarget),
+                typeof(TResult)
+            );
+
+        public static Action<Object, Object> MakeSetter(this PropertyInfo property)
+            => MakeSetter<Object, Object>(property);
+
         public static Action<TTarget, TProperty> MakeSetter<TTarget, TProperty>(this PropertyInfo property)
+            => MakeSetterExpression<TTarget, TProperty>(property).Compile();
+
+        public static Expression<Action<Object, Object>> MakeSetterExpression(this PropertyInfo property)
+            => MakeSetterExpression<Object, Object>(property);
+
+        public static Expression<Action<TTarget, TProperty>> MakeSetterExpression<TTarget, TProperty>(this PropertyInfo property)
         {
             if (property == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(property));
             }
 
-            var target = Expression.Parameter(typeof(TTarget));
-            var value = Expression.Parameter(typeof(TProperty));
+            var target = Expression.Parameter(typeof(TTarget), "target");
+            var value = Expression.Parameter(typeof(TProperty), "object");
 
             var lambda = Expression.Lambda<Action<TTarget, TProperty>>(
-                Expression.Call(
-                    Expression.Convert(target, property.DeclaringType),
-                    property.SetMethod,
-                    Expression.Convert(value, property.PropertyType)
+                Expression.Assign(
+                    Expression.MakeMemberAccess(
+                        ConvertIfNeeded(target, property.DeclaringType),
+                        property
+                    ),
+                    ConvertIfNeeded(value, property.PropertyType)
                 ),
                 target,
                 value
             );
 
-            return lambda.Compile();
+            return lambda;
         }
 
-        public static Action<Object, Object> MakeSetter(this PropertyInfo property)
-            => MakeSetter<Object, Object>(property);
+        private static Expression ConvertIfNeeded(Expression expression, Type type)
+        {
+            if (expression.Type == type)
+            {
+                return expression;
+            }
+
+            return Expression.ConvertChecked(expression, type);
+        }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(PropertyInfoExtensions));
     }
