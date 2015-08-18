@@ -1,13 +1,8 @@
 ﻿using HarshPoint.Provisioning;
 using HarshPoint.Tests;
-using Moq;
 using System;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Management.Automation;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +17,7 @@ namespace HarshPoint.ShellployGenerator.Tests
         public class HarshCustomChildrenTestProvisioner : HarshProvisioner
         {
             [Parameter()]
-            public new String InputObject { get; set; }
+            public String InputObject { get; set; }
         }
 
         public class HarshTestProvisioner : HarshProvisioner

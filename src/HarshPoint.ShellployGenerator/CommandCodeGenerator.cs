@@ -1,5 +1,4 @@
-﻿using HarshPoint.Provisioning.Implementation;
-using System;
+﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace HarshPoint.ShellployGenerator
 {
     internal class CommandCodeGenerator
     {
-        private static readonly String BaseTypeName= "HarshProvisionerCmdlet";
+        private static readonly String BaseTypeName = "HarshProvisionerCmdlet";
 
         private ShellployCommand _command;
 

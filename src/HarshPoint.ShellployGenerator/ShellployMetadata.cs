@@ -1,13 +1,7 @@
-﻿using HarshPoint.Provisioning;
-using HarshPoint.Provisioning.Implementation;
-using Microsoft.SharePoint.Client;
-using Microsoft.SharePoint.Client.Taxonomy;
-using System;
-using System.CodeDom;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reflection;
 
 namespace HarshPoint.ShellployGenerator
 {
@@ -21,7 +15,7 @@ namespace HarshPoint.ShellployGenerator
             var baseType = typeof(IShellployMetadataObject);
             var builders = baseType.Assembly
                 .DefinedTypes
-                .Where(type => 
+                .Where(type =>
                     baseType.IsAssignableFrom(type)
                     && !type.IsAbstract
                 )

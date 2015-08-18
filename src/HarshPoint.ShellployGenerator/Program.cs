@@ -1,21 +1,12 @@
 ﻿using System;
-using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Management.Automation;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.CSharp;
-using System.Diagnostics;
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal class Program
+    internal static class Program
     {
-        static void Main(String[] args)
+        private static Int32 Main(String[] args)
         {
             if (!args.Any())
             {
@@ -23,21 +14,30 @@ namespace HarshPoint.ShellployGenerator
                     Assembly.GetEntryAssembly().Location
                 );
 
-                Console.WriteLine($"Usage: {assemblyFileName} outputDirectory");
-                return;
+                Console.Error.WriteLine($"Usage: {assemblyFileName} outputDirectory");
+                return 2;
             }
 
-            var writer = new SourceFileWriter(args[0]);
-
-            foreach (var command in ShellployMetadata.GetCommands())
+            try
             {
-                Console.WriteLine($"Generating {command.ClassName}...");
-                var targetUnit = new CommandCodeGenerator(command)
-                    .GenerateCompileUnit();
-                writer.Write(targetUnit);
-            }
+                var writer = new SourceFileWriter(args[0]);
 
-            Console.WriteLine("Done.");
+                foreach (var command in ShellployMetadata.GetCommands())
+                {
+                    Console.WriteLine($"Generating {command.ClassName}...");
+                    var targetUnit = new CommandCodeGenerator(command)
+                        .GenerateCompileUnit();
+                    writer.Write(targetUnit);
+                }
+
+                Console.WriteLine("Done.");
+                return 0;
+            }
+            catch (Exception exc)
+            {
+                Console.Error.WriteLine(exc);
+                return 1;
+            }
         }
     }
 }

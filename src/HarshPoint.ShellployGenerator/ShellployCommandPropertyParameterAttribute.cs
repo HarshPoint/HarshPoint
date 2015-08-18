@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator
@@ -41,7 +40,5 @@ namespace HarshPoint.ShellployGenerator
 
             return result.ToArray();
         }
-
-        private static readonly HarshLogger Logger = HarshLog.ForContext<ShellployCommandPropertyParameterAttribute>();
     }
 }

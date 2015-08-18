@@ -53,7 +53,7 @@ namespace HarshPoint.ShellployGenerator
             }
         }
 
-        private String GetFileName(CodeCompileUnit compileUnit)
+        private static String GetFileName(CodeCompileUnit compileUnit)
         {
             var types = compileUnit.Namespaces
                 .Cast<CodeNamespace>()

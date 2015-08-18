@@ -54,7 +54,7 @@ namespace HarshPoint.ShellployGenerator
             TValue value
         )
         {
-            this._fixedParameters[parameter.ExtractSinglePropertyAccess().Name] = value;
+            this._fixedParameters[parameter.ExtractLastPropertyAccess().Name] = value;
 
             return this;
         }
@@ -63,7 +63,7 @@ namespace HarshPoint.ShellployGenerator
             Expression<Func<TParentProvisioner, Object>> parameter
         )
         {
-            _ignoredParameters.Add(parameter.ExtractSinglePropertyAccess().Name);
+            _ignoredParameters.Add(parameter.ExtractLastPropertyAccess().Name);
             return this;
         }
     }

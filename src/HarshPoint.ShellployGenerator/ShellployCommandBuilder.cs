@@ -42,7 +42,7 @@ namespace HarshPoint.ShellployGenerator
             Expression<Func<TProvisioner, Object>> parameter
         )
         {
-            _positionalParameters.Add(parameter.ExtractSinglePropertyAccess().Name);
+            _positionalParameters.Add(parameter.ExtractLastPropertyAccess().Name);
             return this;
         }
 
@@ -92,7 +92,7 @@ namespace HarshPoint.ShellployGenerator
             String newName
         )
         {
-            _renamedParameters[parameter.ExtractSinglePropertyAccess().Name] = newName;
+            _renamedParameters[parameter.ExtractLastPropertyAccess().Name] = newName;
             return this;
         }
 
@@ -101,7 +101,7 @@ namespace HarshPoint.ShellployGenerator
             TValue value
         )
         {
-            _fixedParameters[parameter.ExtractSinglePropertyAccess().Name] = value;
+            _fixedParameters[parameter.ExtractLastPropertyAccess().Name] = value;
             return this;
         }
 
@@ -110,7 +110,7 @@ namespace HarshPoint.ShellployGenerator
             CodeExpression value
         )
         {
-            _fixedParameters[parameter.ExtractSinglePropertyAccess().Name] = value;
+            _fixedParameters[parameter.ExtractLastPropertyAccess().Name] = value;
             return this;
         }
 
@@ -119,7 +119,7 @@ namespace HarshPoint.ShellployGenerator
             TValue value
         )
         {
-            _defaultValues[parameter.ExtractSinglePropertyAccess().Name] = value;
+            _defaultValues[parameter.ExtractLastPropertyAccess().Name] = value;
             return this;
         }
 
@@ -128,7 +128,7 @@ namespace HarshPoint.ShellployGenerator
             CodeExpression value
         )
         {
-            _defaultValues[parameter.ExtractSinglePropertyAccess().Name] = value;
+            _defaultValues[parameter.ExtractLastPropertyAccess().Name] = value;
             return this;
         }
 
@@ -145,7 +145,7 @@ namespace HarshPoint.ShellployGenerator
             Expression<Func<TProvisioner, Object>> parameter
         )
         {
-            _ignoredParameters.Add(parameter.ExtractSinglePropertyAccess().Name);
+            _ignoredParameters.Add(parameter.ExtractLastPropertyAccess().Name);
             return this;
         }
 
@@ -239,7 +239,7 @@ namespace HarshPoint.ShellployGenerator
                 .ToArray();
             SetFixedParameters(properties, _fixedParameters);
 
-            if (hasChildren 
+            if (hasChildren
                 && _provisionerMetadata.Parameters.Any(
                     p => p.Name == ShellployCommand.ChildrenPropertyName
                 )
@@ -332,7 +332,7 @@ namespace HarshPoint.ShellployGenerator
             return new ShellployCommandProperty[0];
         }
 
-        private ShellployCommandProperty GetChildrenProperty(
+        private static ShellployCommandProperty GetChildrenProperty(
             IImmutableDictionary<String, Int32?> positionalParametersIndices,
             Boolean hasChildren
         )
@@ -358,7 +358,7 @@ namespace HarshPoint.ShellployGenerator
             return null;
         }
 
-        private void SetFixedParameters(
+        private static void SetFixedParameters(
             IEnumerable<ShellployCommandProperty> properties,
             IDictionary<String, Object> fixedParameters
         )

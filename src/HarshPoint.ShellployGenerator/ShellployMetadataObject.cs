@@ -1,12 +1,5 @@
-﻿using HarshPoint.Provisioning;
-using HarshPoint.Provisioning.Implementation;
-using Microsoft.SharePoint.Client;
-using Microsoft.SharePoint.Client.Taxonomy;
+﻿using HarshPoint.Provisioning.Implementation;
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace HarshPoint.ShellployGenerator
 {
@@ -17,22 +10,12 @@ namespace HarshPoint.ShellployGenerator
         private const String ProvisioningNamespace = "HarshPoint.Provisioning";
 
         protected virtual ShellployCommandBuilder<TProvisioner> CreateCommandBuilder()
-        {
-            return new ShellployCommandBuilder<TProvisioner>()
+            => new ShellployCommandBuilder<TProvisioner>()
                 .InNamespace(CommandNamespace)
                 .AddUsing(ProvisioningNamespace);
-        }
 
-        public IShellployCommandBuilder GetCommandBuilder()
-        {
-            return CreateCommandBuilder();
-        }
+        public IShellployCommandBuilder GetCommandBuilder() => CreateCommandBuilder();
 
-        public Type GetProvisionerType()
-        {
-            return typeof(TProvisioner);
-        }
-
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ShellployMetadataObject<>));
+        public Type GetProvisionerType() => typeof(TProvisioner);
     }
 }
