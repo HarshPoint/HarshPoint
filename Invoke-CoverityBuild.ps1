@@ -12,6 +12,12 @@ $MSBuildArgs = @(
   "/p:Platform=${Env:PLATFORM}"
 )
 
+if (($Env:APPVEYOR_SCHEDULED_BUILD -ne 'True') -and
+	($Env:APPVEYOR_FORCED_BUILD    -ne 'True')) {
+	& $MSBuild $MSBuildArgs
+	exit $LastExitCode
+}
+
 $CoverityDir = "cov-int"
 $CoverityZip = "${Env:APPVEYOR_PROJECT_NAME}.zip"
 
