@@ -39,10 +39,6 @@
       <HintPath>..\..\packages\HarshPirate.SharePointOnline.CSOM.16.0.4002.1211\lib\net45\Microsoft.Office.Client.TranslationServices.Portable.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\HarshPirate.SharePoint.15.0.4649.1000\lib\net45\Microsoft.SharePoint.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.SharePoint.Client.DocumentManagement.Portable, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\HarshPirate.SharePointOnline.CSOM.16.0.4002.1211\lib\net45\Microsoft.SharePoint.Client.DocumentManagement.Portable.dll</HintPath>
       <Private>True</Private>
