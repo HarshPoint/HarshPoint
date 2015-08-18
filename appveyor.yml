@@ -1,4 +1,4 @@
-version: 0.1.{build}{branch}
+version: 0.1.{build}-{branch}
 os: Visual Studio 2015
 init:
 - ps: $Env:Path = "${Env:ProgramFiles(x86)}\MSBuild\14.0\Bin;${Env:Path}"
