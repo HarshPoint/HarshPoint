@@ -17,7 +17,7 @@ namespace HarshPoint.Shellploy
             Uri url
         )
         {
-            if (credentialType == CredentialType.Default 
+            if (credentialType == CredentialType.Default
                 && IsSharePointOnline(url)
             )
             {
@@ -42,11 +42,8 @@ namespace HarshPoint.Shellploy
         }
 
         private static Boolean IsSharePointOnline(Uri url)
-        {
-            return
-                url != null
+            => url != null
                 && url.HostNameType == UriHostNameType.Dns
                 && url.Host.EndsWith(".sharepoint.com", StringComparison.OrdinalIgnoreCase);
-        }
     }
 }

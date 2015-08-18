@@ -14,14 +14,12 @@ namespace HarshPoint.ShellployGenerator
             Type attributeType,
             params Object[] parameters
         )
-        {
-            return attributeCollection.Add(
+            => attributeCollection.Add(
                 attributeType,
                 parameters.Select(
                     param => Tuple.Create<String, Object>(null, param)
                 ).ToArray()
             );
-        }
 
         public static Int32 Add(
             this CodeAttributeDeclarationCollection attributeCollection,
@@ -48,27 +46,21 @@ namespace HarshPoint.ShellployGenerator
             this CodeExpression targetObject,
             String methodName
         )
-        {
-            return targetObject.Call(methodName, new Type[0], new CodeExpression[0]);
-        }
+            => targetObject.Call(methodName, new Type[0], new CodeExpression[0]);
 
         public static CodeExpression Call(
             this CodeExpression targetObject,
             String methodName,
             params CodeExpression[] parameters
         )
-        {
-            return targetObject.Call(methodName, new Type[0], parameters);
-        }
+            => targetObject.Call(methodName, new Type[0], parameters);
 
         public static CodeExpression Call(
             this CodeExpression targetObject,
             String methodName,
             params Type[] typeParameters
         )
-        {
-            return targetObject.Call(methodName, typeParameters, new CodeExpression[0]);
-        }
+            => targetObject.Call(methodName, typeParameters, new CodeExpression[0]);
 
         public static CodeExpression Call(
                     this CodeExpression targetObject,

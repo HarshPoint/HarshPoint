@@ -88,7 +88,7 @@ namespace HarshPoint.ShellployGenerator
         }
 
         public ShellployCommandBuilder<TProvisioner> RenameParameter(
-            Expression<Func<TProvisioner, Object>> parameter, 
+            Expression<Func<TProvisioner, Object>> parameter,
             String newName
         )
         {
@@ -197,12 +197,6 @@ namespace HarshPoint.ShellployGenerator
             Boolean hasChildren
         )
         {
-            var childrenParameterNameArray = new String[0];
-            if (hasChildren)
-            {
-                childrenParameterNameArray = new[] { ShellployCommand.ChildrenPropertyName };
-            }
-
             var parentPositionalParameters = new String[0];
             var parentBuilder = GetParentBuilder(builders);
             if (parentBuilder != null)
@@ -212,7 +206,7 @@ namespace HarshPoint.ShellployGenerator
 
             return parentPositionalParameters
                 .Concat(_positionalParameters)
-                .Concat(childrenParameterNameArray);
+                .Concat(hasChildren ? ShellployCommand.ChildrenPropertyName.AsCollection() : new String[0]);
         }
 
         public IEnumerable<ShellployCommandProperty> GetProperties(
@@ -221,27 +215,6 @@ namespace HarshPoint.ShellployGenerator
             Boolean hasChildren
         )
         {
-            var childrenPropertyArray = new ShellployCommandProperty[0];
-            if (_hasChildren)
-            {
-                childrenPropertyArray = new[]
-                {
-                    new ShellployCommandProperty{
-                        Name = ShellployCommand.ChildrenPropertyName,
-                        Type = typeof(Object),
-                        AssignmentOnType = null,
-                        ParameterAttributes = new List<ShellployCommandPropertyParameterAttribute>()
-                        {
-                            new ShellployCommandPropertyParameterAttribute()
-                            {
-                                Position = positionalParametersIndices.GetValueOrDefault(ShellployCommand.ChildrenPropertyName, null),
-                                ValueFromPipeline = true,
-                            },
-                        }.ToImmutableList(),
-                    },
-                };
-            }
-
             IEnumerable<ShellployCommandProperty> properties = _provisionerMetadata.Parameters
                 .GroupBy(
                     param => param.Name,
@@ -266,22 +239,25 @@ namespace HarshPoint.ShellployGenerator
                 .ToArray();
             SetFixedParameters(properties, _fixedParameters);
 
-            properties = properties
-                .Concat(childrenPropertyArray);
-
-            var parentProperties = new ShellployCommandProperty[0];
-            var parentBuilder = GetParentBuilder(builders);
-            if (parentBuilder != null)
-            {
-                parentProperties = parentBuilder.GetProperties(
-                    builders,
-                    positionalParametersIndices,
-                    hasChildren = false
+            if (hasChildren 
+                && _provisionerMetadata.Parameters.Any(
+                    p => p.Name == ShellployCommand.ChildrenPropertyName
                 )
-                .Where(prop => !_parentProvisioner.IgnoredParameters.Contains(prop.Name))
-                .ToArray();
-                SetFixedParameters(parentProperties, _parentProvisioner.FixedParameters);
+            )
+            {
+                throw Logger.Fatal.InvalidOperationFormat(
+                    SR.ShellployCommandBuilder_PropertyChildrenAlreadyDefined,
+                    ShellployCommand.ChildrenPropertyName
+                );
             }
+
+            properties = properties
+                .Concat(
+                    GetChildrenProperty(positionalParametersIndices, hasChildren)?.AsCollection()
+                    ?? new ShellployCommandProperty[0]
+                );
+
+            var parentProperties = GetParentProperties(builders, positionalParametersIndices, hasChildren);
 
             if (
                 new HashSet<ShellployCommandProperty>(
@@ -330,6 +306,56 @@ namespace HarshPoint.ShellployGenerator
 
             SetDefaultValues(properties, _defaultValues);
             return properties;
+        }
+
+        private IEnumerable<ShellployCommandProperty> GetParentProperties(
+            IReadOnlyDictionary<Type, IShellployCommandBuilder> builders,
+            IImmutableDictionary<string, int?> positionalParametersIndices,
+            bool hasChildren
+        )
+        {
+            var parentBuilder = GetParentBuilder(builders);
+            if (parentBuilder != null)
+            {
+                var parentProperties = parentBuilder.GetProperties(
+                    builders,
+                    positionalParametersIndices,
+                    hasChildren = false
+                )
+                .Where(prop => !_parentProvisioner.IgnoredParameters.Contains(prop.Name))
+                .ToArray();
+
+                SetFixedParameters(parentProperties, _parentProvisioner.FixedParameters);
+                return parentProperties;
+            }
+
+            return new ShellployCommandProperty[0];
+        }
+
+        private ShellployCommandProperty GetChildrenProperty(
+            IImmutableDictionary<string, int?> positionalParametersIndices,
+            Boolean hasChildren
+        )
+        {
+            if (hasChildren)
+            {
+                return new ShellployCommandProperty
+                {
+                    Name = ShellployCommand.ChildrenPropertyName,
+                    Type = typeof(Object),
+                    AssignmentOnType = null,
+                    ParameterAttributes = new List<ShellployCommandPropertyParameterAttribute>()
+                    {
+                        new ShellployCommandPropertyParameterAttribute()
+                        {
+                            Position = positionalParametersIndices.GetValueOrDefault(ShellployCommand.ChildrenPropertyName, null),
+                            ValueFromPipeline = true,
+                        },
+                    }.ToImmutableList(),
+                };
+            }
+
+            return null;
         }
 
         private void SetFixedParameters(
@@ -397,19 +423,6 @@ namespace HarshPoint.ShellployGenerator
             IReadOnlyDictionary<Type, IShellployCommandBuilder> builders
         )
         {
-            if (_hasChildren)
-            {
-                if (_provisionerMetadata.Parameters.Any(
-                    p => p.Name == ShellployCommand.ChildrenPropertyName
-                ))
-                {
-                    throw Logger.Fatal.InvalidOperationFormat(
-                        SR.ShellployCommandBuilder_PropertyChildrenAlreadyDefined,
-                        ShellployCommand.ChildrenPropertyName
-                    );
-                }
-            }
-
             var positionalParametersIndices
                 = GetPositionalParameters(builders, _hasChildren)
                     .Select(

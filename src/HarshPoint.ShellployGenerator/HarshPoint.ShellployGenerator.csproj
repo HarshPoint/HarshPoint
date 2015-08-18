@@ -126,6 +126,7 @@
   <ItemGroup>
     <Compile Include="CommandCodeGenerator.cs" />
     <Compile Include="CodeDomExtensions.cs" />
+    <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="IShellployCommandBuilder.cs" />
     <Compile Include="IShellployCommandBuilderParent.cs" />
     <Compile Include="Metadata\HarshEnableWebFeatureMetadata.cs" />

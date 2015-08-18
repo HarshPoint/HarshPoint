@@ -22,7 +22,7 @@ namespace HarshPoint.ShellployGenerator.Tests
         public class HarshCustomChildrenTestProvisioner : HarshProvisioner
         {
             [Parameter()]
-            public new String Children { get; set; }
+            public new String InputObject { get; set; }
         }
 
         public class HarshTestProvisioner : HarshProvisioner
@@ -90,7 +90,7 @@ namespace HarshPoint.ShellployGenerator.Tests
             var properties = command.Properties.ToImmutableDictionary(prop => prop.Name);
 
             var propName = ShellployCommand.ChildrenPropertyName;
-            Assert.Equal(typeof(ScriptBlock), properties[propName].Type);
+            Assert.Equal(typeof(Object), properties[propName].Type);
             Assert.Null(properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
             Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
@@ -269,7 +269,7 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.Equal(2, properties[propName].ParameterAttributes[1].Position);
 
             propName = ShellployCommand.ChildrenPropertyName;
-            Assert.Equal(typeof(ScriptBlock), properties[propName].Type);
+            Assert.Equal(typeof(Object), properties[propName].Type);
             Assert.Null(properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
             Assert.False(properties[propName].ParameterAttributes[0].Mandatory);
@@ -297,7 +297,7 @@ namespace HarshPoint.ShellployGenerator.Tests
             Assert.NotEmpty(command.Properties);
             var properties = command.Properties.ToImmutableDictionary(prop => prop.Name);
 
-            var propName = nameof(HarshCustomChildrenTestProvisioner.Children);
+            var propName = nameof(HarshCustomChildrenTestProvisioner.InputObject);
             Assert.Equal(typeof(String), properties[propName].Type);
             Assert.Equal(typeof(HarshCustomChildrenTestProvisioner), properties[propName].AssignmentOnType);
             Assert.Equal(1, properties[propName].ParameterAttributes.Count);
