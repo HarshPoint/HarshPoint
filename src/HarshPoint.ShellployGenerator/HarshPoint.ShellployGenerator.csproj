@@ -160,7 +160,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(TargetPath)" "$(SolutionDir)src\HarshPoint.Shellploy\Generated"</PostBuildEvent>
+    <PostBuildEvent>"$(TargetDir)$(TargetFileName)" "$(SolutionDir)src\HarshPoint.Shellploy\Generated"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
