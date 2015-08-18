@@ -4,7 +4,8 @@ function New-StringContent($str) {
 	New-Object Net.Http.StringContent $str
 }
 
-$MSBuild     = "${Env:ProgramFiles(x86)}\MSBuild\14.0\bin\msbuild.exe"
+$Env:Path = "${Env:ProgramFiles(x86)}\MSBuild\14.0\bin\;${Env:Path}"
+
 $MSBuildArgs = @(
   '/m'
   "/l:${Env:ProgramFiles}\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
@@ -20,19 +21,18 @@ if (${Env:PLATFORM}) {
 
 if (($Env:APPVEYOR_SCHEDULED_BUILD -ne 'True') -and
 	($Env:APPVEYOR_FORCED_BUILD    -ne 'True')) {
-	& $MSBuild $MSBuildArgs
+	msbuild $MSBuildArgs
 	exit $LastExitCode
 }
 
-$CoverityDir = "cov-int"
 $CoverityZip = "${Env:APPVEYOR_PROJECT_NAME}.zip"
 
 Write-Host "Building project with Coverity Scan..."
-cov-build --dir $ConverityDir  $MSBuild $MSBuildArgs
+cov-build --dir cov-int msbuild  $MSBuildArgs
 if (-not $?) { exit $LastExitCode }
 
 Write-Host "Compressing Coverity results for upload..."
-7z a $CoverityZip "$CoverityDir\*"
+7z a $CoverityZip cov-int\*
 if (-not $?) { exit $LastExitCode }
 
 Write-Host "Uploading Coverity results..."
