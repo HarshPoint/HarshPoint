@@ -1,23 +1,32 @@
 version: 0.1.0.{build}
-os: Visual Studio 2015 RC
+os: Visual Studio 2015
 init:
 - ps: $Env:Path = "${Env:ProgramFiles(x86)}\MSBuild\14.0\Bin;${Env:Path}"
 assembly_info:
   patch: true
   file: src\AssemblyInfo.Shared.cs
-  assembly_version: '0.1.0.0'
+  assembly_version: 1.0.0.0
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 environment:
   HarshPointTestUrl:
-    secure: la+SCbMXpAZIZMxu46R9T4qKSdvEtvAHwfUBln2ip4+I9HV4/Rw8800MEVtAfaZ+tnIIo7fZYR4Dv1JTfiR0WQ==
-  HarshPointTestUser:
-    secure: dFT8d/aQmRHTUx2EitgBamM8JR4ROkPqsU3NexYBiyc/lXY+mRuaNVAuBZwgSD1u
-  HarshPointTestPassword:
-    secure: Ldhz1/g23iCZMD3UydbuhgMD6xPf2jSiTow60qXPly0=
+    secure: QIbkFa0+qZZkjxDEpovdCOLFYIv+fC6oTSO47Ece4L7JcZx0IqO/w/5gIgJb2JixO0hWQ85U0Cvc0NXMFuvJzA==
   HarshPointTestAuth:
-    secure: /aPy/TNRcKlV67mllpvM6ZXAoCLkFaKR3HfBb5+n1gI=
-build:
-  verbosity: minimal
+    secure: /JwoCjOxTFwB6posRe9VZZ5N9l4Gw5QyMhckurzBwiU=
+  HarshPointTestPassword:
+    secure: Z8RcawfKTnTUuNEes2/aOi2en0hyOH8kqn/UQ7IYUyc=
+  HarshPointTestUser:
+    secure: AvfmFNR1U4uK+CYGYWnuA3frFktaO2/gAEmkBC6jVV4Z9RXL5I+qu+mNvJBbHbrh
 nuget:
+  account_feed: true
+  project_feed: true
   disable_publish_on_pr: true
+build:
+  publish_nuget: true
+  publish_nuget_symbols: true
+  verbosity: minimal
+deploy:
+- provider: Environment
+  name: MyGet HarshPoint-dev
+  on:
+    branch: development
