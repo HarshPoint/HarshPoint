@@ -32,7 +32,7 @@ namespace HarshPoint.Server.Tests
         {
         }
 
-        protected override string GetSkipReason(IAttributeInfo factAttribute)
+        protected override String GetSkipReason(IAttributeInfo factAttribute)
         {
             if (!FarmJoined)
             {

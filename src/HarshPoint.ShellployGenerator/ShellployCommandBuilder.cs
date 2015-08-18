@@ -310,8 +310,8 @@ namespace HarshPoint.ShellployGenerator
 
         private IEnumerable<ShellployCommandProperty> GetParentProperties(
             IReadOnlyDictionary<Type, IShellployCommandBuilder> builders,
-            IImmutableDictionary<string, int?> positionalParametersIndices,
-            bool hasChildren
+            IImmutableDictionary<String, Int32?> positionalParametersIndices,
+            Boolean hasChildren
         )
         {
             var parentBuilder = GetParentBuilder(builders);
@@ -333,7 +333,7 @@ namespace HarshPoint.ShellployGenerator
         }
 
         private ShellployCommandProperty GetChildrenProperty(
-            IImmutableDictionary<string, int?> positionalParametersIndices,
+            IImmutableDictionary<String, Int32?> positionalParametersIndices,
             Boolean hasChildren
         )
         {

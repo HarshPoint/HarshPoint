@@ -23,25 +23,25 @@ namespace System
         /// <summary>
         /// The composite format string.
         /// </summary>
-        public abstract string Format { get; }
+        public abstract String Format { get; }
         /// <summary>
         /// Returns an object array that contains zero or more objects to format. Clients should not
         /// mutate the contents of the array.
         /// </summary>
-        public abstract object[] GetArguments();
+        public abstract Object[] GetArguments();
         /// <summary>
         /// The number of arguments to be formatted.
         /// </summary>
-        public abstract int ArgumentCount { get; }
+        public abstract Int32 ArgumentCount { get; }
         /// <summary>
         /// Returns one argument to be formatted from argument position <paramref name="index"/>.
         /// </summary>
-        public abstract object GetArgument(int index);
+        public abstract Object GetArgument(Int32 index);
         /// <summary>
         /// Format to a string using the given culture.
         /// </summary>
-        public abstract string ToString(IFormatProvider formatProvider);
-        string IFormattable.ToString(string ignored, IFormatProvider formatProvider) => ToString(formatProvider);
+        public abstract String ToString(IFormatProvider formatProvider);
+        String IFormattable.ToString(String ignored, IFormatProvider formatProvider) => ToString(formatProvider);
         /// <summary>
         /// Format the given object in the invariant culture. This static method may be
         /// imported in C# by
@@ -55,7 +55,7 @@ namespace System
         /// Invariant($"{{ lat = {latitude}; lon = {longitude} }}")
         /// </code>
         /// </summary>
-        public static string Invariant(FormattableString formattable)
+        public static String Invariant(FormattableString formattable)
         {
             if (formattable == null)
             {
@@ -94,7 +94,7 @@ namespace System.Runtime.CompilerServices
         /// Create a <see cref="FormattableString"/> from a composite format string and object
         /// array containing zero or more objects to format.
         /// </summary>
-        public static FormattableString Create(string format, params object[] arguments)
+        public static FormattableString Create(String format, params Object[] arguments)
         {
             if (format == null)
             {
@@ -110,18 +110,18 @@ namespace System.Runtime.CompilerServices
         }
         private sealed class ConcreteFormattableString : FormattableString
         {
-            private readonly string _format;
-            private readonly object[] _arguments;
-            internal ConcreteFormattableString(string format, object[] arguments)
+            private readonly String _format;
+            private readonly Object[] _arguments;
+            internal ConcreteFormattableString(String format, Object[] arguments)
             {
                 _format = format;
                 _arguments = arguments;
             }
-            public override string Format => _format;
-            public override object[] GetArguments() => _arguments;
-            public override int ArgumentCount => _arguments.Length;
-            public override object GetArgument(int index) => _arguments[index];
-            public override string ToString(IFormatProvider formatProvider) => string.Format(formatProvider, Format, _arguments);
+            public override String Format => _format;
+            public override Object[] GetArguments() => _arguments;
+            public override Int32 ArgumentCount => _arguments.Length;
+            public override Object GetArgument(Int32 index) => _arguments[index];
+            public override String ToString(IFormatProvider formatProvider) => String.Format(formatProvider, Format, _arguments);
         }
     }
 }
