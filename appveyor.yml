@@ -21,8 +21,11 @@ environment:
     secure: umuF9aSZzRig6SY8QZWWJGrq8gdwjO8lUXfC2JZ/XqY=
 nuget:
   disable_publish_on_pr: true
-build_script:
-- ps: '& .\Invoke-CoverityBuild.ps1'
+build:
+  publish_nuget: true
+  publish_nuget_symbols: true
+  parallel: true
+  verbosity: minimal
 deploy:
 - provider: Environment
   name: MyGet HarshPoint-dev
