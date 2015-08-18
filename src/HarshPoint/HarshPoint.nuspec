@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://raw.githubusercontent.com/HarshPoint/HarshPoint/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/HarshPoint/HarshPoint</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright (c) 2015 Julie Koubova, Tereza Tomcova</copyright>
+    <tags>SharePoint</tags>
+  </metadata>
+</package>

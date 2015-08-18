@@ -11,9 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329
 		src\AssemblyInfo.Shared.cs = src\AssemblyInfo.Shared.cs
 		src\CodeAnalysisDictionary.xml = src\CodeAnalysisDictionary.xml
 		src\CodeAnalysisRules.ruleset = src\CodeAnalysisRules.ruleset
-		src\FixNugetConfig.targets = src\FixNugetConfig.targets
 		LICENSE = LICENSE
-		LocalSharePoint.runsettings = LocalSharePoint.runsettings
 		nuget.config = nuget.config
 		README.md = README.md
 	EndProjectSection
@@ -42,6 +40,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.ShellployGenerator.Tests", "test\HarshPoint.Shellploy.Generator.Tests\HarshPoint.ShellployGenerator.Tests.csproj", "{02E3AED4-550C-4684-A3E2-E63E104606C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Shellploy.Tests", "test\HarshPoint.Shellploy.Tests\HarshPoint.Shellploy.Tests.csproj", "{C65D36BD-BA54-48FD-9DD8-B478FDA9BD6A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet Specs", "NuGet Specs", "{73E3B374-59C2-4E82-ABC5-1A4CCC3A1037}"
+	ProjectSection(SolutionItems) = preProject
+		src\HarshPoint\HarshPoint.nuspec = src\HarshPoint\HarshPoint.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
