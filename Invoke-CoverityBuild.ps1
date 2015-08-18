@@ -6,11 +6,17 @@ function New-StringContent($str) {
 
 $MSBuild     = "${Env:ProgramFiles(x86)}\MSBuild\14.0\bin\msbuild.exe"
 $MSBuildArgs = @(
-  "/m"
+  '/m'
   "/l:${Env:ProgramFiles}\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  "/p:Configuration=${Env:CONFIGURATION}"
-  "/p:Platform=${Env:PLATFORM}"
 )
+
+if (${Env:CONFIGURATION}) {
+	$MSBuildArgs += @("/p:Configuration=${Env:CONFIGURATION}")
+}
+
+if (${Env:PLATFORM}) {
+	$MSBuildArgs += @("/p:Platform=${Env:PLATFORM}")
+}  
 
 if (($Env:APPVEYOR_SCHEDULED_BUILD -ne 'True') -and
 	($Env:APPVEYOR_FORCED_BUILD    -ne 'True')) {
