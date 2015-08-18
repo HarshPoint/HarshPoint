@@ -145,6 +145,9 @@ Number of resolver elements {1}</value>
   <data name="ClientObjectUpdater_NoParameterSet" xml:space="preserve">
     <value>The specified provisioner has no current ParameterSet.</value>
   </data>
+  <data name="ClientObjectUpdater_NotAParameter" xml:space="preserve">
+    <value>The specified property '{0}' has no Parameter attributes defined.</value>
+  </data>
   <data name="ClientObject_IsNullNotLoaded" xml:space="preserve">
     <value>The specified object hasn't been loaded yet, cannot determine if it is null.</value>
   </data>

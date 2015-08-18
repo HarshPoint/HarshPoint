@@ -8,7 +8,7 @@ namespace HarshPoint.Tests.Provisioning
 {
     public class DateTimeFieldProvisioning : TestFieldBase<FieldDateTime, HarshModifyFieldDateTime>
     {
-        public DateTimeFieldProvisioning(ITestOutputHelper output) 
+        public DateTimeFieldProvisioning(ITestOutputHelper output)
             : base(FieldType.DateTime, output)
         {
         }
@@ -24,6 +24,19 @@ namespace HarshPoint.Tests.Provisioning
             await RunWithField(prov, f =>
             {
                 Assert.Equal(DateTimeFieldFormatType.DateOnly, f.DisplayFormat);
+            });
+        }
+        [Fact]
+        public async Task FriendlyDisplayFormat_is_set()
+        {
+            var prov = new HarshModifyFieldDateTime()
+            {
+                FriendlyDisplayFormat = DateTimeFieldFriendlyFormatType.Relative
+            };
+
+            await RunWithField(prov, f =>
+            {
+                Assert.Equal(DateTimeFieldFriendlyFormatType.Relative, f.FriendlyDisplayFormat);
             });
         }
     }

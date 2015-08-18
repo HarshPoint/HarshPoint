@@ -9,6 +9,7 @@ namespace HarshPoint.Provisioning
     /// <summary>
     /// Creates or updates a SharePoint field by generating its schema XML.
     /// </summary>
+    [DefaultParameterSet(nameof(Type))]
     public sealed class HarshField : HarshProvisioner
     {
         /// <summary>
@@ -43,11 +44,11 @@ namespace HarshPoint.Provisioning
         /// Gets or sets the name of the field type.
         /// </summary>
         [MandatoryWhenCreating]
-        [Parameter(ParameterSetName = "TypeName")]
+        [Parameter(ParameterSetName = nameof(TypeName))]
         public String TypeName { get; set; }
 
         [MandatoryWhenCreating]
-        [Parameter(ParameterSetName = "Type")]
+        [Parameter(ParameterSetName = nameof(Type))]
         [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
         public FieldType? Type { get; set; }
 
@@ -107,8 +108,7 @@ namespace HarshPoint.Provisioning
                 );
 
                 // cannot use the instance returned from AddFieldAsXml,
-                // as that is always of type Field, and not the actual
-                // subtype.
+                // as that is always of type Field, not the actual subtype.
 
                 var reResolvedField = ManualResolver.ResolveSingle(
                     Resolve.Field().ById(Id)

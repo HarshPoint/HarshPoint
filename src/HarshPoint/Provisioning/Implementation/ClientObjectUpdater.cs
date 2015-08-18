@@ -5,57 +5,45 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public sealed class ClientObjectUpdater<TProvisioner, TClientObject>
-        where TProvisioner : HarshProvisioner
-        where TClientObject : ClientObject
+    public partial class ClientObjectUpdater
     {
-        private ImmutableDictionary<PropertyAccessor, PropertyAccessor> _setters
-            = ImmutableDictionary<PropertyAccessor, PropertyAccessor>.Empty;
-
-        public ClientObjectUpdater(HarshObjectMetadata metadata)
-        {
-            if (metadata == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(metadata));
-            }
-
-            Metadata = metadata;
-        }
-
-        private HarshObjectMetadata Metadata { get; }
-
-        public void Map<T>(
-            Expression<Func<TClientObject, T>> clientObjectProperty,
-            Expression<Func<TProvisioner, T>> provisionerProperty
+        private ClientObjectUpdater(
+            Type clientObjectType,
+            ImmutableDictionary<PropertyAccessor, PropertyAccessor> mappings
         )
         {
-            if (provisionerProperty == null)
+            if (mappings == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(provisionerProperty));
+                mappings = ImmutableDictionary
+                    .Create<PropertyAccessor, PropertyAccessor>();
             }
 
-            if (clientObjectProperty == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(clientObjectProperty));
-            }
-
-            var provisionerAccessor = Metadata.GetPropertyAccessor(
-                provisionerProperty.ExtractLastPropertyAccess()
-            );
-
-            var clientObjectAccessor = new PropertyAccessor(
-                clientObjectProperty.ExtractLastPropertyAccess()
-            );
-
-            _setters = _setters.Add(provisionerAccessor, clientObjectAccessor);
+            ClientObjectType = clientObjectType;
+            Mappings = mappings;
         }
 
-        public Boolean Update(TClientObject clientObject, TProvisioner provisioner)
+        private Type ClientObjectType { get; }
+
+        private ImmutableDictionary<PropertyAccessor, PropertyAccessor> Mappings
+        {
+            get;
+        }
+
+        public Expression<Func<TClientObject, Object>>[] GetRetrievals<TClientObject>()
+            where TClientObject : ClientObject
+            => Mappings.Values
+                .Select(p => p.Expression)
+                .Cast<Expression<Func<TClientObject, Object>>>()
+                .ToArray();
+
+        public Boolean Update(
+            ClientObject clientObject,
+            HarshProvisioner provisioner
+        )
         {
             if (provisioner == null)
             {
@@ -78,8 +66,8 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         public Boolean Update(
-            TClientObject clientObject,
-            TProvisioner provisioner,
+            ClientObject clientObject,
+            HarshProvisioner provisioner,
             IEnumerable<Parameter> parameters
         )
         {
@@ -99,23 +87,49 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             var maps = from p in parameters
-                       where !p.HasDefaultValue(provisioner)
-                       let clientObjectAccessor = _setters[p.PropertyAccessor]
-                       let value = clientObjectAccessor.GetValue(clientObject)
+                       where !HasDefaultValue(p, provisioner)
+
+                       let clientObjectAccessor = TryGetClientObjectAccessor(p)
+                       where clientObjectAccessor != null
+
+                       let existingValue = clientObjectAccessor.GetValue(clientObject)
                        select new
                        {
+                           Parameter = p,
                            ParameterValue = p.GetValue(provisioner),
                            ClientObjectAccessor = clientObjectAccessor,
-                           ClientObjectValue = value
+                           ClientObjectValue = existingValue
                        };
 
             var changed = false;
 
             foreach (var m in maps)
             {
-                if (!Equals(m.ParameterValue, m.ClientObjectValue))
+                if (Equals(m.ParameterValue, m.ClientObjectValue))
+                {
+                    Logger.Information(
+                        "Parameter {Parameter} value {$ParameterValue} " +
+                        "equals to client object {ClientObjectProperty} " +
+                        "value {$ClientObjectValue}.",
+                        m.Parameter,
+                        m.ParameterValue,
+                        m.ClientObjectAccessor,
+                        m.ClientObjectValue
+                    );
+                }
+                else
                 {
                     changed = true;
+
+                    Logger.Information(
+                        "Updating client object {ClientObjectProperty}, " +
+                        "current value {$ClientObjectValue} does not equal " +
+                        "{Parameter} value {$ParameterValue}.",
+                        m.ClientObjectAccessor,
+                        m.ClientObjectValue,
+                        m.Parameter,
+                        m.ParameterValue
+                    );
 
                     m.ClientObjectAccessor.SetValue(
                         clientObject,
@@ -127,13 +141,47 @@ namespace HarshPoint.Provisioning.Implementation
             return changed;
         }
 
-        public Expression<Func<TClientObject, Object>>[] GetRetrievals()
-            => _setters.Values
-                .Select(p => p.Expression)
-                .Cast<Expression<Func<TClientObject, Object>>>()
-                .ToArray();
+        private PropertyAccessor TryGetClientObjectAccessor(Parameter parameter)
+        {
+            var result = Mappings.GetValueOrDefault(parameter.PropertyAccessor);
+
+            if (result == null)
+            {
+                Logger.Information(
+                    "Parameter {Parameter} is not mapped to any {ClientObjectType} property.",
+                    parameter,
+                    ClientObjectType
+                );
+            }
+
+            return result;
+        }
+
+        public static Builder<TProvisioner, TClientObject> Build<TProvisioner, TClientObject>()
+            where TProvisioner : HarshProvisioner
+            where TClientObject : ClientObject
+            => new Builder<TProvisioner, TClientObject>();
+
+        private static Boolean HasDefaultValue(
+            Parameter parameter, HarshProvisioner provisioner
+        )
+        {
+            if (parameter.HasDefaultValue(provisioner))
+            {
+                Logger.Information(
+                    "Parameter {Parameter} has default value, skipping."
+                );
+
+                return true;
+            }
+
+            return false;
+        }
+
+        internal static ClientObjectUpdater Empty { get; }
+            = new ClientObjectUpdater(null, null);
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(ClientObjectUpdater<,>));
+            = HarshLog.ForContext(typeof(ClientObjectUpdater));
     }
 }

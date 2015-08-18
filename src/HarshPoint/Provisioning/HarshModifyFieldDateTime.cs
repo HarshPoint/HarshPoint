@@ -1,40 +1,30 @@
 ﻿using Microsoft.SharePoint.Client;
-using System.Threading.Tasks;
+using HarshPoint.Provisioning.Implementation;
 
 namespace HarshPoint.Provisioning
 {
-    public class HarshModifyFieldDateTime : HarshModifyField<FieldDateTime>
+    public sealed class HarshModifyFieldDateTime : HarshModifyField<FieldDateTime>
     {
+        [Parameter]
         public DateTimeFieldFormatType? DisplayFormat
         {
             get;
             set;
         }
 
+        [Parameter]
         public DateTimeFieldFriendlyFormatType? FriendlyDisplayFormat
         {
             get;
             set;
         }
 
-        protected override async Task OnProvisioningAsync()
-        {
-            foreach (var field in Fields)
-            {
-                if (DisplayFormat.HasValue)
-                {
-                    field.DisplayFormat = DisplayFormat.Value;
-                }
+        protected override ClientObjectUpdater GetUpdater() => Updater;
 
-                if (FriendlyDisplayFormat.HasValue)
-                {
-                    field.FriendlyDisplayFormat = FriendlyDisplayFormat.Value;
-                }
-
-                UpdateField(field);
-            }
-
-            await ClientContext.ExecuteQueryAsync();
-        }
+        private static readonly ClientObjectUpdater Updater
+            = ClientObjectUpdater.Build<HarshModifyFieldDateTime, FieldDateTime>()
+            .Map(f => f.DisplayFormat, p => p.DisplayFormat)
+            .Map(f => f.FriendlyDisplayFormat, p => p.FriendlyDisplayFormat)
+            .ToClientObjectUpdater();
     }
 }

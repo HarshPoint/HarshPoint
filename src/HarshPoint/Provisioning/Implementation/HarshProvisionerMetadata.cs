@@ -10,7 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal sealed class HarshProvisionerMetadata : HarshObjectMetadata
     {
-        public HarshProvisionerMetadata(Type type)
+        internal HarshProvisionerMetadata(Type type)
             : base(type)
         {
             if (!HarshProvisionerBaseTypeInfo.IsAssignableFrom(ObjectTypeInfo))
@@ -59,6 +59,7 @@ namespace HarshPoint.Provisioning.Implementation
             => ParameterSets.SelectMany(set => set.Parameters);
 
         public IEnumerable<ParameterSet> ParameterSets { get; }
+
         public IEnumerable<PropertyAccessor> ParameterProperties { get; }
 
         public ResolvedPropertyBinder ResolvedPropertyBinder { get; }

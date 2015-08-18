@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint.Provisioning
 {
+    [DefaultParameterSet(nameof(Type))]
     public sealed class HarshModifyField : HarshModifyField<Field>
     {
         [Parameter]
@@ -16,10 +17,10 @@ namespace HarshPoint.Provisioning
         /// <summary>
         /// Gets or sets the name of the field type.
         /// </summary>
-        [Parameter(ParameterSetName = "TypeName")]
+        [Parameter(ParameterSetName = nameof(TypeName))]
         public String TypeName { get; set; }
 
-        [Parameter(ParameterSetName = "Type")]
+        [Parameter(ParameterSetName = nameof(Type))]
         [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
         public FieldType? Type { get; set; }
     }

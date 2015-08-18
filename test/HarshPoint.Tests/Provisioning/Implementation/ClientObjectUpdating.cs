@@ -22,13 +22,13 @@ namespace HarshPoint.Tests.Provisioning.Implementation
                 Description = null
             };
 
-            var updater = new ClientObjectUpdater<DescriptionProvisioner, Field>(
-                provisioner.Metadata
-            );
+            var updater = ClientObjectUpdater
+                .Build<DescriptionProvisioner, Field>()
+                .Map(f => f.Description, p => p.Description)
+                .ToClientObjectUpdater();
 
             var description = "initial description";
 
-            updater.Map(f => f.Description, p => p.Description);
 
             var field = await CreateField();
             field.Description = description;
@@ -53,11 +53,10 @@ namespace HarshPoint.Tests.Provisioning.Implementation
                 Description = description
             };
 
-            var updater = new ClientObjectUpdater<DescriptionProvisioner, Field>(
-                provisioner.Metadata
-            );
-
-            updater.Map(f => f.Description, p => p.Description);
+            var updater = ClientObjectUpdater
+                .Build<DescriptionProvisioner, Field>()
+                .Map(f => f.Description, p => p.Description)
+                .ToClientObjectUpdater();
 
             var field = await CreateField();
             field.Description = description;
@@ -80,11 +79,10 @@ namespace HarshPoint.Tests.Provisioning.Implementation
                 Description = "42"
             };
 
-            var updater = new ClientObjectUpdater<DescriptionProvisioner, Field>(
-                provisioner.Metadata
-            );
-
-            updater.Map(f => f.Description, p => p.Description);
+            var updater = ClientObjectUpdater
+                .Build<DescriptionProvisioner, Field>()
+                .Map(f => f.Description, p => p.Description)
+                .ToClientObjectUpdater();
 
             var field = await CreateField();
             field.Description = "initial";
@@ -104,13 +102,12 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         {
             var provisioner = new DescriptionProvisioner();
 
-            var updater = new ClientObjectUpdater<DescriptionProvisioner, Field>(
-                provisioner.Metadata
-            );
+            var updater = ClientObjectUpdater
+                .Build<DescriptionProvisioner, Field>()
+                .Map(f => f.Description, p => p.Description)
+                .ToClientObjectUpdater();
 
-            updater.Map(f => f.Description, p => p.Description);
-
-            var retrievals = updater.GetRetrievals();
+            var retrievals = updater.GetRetrievals<Field>();
             var descRetrieval = Assert.Single(retrievals);
 
             var property = descRetrieval.ExtractLastPropertyAccess();

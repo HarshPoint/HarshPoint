@@ -11,13 +11,10 @@ namespace HarshPoint.Provisioning
     public abstract class HarshModifyField<TField> : HarshProvisioner
         where TField : Field
     {
-        private readonly ClientObjectUpdater<HarshModifyField<TField>, TField> _updater;
+        private ClientObjectUpdater _updater;
 
-        public HarshModifyField()
+        protected HarshModifyField()
         {
-            _updater = new ClientObjectUpdater<HarshModifyField<TField>, TField>(
-                Metadata
-            );
         }
 
         [Parameter]
@@ -65,11 +62,15 @@ namespace HarshPoint.Provisioning
             }
         }
 
-
         protected override void InitializeResolveContext(ClientObjectResolveContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             context.Include(
-                _updater.GetRetrievals()
+                Updater.GetRetrievals<TField>()
             );
 
             base.InitializeResolveContext(context);
@@ -79,6 +80,11 @@ namespace HarshPoint.Provisioning
         {
             foreach (var field in Fields)
             {
+                if (Updater.Update(field, this))
+                {
+                    UpdateField(field);
+                }
+
                 ModifyField(field);
             }
 
@@ -91,5 +97,14 @@ namespace HarshPoint.Provisioning
         protected virtual void ModifyField(TField field)
         {
         }
+
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        protected virtual ClientObjectUpdater GetUpdater() => null;
+
+        private ClientObjectUpdater GetUpdaterOrEmpty()
+            => GetUpdater() ?? ClientObjectUpdater.Empty;
+
+        private ClientObjectUpdater Updater
+            => HarshLazy.Initialize(ref _updater, GetUpdaterOrEmpty);
     }
 }

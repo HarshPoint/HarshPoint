@@ -141,6 +141,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified property &apos;{0}&apos; has no Parameter attributes defined..
+        /// </summary>
+        internal static string ClientObjectUpdater_NotAParameter {
+            get {
+                return ResourceManager.GetString("ClientObjectUpdater_NotAParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The content type ID could not be determined because no parent of the specified type &apos;{0}&apos; defines an absolute content type ID..
         /// </summary>
         internal static string ContentTypeIdBuilder_NoAbsoluteIDInHierarchy {

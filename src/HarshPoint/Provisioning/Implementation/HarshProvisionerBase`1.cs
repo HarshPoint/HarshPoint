@@ -65,7 +65,10 @@ namespace HarshPoint.Provisioning.Implementation
             => _parameterSet.Value;
 
         internal HarshProvisionerMetadata Metadata
-            => HarshLazy.Initialize(ref _metadata, () => new HarshProvisionerMetadata(GetType()));
+            => HarshLazy.Initialize(
+                ref _metadata,
+                () => HarshProvisionerMetadataRepository.Get(GetType())
+            );
 
         internal PropertyValueSourceTracker ValueSourceTracker
             => HarshLazy.Initialize(ref _valueSourceTracker);
