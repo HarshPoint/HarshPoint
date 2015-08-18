@@ -19,3 +19,5 @@ environment:
     secure: /aPy/TNRcKlV67mllpvM6ZXAoCLkFaKR3HfBb5+n1gI=
 build:
   verbosity: minimal
+nuget:
+  disable_publish_on_pr: true
