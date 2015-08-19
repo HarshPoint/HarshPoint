@@ -5,8 +5,8 @@ using System.Resources;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyProduct("HarshPoint")]
-[assembly: AssemblyCompany("Julie Koubová, Tereza Tomcová")]
-[assembly: AssemblyCopyright("Copyright © 2014-2015 Julie Koubová, Tereza Tomcová")]
+[assembly: AssemblyCompany("Julie Koubova, Tereza Tomcova")]
+[assembly: AssemblyCopyright("Copyright (c) 2014-2015 Julie Koubova, Tereza Tomcova")]
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("0.0.0.0")]
