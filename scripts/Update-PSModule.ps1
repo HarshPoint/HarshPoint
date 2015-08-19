@@ -55,7 +55,6 @@ try {
 		Copyright     = Get-AttributeValue Reflection.AssemblyCopyright
 		Description   = Get-AttributeValue Reflection.AssemblyDescription
 		Guid          = Get-AttributeValue Runtime.InteropServices.Guid Value
-		ModuleVersion = Get-AttributeValue Reflection.AssemblyInformationalVersion
 	}
 
 
@@ -72,11 +71,12 @@ try {
 
 	New-ModuleManifest -RootModule    $AssemblyFileName `
 					   -Path          $ModulePath `
+					   -ModuleVersion $AssemblyName.Version `
 					   @AssemblyInfo
 
 	$NuSpec.package.metadata.id          = $AssemblyName.Name
 	$NuSpec.package.metadata.title       = $AssemblyName.Name
-	$NuSpec.package.metadata.version     = $AssemblyInfo['ModuleVersion']
+	$NuSpec.package.metadata.version     = (Get-AttributeValue Reflection.AssemblyInformationalVersion)
 	$NuSpec.package.metadata.authors     = $AssemblyInfo['Author']
 	$NuSpec.package.metadata.owners      = $AssemblyInfo['Author']
 	$NuSpec.package.metadata.description = $AssemblyInfo['Description']
