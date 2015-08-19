@@ -22,7 +22,7 @@ environment:
 nuget:
   disable_publish_on_pr: true
 before_build:
-- ps: >-
+- ps: |
     Copy-Item nuspec.template src\HarshPoint\HarshPoint.nuspec -Force -PassThru
     Copy-Item nuspec.template src\HarshPoint.Server\HarshPoint.Server.nuspec -Force -PassThru
 build:
