@@ -65,11 +65,11 @@ try {
 	$ModulePath = (Join-Path $ModuleRoot "$($AssemblyName.Name).psd1")
 	$NuSpecPath = (Join-Path $ModuleRoot "$($AssemblyName.Name).nuspec")
 
-	$AssemblyInfo['LicenseUri']    = $NuSpec.package.metadata.licenseUrl
-	$AssemblyInfo['ProjectUri']    = $NuSpec.package.metadata.projectUrl
-	
-	# Only on WMF 5.0
-	#$AssemblyInfo['Tags']          = $NuSpec.package.metadata.tags
+	if ($PSVersionTable.PSVersion.Major -ge 5) {
+		$AssemblyInfo['LicenseUri']    = $NuSpec.package.metadata.licenseUrl
+		$AssemblyInfo['ProjectUri']    = $NuSpec.package.metadata.projectUrl
+		$AssemblyInfo['Tags']          = $NuSpec.package.metadata.tags
+	}
 
 	New-ModuleManifest -RootModule    $AssemblyFileName `
 					   -Path          $ModulePath `
