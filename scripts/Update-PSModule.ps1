@@ -67,7 +67,9 @@ try {
 
 	$AssemblyInfo['LicenseUri']    = $NuSpec.package.metadata.licenseUrl
 	$AssemblyInfo['ProjectUri']    = $NuSpec.package.metadata.projectUrl
-	$AssemblyInfo['Tags']          = $NuSpec.package.metadata.tags
+	
+	# Only on WMF 5.0
+	#$AssemblyInfo['Tags']          = $NuSpec.package.metadata.tags
 
 	New-ModuleManifest -RootModule    $AssemblyFileName `
 					   -Path          $ModulePath `
