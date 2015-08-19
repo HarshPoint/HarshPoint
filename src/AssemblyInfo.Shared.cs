@@ -5,10 +5,10 @@ using System.Resources;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyProduct("HarshPoint")]
-[assembly: AssemblyCompany("HarshPoint Contributors")]
+[assembly: AssemblyCompany("Julie Koubová, Tereza Tomcová")]
 [assembly: AssemblyCopyright("Copyright © 2014-2015 Julie Koubová, Tereza Tomcová")]
 
-[assembly: AssemblyVersion("0.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("0.0.0.0")]
 [assembly: AssemblyInformationalVersion("0.0.0.0")]
 

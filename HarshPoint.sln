@@ -39,14 +39,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Shellploy.Tests"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet Specs", "NuGet Specs", "{73E3B374-59C2-4E82-ABC5-1A4CCC3A1037}"
 	ProjectSection(SolutionItems) = preProject
-		src\HarshPoint\HarshPoint.nuspec = src\HarshPoint\HarshPoint.nuspec
+		nuspec.template = nuspec.template
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{19E3F0D9-65FB-4E28-B7B8-85AF4E6E1895}"
 	ProjectSection(SolutionItems) = preProject
-		Invoke-CoverityBuild.ps1 = Invoke-CoverityBuild.ps1
-		test\Invoke-Test.ps1 = test\Invoke-Test.ps1
-		test\Invoke-TestLocal.ps1 = test\Invoke-TestLocal.ps1
+		scripts\Invoke-CoverityBuild.ps1 = scripts\Invoke-CoverityBuild.ps1
+		scripts\Invoke-Test.ps1 = scripts\Invoke-Test.ps1
+		scripts\Invoke-TestLocal.ps1 = scripts\Invoke-TestLocal.ps1
+		scripts\Update-PSModule.ps1 = scripts\Update-PSModule.ps1
 	EndProjectSection
 EndProject
 Global

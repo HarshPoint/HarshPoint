@@ -26,6 +26,9 @@ build:
   publish_nuget_symbols: true
   parallel: true
   verbosity: minimal
+artifacts:
+- path: PSModulePath/*.nupkg
+  name: PowerShellGet
 deploy:
 - provider: Environment
   name: MyGet HarshPoint-dev

@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<package >
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
@@ -8,9 +8,9 @@
     <owners>$author$</owners>
     <licenseUrl>https://raw.githubusercontent.com/HarshPoint/HarshPoint/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/HarshPoint/HarshPoint</projectUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright (c) 2015 Julie Koubova, Tereza Tomcova</copyright>
-    <tags>SharePoint provisioning CSOM</tags>
+    <copyright>$copyright$</copyright>
+    <tags>SharePoint provisioning</tags>
   </metadata>
 </package>
