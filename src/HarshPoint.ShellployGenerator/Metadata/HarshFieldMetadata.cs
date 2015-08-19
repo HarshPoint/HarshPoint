@@ -2,8 +2,8 @@
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal sealed class HarshFieldMetadata
-        : ShellployMetadataObject<HarshField>
+    internal sealed class HarshFieldMetadata :
+        HarshPointShellployCommand<HarshField>
     {
     }
 }

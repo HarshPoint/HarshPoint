@@ -4,26 +4,25 @@ using System.CodeDom;
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal sealed class HarshRemoveContentTypeRefMetadata
-        : ShellployMetadataObject<HarshRemoveContentTypeRef>
+    internal sealed class HarshRemoveContentTypeRefMetadata :
+        HarshPointShellployCommand<HarshRemoveContentTypeRef>
     {
-        protected override ShellployCommandBuilder<HarshRemoveContentTypeRef> CreateCommandBuilder()
+        public HarshRemoveContentTypeRefMetadata()
         {
-            return base.CreateCommandBuilder()
-                .AddPositionalParameter<HarshContentTypeId[]>(
-                    "ContentTypeId",
-                    new ShellployCommandPropertyParameterAttribute()
-                    {
-                        Mandatory = true,
-                    }
-                )
-                .RenameParameter(x => x.Lists, "List")
-                .SetParameterValue(x => x.ContentTypes,
-                    new CodeTypeReferenceExpression(typeof(Resolve))
-                        .Call(nameof(Resolve.ContentType))
-                        .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("ContentTypeId"))
-                        .Call(nameof(ResolveBuilderExtensions.As), typeof(ContentType))
-                );
+            AddPositionalParameter<HarshContentTypeId[]>(
+                "ContentTypeId",
+                new ShellployCommandPropertyParameterAttribute()
+                {
+                    Mandatory = true,
+                }
+            );
+            RenameParameter(x => x.Lists, "List");
+            SetParameterValue(x => x.ContentTypes,
+                new CodeTypeReferenceExpression(typeof(Resolve))
+                    .Call(nameof(Resolve.ContentType))
+                    .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("ContentTypeId"))
+                    .Call(nameof(ResolveBuilderExtensions.As), typeof(ContentType))
+            );
         }
     }
 }

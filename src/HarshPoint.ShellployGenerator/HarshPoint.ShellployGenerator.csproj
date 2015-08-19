@@ -112,7 +112,6 @@
   <ItemGroup>
     <Compile Include="CommandCodeGenerator.cs" />
     <Compile Include="CodeDomExtensions.cs" />
-    <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="IShellployCommandBuilder.cs" />
     <Compile Include="IShellployCommandBuilderParent.cs" />
     <Compile Include="Metadata\HarshEnableWebFeatureMetadata.cs" />
@@ -123,6 +122,7 @@
     <Compile Include="Metadata\HarshModifyFieldMultilineTextMetadata.cs" />
     <Compile Include="Metadata\HarshModifyFieldDateTimeMetadata.cs" />
     <Compile Include="Metadata\HarshFieldMetadata.cs" />
+    <Compile Include="Metadata\HarshPointShellployCommand.cs" />
     <Compile Include="Metadata\HarshRemoveContentTypeRefMetadata.cs" />
     <Compile Include="Metadata\HarshContentTypeRefMetadata.cs" />
     <Compile Include="ShellployCommand.cs" />
@@ -133,8 +133,6 @@
     <Compile Include="ShellployCommandProperty.cs" />
     <Compile Include="ShellployCommandPropertyParameterAttribute.cs" />
     <Compile Include="Metadata\HarshContentTypeMetadata.cs" />
-    <Compile Include="IShellployMetadataObject.cs" />
-    <Compile Include="ShellployMetadataObject.cs" />
     <Compile Include="ShellployMetadata.cs" />
     <Compile Include="SourceFileWriter.cs" />
     <Compile Include="SR.Designer.cs">
@@ -160,7 +158,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(OutDir)HarshPoint.ShellployGenerator" "$(SolutionDir)src\HarshPoint.Shellploy\Generated"</PostBuildEvent>
+    <PostBuildEvent>"$(OutDir)HarshPoint.ShellployGenerator" "$(SolutionDir)src\HarshPoint.Shellploy"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

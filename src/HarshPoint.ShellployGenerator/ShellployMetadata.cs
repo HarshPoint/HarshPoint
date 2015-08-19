@@ -2,33 +2,30 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 
 namespace HarshPoint.ShellployGenerator
 {
     internal static class ShellployMetadata
     {
-        private const String CommandNamespace = "HarshPoint.Shellploy";
-        private const String ProvisioningNamespace = "HarshPoint.Provisioning";
-
-        public static IEnumerable<ShellployCommand> GetCommands()
+        public static IEnumerable<ShellployCommand> GetCommands(Assembly assembly)
         {
-            var baseType = typeof(IShellployMetadataObject);
-            var builders = baseType.Assembly
-                .DefinedTypes
-                .Where(type =>
-                    baseType.IsAssignableFrom(type)
-                    && !type.IsAbstract
-                )
-
-                .Select(type => (IShellployMetadataObject)Activator.CreateInstance(type))
+            var builders = assembly.DefinedTypes
+                .Where(ICommandBuilderTypeInfo.IsAssignableFrom)
+                .Where(type => !type.IsAbstract && !type.ContainsGenericParameters)
+                .Select(Activator.CreateInstance)
+                .Cast<IShellployCommandBuilder>()
                 .ToImmutableDictionary(
-                    metadata => metadata.GetProvisionerType(),
-                    metadata => metadata.GetCommandBuilder()
+                    builder => builder.ProvisionerType
                 );
 
             return builders.Values.Select(builder => builder.ToCommand(builders));
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ShellployMetadata));
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(ShellployMetadata));
+
+        private static readonly TypeInfo ICommandBuilderTypeInfo
+            = typeof(IShellployCommandBuilder).GetTypeInfo();
     }
 }

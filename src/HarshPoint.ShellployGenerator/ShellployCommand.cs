@@ -10,9 +10,11 @@ namespace HarshPoint.ShellployGenerator
     {
         public const String ChildrenPropertyName = "InputObject";
 
+        public IEnumerable<String> Aliases { get; set; }
         public String ClassName { get; set; }
         public Boolean HasChildren { get; set; }
         public IEnumerable<Type> ParentProvisionerTypes { get; set; }
+        public String Name { get; set; }
         public String Noun { get; set; }
         public Type ProvisionerType { get; set; }
         public Tuple<Type, String> Verb { get; set; }

@@ -68,7 +68,6 @@ namespace HarshPoint.Reflection
 
         }
 
-
         public static Boolean IsNullable(this TypeInfo typeInfo)
         {
             if (typeInfo == null)

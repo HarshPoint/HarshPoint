@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Module\HarshPoint.ShellPloy.psm1" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -123,9 +124,7 @@
       <Name>HarshPoint</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Module\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)scripts\Update-PSModule.ps1" "$(TargetDir)$(TargetFileName)" "$(SolutionDir)PSModulePath\HarshPoint.Shellploy"</PostBuildEvent>

@@ -2,13 +2,12 @@
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal sealed class HarshEnableWebFeatureMetadata
-        : ShellployMetadataObject<HarshEnableWebFeature>
+    internal sealed class HarshEnableWebFeatureMetadata :
+        HarshPointShellployCommand<HarshEnableWebFeature>
     {
-        protected override ShellployCommandBuilder<HarshEnableWebFeature> CreateCommandBuilder()
+        public HarshEnableWebFeatureMetadata()
         {
-            return base.CreateCommandBuilder()
-                .AddPositionalParameter(x => x.FeatureId);
+            AddPositionalParameter(x => x.FeatureId);
         }
     }
 }

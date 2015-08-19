@@ -6,10 +6,11 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Management.Automation;
+using System.Text.RegularExpressions;
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal sealed class ShellployCommandBuilder<TProvisioner> : IShellployCommandBuilder
+    internal class ShellployCommandBuilder<TProvisioner> : IShellployCommandBuilder
         where TProvisioner : HarshProvisionerBase
     {
         private List<String> _positionalParameters = new List<String>();
@@ -206,7 +207,7 @@ namespace HarshPoint.ShellployGenerator
 
             return parentPositionalParameters
                 .Concat(_positionalParameters)
-                .Concat(hasChildren ? ShellployCommand.ChildrenPropertyName.AsCollection() : new String[0]);
+                .Concat(hasChildren ? new[] { ShellployCommand.ChildrenPropertyName } : new String[0]);
         }
 
         public IEnumerable<ShellployCommandProperty> GetProperties(
@@ -251,11 +252,15 @@ namespace HarshPoint.ShellployGenerator
                 );
             }
 
-            properties = properties
-                .Concat(
-                    GetChildrenProperty(positionalParametersIndices, hasChildren)?.AsCollection()
-                    ?? new ShellployCommandProperty[0]
-                );
+            var childrenProperty = GetChildrenProperty(
+                positionalParametersIndices,
+                hasChildren
+            );
+
+            if (childrenProperty != null)
+            {
+                properties = properties.Concat(new[] { childrenProperty });
+            }
 
             var parentProperties = GetParentProperties(builders, positionalParametersIndices, hasChildren);
 
@@ -435,10 +440,18 @@ namespace HarshPoint.ShellployGenerator
 
             var properties = GetProperties(builders, positionalParametersIndices, _hasChildren);
 
+
             var verb = VerbsCommon.New;
             var noun = ProvisionerType.Name;
+
+            var aliases = ImmutableArray.Create(
+                Regex.Replace(noun, "^Harsh", "")
+            );
+
             return new ShellployCommand
             {
+                Aliases = aliases,
+                Name = $"{verb}-${noun}",
                 ProvisionerType = ProvisionerType,
                 ContextType = _provisionerMetadata.ContextType,
                 ParentProvisionerTypes = GetParentProvisionerTypes(builders),

@@ -5,25 +5,24 @@ using System.CodeDom;
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal sealed class HarshModifyFieldTaxonomyMetadata
-        : ShellployMetadataObject<HarshModifyFieldTaxonomy>
+    internal sealed class HarshModifyFieldTaxonomyMetadata :
+        HarshPointShellployCommand<HarshModifyFieldTaxonomy>
     {
-        protected override ShellployCommandBuilder<HarshModifyFieldTaxonomy> CreateCommandBuilder()
+        public HarshModifyFieldTaxonomyMetadata()
         {
-            return base.CreateCommandBuilder()
-                .AddNamedParameter<Guid>("TermSetId")
-                .SetParameterValue(x => x.TermSet,
-                    new CodeTypeReferenceExpression(typeof(Resolve))
-                        .Call(nameof(Resolve.TermStoreSiteCollectionDefault))
-                        .Call(nameof(Resolve.TermSet))
-                        .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("TermSetId"))
-                        .Call(nameof(ResolveBuilderExtensions.As), typeof(TermSet))
-                )
-                .RenameParameter(x => x.Fields, "Field")
-                .AsChildOf<HarshField>()
-                    .SetValue(x => x.TypeName, "TaxonomyFieldType")
-                    .IgnoreParameter(x => x.Type)
-                .End();
+            AddNamedParameter<Guid>("TermSetId");
+            SetParameterValue(x => x.TermSet,
+                new CodeTypeReferenceExpression(typeof(Resolve))
+                    .Call(nameof(Resolve.TermStoreSiteCollectionDefault))
+                    .Call(nameof(Resolve.TermSet))
+                    .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("TermSetId"))
+                    .Call(nameof(ResolveBuilderExtensions.As), typeof(TermSet))
+            );
+            RenameParameter(x => x.Fields, "Field");
+
+            AsChildOf<HarshField>()
+                .SetValue(x => x.TypeName, "TaxonomyFieldType")
+                .IgnoreParameter(x => x.Type);
         }
     }
 }

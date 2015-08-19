@@ -3,16 +3,14 @@ using Microsoft.SharePoint.Client;
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal sealed class HarshModifyFieldDateTimeMetadata
-        : ShellployMetadataObject<HarshModifyFieldDateTime>
+    internal sealed class HarshModifyFieldDateTimeMetadata :
+        HarshPointShellployCommand<HarshModifyFieldDateTime>
     {
-        protected override ShellployCommandBuilder<HarshModifyFieldDateTime> CreateCommandBuilder()
+        public HarshModifyFieldDateTimeMetadata()
         {
-            return base.CreateCommandBuilder()
-                .RenameParameter(x => x.Fields, "Field")
-                .AsChildOf<HarshField>()
-                    .SetValue(x => x.Type, FieldType.DateTime)
-                .End();
+            RenameParameter(x => x.Fields, "Field");
+            AsChildOf<HarshField>()
+               .SetValue(x => x.Type, FieldType.DateTime);
         }
     }
 }

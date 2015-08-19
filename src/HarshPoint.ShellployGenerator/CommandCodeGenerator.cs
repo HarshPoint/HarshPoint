@@ -18,6 +18,7 @@ namespace HarshPoint.ShellployGenerator
         {
             _command = command;
         }
+
         public CodeCompileUnit GenerateCompileUnit()
         {
             return new CodeCompileUnit()
