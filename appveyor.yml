@@ -21,6 +21,10 @@ environment:
     secure: umuF9aSZzRig6SY8QZWWJGrq8gdwjO8lUXfC2JZ/XqY=
 nuget:
   disable_publish_on_pr: true
+before_build:
+- ps: >-
+    Copy-Item nuspec.template src\HarshPoint\HarshPoint.nuspec -Force -PassThru
+    Copy-Item nuspec.template src\HarshPoint.Server\HarshPoint.Server.nuspec -Force -PassThru
 build:
   publish_nuget: true
   publish_nuget_symbols: true
