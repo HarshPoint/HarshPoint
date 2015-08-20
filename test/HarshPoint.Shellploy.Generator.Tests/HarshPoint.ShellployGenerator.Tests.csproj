@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeDataTestExtensions.cs" />
+    <Compile Include="CommandBuilding\Synthesized_parameter.cs" />
     <Compile Include="CommandBuilding\Fails_when.cs" />
     <Compile Include="CommandBuilding\Positional_parameters.cs" />
     <Compile Include="CommandBuilding\Renamed_parameter.cs" />

@@ -70,23 +70,28 @@ namespace HarshPoint.ShellployGenerator
             return previous;
         }
 
-        private void AppendThisTo(CommandParameter parameter)
+        private void AppendThisTo(CommandParameter appendTo)
         {
-            var last = parameter;
-
-            while (last.Previous != null)
+            if (appendTo is CommandParameterSynthesized)
             {
-                if (last is CommandParameterSynthesized)
+                throw Logger.Fatal.InvalidOperation(
+                    SR.CommandParameterSynthesized_AttemptedToNest
+                );
+            }
+
+            while (appendTo.Previous != null)
+            {
+                if (appendTo is CommandParameterSynthesized)
                 {
                     throw Logger.Fatal.InvalidOperation(
                         SR.CommandParameterSynthesized_AttemptedToNest
                     );
                 }
 
-                last = last.Previous;
+                appendTo = appendTo.Previous;
             }
 
-            last.Previous = this;
+            appendTo.Previous = this;
         }
 
         private static Boolean IsParameterAttribute(AttributeData data)
