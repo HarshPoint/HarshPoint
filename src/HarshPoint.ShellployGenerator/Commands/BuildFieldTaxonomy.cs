@@ -3,20 +3,18 @@ using Microsoft.SharePoint.Client.Taxonomy;
 using System;
 using System.CodeDom;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Commands
 {
-    internal sealed class HarshModifyFieldTaxonomyMetadata :
-        HarshPointShellployCommand<HarshModifyFieldTaxonomy>
+    internal sealed class BuildFieldTaxonomy :
+        HarshPointCommandBuilder<HarshModifyFieldTaxonomy>
     {
-        public HarshModifyFieldTaxonomyMetadata()
+        public BuildFieldTaxonomy()
         {
             AsChildOf<HarshField>(p =>
             {
                 p.SetFixedValue(x => x.TypeName, "TaxonomyFieldType");
                 p.Ignore(x => x.Type);
             });
-
-            Parameter(x => x.Fields).Rename("Field");
 
             Parameter("TermSetId").Synthesize(typeof(Guid));
 
@@ -25,7 +23,6 @@ namespace HarshPoint.ShellployGenerator
                     .Call(nameof(Resolve.TermStoreSiteCollectionDefault))
                     .Call(nameof(Resolve.TermSet))
                     .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("TermSetId"))
-                    .Call(nameof(ResolveBuilderExtensions.As), typeof(TermSet))
             );
 
         }

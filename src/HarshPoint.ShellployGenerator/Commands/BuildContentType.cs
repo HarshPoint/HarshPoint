@@ -1,11 +1,11 @@
 ﻿using HarshPoint.Provisioning;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Commands
 {
-    internal sealed class HarshContentTypeMetadata :
-        HarshPointShellployCommand<HarshContentType>
+    internal sealed class BuildContentType :
+        HarshPointCommandBuilder<HarshContentType>
     {
-        public HarshContentTypeMetadata()
+        public BuildContentType()
         {
             PositionalParameter(x => x.Id);
             PositionalParameter(x => x.Name);

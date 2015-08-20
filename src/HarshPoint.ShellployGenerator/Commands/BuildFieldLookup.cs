@@ -3,12 +3,12 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.CodeDom;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Commands
 {
-    internal sealed class HarshModifyFieldLookupMetadata :
-        HarshPointShellployCommand<HarshModifyFieldLookup>
+    internal sealed class BuildFieldLookup :
+        HarshPointCommandBuilder<HarshModifyFieldLookup>
     {
-        public HarshModifyFieldLookupMetadata()
+        public BuildFieldLookup()
         {
             AsChildOf<HarshField>(parent =>
             {
@@ -32,9 +32,6 @@ namespace HarshPoint.ShellployGenerator
                     .Call(nameof(Resolve.ByInternalName), new CodeVariableReferenceExpression("TargetField"))
                     .Call(nameof(ResolveBuilderExtensions.As), typeof(Tuple<List, Field>))
             );
-
-            Parameter(x => x.Fields)
-                .Rename("Field");
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using HarshPoint.Provisioning;
 using Microsoft.SharePoint.Client;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Commands
 {
-    internal sealed class HarshListMetadata :
-        HarshPointShellployCommand<HarshList>
+    internal sealed class BuildList :
+        HarshPointCommandBuilder<HarshList>
     {
-        public HarshListMetadata()
+        public BuildList()
         {
             PositionalParameter(x => x.Title);
             PositionalParameter(x => x.Url);

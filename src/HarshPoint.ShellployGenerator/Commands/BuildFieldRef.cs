@@ -3,12 +3,12 @@ using Microsoft.SharePoint.Client;
 using System;
 using System.CodeDom;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Commands
 {
-    internal sealed class HarshFieldRefMetadata :
-        HarshPointShellployCommand<HarshFieldRef>
+    internal sealed class BuildFieldRef :
+        HarshPointCommandBuilder<HarshFieldRef>
     {
-        public HarshFieldRefMetadata()
+        public BuildFieldRef()
         {
             Parameter("InternalName").Synthesize(typeof(String));
 
@@ -16,7 +16,6 @@ namespace HarshPoint.ShellployGenerator
                 new CodeTypeReferenceExpression(typeof(Resolve))
                     .Call(nameof(Resolve.Field))
                     .Call(nameof(Resolve.ByInternalName), new CodeVariableReferenceExpression("InternalName"))
-                    .Call(nameof(ResolveBuilderExtensions.As), typeof(Field))
             );
         }
     }

@@ -22,10 +22,6 @@ namespace HarshPoint.ShellployGenerator
 
         public CommandBuilder()
         {
-            Aliases.Add(
-                Regex.Replace(Metadata.ObjectType.Name, "^Harsh(Modify)?", "")
-            );
-
             foreach (var grouping in Metadata.PropertyParameters)
             {
                 var property = grouping.Key;

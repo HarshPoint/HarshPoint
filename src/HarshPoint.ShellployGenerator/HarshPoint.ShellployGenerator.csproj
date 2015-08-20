@@ -127,24 +127,24 @@
     <Compile Include="ICommandBuilder.cs" />
     <Compile Include="CommandParameter.cs" />
     <Compile Include="IChildCommandBuilder.cs" />
-    <Compile Include="Metadata\HarshEnableWebFeatureMetadata.cs" />
-    <Compile Include="Metadata\HarshListMetadata.cs" />
-    <Compile Include="Metadata\HarshFieldRefMetadata.cs" />
-    <Compile Include="Metadata\HarshModifyFieldLookupMetadata.cs" />
-    <Compile Include="Metadata\HarshModifyFieldTaxonomyMetadata.cs" />
-    <Compile Include="Metadata\HarshModifyFieldMultilineTextMetadata.cs" />
-    <Compile Include="Metadata\HarshModifyFieldDateTimeMetadata.cs" />
-    <Compile Include="Metadata\HarshFieldMetadata.cs" />
-    <Compile Include="Metadata\HarshPointShellployCommand.cs" />
-    <Compile Include="Metadata\HarshRemoveContentTypeRefMetadata.cs" />
-    <Compile Include="Metadata\HarshContentTypeRefMetadata.cs" />
+    <Compile Include="Commands\BuildEnableWebFeature.cs" />
+    <Compile Include="Commands\BuildList.cs" />
+    <Compile Include="Commands\BuildFieldRef.cs" />
+    <Compile Include="Commands\BuildFieldLookup.cs" />
+    <Compile Include="Commands\BuildFieldTaxonomy.cs" />
+    <Compile Include="Commands\BuildFieldMultilineText.cs" />
+    <Compile Include="Commands\BuildFieldDateTime.cs" />
+    <Compile Include="Commands\BuildField.cs" />
+    <Compile Include="Commands\HarshPointCommandBuilder.cs" />
+    <Compile Include="Commands\BuildRemoveContentTypeRef.cs" />
+    <Compile Include="Commands\BuildContentTypeRef.cs" />
     <Compile Include="ShellployCommand.cs" />
     <Compile Include="CommandBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ChildCommandBuilder.cs" />
     <Compile Include="ShellployCommandProperty.cs" />
-    <Compile Include="Metadata\HarshContentTypeMetadata.cs" />
+    <Compile Include="Commands\BuildContentType.cs" />
     <Compile Include="ShellployMetadata.cs" />
     <Compile Include="SourceFileWriter.cs" />
     <Compile Include="SR.Designer.cs">
@@ -168,6 +168,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Metadata\" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>"$(OutDir)HarshPoint.ShellployGenerator" "$(SolutionDir)src\HarshPoint.Shellploy"</PostBuildEvent>
