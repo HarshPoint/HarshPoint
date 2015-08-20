@@ -10,9 +10,6 @@ namespace HarshPoint.ObjectModel
         private static readonly HarshLogger Logger
             = HarshLog.ForContext<ParameterSetResolver>();
 
-        private static readonly String ImplicitParameterSetName
-            = ParameterSet.ImplicitParameterSetName;
-
         public ParameterSetResolver(Object target, IEnumerable<ParameterSet> parameterSets)
         {
             if (target == null)
@@ -25,12 +22,7 @@ namespace HarshPoint.ObjectModel
                 throw Logger.Fatal.ArgumentNull(nameof(parameterSets));
             }
 
-            if (!parameterSets.Any())
-            {
-                throw Logger.Fatal.ArgumentEmptySequence(nameof(parameterSets));
-            }
-
-            DefaultParameterSet = parameterSets.Single(
+            DefaultParameterSet = parameterSets.SingleOrDefault(
                 set => set.IsDefault
             );
 
@@ -44,7 +36,7 @@ namespace HarshPoint.ObjectModel
 
         public ParameterSet Resolve()
         {
-            if (ParameterSets.Count == 1)
+            if ((ParameterSets.Count == 1) && (DefaultParameterSet != null))
             {
                 Logger.Debug(
                     "Only one parameter set defined: {DefaultParameterSetName}",
@@ -59,20 +51,15 @@ namespace HarshPoint.ObjectModel
                 RemoveCandidateIfParamDefault
             );
 
-            if (candidates.Count == 0)
+            if ((candidates.Count == 0) && (DefaultParameterSet != null))
             {
                 Logger.Debug(
-                    "No parameter set matched, assuming default {DefaultParameterSetName}",
+                    "No parameter set matched, " +
+                    "assuming default {DefaultParameterSetName}",
                     DefaultParameterSet.Name
                 );
 
                 return DefaultParameterSet;
-            }
-
-            if ((candidates.Count > 1) &&
-                 (candidates.ContainsKey(ImplicitParameterSetName)))
-            {
-                candidates = candidates.Remove(ImplicitParameterSetName);
             }
 
             if (candidates.Count == 1)
@@ -87,13 +74,14 @@ namespace HarshPoint.ObjectModel
                 return result;
             }
 
-            throw Logger.Fatal.InvalidOperation(SR.ParameterSetResolver_Ambiguous);
+            throw Logger.Fatal.InvalidOperation(
+                SR.ParameterSetResolver_Ambiguous
+            );
         }
 
         public ImmutableDictionary<String, ParameterSet> ParameterSets
         {
             get;
-
         }
 
         public Object Target

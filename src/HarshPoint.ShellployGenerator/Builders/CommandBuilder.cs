@@ -20,6 +20,8 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public CommandBuilder()
         {
+            DefaultParameterSetName = Metadata.DefaultParameterSet?.Name;
+
             foreach (var grouping in Metadata.PropertyParameters)
             {
                 var property = grouping.Key;
@@ -45,6 +47,8 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public HashSet<String> Aliases { get; }
             = new HashSet<String>(StringComparer.OrdinalIgnoreCase);
+
+        public String DefaultParameterSetName { get; set; }
 
         public Boolean HasInputObject { get; set; }
 

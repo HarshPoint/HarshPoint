@@ -11,6 +11,7 @@ namespace HarshPoint.ShellployGenerator
         public const String InputObjectPropertyName = "InputObject";
 
         public IEnumerable<String> Aliases { get; set; }
+        public IImmutableList<AttributeData> Attributes { get; set; }
         public String ClassName { get; set; }
         public Boolean HasInputObject { get; set; }
         public IEnumerable<Type> ParentProvisionerTypes { get; set; }

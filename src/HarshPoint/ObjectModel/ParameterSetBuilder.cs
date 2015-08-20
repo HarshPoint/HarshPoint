@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 
@@ -89,7 +90,7 @@ namespace HarshPoint.ObjectModel
                 DefaultParameterSetName
             );
 
-            var parameters = BuildParameterMetadata().ToArray();
+            var parameters = BuildParameterMetadata().ToImmutableArray();
 
             Logger.Debug(
                 "{ProcessedType}: All parameters: {@Parameters}",
@@ -117,32 +118,24 @@ namespace HarshPoint.ObjectModel
                         IsDefaultParameterSet(set.Key)
                     )
                 )
-                .ToList();
+                .ToImmutableArray();
 
-            if (!parameterSets.Any(set => set.IsDefault))
+            if (DefaultParameterSetName == null)
             {
-                if (DefaultParameterSetName != null)
+                if (parameterSets.Length == 0)
                 {
-                    throw Logger.Fatal.ObjectMetadata(
-                        SR.HarshProvisionerMetadata_DefaultParameterSetNotFound,
-                        DefaultParameterSetName,
-                        Metadata
-                    );
+                    parameterSets = 
+                        CreateImplicitParameterSet(commonParameters);
                 }
-
-                var implicitParameterSet = new ParameterSet(
-                    ParameterSet.ImplicitParameterSetName,
-                    commonParameters,
-                    isDefault: true
-                );
-
-                Logger.Debug(
-                    "{ProcessedType}: Implicit parameter set: {@ImplicitParameterSet}",
-                    Metadata,
-                    implicitParameterSet
-                );
-
-                parameterSets.Add(implicitParameterSet);
+                else if (parameterSets.Length == 1)
+                {
+                    parameterSets =
+                        MakeSingleParameterSetDefault(parameterSets);
+                }
+            }
+            else
+            {
+                ValidateDefaultParameterSetExists(parameterSets);
             }
 
             Logger.Debug(
@@ -152,6 +145,42 @@ namespace HarshPoint.ObjectModel
             );
 
             return parameterSets;
+        }
+
+        private void ValidateDefaultParameterSetExists(
+            ImmutableArray<ParameterSet> parameterSets
+        )
+        {
+            if (!parameterSets.Any(set => set.IsDefault))
+            {
+                throw Logger.Fatal.ObjectMetadata(
+                    SR.HarshProvisionerMetadata_DefaultParameterSetNotFound,
+                    DefaultParameterSetName,
+                    Metadata
+                );
+            }
+        }
+
+        private ImmutableArray<ParameterSet> MakeSingleParameterSetDefault(
+            ImmutableArray<ParameterSet> parameterSets
+        )
+        {
+            var single = parameterSets.Single();
+
+            Logger.Debug(
+                "{ProcessedType}: Single parameter set, " + 
+                "making it default: {@ParameterSet}",
+                Metadata,
+                single
+            );
+
+            return ImmutableArray.Create(
+                new ParameterSet(
+                    single.Name,
+                    single.Parameters,
+                    isDefault: true
+                )
+            );
         }
 
         private Boolean IsDefaultParameterSet(String name)
@@ -246,6 +275,25 @@ namespace HarshPoint.ObjectModel
             }
 
             return false;
+        }
+
+        private static ImmutableArray<ParameterSet> CreateImplicitParameterSet(
+            IEnumerable<Parameter> commonParameters
+        )
+        {
+            Logger.Debug(
+                "{ProcessedType}: Creating implicit parameter set from " +
+                "common parameters: {@CommonParameters}",
+                commonParameters
+            );
+
+            return ImmutableArray.Create(
+                new ParameterSet(
+                    ParameterSet.ImplicitParameterSetName,
+                    commonParameters,
+                    true
+                )
+            );
         }
     }
 }
