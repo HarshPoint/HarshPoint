@@ -10,28 +10,75 @@ namespace CommandBuilding
 {
     public class Renamed_parameter : SeriloggedTest
     {
-        private readonly ShellployCommandProperty _property;
-
         public Renamed_parameter(ITestOutputHelper output) : base(output)
         {
-            var builder = new CommandBuilder<TestProvisioner>();
-            builder.Parameter(x => x.RenamedParam).Rename("NewName");
-
-            var command = builder.ToCommand();
-            _property = Assert.Single(command.Properties);
         }
 
         [Fact]
         public void Has_new_PropertyName()
         {
-            Assert.Equal("NewName", _property.PropertyName);
+            var builder = new CommandBuilder<TestProvisioner>();
+            builder.Parameter(x => x.RenamedParam).Rename("NewName");
+
+            var command = builder.ToCommand();
+            var property = Assert.Single(command.Properties);
+
+            Assert.Equal("NewName", property.PropertyName);
         }
 
         [Fact]
         public void Has_original_Identifier()
         {
-            Assert.Equal("RenamedParam", _property.Identifier);
+            var builder = new CommandBuilder<TestProvisioner>();
+            builder.Parameter(x => x.RenamedParam).Rename("NewName");
+
+            var command = builder.ToCommand();
+            var property = Assert.Single(command.Properties);
+
+            Assert.Equal("RenamedParam", property.Identifier);
         }
+
+        [Fact]
+        public void Cannot_rename_to_null()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var builder = new CommandBuilder<TestProvisioner>();
+                builder.Parameter(x => x.RenamedParam).Rename(null);
+            });
+        }
+
+        [Fact]
+        public void Cannot_rename_to_empty_string()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var builder = new CommandBuilder<TestProvisioner>();
+                builder.Parameter(x => x.RenamedParam).Rename(String.Empty);
+            });
+        }
+
+
+        [Fact]
+        public void Cannot_rename_to_whitespace_string()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var builder = new CommandBuilder<TestProvisioner>();
+                builder.Parameter(x => x.RenamedParam).Rename(" \t \r \n ");
+            });
+        }
+
+        [Fact]
+        public void Cannot_rename_to_InputObject()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var builder = new CommandBuilder<TestProvisioner>();
+                builder.Parameter(x => x.RenamedParam).Rename("InputObject");
+            });
+        }
+
 
         private sealed class TestProvisioner : HarshProvisioner
         {

@@ -77,7 +77,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeDataTestExtensions.cs" />
+    <Compile Include="CommandBuilding\Positional_parameters.cs" />
     <Compile Include="CommandBuilding\Renamed_parameter.cs" />
+    <Compile Include="CommandBuilding\With_InputObject.cs" />
     <Compile Include="CommandBuilding\With_multiple_parameter_sets.cs" />
     <Compile Include="CommandBuilding\Fixed_value_parameter.cs" />
     <Compile Include="CommandBuilding\Default_value_parameter.cs" />

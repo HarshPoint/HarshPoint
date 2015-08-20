@@ -129,6 +129,9 @@
   <data name="CodeDomExtensions_PropertySetterNotEmpty" xml:space="preserve">
     <value>Property setter is not empty.</value>
   </data>
+  <data name="CommandBuilder_ReservedName" xml:space="preserve">
+    <value>The specified name '{0}' is reserved.</value>
+  </data>
   <data name="CommandParameterSynthesized_AttemptedToNest" xml:space="preserve">
     <value>Attempted to nest one CommandParameterSynthesized in another.</value>
   </data>

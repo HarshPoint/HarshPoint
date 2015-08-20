@@ -1,39 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal class CommandParameterInputObject : CommandParameterSynthesized
+    internal sealed class CommandParameterInputObject : CommandParameter
     {
-        internal CommandParameterInputObject()
-            : base(typeof(Object), CreateAttributes())
+        internal override void Process(ShellployCommandProperty property)
         {
-            Name = ShellployCommand.InputObjectPropertyName;
-            Position = Int32.MaxValue;
-        }
+            property.IsInputObject = true;
+            property.IsPositional = true;
 
-        internal override IEnumerable<ShellployCommandProperty> Synthesize()
-        {
-            var results = base.Synthesize();
-
-            foreach (var item in results)
+            foreach (var attr in property.ParameterAttributes)
             {
-                item.IsInputObject = true;
+                attr.NamedArguments["ValueFromPipeline"] = true;
             }
-
-            return results;
         }
 
-        private static IEnumerable<AttributeData> CreateAttributes()
-        {
-            yield return new AttributeData(typeof(SMA.ParameterAttribute))
-            {
-                NamedArguments =
-                {
-                    ["ValueFromPipeline"]=true
-                }
-            };
-        }
+        public static readonly String Name
+            = ShellployCommand.InputObjectPropertyName;
     }
 }

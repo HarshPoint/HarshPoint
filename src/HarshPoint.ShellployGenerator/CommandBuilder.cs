@@ -13,10 +13,12 @@ namespace HarshPoint.ShellployGenerator
     internal class CommandBuilder<TProvisioner> : ICommandBuilder
         where TProvisioner : HarshProvisionerBase
     {
+        private IChildCommandBuilder _childBuilder;
+
+        private Int32 _nextPositionalParam;
+
         private ImmutableDictionary<String, CommandParameter> _parameters
             = ImmutableDictionary<String, CommandParameter>.Empty;
-
-        private IChildCommandBuilder _childBuilder;
 
         public CommandBuilder()
         {
@@ -40,8 +42,8 @@ namespace HarshPoint.ShellployGenerator
 
                 SetParameter(
                     property.Name,
-                    isPositional: false,
-                    parameter: new CommandParameterSynthesized(
+                    new CommandParameterSynthesized(
+                        property.Name,
                         property.PropertyType,
                         Metadata.ObjectType,
                         attributes
@@ -96,56 +98,34 @@ namespace HarshPoint.ShellployGenerator
         {
             var parametersSorted =
                 _parameters.Values
-                .OrderBy(param => param.Position ?? Int32.MaxValue)
+                .OrderBy(param => param.SortOrder ?? Int32.MaxValue)
                 .ToList();
 
             if (HasInputObject)
             {
-                parametersSorted.Add(new CommandParameterInputObject());
+                parametersSorted.Add(
+                    new CommandParameterInputObject().CreateFrom(
+                        new CommandParameterSynthesized(
+                            CommandParameterInputObject.Name,
+                            typeof(Object)
+                        )
+                    )
+                );
             }
 
-            var properties = GetParentProperties(builders)
-                .Concat(
-                    parametersSorted.SelectMany(p => p.Synthesize())
-                )
+            var parentProperties = GetParentProperties(builders);
+
+            var myProperties = parametersSorted
+                .SelectMany(p => p.Synthesize());
+
+            var allProperties = parentProperties
+                .Concat(myProperties)
                 .ToArray();
 
-            SetValueFromPipelineByPropertyName(properties);
-            AssignParameterPositions(properties);
+            SetValueFromPipelineByPropertyName(allProperties);
+            AssignParameterPositions(allProperties);
 
-            return properties;
-        }
-
-        private static void SetValueFromPipelineByPropertyName(
-            IEnumerable<ShellployCommandProperty> properties
-        )
-        {
-            var attrs = from prop in properties
-                        where !prop.IsInputObject
-                        from attr in prop.ParameterAttributes
-                        select attr;
-
-            foreach (var attr in attrs)
-            {
-                attr.NamedArguments["ValueFromPipelineByPropertyName"] = true;
-            }
-        }
-
-        private static void AssignParameterPositions(
-            IEnumerable<ShellployCommandProperty> properties
-        )
-        {
-            var currentPosition = 0;
-
-            foreach (var prop in properties.Where(p => p.IsPositional))
-            {
-                foreach (var attr in prop.ParameterAttributes)
-                {
-                    attr.NamedArguments["Position"] = currentPosition;
-                }
-
-                currentPosition++;
-            }
+            return myProperties;
         }
 
         public ImmutableList<Type> GetParentProvisionerTypes(
@@ -203,10 +183,11 @@ namespace HarshPoint.ShellployGenerator
 
         internal void SetParameter(
             String name,
-            Boolean isPositional,
             CommandParameter parameter
         )
         {
+            ValidateParameterName(name);
+
             var existing = _parameters.GetValueOrDefault(name);
 
             if (parameter == existing)
@@ -214,17 +195,66 @@ namespace HarshPoint.ShellployGenerator
                 return;
             }
 
-            parameter = parameter.CreateFrom(existing);
-            parameter.Name = name;
-
-            if (isPositional && !parameter.Position.HasValue)
-            {
-                parameter.Position = _parameters.Count;
-            }
-
             _parameters = _parameters.SetItem(
                 name,
-                parameter
+                parameter.CreateFrom(existing)
+            );
+        }
+
+        internal void ValidateParameterName(String name)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
+            }
+
+            if (ReservedNames.Contains(name))
+            {
+                throw Logger.Fatal.ArgumentFormat(
+                    nameof(name),
+                    SR.CommandBuilder_ReservedName,
+                    name
+                );
+            }
+        }
+
+        private CommandParameterFactory<TProvisioner> GetParameterFactory(
+            Expression<Func<TProvisioner, Object>> expression,
+            Boolean isPositional = false
+        )
+        {
+            if (expression == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
+            }
+
+            var name = expression.ExtractLastPropertyAccess().Name;
+            return GetParameterFactory(name, isPositional);
+        }
+
+        private CommandParameterFactory<TProvisioner> GetParameterFactory(
+            String name,
+            Boolean isPositional = false
+        )
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
+            }
+
+            if (isPositional)
+            {
+                SetParameter(
+                    name,
+                    new CommandParameterPositional(_nextPositionalParam)
+                );
+
+                _nextPositionalParam++;
+            }
+
+            return new CommandParameterFactory<TProvisioner>(
+                this,
+                name
             );
         }
 
@@ -265,37 +295,6 @@ namespace HarshPoint.ShellployGenerator
             return Enumerable.Empty<ShellployCommandProperty>();
         }
 
-        private CommandParameterFactory<TProvisioner> GetParameterFactory(
-            Expression<Func<TProvisioner, Object>> expression,
-            Boolean isPositional = false
-        )
-        {
-            if (expression == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(expression));
-            }
-
-            var name = expression.ExtractLastPropertyAccess().Name;
-            return GetParameterFactory(name, isPositional);
-        }
-
-        private CommandParameterFactory<TProvisioner> GetParameterFactory(
-            String name,
-            Boolean isPositional = false
-        )
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
-            }
-
-            return new CommandParameterFactory<TProvisioner>(
-                this,
-                name,
-                isPositional
-            );
-        }
-
         private static AttributeData CreateParameterAttribute(Parameter param)
         {
             var data = new AttributeData(typeof(SMA.ParameterAttribute));
@@ -313,10 +312,48 @@ namespace HarshPoint.ShellployGenerator
             return data;
         }
 
+        private static void SetValueFromPipelineByPropertyName(
+            IEnumerable<ShellployCommandProperty> properties
+        )
+        {
+            var attrs = from prop in properties
+                        where !prop.IsInputObject
+                        from attr in prop.ParameterAttributes
+                        select attr;
+
+            foreach (var attr in attrs)
+            {
+                attr.NamedArguments["ValueFromPipelineByPropertyName"] = true;
+            }
+        }
+
+        private static void AssignParameterPositions(
+            IEnumerable<ShellployCommandProperty> properties
+        )
+        {
+            var currentPosition = 0;
+
+            foreach (var prop in properties.Where(p => p.IsPositional))
+            {
+                foreach (var attr in prop.ParameterAttributes)
+                {
+                    attr.NamedArguments["Position"] = currentPosition;
+                }
+
+                currentPosition++;
+            }
+        }
+
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(CommandBuilder<>));
 
         private static readonly HarshProvisionerMetadata Metadata
            = HarshProvisionerMetadataRepository.Get(typeof(TProvisioner));
+
+        private static readonly ImmutableHashSet<String> ReservedNames
+            = ImmutableHashSet.Create(
+                StringComparer.OrdinalIgnoreCase,
+                ShellployCommand.InputObjectPropertyName
+            );
     }
 }

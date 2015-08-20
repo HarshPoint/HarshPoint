@@ -118,6 +118,7 @@
     <Compile Include="CommandParameterFactory.cs" />
     <Compile Include="CommandParameterIgnored.cs" />
     <Compile Include="CommandParameterInputObject.cs" />
+    <Compile Include="CommandParameterPositional.cs" />
     <Compile Include="CommandParameterSynthesized.cs" />
     <Compile Include="CommandParameterDefaultValue.cs" />
     <Compile Include="CommandParameterFixed.cs" />

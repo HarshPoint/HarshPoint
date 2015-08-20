@@ -7,36 +7,38 @@ using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal class CommandParameterSynthesized : CommandParameter
+    internal sealed class CommandParameterSynthesized : CommandParameter
     {
         internal CommandParameterSynthesized(
+            String name,
             Type type,
-            IEnumerable<AttributeData> attributes
+            Type provisionerType = null,
+            IEnumerable<AttributeData> attributes = null
         )
-            : this(type, null, attributes)
         {
-        }
+            if (type == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(type));
+            }
 
-        internal CommandParameterSynthesized(
-            Type type,
-            Type provisionerType,
-            IEnumerable<AttributeData> attributes
-        )
-        {
+            Name = name;
             ParameterType = type;
             ProvisionerType = provisionerType;
-            Attributes = attributes.ToImmutableArray();
+
+            Attributes = attributes?.ToImmutableArray() ??
+                ImmutableArray<AttributeData>.Empty;
 
             if (!Attributes.Any(IsParameterAttribute))
             {
-                Attributes = ImmutableArray.Create(
+                Attributes = Attributes.Add(
                     new AttributeData(typeof(SMA.ParameterAttribute))
                 );
             }
         }
 
-        public IReadOnlyList<AttributeData> Attributes { get; }
-            = new Collection<AttributeData>();
+        public ImmutableArray<AttributeData> Attributes { get; }
+
+        public String Name { get; }
 
         public Type ParameterType { get; }
 
@@ -51,7 +53,7 @@ namespace HarshPoint.ShellployGenerator
                     ProvisionerType = ProvisionerType,
                     Type = ParameterType,
                     Attributes = Attributes,
-                    IsPositional = Position.HasValue
+                    IsPositional = SortOrder.HasValue
                 }
             );
 
@@ -63,9 +65,7 @@ namespace HarshPoint.ShellployGenerator
             }
 
             AppendThisTo(previous);
-
-            Name = previous.Name;
-            Position = previous.Position;
+            SortOrder = previous.SortOrder;
 
             return previous;
         }

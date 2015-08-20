@@ -9,13 +9,11 @@ namespace HarshPoint.ShellployGenerator
     {
         internal CommandParameterFactory(
             CommandBuilder<TProvisioner> builder,
-            String name,
-            Boolean isPositional
+            String name
         )
         {
             Builder = builder;
             Name = name;
-            IsPositional = isPositional;
         }
 
         public String Name { get; }
@@ -28,6 +26,7 @@ namespace HarshPoint.ShellployGenerator
 
         public CommandParameterFactory<TProvisioner> Rename(String propertyName)
         {
+            Builder.ValidateParameterName(propertyName);
             Set(new CommandParameterRenamed(propertyName));
             return this;
         }
@@ -57,10 +56,7 @@ namespace HarshPoint.ShellployGenerator
                 parameterType,
                 new AttributeData(typeof(SMA.ParameterAttribute))
                 {
-                    NamedArguments =
-                    {
-                        ["Mandatory"] = true
-                    }
+                    NamedArguments = { ["Mandatory"] = true }
                 }
             );
         }
@@ -79,17 +75,20 @@ namespace HarshPoint.ShellployGenerator
                 throw Logger.Fatal.ArgumentNull(nameof(attributeData));
             }
 
-            Set(new CommandParameterSynthesized(parameterType, attributeData));
+            Set(new CommandParameterSynthesized(
+                Name,
+                parameterType, 
+                attributes: attributeData
+            ));
+
             return this;
         }
 
         private CommandBuilder<TProvisioner> Builder { get; }
 
-        private Boolean IsPositional { get; }
-
         private void Set(CommandParameter parameter)
         {
-            Builder.SetParameter(Name, IsPositional, parameter);
+            Builder.SetParameter(Name, parameter);
         }
 
         private static readonly HarshLogger Logger

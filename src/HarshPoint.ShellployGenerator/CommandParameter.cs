@@ -6,11 +6,9 @@ namespace HarshPoint.ShellployGenerator
 {
     internal abstract class CommandParameter
     {
-        internal String Name { get; set; }
-
         internal CommandParameter Previous { get; set; }
 
-        internal Int32? Position { get; set; }
+        internal Int32? SortOrder { get; set; }
 
         internal virtual IEnumerable<ShellployCommandProperty> Synthesize()
         {
@@ -38,7 +36,7 @@ namespace HarshPoint.ShellployGenerator
             if (previous != null)
             {
                 Previous = previous;
-                Position = previous.Position;
+                SortOrder = SortOrder ?? previous.SortOrder;
             }
 
             return this;

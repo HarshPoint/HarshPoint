@@ -97,6 +97,15 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified name &apos;{0}&apos; is reserved..
+        /// </summary>
+        internal static string CommandBuilder_ReservedName {
+            get {
+                return ResourceManager.GetString("CommandBuilder_ReservedName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempted to nest one CommandParameterSynthesized in another..
         /// </summary>
         internal static string CommandParameterSynthesized_AttemptedToNest {
