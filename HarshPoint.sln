@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329A8-9B0A-428D-B5C7-C9F1BCF82E50}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Shared", ".Shared", "{549329A8-9B0A-428D-B5C7-C9F1BCF82E50}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{549329
 		src\CodeAnalysisRules.ruleset = src\CodeAnalysisRules.ruleset
 		LICENSE = LICENSE
 		nuget.config = nuget.config
+		nuspec.template = nuspec.template
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -23,8 +24,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Tests", "test\HarshPoint.Tests\HarshPoint.Tests.csproj", "{1A4B3615-7C9D-4B3A-B44F-3561151802B9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Server.Tests", "test\HarshPoint.Server.Tests\HarshPoint.Server.Tests.csproj", "{982BD98C-2FAF-48A3-B327-EBBB2E179F4A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3FB3A866-84E3-49E6-9672-1EF365E48A0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Shellploy", "src\HarshPoint.Shellploy\HarshPoint.Shellploy.csproj", "{6B9395CF-6B77-4AE0-85E0-EEC08584356B}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -37,18 +36,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.ShellployGenerat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarshPoint.Shellploy.Tests", "test\HarshPoint.Shellploy.Tests\HarshPoint.Shellploy.Tests.csproj", "{C65D36BD-BA54-48FD-9DD8-B478FDA9BD6A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet Specs", "NuGet Specs", "{73E3B374-59C2-4E82-ABC5-1A4CCC3A1037}"
-	ProjectSection(SolutionItems) = preProject
-		nuspec.template = nuspec.template
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{19E3F0D9-65FB-4E28-B7B8-85AF4E6E1895}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Scripts", ".Scripts", "{19E3F0D9-65FB-4E28-B7B8-85AF4E6E1895}"
 	ProjectSection(SolutionItems) = preProject
 		scripts\Invoke-CoverityBuild.ps1 = scripts\Invoke-CoverityBuild.ps1
 		scripts\Invoke-Test.ps1 = scripts\Invoke-Test.ps1
 		scripts\Invoke-TestLocal.ps1 = scripts\Invoke-TestLocal.ps1
 		scripts\Update-PSModule.ps1 = scripts\Update-PSModule.ps1
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HarshPoint", "HarshPoint", "{7EA4C177-4CD2-4070-9141-0B3F03F27741}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HarshPoint.Server", "HarshPoint.Server", "{77C8BA4E-2514-4E1A-A193-202AAFF141CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HarshPoint.Shellploy", "HarshPoint.Shellploy", "{E64D27A6-5E73-4568-B46E-EFDB13E35B2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,9 +93,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{1A4B3615-7C9D-4B3A-B44F-3561151802B9} = {3FB3A866-84E3-49E6-9672-1EF365E48A0C}
-		{982BD98C-2FAF-48A3-B327-EBBB2E179F4A} = {3FB3A866-84E3-49E6-9672-1EF365E48A0C}
-		{02E3AED4-550C-4684-A3E2-E63E104606C7} = {3FB3A866-84E3-49E6-9672-1EF365E48A0C}
-		{C65D36BD-BA54-48FD-9DD8-B478FDA9BD6A} = {3FB3A866-84E3-49E6-9672-1EF365E48A0C}
+		{5D981A8F-A98E-43F2-A112-2CFD50455447} = {7EA4C177-4CD2-4070-9141-0B3F03F27741}
+		{DB0928B3-B2C2-4887-9AFD-B7E693EA41E9} = {77C8BA4E-2514-4E1A-A193-202AAFF141CD}
+		{1A4B3615-7C9D-4B3A-B44F-3561151802B9} = {7EA4C177-4CD2-4070-9141-0B3F03F27741}
+		{982BD98C-2FAF-48A3-B327-EBBB2E179F4A} = {77C8BA4E-2514-4E1A-A193-202AAFF141CD}
+		{6B9395CF-6B77-4AE0-85E0-EEC08584356B} = {E64D27A6-5E73-4568-B46E-EFDB13E35B2D}
+		{B2A9F7B4-4307-46F0-AC60-BF9965629953} = {E64D27A6-5E73-4568-B46E-EFDB13E35B2D}
+		{02E3AED4-550C-4684-A3E2-E63E104606C7} = {E64D27A6-5E73-4568-B46E-EFDB13E35B2D}
+		{C65D36BD-BA54-48FD-9DD8-B478FDA9BD6A} = {E64D27A6-5E73-4568-B46E-EFDB13E35B2D}
 	EndGlobalSection
 EndGlobal
