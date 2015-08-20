@@ -76,7 +76,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeDataTestExtensions.cs" />
     <Compile Include="CommandBuilding\Synthesized_parameter.cs" />
     <Compile Include="CommandBuilding\Fails_when.cs" />
     <Compile Include="CommandBuilding\Positional_parameters.cs" />
@@ -88,9 +87,7 @@
     <Compile Include="CommandBuilding\Ignored_Parameter.cs" />
     <Compile Include="CommandBuilding\Mandatory_parameter.cs" />
     <Compile Include="CommandBuilding\Basic_parameter.cs" />
-    <Compile Include="ShellployCommandBuilderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestProvisioner.cs" />
     <Compile Include="CommandBuilding\Without_configuration.cs" />
     <Compile Include="CommandBuilding\With_namespace.cs" />
   </ItemGroup>

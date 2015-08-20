@@ -14,6 +14,43 @@ namespace CommandBuilding
         {
         }
 
+
+        [Fact]
+        public void Has_Name()
+        {
+            var builder = new CommandBuilder<EmptyProvisioner>();
+            builder.Parameter("Synth").Synthesize(typeof(Int32));
+
+            var command = builder.ToCommand();
+
+            var prop = Assert.Single(command.Properties);
+            Assert.Equal("Synth", prop.PropertyName);
+        }
+
+        [Fact]
+        public void Has_Type()
+        {
+            var builder = new CommandBuilder<EmptyProvisioner>();
+            builder.Parameter("Synth").Synthesize(typeof(Int32));
+
+            var command = builder.ToCommand();
+
+            var prop = Assert.Single(command.Properties);
+            Assert.Equal(typeof(Int32), prop.Type);
+        }
+
+        [Fact]
+        public void Has_no_ProvisionerType()
+        {
+            var builder = new CommandBuilder<EmptyProvisioner>();
+            builder.Parameter("Synth").Synthesize(typeof(Int32));
+
+            var command = builder.ToCommand();
+
+            var prop = Assert.Single(command.Properties);
+            Assert.Null(prop.ProvisionerType);
+        }
+
         [Fact]
         public void Is_created_even_when_not_first_in_the_list()
         {

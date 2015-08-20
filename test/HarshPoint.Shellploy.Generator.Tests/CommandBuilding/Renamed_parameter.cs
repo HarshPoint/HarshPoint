@@ -14,6 +14,19 @@ namespace CommandBuilding
         {
         }
 
+
+        [Fact]
+        public void Can_rename_nonexistent_param()
+        {
+            var builder = new CommandBuilder<TestProvisioner>();
+            builder.Parameter("DoesNotExist").Rename("StillDoesNot");
+
+            var command = builder.ToCommand();
+            var property = Assert.Single(command.Properties);
+
+            Assert.Equal("RenamedParam", property.PropertyName);
+        }
+
         [Fact]
         public void Has_new_PropertyName()
         {

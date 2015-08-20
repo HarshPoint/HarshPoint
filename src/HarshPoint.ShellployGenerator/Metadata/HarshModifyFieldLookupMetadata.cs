@@ -19,8 +19,6 @@ namespace HarshPoint.ShellployGenerator
             Parameter("TargetListUrl")
                 .Synthesize(typeof(String));
 
-#warning let's see if the "wrong" order still works
-
             Parameter("TargetField")
                 .SetDefaultValue("Title")
                 .Synthesize(typeof(String));
