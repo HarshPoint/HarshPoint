@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Management.Automation;
-using System.Collections;
-using HarshPoint.Provisioning;
-using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using SMA = System.Management.Automation;
-using System.Net;
 
 namespace HarshPoint.Shellploy
 {
-    public abstract class ClientContextCmdlet : HarshProvisionerCmdlet 
+    public abstract class ClientContextCmdlet : HarshProvisionerCmdlet
     {
         [SMA.Parameter(Mandatory = true, Position = 0, ValueFromPipelineByPropertyName = true)]
         public Uri Url { get; set; }
@@ -40,8 +32,12 @@ namespace HarshPoint.Shellploy
             }
             else
             {
-                clientContext.Credentials =
-                    CredentialFactory.CreateCredentials(CredentialType, UserName, Password, Url);
+                clientContext.Credentials = CredentialFactory.CreateCredentials(
+                    CredentialType,
+                    UserName,
+                    Password,
+                    Url
+                );
             }
 
             return clientContext;

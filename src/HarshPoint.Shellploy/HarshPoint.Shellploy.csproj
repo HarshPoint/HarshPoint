@@ -111,6 +111,7 @@
     <Compile Include="ClientContextCmdlet.cs" />
     <Compile Include="Generated\*.cs" />
     <Compile Include="HarshProvisionerCmdlet.cs" />
+    <Compile Include="PowerShellOutputSink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

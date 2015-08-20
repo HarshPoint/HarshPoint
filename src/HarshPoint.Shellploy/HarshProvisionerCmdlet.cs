@@ -10,7 +10,10 @@ namespace HarshPoint.Shellploy
 {
     public abstract class HarshProvisionerCmdlet : PSCmdlet
     {
-        internal static void AddChildren<TContext>(HarshProvisionerBase<TContext> parent, Object children)
+        internal static void AddChildren<TContext>(
+            HarshProvisionerBase<TContext> parent,
+            Object children
+        )
             where TContext : HarshProvisionerContextBase
         {
             if (children == null)
@@ -18,7 +21,8 @@ namespace HarshPoint.Shellploy
                 return;
             }
 
-            if ((children is HarshProvisionerBase) || (children is IDefaultFromContextTag))
+            if ((children is HarshProvisionerBase) ||
+                (children is IDefaultFromContextTag))
             {
                 AddChild(parent, children);
             }
@@ -26,20 +30,26 @@ namespace HarshPoint.Shellploy
             var scriptBlock = children as ScriptBlock;
             if (scriptBlock != null)
             {
-                children = scriptBlock.Invoke()
+                children = scriptBlock
+                    .Invoke()
                     .Select(c => c.BaseObject);
             }
 
             var enumerable = children as IEnumerable;
-            if (children != null)
+            if (enumerable != null)
             {
-                AddChildren(parent, children);
+                AddChildren(parent, enumerable);
             }
-
-            AddChild(parent, children);
+            else
+            {
+                AddChild(parent, children);
+            }
         }
 
-        internal static void AddChildren<TContext>(HarshProvisionerBase<TContext> parent, IEnumerable<Object> children)
+        internal static void AddChildren<TContext>(
+            HarshProvisionerBase<TContext> parent,
+            IEnumerable children
+        )
             where TContext : HarshProvisionerContextBase
         {
             foreach (var child in children)
@@ -48,7 +58,10 @@ namespace HarshPoint.Shellploy
             }
         }
 
-        internal static void AddChild<TContext>(HarshProvisionerBase<TContext> parent, Object child)
+        internal static void AddChild<TContext>(
+            HarshProvisionerBase<TContext> parent,
+            Object child
+        )
             where TContext : HarshProvisionerContextBase
         {
             if (parent == null)
@@ -83,6 +96,7 @@ namespace HarshPoint.Shellploy
             }
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(HarshProvisionerCmdlet));
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(HarshProvisionerCmdlet));
     }
 }

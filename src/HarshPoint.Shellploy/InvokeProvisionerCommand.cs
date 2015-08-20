@@ -16,11 +16,13 @@ namespace HarshPoint.Shellploy
             using (var clientContext = CreateClientContext())
             {
                 var context = new HarshProvisionerContext(clientContext);
+                    //.WithOutputSink(new PowerShellOutputSink(this));
+
+                var provisioner = new HarshProvisioner();
+                AddChildren(provisioner, Children);
+
                 try
                 {
-                    var provisioner = new HarshProvisioner();
-                    AddChildren(provisioner, Children);
-
                     provisioner.ProvisionAsync(context).Wait();
                 }
                 catch (AggregateException ex)
