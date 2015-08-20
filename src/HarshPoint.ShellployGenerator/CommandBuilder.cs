@@ -26,6 +26,7 @@ namespace HarshPoint.ShellployGenerator
 
             foreach (var grouping in Metadata.PropertyParameters)
             {
+                var property = grouping.Key;
                 var parameters = grouping.AsEnumerable();
 
                 if (parameters.Any(p => p.IsCommonParameter))
@@ -37,9 +38,14 @@ namespace HarshPoint.ShellployGenerator
                     .Select(CreateParameterAttribute)
                     .ToArray();
 
-                Parameter(grouping.Key.Name).Synthesize(
-                    grouping.Key.PropertyInfo,
-                    attributes
+                SetParameter(
+                    property.Name,
+                    isPositional: false,
+                    parameter: new CommandParameterSynthesized(
+                        property.PropertyType,
+                        Metadata.ObjectType,
+                        attributes
+                    )
                 );
             }
         }
@@ -84,11 +90,6 @@ namespace HarshPoint.ShellployGenerator
         )
             => GetParameterFactory(name, isPositional: true);
 
-        public ShellployCommand ToCommand()
-        {
-            return ToCommand(new Dictionary<Type, ICommandBuilder>());
-        }
-
         public IEnumerable<ShellployCommandProperty> GetProperties(
             IReadOnlyDictionary<Type, ICommandBuilder> builders
         )
@@ -109,26 +110,45 @@ namespace HarshPoint.ShellployGenerator
                 )
                 .ToArray();
 
+            SetValueFromPipelineByPropertyName(properties);
+            AssignParameterPositions(properties);
+
+            return properties;
+        }
+
+        private static void SetValueFromPipelineByPropertyName(
+            IEnumerable<ShellployCommandProperty> properties
+        )
+        {
+            var attrs = from prop in properties
+                        where !prop.IsInputObject
+                        from attr in prop.ParameterAttributes
+                        select attr;
+
+            foreach (var attr in attrs)
+            {
+                attr.NamedArguments["ValueFromPipelineByPropertyName"] = true;
+            }
+        }
+
+        private static void AssignParameterPositions(
+            IEnumerable<ShellployCommandProperty> properties
+        )
+        {
             var currentPosition = 0;
 
             foreach (var prop in properties.Where(p => p.IsPositional))
             {
-                var parameterAttributes = prop.Attributes.Where(
-                    a => a.AttributeType == typeof(SMA.ParameterAttribute)
-                );
-
-                foreach (var attr in parameterAttributes)
+                foreach (var attr in prop.ParameterAttributes)
                 {
                     attr.NamedArguments["Position"] = currentPosition;
                 }
 
                 currentPosition++;
             }
-
-            return properties;
         }
 
-        public IEnumerable<Type> GetParentProvisionerTypes(
+        public ImmutableList<Type> GetParentProvisionerTypes(
             IReadOnlyDictionary<Type, ICommandBuilder> builders
         )
         {
@@ -136,31 +156,37 @@ namespace HarshPoint.ShellployGenerator
 
             if (parentBuilder != null)
             {
-                return parentBuilder.GetParentProvisionerTypes(builders)
-                    .Concat(new[] { parentBuilder.ProvisionerType });
+                return parentBuilder
+                    .GetParentProvisionerTypes(builders)
+                    .Add(parentBuilder.ProvisionerType);
             }
 
-            return new Type[0];
+            return ImmutableList<Type>.Empty;
         }
+
+        public ShellployCommand ToCommand()
+            => ToCommand(null);
 
         public ShellployCommand ToCommand(
             IReadOnlyDictionary<Type, ICommandBuilder> builders
         )
         {
+            if (builders == null)
+            {
+                builders = ImmutableDictionary<Type, ICommandBuilder>.Empty;
+            }
+
             var properties = GetProperties(builders);
 
             var verb = SMA.VerbsCommon.New;
             var noun = ProvisionerType.Name;
-
 
             return new ShellployCommand
             {
                 Aliases = Aliases.ToImmutableArray(),
                 ClassName = $"{verb}{noun}Command",
                 ContextType = Metadata.ContextType,
-                HasInputObject = properties
-                    .Select(p => p.PropertyName)
-                    .Contains(ShellployCommand.InputObjectPropertyName),
+                HasInputObject = properties.Any(p => p.IsInputObject),
                 Name = $"{verb}-{noun}",
                 Namespace = Namespace,
                 Noun = noun,

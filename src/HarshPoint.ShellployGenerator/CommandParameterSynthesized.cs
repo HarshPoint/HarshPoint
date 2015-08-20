@@ -33,11 +33,6 @@ namespace HarshPoint.ShellployGenerator
                     new AttributeData(typeof(SMA.ParameterAttribute))
                 );
             }
-
-            foreach (var attr in Attributes.Where(IsParameterAttribute))
-            {
-                attr.NamedArguments["ValueFromPipelineByPropertyName"] = true;
-            }
         }
 
         public IReadOnlyList<AttributeData> Attributes { get; }
@@ -66,6 +61,7 @@ namespace HarshPoint.ShellployGenerator
             {
                 return this;
             }
+
             AppendThisTo(previous);
 
             Name = previous.Name;

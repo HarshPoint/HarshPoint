@@ -1,10 +1,5 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reflection;
 using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator
@@ -46,36 +41,6 @@ namespace HarshPoint.ShellployGenerator
         public CommandParameterFactory<TProvisioner> SetFixedValue(Object value)
         {
             Set(new CommandParameterFixed(value));
-            return this;
-        }
-
-        public CommandParameterFactory<TProvisioner> Synthesize(Type parameterType)
-        {
-            Synthesize(parameterType, new AttributeData[0]);
-            return this;
-        }
-
-        public CommandParameterFactory<TProvisioner> Synthesize(
-            PropertyInfo property,
-            params AttributeData[] attributeData
-        )
-        {
-            if (property == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(property));
-            }
-
-            if (attributeData == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(attributeData));
-            }
-
-            Set(new CommandParameterSynthesized(
-                property.PropertyType,
-                property.DeclaringType,
-                attributeData
-            ));
-
             return this;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace HarshPoint.ShellployGenerator
 {
@@ -15,7 +16,7 @@ namespace HarshPoint.ShellployGenerator
             IReadOnlyDictionary<Type, ICommandBuilder> builders
         );
 
-        IEnumerable<Type> GetParentProvisionerTypes(
+        ImmutableList<Type> GetParentProvisionerTypes(
             IReadOnlyDictionary<Type, ICommandBuilder> builders
         );
     }

@@ -105,6 +105,7 @@
     <Compile Include="Provisioning\HarshModifyFieldMultilineText.cs" />
     <Compile Include="Provisioning\HarshProvisionerOutputSink.cs" />
     <Compile Include="Provisioning\HarshProvisionerOutput.cs" />
+    <Compile Include="Provisioning\Implementation\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectUpdater.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectUpdater_Builder`2.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyValueSource.cs" />
@@ -118,7 +119,6 @@
     <Compile Include="Provisioning\Output\IdentifiedOutputBase.cs" />
     <Compile Include="Provisioning\Output\ObjectAlreadyExists.cs" />
     <Compile Include="Provisioning\Output\ObjectAdded.cs" />
-    <Compile Include="Provisioning\Implementation\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectIdentifierResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectManualResolver.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectNestedResolveBuilder.cs" />
