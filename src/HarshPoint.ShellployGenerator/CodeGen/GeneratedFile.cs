@@ -11,19 +11,23 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
         public virtual void Write(CodeGeneratorContext context)
         {
-            using (var writer = OpenFile(context))
-            {
-                Write(writer);
-            }
-        }
-
-        protected TextWriter OpenFile(CodeGeneratorContext context)
-        {
             if (context == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
+            var path = GetFilePath(context);
+
+            Logger.Information("Generating {path}...", path);
+
+            using (var writer = File.CreateText(path))
+            {
+                Write(writer);
+            }
+        }
+
+        private string GetFilePath(CodeGeneratorContext context)
+        {
             if (FileName == null)
             {
                 throw Logger.Fatal.InvalidOperation(
@@ -36,10 +40,11 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 FileName
             );
 
-            return File.CreateText(path);
+            return path;
         }
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(GeneratedFile));
+
     }
 }

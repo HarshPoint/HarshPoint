@@ -21,6 +21,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             var aliases = ImmutableDictionary.CreateRange(
                 from cmd in Commands
                 from alias in cmd.Aliases
+                orderby alias
                 select new KeyValuePair<String, ShellployCommand>(
                     alias, cmd
                 )

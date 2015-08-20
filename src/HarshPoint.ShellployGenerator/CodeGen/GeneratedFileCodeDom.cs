@@ -1,5 +1,4 @@
 ﻿using Microsoft.CSharp;
-using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
@@ -42,7 +41,6 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 writer,
                 CodeGeneratorOptions
             );
-            
         }
 
         protected abstract CodeCompileUnit Generate();

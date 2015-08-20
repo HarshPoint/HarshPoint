@@ -1,5 +1,6 @@
 ﻿using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.ShellployGenerator.CodeGen;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +21,10 @@ namespace HarshPoint.ShellployGenerator
                 return 2;
             }
 
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
+
             try
             {
                 var commands = CreateCommands();
@@ -37,8 +42,8 @@ namespace HarshPoint.ShellployGenerator
             }
             catch (Exception exc)
             {
-                Console.Error.WriteLine(exc);
-                return 1;
+                Log.Fatal(exc, "Unhandled exception");
+                throw;
             }
         }
 
@@ -71,9 +76,11 @@ namespace HarshPoint.ShellployGenerator
 
             if (directory.Exists)
             {
+                Log.Warning("Recursively deleting {path}", path);
                 directory.Delete(recursive: true);
             }
 
+            Log.Information("Creating directory {path}", path);
             directory.Create();
             return directory;
         }
