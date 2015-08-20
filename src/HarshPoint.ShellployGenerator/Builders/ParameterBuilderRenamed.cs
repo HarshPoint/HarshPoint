@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class CommandParameterRenamed : CommandParameter
+    internal sealed class ParameterBuilderRenamed : ParameterBuilder
     {
-        internal CommandParameterRenamed(String propertyName)
+        internal ParameterBuilderRenamed(String propertyName)
         {
             PropertyName = propertyName;
         }

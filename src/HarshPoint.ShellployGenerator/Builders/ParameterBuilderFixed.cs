@@ -1,10 +1,10 @@
 using System;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class CommandParameterFixed : CommandParameter
+    internal sealed class ParameterBuilderFixed : ParameterBuilder
     {
-        internal CommandParameterFixed(Object value)
+        internal ParameterBuilderFixed(Object value)
         {
             Value = value;
         }

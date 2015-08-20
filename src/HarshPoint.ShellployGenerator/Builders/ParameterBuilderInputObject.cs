@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class CommandParameterInputObject : CommandParameter
+    internal sealed class ParameterBuilderInputObject : ParameterBuilder
     {
         internal override void Process(ShellployCommandProperty property)
         {

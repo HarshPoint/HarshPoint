@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
     internal interface ICommandBuilder
     {

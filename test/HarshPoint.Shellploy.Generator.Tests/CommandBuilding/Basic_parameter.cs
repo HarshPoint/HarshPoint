@@ -1,6 +1,7 @@
 using HarshPoint;
 using HarshPoint.Provisioning;
 using HarshPoint.ShellployGenerator;
+using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
 using System;
 using Xunit;

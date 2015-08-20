@@ -5,10 +5,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 using SMA = System.Management.Automation;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
     internal class CommandBuilder<TProvisioner> : ICommandBuilder
         where TProvisioner : HarshProvisionerBase
@@ -17,8 +16,8 @@ namespace HarshPoint.ShellployGenerator
 
         private Int32 _nextPositionalParam;
 
-        private ImmutableDictionary<String, CommandParameter> _parameters
-            = ImmutableDictionary<String, CommandParameter>.Empty;
+        private ImmutableDictionary<String, ParameterBuilder> _parameters
+            = ImmutableDictionary<String, ParameterBuilder>.Empty;
 
         public CommandBuilder()
         {
@@ -34,7 +33,7 @@ namespace HarshPoint.ShellployGenerator
 
                 var attributes = parameters.Select(CreateParameterAttribute);
 
-                var synthesized = new CommandParameterSynthesized(
+                var synthesized = new ParameterBuilderSynthesized(
                     property.Name,
                     property.PropertyType,
                     Metadata.ObjectType,
@@ -67,20 +66,20 @@ namespace HarshPoint.ShellployGenerator
             action(result);
         }
 
-        public CommandParameterFactory<TProvisioner> Parameter(
+        public ParameterBuilderFactory<TProvisioner> Parameter(
             Expression<Func<TProvisioner, Object>> expression
         )
             => GetParameterFactory(expression);
 
-        public CommandParameterFactory<TProvisioner> Parameter(String name)
+        public ParameterBuilderFactory<TProvisioner> Parameter(String name)
             => GetParameterFactory(name);
 
-        public CommandParameterFactory<TProvisioner> PositionalParameter(
+        public ParameterBuilderFactory<TProvisioner> PositionalParameter(
             Expression<Func<TProvisioner, Object>> expression
         )
             => GetParameterFactory(expression, isPositional: true);
 
-        public CommandParameterFactory<TProvisioner> PositionalParameter(
+        public ParameterBuilderFactory<TProvisioner> PositionalParameter(
             String name
         )
             => GetParameterFactory(name, isPositional: true);
@@ -98,9 +97,9 @@ namespace HarshPoint.ShellployGenerator
             if (HasInputObject)
             {
                 parametersSorted.Add(
-                    new CommandParameterInputObject().CreateFrom(
-                        new CommandParameterSynthesized(
-                            CommandParameterInputObject.Name,
+                    new ParameterBuilderInputObject().CreateFrom(
+                        new ParameterBuilderSynthesized(
+                            ParameterBuilderInputObject.Name,
                             typeof(Object)
                         )
                     )
@@ -176,7 +175,7 @@ namespace HarshPoint.ShellployGenerator
 
         internal void SetParameter(
             String name,
-            CommandParameter parameter
+            ParameterBuilder parameter
         )
         {
             ValidateParameterName(name);
@@ -211,7 +210,7 @@ namespace HarshPoint.ShellployGenerator
             }
         }
 
-        private CommandParameterFactory<TProvisioner> GetParameterFactory(
+        private ParameterBuilderFactory<TProvisioner> GetParameterFactory(
             Expression<Func<TProvisioner, Object>> expression,
             Boolean isPositional = false
         )
@@ -225,7 +224,7 @@ namespace HarshPoint.ShellployGenerator
             return GetParameterFactory(name, isPositional);
         }
 
-        private CommandParameterFactory<TProvisioner> GetParameterFactory(
+        private ParameterBuilderFactory<TProvisioner> GetParameterFactory(
             String name,
             Boolean isPositional = false
         )
@@ -239,13 +238,13 @@ namespace HarshPoint.ShellployGenerator
             {
                 SetParameter(
                     name,
-                    new CommandParameterPositional(_nextPositionalParam)
+                    new ParameterBuilderPositional(_nextPositionalParam)
                 );
 
                 _nextPositionalParam++;
             }
 
-            return new CommandParameterFactory<TProvisioner>(
+            return new ParameterBuilderFactory<TProvisioner>(
                 this,
                 name
             );
@@ -322,11 +321,11 @@ namespace HarshPoint.ShellployGenerator
             return data;
         }
 
-        private static CommandParameter SetValueFromPipelineByPropertyName(
-            CommandParameter parameter
+        private static ParameterBuilder SetValueFromPipelineByPropertyName(
+            ParameterBuilder parameter
         )
         {
-            var namedArg = new CommandParameterWithNamedArgument(
+            var namedArg = new ParameterBuilderAttributeNamedArgument(
                 typeof(SMA.ParameterAttribute),
                 "ValueFromPipelineByPropertyName",
                 true

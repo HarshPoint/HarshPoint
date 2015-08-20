@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class CommandParameterPositional : CommandParameter
+    internal sealed class ParameterBuilderPositional : ParameterBuilder
     {
-        public CommandParameterPositional(Int32 sortOrder)
+        public ParameterBuilderPositional(Int32 sortOrder)
         {
             SortOrder = sortOrder;
         }

@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
     internal class ChildCommandBuilder<TProvisioner, TParent> :
         IChildCommandBuilder

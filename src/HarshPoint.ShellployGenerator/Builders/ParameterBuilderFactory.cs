@@ -2,12 +2,12 @@
 using System;
 using SMA = System.Management.Automation;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class CommandParameterFactory<TProvisioner>
+    internal sealed class ParameterBuilderFactory<TProvisioner>
         where TProvisioner : HarshProvisionerBase
     {
-        internal CommandParameterFactory(
+        internal ParameterBuilderFactory(
             CommandBuilder<TProvisioner> builder,
             String name
         )
@@ -18,32 +18,32 @@ namespace HarshPoint.ShellployGenerator
 
         public String Name { get; }
 
-        public CommandParameterFactory<TProvisioner> Ignore()
+        public ParameterBuilderFactory<TProvisioner> Ignore()
         {
-            Set(new CommandParameterIgnored());
+            Set(new ParameterBuilderIgnored());
             return this;
         }
 
-        public CommandParameterFactory<TProvisioner> Rename(String propertyName)
+        public ParameterBuilderFactory<TProvisioner> Rename(String propertyName)
         {
             Builder.ValidateParameterName(propertyName);
-            Set(new CommandParameterRenamed(propertyName));
+            Set(new ParameterBuilderRenamed(propertyName));
             return this;
         }
 
-        public CommandParameterFactory<TProvisioner> SetDefaultValue(Object value)
+        public ParameterBuilderFactory<TProvisioner> SetDefaultValue(Object value)
         {
-            Set(new CommandParameterDefaultValue(value));
+            Set(new ParameterBuilderDefaultValue(value));
             return this;
         }
 
-        public CommandParameterFactory<TProvisioner> SetFixedValue(Object value)
+        public ParameterBuilderFactory<TProvisioner> SetFixedValue(Object value)
         {
-            Set(new CommandParameterFixed(value));
+            Set(new ParameterBuilderFixed(value));
             return this;
         }
 
-        public CommandParameterFactory<TProvisioner> SynthesizeMandatory(
+        public ParameterBuilderFactory<TProvisioner> SynthesizeMandatory(
             Type parameterType
         )
         {
@@ -60,7 +60,7 @@ namespace HarshPoint.ShellployGenerator
                 }
             );
         }
-        public CommandParameterFactory<TProvisioner> Synthesize(
+        public ParameterBuilderFactory<TProvisioner> Synthesize(
             Type parameterType,
             params AttributeData[] attributeData
         )
@@ -75,7 +75,7 @@ namespace HarshPoint.ShellployGenerator
                 throw Logger.Fatal.ArgumentNull(nameof(attributeData));
             }
 
-            Set(new CommandParameterSynthesized(
+            Set(new ParameterBuilderSynthesized(
                 Name,
                 parameterType, 
                 attributes: attributeData
@@ -86,12 +86,12 @@ namespace HarshPoint.ShellployGenerator
 
         private CommandBuilder<TProvisioner> Builder { get; }
 
-        private void Set(CommandParameter parameter)
+        private void Set(ParameterBuilder parameter)
         {
             Builder.SetParameter(Name, parameter);
         }
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(CommandParameterFactory<>));
+            = HarshLog.ForContext(typeof(ParameterBuilderFactory<>));
     }
 }

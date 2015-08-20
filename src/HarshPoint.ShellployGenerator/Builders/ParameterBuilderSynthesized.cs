@@ -5,11 +5,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using SMA = System.Management.Automation;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class CommandParameterSynthesized : CommandParameter
+    internal sealed class ParameterBuilderSynthesized : ParameterBuilder
     {
-        internal CommandParameterSynthesized(
+        internal ParameterBuilderSynthesized(
             String name,
             Type type,
             Type provisionerType = null,
@@ -57,7 +57,7 @@ namespace HarshPoint.ShellployGenerator
                 }
             );
 
-        internal override CommandParameter CreateFrom(CommandParameter previous)
+        internal override ParameterBuilder CreateFrom(ParameterBuilder previous)
         {
             if (previous == null)
             {
@@ -70,9 +70,9 @@ namespace HarshPoint.ShellployGenerator
             return previous;
         }
 
-        private void AppendThisTo(CommandParameter appendTo)
+        private void AppendThisTo(ParameterBuilder appendTo)
         {
-            if (appendTo is CommandParameterSynthesized)
+            if (appendTo is ParameterBuilderSynthesized)
             {
                 throw Logger.Fatal.InvalidOperation(
                     SR.CommandParameterSynthesized_AttemptedToNest
@@ -81,7 +81,7 @@ namespace HarshPoint.ShellployGenerator
 
             while (appendTo.Previous != null)
             {
-                if (appendTo is CommandParameterSynthesized)
+                if (appendTo is ParameterBuilderSynthesized)
                 {
                     throw Logger.Fatal.InvalidOperation(
                         SR.CommandParameterSynthesized_AttemptedToNest
@@ -98,6 +98,6 @@ namespace HarshPoint.ShellployGenerator
             => data.AttributeType == typeof(SMA.ParameterAttribute);
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext<CommandParameterSynthesized>();
+            = HarshLog.ForContext<ParameterBuilderSynthesized>();
     }
 }

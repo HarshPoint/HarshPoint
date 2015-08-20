@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class CommandParameterWithNamedArgument : CommandParameter
+    internal sealed class ParameterBuilderAttributeNamedArgument : ParameterBuilder
     {
-        public CommandParameterWithNamedArgument(
+        public ParameterBuilderAttributeNamedArgument(
             Type attributeType, 
             String name, 
             Object value

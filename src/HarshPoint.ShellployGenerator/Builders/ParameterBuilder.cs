@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal abstract class CommandParameter
+    internal abstract class ParameterBuilder
     {
-        internal CommandParameter Previous { get; set; }
+        internal ParameterBuilder Previous { get; set; }
 
         internal Int32? SortOrder { get; set; }
 
@@ -31,7 +31,7 @@ namespace HarshPoint.ShellployGenerator
         {
         }
 
-        internal virtual CommandParameter CreateFrom(CommandParameter previous)
+        internal virtual ParameterBuilder CreateFrom(ParameterBuilder previous)
         {
             if (previous != null)
             {
