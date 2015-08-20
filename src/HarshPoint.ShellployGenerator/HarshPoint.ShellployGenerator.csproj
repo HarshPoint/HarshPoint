@@ -111,10 +111,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeData.cs" />
-    <Compile Include="AttributeDataCodeDom.cs" />
-    <Compile Include="CodeLiteralExpression.cs" />
-    <Compile Include="CommandCodeGenerator.cs" />
-    <Compile Include="CodeDomExtensions.cs" />
+    <Compile Include="Builders\CommandBuilder_ICommandBuilder.cs" />
+    <Compile Include="CodeGen\AttributeDataCodeDom.cs" />
+    <Compile Include="CodeGen\CodeLiteralExpression.cs" />
+    <Compile Include="CodeGen\CommandCodeGenerator.cs" />
+    <Compile Include="CodeGen\CodeDomExtensions.cs" />
     <Compile Include="Builders\ParameterBuilderFactory.cs" />
     <Compile Include="Builders\ParameterBuilderIgnored.cs" />
     <Compile Include="Builders\ParameterBuilderInputObject.cs" />
@@ -146,7 +147,7 @@
     <Compile Include="ShellployCommandProperty.cs" />
     <Compile Include="Commands\BuildContentType.cs" />
     <Compile Include="Builders\CommandBuilderContext.cs" />
-    <Compile Include="SourceFileWriter.cs" />
+    <Compile Include="CodeGen\SourceFileWriter.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -8,9 +8,12 @@ namespace HarshPoint.ShellployGenerator.Builders
         public ParameterBuilderAttributeNamedArgument(
             Type attributeType, 
             String name, 
-            Object value
+            Object value,
+            ParameterBuilder previous
         )
         {
+            InitializeFrom(previous);
+
             AttributeType = attributeType;
             Name = name;
             Value = value;

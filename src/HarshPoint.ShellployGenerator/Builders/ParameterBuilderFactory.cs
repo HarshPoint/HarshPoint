@@ -5,7 +5,6 @@ using SMA = System.Management.Automation;
 namespace HarshPoint.ShellployGenerator.Builders
 {
     internal sealed class ParameterBuilderFactory<TProvisioner>
-        where TProvisioner : HarshProvisionerBase
     {
         internal ParameterBuilderFactory(
             CommandBuilder<TProvisioner> builder,

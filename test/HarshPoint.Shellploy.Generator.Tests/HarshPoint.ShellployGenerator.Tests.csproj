@@ -76,6 +76,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandBuilding\CommandBuilderExtensions.cs" />
     <Compile Include="CommandBuilding\Synthesized_parameter.cs" />
     <Compile Include="CommandBuilding\Fails_when.cs" />
     <Compile Include="CommandBuilding\Positional_parameters.cs" />

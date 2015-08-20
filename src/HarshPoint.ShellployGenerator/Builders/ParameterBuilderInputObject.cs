@@ -4,6 +4,11 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     internal sealed class ParameterBuilderInputObject : ParameterBuilder
     {
+        public ParameterBuilderInputObject(ParameterBuilder previous)
+        {
+            InitializeFrom(previous);
+        }
+
         internal override void Process(ShellployCommandProperty property)
         {
             property.IsInputObject = true;

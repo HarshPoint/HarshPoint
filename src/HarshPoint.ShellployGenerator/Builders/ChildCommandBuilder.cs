@@ -9,8 +9,6 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     internal class ChildCommandBuilder<TProvisioner, TParent> :
         IChildCommandBuilder
-        where TProvisioner : HarshProvisionerBase
-        where TParent : HarshProvisionerBase
     {
         private ImmutableDictionary<String, Object> _fixedParameters
             = ImmutableDictionary<String, Object>.Empty;

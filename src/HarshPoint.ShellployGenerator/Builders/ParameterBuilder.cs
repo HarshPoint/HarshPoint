@@ -33,13 +33,17 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         internal virtual ParameterBuilder CreateFrom(ParameterBuilder previous)
         {
+            InitializeFrom(previous);
+            return this;
+        }
+
+        internal virtual void InitializeFrom(ParameterBuilder previous)
+        {
             if (previous != null)
             {
                 Previous = previous;
                 SortOrder = SortOrder ?? previous.SortOrder;
             }
-
-            return this;
         }
     }
 }

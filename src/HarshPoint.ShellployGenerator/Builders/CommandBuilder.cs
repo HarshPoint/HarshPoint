@@ -9,8 +9,7 @@ using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal class CommandBuilder<TProvisioner> : ICommandBuilder
-        where TProvisioner : HarshProvisionerBase
+    internal partial class CommandBuilder<TProvisioner>
     {
         private IChildCommandBuilder _childBuilder;
 
@@ -59,7 +58,6 @@ namespace HarshPoint.ShellployGenerator.Builders
         public void AsChildOf<TParent>(
             Action<ChildCommandBuilder<TProvisioner, TParent>> action
         )
-            where TParent : HarshProvisionerBase
         {
             var result = new ChildCommandBuilder<TProvisioner, TParent>();
             _childBuilder = result;
@@ -83,93 +81,6 @@ namespace HarshPoint.ShellployGenerator.Builders
             String name
         )
             => GetParameterFactory(name, isPositional: true);
-
-        public IEnumerable<ShellployCommandProperty> GetProperties(
-            CommandBuilderContext context
-        )
-        {
-            var parametersSorted =
-                _parameters.Values
-                .OrderBy(param => param.SortOrder ?? Int32.MaxValue)
-                .Select(SetValueFromPipelineByPropertyName)
-                .ToList();
-
-            if (HasInputObject)
-            {
-                parametersSorted.Add(
-                    new ParameterBuilderInputObject().CreateFrom(
-                        new ParameterBuilderSynthesized(
-                            ParameterBuilderInputObject.Name,
-                            typeof(Object)
-                        )
-                    )
-                );
-            }
-
-            var parentProperties = GetParentProperties(context);
-
-            var myProperties = parametersSorted
-                .SelectMany(p => p.Synthesize());
-
-            var allProperties = parentProperties
-                .Concat(myProperties)
-                .ToArray();
-
-            AssignParameterPositions(allProperties);
-
-            return myProperties;
-        }
-
-        public ImmutableList<Type> GetParentProvisionerTypes(
-            CommandBuilderContext context
-        )
-        {
-            var parentBuilder = GetParentBuilder(context);
-
-            if (parentBuilder != null)
-            {
-                return parentBuilder
-                    .GetParentProvisionerTypes(context)
-                    .Add(parentBuilder.ProvisionerType);
-            }
-
-            return ImmutableList<Type>.Empty;
-        }
-
-        public ShellployCommand ToCommand()
-            => ToCommand(null);
-
-        public ShellployCommand ToCommand(CommandBuilderContext context)
-        {
-            if (context == null)
-            {
-                context = new CommandBuilderContext();
-            }
-
-            var properties = GetProperties(context);
-
-            var verb = SMA.VerbsCommon.New;
-            var noun = ProvisionerType.Name;
-
-            return new ShellployCommand
-            {
-                Aliases = Aliases.ToImmutableArray(),
-                ClassName = $"{verb}{noun}Command",
-                ContextType = Metadata.ContextType,
-                HasInputObject = properties.Any(p => p.IsInputObject),
-                Name = $"{verb}-{noun}",
-                Namespace = Namespace,
-                Noun = noun,
-                Properties = properties.ToImmutableArray(),
-                ParentProvisionerTypes = GetParentProvisionerTypes(context),
-                ProvisionerType = ProvisionerType,
-                Usings = ImportedNamespaces.ToImmutableArray(),
-                Verb = Tuple.Create(
-                    typeof(SMA.VerbsCommon),
-                    nameof(SMA.VerbsCommon.New)
-                ),
-            };
-        }
 
         internal void SetParameter(
             String name,
@@ -248,41 +159,6 @@ namespace HarshPoint.ShellployGenerator.Builders
             );
         }
 
-        private ICommandBuilder GetParentBuilder(CommandBuilderContext context)
-        {
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
-            if (_childBuilder == null)
-            {
-                return null;
-            }
-
-            return context.GetBuilder(_childBuilder.ProvisionerType);
-        }
-
-        private IEnumerable<ShellployCommandProperty> GetParentProperties(
-            CommandBuilderContext context
-        )
-        {
-            if (_childBuilder != null)
-            {
-                var parentBuilder = GetParentBuilder(context);
-
-                var parentProperties = parentBuilder.GetProperties(
-                    context
-                );
-
-                return _childBuilder.Process(
-                    parentProperties
-                );
-            }
-
-            return Enumerable.Empty<ShellployCommandProperty>();
-        }
-
         private static void AssignParameterPositions(
             IEnumerable<ShellployCommandProperty> properties
         )
@@ -320,15 +196,12 @@ namespace HarshPoint.ShellployGenerator.Builders
         private static ParameterBuilder SetValueFromPipelineByPropertyName(
             ParameterBuilder parameter
         )
-        {
-            var namedArg = new ParameterBuilderAttributeNamedArgument(
+            => new ParameterBuilderAttributeNamedArgument(
                 typeof(SMA.ParameterAttribute),
                 "ValueFromPipelineByPropertyName",
-                true
+                true,
+                parameter
             );
-
-            return namedArg.CreateFrom(parameter);
-        }
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(CommandBuilder<>));
