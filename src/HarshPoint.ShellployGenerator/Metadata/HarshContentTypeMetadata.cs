@@ -7,9 +7,9 @@ namespace HarshPoint.ShellployGenerator
     {
         public HarshContentTypeMetadata()
         {
-            AddPositionalParameter(x => x.Id);
-            AddPositionalParameter(x => x.Name);
-            HasChildren();
+            PositionalParameter(x => x.Id);
+            PositionalParameter(x => x.Name);
+            HasInputObject = true;
         }
     }
 }

@@ -10,9 +10,9 @@ namespace HarshPoint.ShellployGenerator
     {
         public HarshFieldRefMetadata()
         {
-            AddNamedParameter<String>("InternalName");
+            Parameter("InternalName").Synthesize(typeof(String));
 
-            SetParameterValue(x => x.Fields,
+            Parameter(x => x.Fields).SetFixedValue(
                 new CodeTypeReferenceExpression(typeof(Resolve))
                     .Call(nameof(Resolve.Field))
                     .Call(nameof(Resolve.ByInternalName), new CodeVariableReferenceExpression("InternalName"))

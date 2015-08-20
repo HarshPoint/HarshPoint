@@ -34,10 +34,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .GenericTypeArguments
                 .First();
 
-            ParameterProperties = Parameters
-                .Select(p => p.PropertyAccessor)
-                .Distinct()
-                .ToImmutableArray();
+            PropertyParameters = Parameters.ToLookup(p => p.PropertyAccessor);
 
             DefaultParameterSet = ParameterSets.Single(set => set.IsDefault);
 
@@ -58,11 +55,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
         }
-        public Type ContextType
-        {
-            get;
-            private set;
-        }
+        public Type ContextType { get; }
 
         public DefaultFromContextPropertyBinder DefaultFromContextPropertyBinder { get; }
 
@@ -73,7 +66,10 @@ namespace HarshPoint.Provisioning.Implementation
 
         public IEnumerable<ParameterSet> ParameterSets { get; }
 
-        public IEnumerable<PropertyAccessor> ParameterProperties { get; }
+        public IEnumerable<PropertyAccessor> ParameterProperties
+            => PropertyParameters.Select(g => g.Key);
+
+        public ILookup<PropertyAccessor, Parameter> PropertyParameters { get; }
 
         public ResolvedPropertyBinder ResolvedPropertyBinder { get; }
 

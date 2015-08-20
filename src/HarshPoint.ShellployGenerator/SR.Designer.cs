@@ -97,6 +97,15 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attempted to nest one CommandParameterSynthesized in another..
+        /// </summary>
+        internal static string CommandParameterSynthesized_AttemptedToNest {
+            get {
+                return ResourceManager.GetString("CommandParameterSynthesized_AttemptedToNest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; is set to use both fixed and default value..
         /// </summary>
         internal static string ShellployCommandBuilder_Fixed_and_default {

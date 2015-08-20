@@ -10,21 +10,33 @@ namespace HarshPoint.ShellployGenerator
     {
         public HarshModifyFieldLookupMetadata()
         {
-            AddNamedParameter<String>("TargetListUrl");
-            AddNamedParameter<String>("TargetField");
-            SetDefaultValue("TargetField", "Title");
-            SetParameterValue(x => x.LookupTarget,
+            AsChildOf<HarshField>(parent =>
+            {
+                parent.SetFixedValue(x => x.Type, FieldType.Lookup);
+                parent.Ignore(x => x.TypeName);
+            });
+
+            Parameter("TargetListUrl")
+                .Synthesize(typeof(String));
+
+#warning let's see if the "wrong" order still works
+
+            Parameter("TargetField")
+                .SetDefaultValue("Title")
+                .Synthesize(typeof(String));
+
+            Parameter(x => x.LookupTarget)
+                .SetFixedValue(
                 new CodeTypeReferenceExpression(typeof(Resolve))
                     .Call(nameof(Resolve.List))
                     .Call(nameof(Resolve.ByUrl), new CodeVariableReferenceExpression("TargetListUrl"))
                     .Call(nameof(Resolve.Field))
                     .Call(nameof(Resolve.ByInternalName), new CodeVariableReferenceExpression("TargetField"))
                     .Call(nameof(ResolveBuilderExtensions.As), typeof(Tuple<List, Field>))
-                );
-            RenameParameter(x => x.Fields, "Field");
-            AsChildOf<HarshField>()
-                .SetValue(x => x.Type, FieldType.Lookup)
-                .IgnoreParameter(x => x.TypeName);
+            );
+
+            Parameter(x => x.Fields)
+                .Rename("Field");
         }
     }
 }

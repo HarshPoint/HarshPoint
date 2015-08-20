@@ -8,10 +8,13 @@ namespace HarshPoint.ShellployGenerator
     {
         public HarshListMetadata()
         {
-            AddPositionalParameter(x => x.Title);
-            AddPositionalParameter(x => x.Url);
-            SetDefaultParameterValue(x => x.TemplateType, ListTemplateType.GenericList);
-            HasChildren();
+            PositionalParameter(x => x.Title);
+            PositionalParameter(x => x.Url);
+
+            Parameter(x => x.TemplateType)
+                .SetDefaultValue(ListTemplateType.GenericList);
+
+            HasInputObject = true;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace HarshPoint.ShellployGenerator
                 .Where(ICommandBuilderTypeInfo.IsAssignableFrom)
                 .Where(type => !type.IsAbstract && !type.ContainsGenericParameters)
                 .Select(Activator.CreateInstance)
-                .Cast<IShellployCommandBuilder>()
+                .Cast<ICommandBuilder>()
                 .ToImmutableDictionary(
                     builder => builder.ProvisionerType
                 );
@@ -26,6 +26,6 @@ namespace HarshPoint.ShellployGenerator
             = HarshLog.ForContext(typeof(ShellployMetadata));
 
         private static readonly TypeInfo ICommandBuilderTypeInfo
-            = typeof(IShellployCommandBuilder).GetTypeInfo();
+            = typeof(ICommandBuilder).GetTypeInfo();
     }
 }

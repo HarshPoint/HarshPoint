@@ -8,9 +8,11 @@ namespace HarshPoint.ShellployGenerator
     {
         public HarshModifyFieldDateTimeMetadata()
         {
-            RenameParameter(x => x.Fields, "Field");
-            AsChildOf<HarshField>()
-               .SetValue(x => x.Type, FieldType.DateTime);
+            AsChildOf<HarshField>(
+                parent => parent.SetFixedValue(x => x.Type, FieldType.DateTime)
+            );
+
+            Parameter(x => x.Fields).Rename("Field");
         }
     }
 }

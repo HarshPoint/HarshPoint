@@ -8,10 +8,13 @@ namespace HarshPoint.ShellployGenerator
     {
         public HarshModifyFieldMultilineTextMetadata()
         {
-            RenameParameter(x => x.Fields, "Field");
+            AsChildOf<HarshField>(p =>
+            {
+                p.SetFixedValue(x => x.Type, FieldType.Note);
+                p.Ignore(x => x.TypeName);
+            });
 
-            AsChildOf<HarshField>()
-                .SetValue(x => x.Type, FieldType.Note);
+            Parameter(x => x.Fields).Rename("Field");
         }
     }
 }

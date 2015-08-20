@@ -75,7 +75,7 @@ namespace HarshPoint.ShellployGenerator
 
             commandClass.Members.AddRange(
                 _command.Properties
-                .Where(p => !p.UseFixedValue)
+                .Where(p => !p.HasFixedValue)
                 .Select(p => CreateProperty(commandClass, p))
                 .ToArray()
             );
@@ -152,8 +152,7 @@ namespace HarshPoint.ShellployGenerator
                 );
                 method.Statements.AddRange(
                     _command.Properties
-                    .Where(prop => prop.AssignmentOnType == type)
-                    .Where(prop => !prop.Custom)
+                    .Where(prop => prop.ProvisionerType == type)
                     .Select(prop => CreatePropertyAssignment(prop, resultVar))
                     .ToArray()
                 );
@@ -168,7 +167,7 @@ namespace HarshPoint.ShellployGenerator
                         )
                     );
                 }
-                else if (_command.HasChildren)
+                else if (_command.HasInputObject)
                 {
                     method.Statements.Add(
                         new CodeMethodInvokeExpression(
@@ -177,7 +176,7 @@ namespace HarshPoint.ShellployGenerator
                             resultVar,
                             new CodePropertyReferenceExpression(
                                 This,
-                                ShellployCommand.ChildrenPropertyName
+                                ShellployCommand.InputObjectPropertyName
                             )
                         )
                     );
@@ -216,10 +215,10 @@ namespace HarshPoint.ShellployGenerator
         {
             CodeExpression valueExpression = new CodePropertyReferenceExpression(
                 This,
-                property.PropertyName ?? property.Name
+                property.PropertyName ?? property.Identifier
             );
 
-            if (property.UseFixedValue)
+            if (property.HasFixedValue)
             {
                 valueExpression = CreateLiteralExpression(property.FixedValue);
             }
@@ -232,7 +231,7 @@ namespace HarshPoint.ShellployGenerator
             return new CodeAssignStatement(
                 new CodePropertyReferenceExpression(
                     resultVar,
-                    property.Name
+                    property.Identifier
                 ),
                 valueExpression
             );
@@ -249,50 +248,25 @@ namespace HarshPoint.ShellployGenerator
 
             var codeProperty = new CodeMemberProperty()
             {
-                Name = property.PropertyName ?? property.Name,
+                Name = property.PropertyName ?? property.Identifier,
                 Type = new CodeTypeReference(type),
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
             };
 
             codeProperty.GenerateBackingField(targetClass, property.DefaultValue);
 
-            foreach (var parameterAttribute in property.ParameterAttributes)
-            {
-                codeProperty.CustomAttributes.Add(
-                    typeof(SMA.ParameterAttribute),
-                    parameterAttribute.GetAttributeArguments()
-                );
-            }
+            codeProperty.CustomAttributes.AddRange(
+                property.Attributes
+                .Select(a => a.ToCodeAttributeDeclaration())
+                .ToArray()
+            );
 
             return codeProperty;
         }
 
         public static CodeExpression CreateLiteralExpression(Object value)
         {
-            var expressionValue = value as CodeExpression;
-
-            if (expressionValue != null)
-            {
-                return expressionValue;
-            }
-
-            var typeValue = value as Type;
-
-            if (typeValue != null)
-            {
-                return new CodeTypeOfExpression(typeValue);
-            }
-
-            var type = value?.GetType();
-            if (type?.IsEnum ?? false)
-            {
-                return new CodeFieldReferenceExpression(
-                    new CodeTypeReferenceExpression(type),
-                    type.GetEnumName(value)
-                );
-            }
-
-            return new CodePrimitiveExpression(value);
+            return CodeLiteralExpression.Create(value);
         }
 
         private static readonly CodeThisReferenceExpression This = new CodeThisReferenceExpression();

@@ -7,7 +7,7 @@ namespace HarshPoint.ShellployGenerator
     {
         public HarshEnableWebFeatureMetadata()
         {
-            AddPositionalParameter(x => x.FeatureId);
+            PositionalParameter(x => x.FeatureId);
         }
     }
 }

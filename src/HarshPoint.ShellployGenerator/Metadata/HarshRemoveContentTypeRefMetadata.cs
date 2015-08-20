@@ -9,15 +9,13 @@ namespace HarshPoint.ShellployGenerator
     {
         public HarshRemoveContentTypeRefMetadata()
         {
-            AddPositionalParameter<HarshContentTypeId[]>(
-                "ContentTypeId",
-                new ShellployCommandPropertyParameterAttribute()
-                {
-                    Mandatory = true,
-                }
+            PositionalParameter("ContentTypeId").SynthesizeMandatory(
+                typeof(HarshContentTypeId[])
             );
-            RenameParameter(x => x.Lists, "List");
-            SetParameterValue(x => x.ContentTypes,
+
+            Parameter(x => x.Lists).Rename("List");
+
+            Parameter(x => x.ContentTypes).SetFixedValue(
                 new CodeTypeReferenceExpression(typeof(Resolve))
                     .Call(nameof(Resolve.ContentType))
                     .Call(nameof(Resolve.ById), new CodeVariableReferenceExpression("ContentTypeId"))

@@ -8,11 +8,11 @@ namespace HarshPoint.ShellployGenerator
 {
     internal class ShellployCommand
     {
-        public const String ChildrenPropertyName = "InputObject";
+        public const String InputObjectPropertyName = "InputObject";
 
         public IEnumerable<String> Aliases { get; set; }
         public String ClassName { get; set; }
-        public Boolean HasChildren { get; set; }
+        public Boolean HasInputObject { get; set; }
         public IEnumerable<Type> ParentProvisionerTypes { get; set; }
         public String Name { get; set; }
         public String Noun { get; set; }
