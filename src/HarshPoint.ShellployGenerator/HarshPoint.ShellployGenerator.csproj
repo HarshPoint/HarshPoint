@@ -123,6 +123,7 @@
     <Compile Include="CommandParameterDefaultValue.cs" />
     <Compile Include="CommandParameterFixed.cs" />
     <Compile Include="CommandParameterRenamed.cs" />
+    <Compile Include="CommandParameterWithNamedArgument.cs" />
     <Compile Include="ICommandBuilder.cs" />
     <Compile Include="CommandParameter.cs" />
     <Compile Include="IChildCommandBuilder.cs" />

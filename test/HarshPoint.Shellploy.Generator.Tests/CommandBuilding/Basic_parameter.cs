@@ -66,7 +66,15 @@ namespace CommandBuilding
         {
             var attr = Assert.Single(Property.Attributes);
             Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
-            Assert.Empty(attr.ConstructorArguments);
+        }
+
+        [Fact]
+        public void Is_ValueFromPipelineByPropertyName()
+        {
+            var attr = Assert.Single(
+                Property.Attributes,
+                a => a.AttributeType == typeof(SMA.ParameterAttribute)
+            );
 
             var namedArg = Assert.Single(attr.NamedArguments);
             Assert.Equal("ValueFromPipelineByPropertyName", namedArg.Key);

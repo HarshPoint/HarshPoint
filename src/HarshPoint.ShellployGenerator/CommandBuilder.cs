@@ -36,19 +36,16 @@ namespace HarshPoint.ShellployGenerator
                     parameters = parameters.Take(1);
                 }
 
-                var attributes = parameters
-                    .Select(CreateParameterAttribute)
-                    .ToArray();
+                var attributes = parameters.Select(CreateParameterAttribute);
 
-                SetParameter(
+                var synthesized = new CommandParameterSynthesized(
                     property.Name,
-                    new CommandParameterSynthesized(
-                        property.Name,
-                        property.PropertyType,
-                        Metadata.ObjectType,
-                        attributes
-                    )
+                    property.PropertyType,
+                    Metadata.ObjectType,
+                    attributes
                 );
+
+                SetParameter(property.Name, synthesized);
             }
         }
 
@@ -99,6 +96,7 @@ namespace HarshPoint.ShellployGenerator
             var parametersSorted =
                 _parameters.Values
                 .OrderBy(param => param.SortOrder ?? Int32.MaxValue)
+                .Select(SetValueFromPipelineByPropertyName)
                 .ToList();
 
             if (HasInputObject)
@@ -122,7 +120,6 @@ namespace HarshPoint.ShellployGenerator
                 .Concat(myProperties)
                 .ToArray();
 
-            SetValueFromPipelineByPropertyName(allProperties);
             AssignParameterPositions(allProperties);
 
             return myProperties;
@@ -295,6 +292,23 @@ namespace HarshPoint.ShellployGenerator
             return Enumerable.Empty<ShellployCommandProperty>();
         }
 
+        private static void AssignParameterPositions(
+            IEnumerable<ShellployCommandProperty> properties
+        )
+        {
+            var currentPosition = 0;
+
+            foreach (var prop in properties.Where(p => p.IsPositional))
+            {
+                foreach (var attr in prop.ParameterAttributes)
+                {
+                    attr.NamedArguments["Position"] = currentPosition;
+                }
+
+                currentPosition++;
+            }
+        }
+
         private static AttributeData CreateParameterAttribute(Parameter param)
         {
             var data = new AttributeData(typeof(SMA.ParameterAttribute));
@@ -312,36 +326,17 @@ namespace HarshPoint.ShellployGenerator
             return data;
         }
 
-        private static void SetValueFromPipelineByPropertyName(
-            IEnumerable<ShellployCommandProperty> properties
+        private static CommandParameter SetValueFromPipelineByPropertyName(
+            CommandParameter parameter
         )
         {
-            var attrs = from prop in properties
-                        where !prop.IsInputObject
-                        from attr in prop.ParameterAttributes
-                        select attr;
+            var namedArg = new CommandParameterWithNamedArgument(
+                typeof(SMA.ParameterAttribute),
+                "ValueFromPipelineByPropertyName",
+                true
+            );
 
-            foreach (var attr in attrs)
-            {
-                attr.NamedArguments["ValueFromPipelineByPropertyName"] = true;
-            }
-        }
-
-        private static void AssignParameterPositions(
-            IEnumerable<ShellployCommandProperty> properties
-        )
-        {
-            var currentPosition = 0;
-
-            foreach (var prop in properties.Where(p => p.IsPositional))
-            {
-                foreach (var attr in prop.ParameterAttributes)
-                {
-                    attr.NamedArguments["Position"] = currentPosition;
-                }
-
-                currentPosition++;
-            }
+            return namedArg.CreateFrom(parameter);
         }
 
         private static readonly HarshLogger Logger
