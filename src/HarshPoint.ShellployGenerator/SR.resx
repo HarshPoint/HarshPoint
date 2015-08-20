@@ -138,6 +138,9 @@
   <data name="CommandParameterSynthesized_AttemptedToNest" xml:space="preserve">
     <value>Attempted to nest one CommandParameterSynthesized in another.</value>
   </data>
+  <data name="GeneratedFile_FileNameNotSet" xml:space="preserve">
+    <value>FileName not set.</value>
+  </data>
   <data name="ShellployCommandBuilder_Fixed_and_default" xml:space="preserve">
     <value>Property '{0}' is set to use both fixed and default value.</value>
   </data>

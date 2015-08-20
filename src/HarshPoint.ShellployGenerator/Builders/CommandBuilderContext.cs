@@ -28,8 +28,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             );
         }
 
-        public IEnumerable<ShellployCommand> BuildCommands()
-            => _builders.Values.Select(b => b.ToCommand(this));
+        public IEnumerable<ICommandBuilder> Builders => _builders.Values;
 
         public ICommandBuilder GetBuilder(Type provisionerType)
         {

@@ -1,5 +1,4 @@
 ﻿using HarshPoint.Provisioning;
-using Microsoft.SharePoint.Client;
 using System;
 using System.CodeDom;
 

@@ -1,5 +1,7 @@
 ﻿using HarshPoint.ShellployGenerator.Builders;
+using HarshPoint.ShellployGenerator.CodeGen;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -20,50 +22,17 @@ namespace HarshPoint.ShellployGenerator
 
             try
             {
-                var writer = new SourceFileWriter(Path.Combine(args[0], "Generated"));
-                var script = File.CreateText(Path.Combine(args[0], "Module", "HarshPoint.ShellPloy.psm1"));
+                var commands = CreateCommands();
+                var files = CreateFiles(commands);
 
-                var context = new CommandBuilderContext();
-                context.AddBuildersFrom(typeof(Program).Assembly);
+                var directory = EnsureDirectoryEmpty(args[0]);
+                var codeGenContext = new CodeGeneratorContext(directory);
 
-                var commands = context.BuildCommands();
-
-                var results = from command in commands
-                              let generator = new CommandCodeGenerator(command)
-
-                              select new
-                              {
-                                  CompileUnit = generator.GenerateCompileUnit(),
-                                  command.Aliases,
-                                  command.ClassName,
-                                  command.Name,
-                              };
-
-                foreach (var command in results)
+                foreach (var file in files)
                 {
-                    Console.WriteLine($"Generating {command.ClassName}...");
-                    writer.Write(command.CompileUnit);
+                    file.Write(codeGenContext);
                 }
 
-                var aliases = from cmd in results
-                              from alias in cmd.Aliases
-                              select Tuple.Create(alias, cmd.Name);
-
-                foreach (var a in aliases)
-                {
-                    script.WriteLine($"Set-Alias -Name {a.Item1} -Value {a.Item2}");
-                }
-
-                script.WriteLine();
-                script.WriteLine("Export-ModuleMember -Alias @(");
-
-                foreach (var a in aliases)
-                {
-                    script.WriteLine($"    '{a.Item1}'");
-                }
-                script.WriteLine(")");
-
-                Console.WriteLine("Done.");
                 return 0;
             }
             catch (Exception exc)
@@ -71,6 +40,42 @@ namespace HarshPoint.ShellployGenerator
                 Console.Error.WriteLine(exc);
                 return 1;
             }
+        }
+
+        private static IEnumerable<GeneratedFile> CreateFiles(
+            ShellployCommand[] commands
+        )
+        {
+            var files = commands
+                .Select(c => new GeneratedFileShellployCommand(c))
+                .Cast<GeneratedFile>()
+                .ToList();
+
+            files.Add(new GeneratedFileAliases(commands));
+            return files;
+        }
+
+        private static ShellployCommand[] CreateCommands()
+        {
+            var builderContext = new CommandBuilderContext();
+            builderContext.AddBuildersFrom(typeof(Program).Assembly);
+
+            return builderContext.Builders
+                .Select(b => b.ToCommand(builderContext))
+                .ToArray();
+        }
+
+        private static DirectoryInfo EnsureDirectoryEmpty(String path)
+        {
+            var directory = new DirectoryInfo(path);
+
+            if (directory.Exists)
+            {
+                directory.Delete(recursive: true);
+            }
+
+            directory.Create();
+            return directory;
         }
     }
 }

@@ -33,7 +33,10 @@ namespace HarshPoint.ShellployGenerator
                 new CodeAttributeDeclaration(
                     new CodeTypeReference(attributeType),
                     parameters.Select(
-                        tuple => new CodeAttributeArgument(tuple.Item1, CommandCodeGenerator.CreateLiteralExpression(tuple.Item2))
+                        tuple => new CodeAttributeArgument(
+                            tuple.Item1, 
+                            CodeLiteralExpression.Create(tuple.Item2)
+                        )
                     ).ToArray()
                 )
             );
@@ -60,11 +63,11 @@ namespace HarshPoint.ShellployGenerator
             => targetObject.Call(methodName, typeParameters, new CodeExpression[0]);
 
         public static CodeExpression Call(
-                    this CodeExpression targetObject,
-                    String methodName,
-                    Type[] typeParameters,
-                    params CodeExpression[] parameters
-                )
+            this CodeExpression targetObject,
+            String methodName,
+            Type[] typeParameters,
+            params CodeExpression[] parameters
+        )
         {
             if (targetObject == null)
             {
@@ -153,7 +156,7 @@ namespace HarshPoint.ShellployGenerator
 
             if (defaultValue != null)
             {
-                codeField.InitExpression = CommandCodeGenerator.CreateLiteralExpression(defaultValue);
+                codeField.InitExpression = CodeLiteralExpression.Create(defaultValue);
             }
 
             CreatePropertyGetterAndSetter(property, codeField.Name, CreateThisExpression(containingType, isStatic));

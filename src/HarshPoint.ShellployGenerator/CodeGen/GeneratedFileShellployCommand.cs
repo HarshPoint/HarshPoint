@@ -6,63 +6,64 @@ using System.Management.Automation;
 using System.Reflection;
 using SMA = System.Management.Automation;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.CodeGen
 {
-    internal class CommandCodeGenerator
+    internal sealed class GeneratedFileShellployCommand : GeneratedFileCodeDom
     {
-        private static readonly String BaseTypeName = "HarshProvisionerCmdlet";
-
-        private ShellployCommand _command;
-
-        public CommandCodeGenerator(ShellployCommand command)
+        public GeneratedFileShellployCommand(ShellployCommand command)
         {
-            _command = command;
+            if (command == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(command));
+            }
+
+            Command = command;
+            FileName = $"{command.ClassName}.cs";
         }
 
-        public CodeCompileUnit GenerateCompileUnit()
-        {
-            return new CodeCompileUnit()
+        public ShellployCommand Command { get; }
+
+        protected override CodeCompileUnit Generate()
+            => new CodeCompileUnit()
             {
                 Namespaces =
                 {
                     CreateNamespace()
                 },
             };
-        }
 
         private CodeNamespace CreateNamespace()
         {
-            var ns = new CodeNamespace(_command.Namespace)
+            var ns = new CodeNamespace(Command.Namespace)
             {
                 Types = { CreateClass() },
             };
 
-            ns.Imports.AddRange(
-                _command.Usings
-                    .Select(n => new CodeNamespaceImport(n))
-                    .ToArray()
-            );
+            var imports = Command.Usings
+                .Select(n => new CodeNamespaceImport(n))
+                .ToArray();
 
+            ns.Imports.AddRange(imports);
             return ns;
         }
 
         private CodeTypeDeclaration CreateClass()
         {
-            var commandClass = new CodeTypeDeclaration(_command.ClassName)
+            var commandClass = new CodeTypeDeclaration(Command.ClassName)
             {
                 CustomAttributes =
                 {
                     {
                         typeof(CmdletAttribute),
                         new CodeFieldReferenceExpression(
-                            new CodeTypeReferenceExpression( _command.Verb.Item1),
-                            _command.Verb.Item2
+                            new CodeTypeReferenceExpression(Command.Verb.Item1),
+                            Command.Verb.Item2
                         ),
-                        _command.Noun
+                        Command.Noun
                     },
                     {
                         typeof(OutputTypeAttribute),
-                        _command.ProvisionerType
+                        Command.ProvisionerType
                     },
                 },
                 IsClass = true,
@@ -74,13 +75,15 @@ namespace HarshPoint.ShellployGenerator
             };
 
             commandClass.Members.AddRange(
-                _command.Properties
+                Command.Properties
                 .Where(p => !p.HasFixedValue)
                 .Select(p => CreateProperty(commandClass, p))
                 .ToArray()
             );
 
-            commandClass.Members.AddRange(CreateProvisionerMethods().ToArray());
+            commandClass.Members.AddRange(
+                CreateProvisionerMethods().ToArray()
+            );
 
             return commandClass;
         }
@@ -102,7 +105,7 @@ namespace HarshPoint.ShellployGenerator
                     ),
                     new CodeMethodInvokeExpression(
                         This,
-                        $"CreateProvisioner{_command.ProvisionerType.Name}"
+                        $"CreateProvisioner{Command.ProvisionerType.Name}"
                     )
                 )
             );
@@ -118,8 +121,8 @@ namespace HarshPoint.ShellployGenerator
             var resultVar = new CodeVariableReferenceExpression("result");
             var innerVar = new CodeVariableReferenceExpression("inner");
 
-            var types = _command.ParentProvisionerTypes
-                .Concat(new Type[] { _command.ProvisionerType })
+            var types = Command.ParentProvisionerTypes
+                .Concat(new Type[] { Command.ProvisionerType })
                 .Reverse()
                 .ToArray();
 
@@ -151,7 +154,7 @@ namespace HarshPoint.ShellployGenerator
                     )
                 );
                 method.Statements.AddRange(
-                    _command.Properties
+                    Command.Properties
                     .Where(prop => prop.ProvisionerType == type)
                     .Select(prop => CreatePropertyAssignment(prop, resultVar))
                     .ToArray()
@@ -167,7 +170,7 @@ namespace HarshPoint.ShellployGenerator
                         )
                     );
                 }
-                else if (_command.HasInputObject)
+                else if (Command.HasInputObject)
                 {
                     method.Statements.Add(
                         new CodeMethodInvokeExpression(
@@ -220,11 +223,15 @@ namespace HarshPoint.ShellployGenerator
 
             if (property.HasFixedValue)
             {
-                valueExpression = CreateLiteralExpression(property.FixedValue);
+                valueExpression = CodeLiteralExpression.Create(
+                    property.FixedValue
+                );
             }
             else if (property.Type == typeof(Boolean))
             {
-                valueExpression = new CodeMethodInvokeExpression(valueExpression, "ToBool");
+                valueExpression = new CodeMethodInvokeExpression(
+                    valueExpression, "ToBool"
+                );
             }
 
 
@@ -237,7 +244,10 @@ namespace HarshPoint.ShellployGenerator
             );
         }
 
-        private static CodeMemberProperty CreateProperty(CodeTypeDeclaration targetClass, ShellployCommandProperty property)
+        private static CodeMemberProperty CreateProperty(
+            CodeTypeDeclaration targetClass, 
+            ShellployCommandProperty property
+        )
         {
             var type = property.Type;
 
@@ -248,12 +258,15 @@ namespace HarshPoint.ShellployGenerator
 
             var codeProperty = new CodeMemberProperty()
             {
-                Name = property.PropertyName ?? property.Identifier,
+                Name = property.PropertyName,
                 Type = new CodeTypeReference(type),
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
             };
 
-            codeProperty.GenerateBackingField(targetClass, property.DefaultValue);
+            codeProperty.GenerateBackingField(
+                targetClass, 
+                property.DefaultValue
+            );
 
             codeProperty.CustomAttributes.AddRange(
                 property.Attributes
@@ -264,13 +277,12 @@ namespace HarshPoint.ShellployGenerator
             return codeProperty;
         }
 
-        public static CodeExpression CreateLiteralExpression(Object value)
-        {
-            return CodeLiteralExpression.Create(value);
-        }
+        private static readonly CodeThisReferenceExpression This
+            = new CodeThisReferenceExpression();
 
-        private static readonly CodeThisReferenceExpression This = new CodeThisReferenceExpression();
+        private static readonly HarshLogger Logger 
+            = HarshLog.ForContext<GeneratedFileShellployCommand>();
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext<CommandCodeGenerator>();
+        private const String BaseTypeName = "HarshProvisionerCmdlet";
     }
 }

@@ -124,6 +124,15 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FileName not set..
+        /// </summary>
+        internal static string GeneratedFile_FileNameNotSet {
+            get {
+                return ResourceManager.GetString("GeneratedFile_FileNameNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; is set to use both fixed and default value..
         /// </summary>
         internal static string ShellployCommandBuilder_Fixed_and_default {

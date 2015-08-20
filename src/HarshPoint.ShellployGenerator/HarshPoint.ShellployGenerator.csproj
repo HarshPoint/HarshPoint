@@ -112,9 +112,9 @@
   <ItemGroup>
     <Compile Include="AttributeData.cs" />
     <Compile Include="Builders\CommandBuilder_ICommandBuilder.cs" />
-    <Compile Include="CodeGen\AttributeDataCodeDom.cs" />
+    <Compile Include="CodeGen\AttributeDataToCodeDom.cs" />
+    <Compile Include="CodeGen\CodeGeneratorContext.cs" />
     <Compile Include="CodeGen\CodeLiteralExpression.cs" />
-    <Compile Include="CodeGen\CommandCodeGenerator.cs" />
     <Compile Include="CodeGen\CodeDomExtensions.cs" />
     <Compile Include="Builders\ParameterBuilderFactory.cs" />
     <Compile Include="Builders\ParameterBuilderIgnored.cs" />
@@ -128,6 +128,9 @@
     <Compile Include="Builders\ICommandBuilder.cs" />
     <Compile Include="Builders\ParameterBuilder.cs" />
     <Compile Include="Builders\IChildCommandBuilder.cs" />
+    <Compile Include="CodeGen\GeneratedFileCodeDom.cs" />
+    <Compile Include="CodeGen\GeneratedFileShellployCommand.cs" />
+    <Compile Include="CodeGen\GeneratedFile.cs" />
     <Compile Include="Commands\BuildEnableWebFeature.cs" />
     <Compile Include="Commands\BuildList.cs" />
     <Compile Include="Commands\BuildFieldRef.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="Commands\HarshPointCommandBuilder.cs" />
     <Compile Include="Commands\BuildRemoveContentTypeRef.cs" />
     <Compile Include="Commands\BuildContentTypeRef.cs" />
+    <Compile Include="CodeGen\GeneratedFileAliases.cs" />
     <Compile Include="ShellployCommand.cs" />
     <Compile Include="Builders\CommandBuilder.cs" />
     <Compile Include="Program.cs" />
@@ -147,7 +151,6 @@
     <Compile Include="ShellployCommandProperty.cs" />
     <Compile Include="Commands\BuildContentType.cs" />
     <Compile Include="Builders\CommandBuilderContext.cs" />
-    <Compile Include="CodeGen\SourceFileWriter.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -172,7 +175,7 @@
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
-    <PostBuildEvent>"$(OutDir)HarshPoint.ShellployGenerator" "$(SolutionDir)src\HarshPoint.Shellploy"</PostBuildEvent>
+    <PostBuildEvent>"$(OutDir)HarshPoint.ShellployGenerator" "$(SolutionDir)src\HarshPoint.Shellploy\Generated"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
