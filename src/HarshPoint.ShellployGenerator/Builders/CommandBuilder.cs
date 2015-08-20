@@ -85,7 +85,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             => GetParameterFactory(name, isPositional: true);
 
         public IEnumerable<ShellployCommandProperty> GetProperties(
-            IReadOnlyDictionary<Type, ICommandBuilder> builders
+            CommandBuilderContext context
         )
         {
             var parametersSorted =
@@ -106,7 +106,7 @@ namespace HarshPoint.ShellployGenerator.Builders
                 );
             }
 
-            var parentProperties = GetParentProperties(builders);
+            var parentProperties = GetParentProperties(context);
 
             var myProperties = parametersSorted
                 .SelectMany(p => p.Synthesize());
@@ -121,15 +121,15 @@ namespace HarshPoint.ShellployGenerator.Builders
         }
 
         public ImmutableList<Type> GetParentProvisionerTypes(
-            IReadOnlyDictionary<Type, ICommandBuilder> builders
+            CommandBuilderContext context
         )
         {
-            var parentBuilder = GetParentBuilder(builders);
+            var parentBuilder = GetParentBuilder(context);
 
             if (parentBuilder != null)
             {
                 return parentBuilder
-                    .GetParentProvisionerTypes(builders)
+                    .GetParentProvisionerTypes(context)
                     .Add(parentBuilder.ProvisionerType);
             }
 
@@ -139,16 +139,14 @@ namespace HarshPoint.ShellployGenerator.Builders
         public ShellployCommand ToCommand()
             => ToCommand(null);
 
-        public ShellployCommand ToCommand(
-            IReadOnlyDictionary<Type, ICommandBuilder> builders
-        )
+        public ShellployCommand ToCommand(CommandBuilderContext context)
         {
-            if (builders == null)
+            if (context == null)
             {
-                builders = ImmutableDictionary<Type, ICommandBuilder>.Empty;
+                context = new CommandBuilderContext();
             }
 
-            var properties = GetProperties(builders);
+            var properties = GetProperties(context);
 
             var verb = SMA.VerbsCommon.New;
             var noun = ProvisionerType.Name;
@@ -163,7 +161,7 @@ namespace HarshPoint.ShellployGenerator.Builders
                 Namespace = Namespace,
                 Noun = noun,
                 Properties = properties.ToImmutableArray(),
-                ParentProvisionerTypes = GetParentProvisionerTypes(builders),
+                ParentProvisionerTypes = GetParentProvisionerTypes(context),
                 ProvisionerType = ProvisionerType,
                 Usings = ImportedNamespaces.ToImmutableArray(),
                 Verb = Tuple.Create(
@@ -250,13 +248,11 @@ namespace HarshPoint.ShellployGenerator.Builders
             );
         }
 
-        private ICommandBuilder GetParentBuilder(
-            IReadOnlyDictionary<Type, ICommandBuilder> builders
-        )
+        private ICommandBuilder GetParentBuilder(CommandBuilderContext context)
         {
-            if (builders == null)
+            if (context == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(builders));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             if (_childBuilder == null)
@@ -264,19 +260,19 @@ namespace HarshPoint.ShellployGenerator.Builders
                 return null;
             }
 
-            return builders[_childBuilder.Type];
+            return context.GetBuilder(_childBuilder.ProvisionerType);
         }
 
         private IEnumerable<ShellployCommandProperty> GetParentProperties(
-            IReadOnlyDictionary<Type, ICommandBuilder> builders
+            CommandBuilderContext context
         )
         {
             if (_childBuilder != null)
             {
-                var parentBuilder = GetParentBuilder(builders);
+                var parentBuilder = GetParentBuilder(context);
 
                 var parentProperties = parentBuilder.GetProperties(
-                    builders
+                    context
                 );
 
                 return _childBuilder.Process(

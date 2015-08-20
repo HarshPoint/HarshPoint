@@ -1,21 +1,20 @@
-﻿using System;
+﻿using HarshPoint.ShellployGenerator.Builders;
+using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace HarshPoint.ShellployGenerator
 {
     internal static class Program
     {
+        private static String ProgramName =>
+            Environment.GetCommandLineArgs().FirstOrDefault();
+
         private static Int32 Main(String[] args)
         {
-            if (!args.Any())
+            if (args.Length != 1)
             {
-                var assemblyFileName = Path.GetFileName(
-                    Assembly.GetEntryAssembly().Location
-                );
-
-                Console.Error.WriteLine($"Usage: {assemblyFileName} outputDirectory");
+                Console.Error.WriteLine($"Usage: {ProgramName} OutputDirectory");
                 return 2;
             }
 
@@ -24,8 +23,10 @@ namespace HarshPoint.ShellployGenerator
                 var writer = new SourceFileWriter(Path.Combine(args[0], "Generated"));
                 var script = File.CreateText(Path.Combine(args[0], "Module", "HarshPoint.ShellPloy.psm1"));
 
-                var assembly = typeof(Program).Assembly;
-                var commands = ShellployMetadata.GetCommands(assembly);
+                var context = new CommandBuilderContext();
+                context.AddBuildersFrom(typeof(Program).Assembly);
+
+                var commands = context.BuildCommands();
 
                 var results = from command in commands
                               let generator = new CommandCodeGenerator(command)

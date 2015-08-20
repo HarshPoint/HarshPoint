@@ -106,6 +106,15 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no ICommandBuilder for the specified provisioner type &apos;{0}&apos;..
+        /// </summary>
+        internal static string CommandBuilderContext_NoBuilder {
+            get {
+                return ResourceManager.GetString("CommandBuilderContext_NoBuilder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempted to nest one CommandParameterSynthesized in another..
         /// </summary>
         internal static string CommandParameterSynthesized_AttemptedToNest {

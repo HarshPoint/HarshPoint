@@ -23,7 +23,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
             Ignore(ShellployCommand.InputObjectPropertyName);
         }
-        public Type Type => typeof(TParent);
+        public Type ProvisionerType => typeof(TParent);
 
         public void SetFixedValue<TValue>(
             Expression<Func<TParent, TValue>> parameter,

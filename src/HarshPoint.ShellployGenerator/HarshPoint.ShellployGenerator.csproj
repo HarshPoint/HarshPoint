@@ -145,7 +145,7 @@
     <Compile Include="Builders\ChildCommandBuilder.cs" />
     <Compile Include="ShellployCommandProperty.cs" />
     <Compile Include="Commands\BuildContentType.cs" />
-    <Compile Include="ShellployMetadata.cs" />
+    <Compile Include="Builders\CommandBuilderContext.cs" />
     <Compile Include="SourceFileWriter.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>

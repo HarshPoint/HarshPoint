@@ -8,6 +8,6 @@ namespace HarshPoint.ShellployGenerator.Builders
         IEnumerable<ShellployCommandProperty> Process(
             IEnumerable<ShellployCommandProperty> parentProperties
         );
-        Type Type { get; }
+        Type ProvisionerType { get; }
     }
 }

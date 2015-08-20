@@ -129,6 +129,9 @@
   <data name="CodeDomExtensions_PropertySetterNotEmpty" xml:space="preserve">
     <value>Property setter is not empty.</value>
   </data>
+  <data name="CommandBuilderContext_NoBuilder" xml:space="preserve">
+    <value>There is no ICommandBuilder for the specified provisioner type '{0}'.</value>
+  </data>
   <data name="CommandBuilder_ReservedName" xml:space="preserve">
     <value>The specified name '{0}' is reserved.</value>
   </data>
