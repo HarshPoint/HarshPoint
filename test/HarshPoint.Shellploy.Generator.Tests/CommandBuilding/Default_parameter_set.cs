@@ -20,15 +20,17 @@ namespace CommandBuilding
             _command = new CommandBuilder<ParameterSetProvisioner>().ToCommand();
         }
 
-        private AttributeData GetAttribute<T>()
-            => _command.Attributes
-                .Where(attr => attr.AttributeType == typeof(T))
-                .First();
+        private Boolean WithAttributeType<T>(AttributeData attr)
+            => attr.AttributeType == typeof(T);
 
         [Fact]
         public void Has_default_parameter_set_name()
         {
-            Assert.Equal("ParamSet2", GetAttribute<SMA.CmdletAttribute>().NamedArguments["DefaultParameterSetName"]);
+            var attr = Assert.Single(
+                _command.Attributes,
+                WithAttributeType<SMA.CmdletAttribute>
+            );
+            Assert.Equal("ParamSet2", attr.NamedArguments["DefaultParameterSetName"]);
         }
 
         [DefaultParameterSet("ParamSet2")]

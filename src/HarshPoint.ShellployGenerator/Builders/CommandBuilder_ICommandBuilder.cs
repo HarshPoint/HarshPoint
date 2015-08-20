@@ -86,19 +86,27 @@ namespace HarshPoint.ShellployGenerator.Builders
             var verb = SMA.VerbsCommon.New;
             var noun = ProvisionerType.Name;
 
-            if (!Attributes.OfType<CmdletAttribute>().Any())
+            if (
+                !Attributes
+                    .Where(attr => attr.AttributeType == typeof(CmdletAttribute))
+                    .Any()
+            )
             {
                 Attributes.Add(CreateCmdletAttributeData(verb, noun));
             }
 
-            if (!Attributes.OfType<OutputTypeAttribute>().Any())
+            if (
+                !Attributes
+                    .Where(attr => attr.AttributeType == typeof(OutputTypeAttribute))
+                    .Any()
+            )
             {
                 Attributes.Add(CreateOutputTypeAttributeData());
             }
 
             return new ShellployCommand
             {
-                Attributes = Attributes.ToImmutableList(),
+                Attributes = Attributes.ToImmutableArray(),
                 Aliases = Aliases.ToImmutableArray(),
                 ClassName = $"{verb}{noun}Command",
                 ContextType = Metadata.ContextType,
