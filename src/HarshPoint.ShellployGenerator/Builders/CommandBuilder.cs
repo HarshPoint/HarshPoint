@@ -48,6 +48,9 @@ namespace HarshPoint.ShellployGenerator.Builders
         public HashSet<String> Aliases { get; }
             = new HashSet<String>(StringComparer.OrdinalIgnoreCase);
 
+        public List<AttributeData> Attributes { get; }
+            = new List<AttributeData>();
+
         public String DefaultParameterSetName { get; set; }
 
         public Boolean HasInputObject { get; set; }
