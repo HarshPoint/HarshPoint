@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal class ParameterBuilderContainer :
+    internal abstract class ParameterBuilderContainer :
         IEnumerable<KeyValuePair<String, ParameterBuilder>>
     {
         private ImmutableDictionary<String, ParameterBuilder> _parameters

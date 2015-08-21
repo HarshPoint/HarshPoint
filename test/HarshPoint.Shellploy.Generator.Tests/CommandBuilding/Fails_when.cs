@@ -24,11 +24,43 @@ namespace CommandBuilding
         }
 
 
+        [Fact]
+        public void Sets_parameter_default_then_fixed()
+        {
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var builder = new CommandBuilder<Provisioner>();
+
+                builder.Parameter(x => x.Param)
+                    .SetDefaultValue("42")
+                    .SetFixedValue("4242");
+            });
+        }
+
+
+        [Fact]
+        public void Sets_parameter_fixed_then_default()
+        {
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var builder = new CommandBuilder<Provisioner>();
+
+                builder.Parameter(x => x.Param)
+                    .SetFixedValue("4242")
+                    .SetDefaultValue("42");
+            });
+        }
+
         private sealed class InputObjectProvisioner : HarshProvisioner
         {
             [Parameter]
             public String InputObject { get; set; }
         }
 
+        private sealed class Provisioner : HarshProvisioner
+        {
+            [Parameter]
+            public String Param { get; set; }
+        }
     }
 }

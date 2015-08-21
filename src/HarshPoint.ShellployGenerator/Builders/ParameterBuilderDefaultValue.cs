@@ -15,5 +15,21 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
             property.DefaultValue = DefaultValue;
         }
+
+        internal override ParameterBuilder WithNext(ParameterBuilder next)
+        {
+            if (next?.HasElementOfType<ParameterBuilderFixed>() ?? false)
+            {
+                throw Logger.Fatal.InvalidOperation(
+                    SR.ParameterBuilderDefaultValue_AttemptedToNestFixed
+                );
+            }
+
+            return base.WithNext(next);
+        }
+
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(ParameterBuilderDefaultValue));
     }
 }

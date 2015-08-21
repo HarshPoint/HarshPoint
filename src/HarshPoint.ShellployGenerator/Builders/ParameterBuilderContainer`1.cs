@@ -8,7 +8,6 @@ namespace HarshPoint.ShellployGenerator.Builders
     {
         private Int32 _nextPositionalParam;
 
-
         public ParameterBuilderFactory<TTarget> GetFactory(
             Expression<Func<TTarget, Object>> expression,
             Boolean isPositional = false

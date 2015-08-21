@@ -151,11 +151,20 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Property &apos;{0}&apos; is set to use both fixed and default value..
+        ///   Looks up a localized string similar to Attempted to set a default value on a parameter with a fixed value..
         /// </summary>
-        internal static string ShellployCommandBuilder_Fixed_and_default {
+        internal static string ParameterBuilderDefaultValue_AttemptedToNestFixed {
             get {
-                return ResourceManager.GetString("ShellployCommandBuilder_Fixed_and_default", resourceCulture);
+                return ResourceManager.GetString("ParameterBuilderDefaultValue_AttemptedToNestFixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempted to set a fixed value on a parameter with a default value..
+        /// </summary>
+        internal static string ParameterBuilderFixed_AttemptedToNestDefaultValue {
+            get {
+                return ResourceManager.GetString("ParameterBuilderFixed_AttemptedToNestDefaultValue", resourceCulture);
             }
         }
         
