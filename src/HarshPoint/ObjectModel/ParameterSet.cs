@@ -4,12 +4,12 @@ using System.Collections.Immutable;
 
 namespace HarshPoint.ObjectModel
 {
-    internal sealed class ParameterSet
+    public sealed class ParameterSet
     {
         public static readonly StringComparer NameComparer
             = StringComparer.Ordinal;
 
-        public ParameterSet(
+        internal ParameterSet(
             String name, IEnumerable<Parameter> parameters, Boolean isDefault
         )
             : this(name, parameters, isDefault, isImplicit: false)

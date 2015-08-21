@@ -14,7 +14,7 @@ namespace CommandBuilding
     {
         public Mandatory_parameter(ITestOutputHelper output) : base(output)
         {
-            var builder = new CommandBuilder<TestProvisioner>();
+            var builder = new NewObjectCommandBuilder<TestProvisioner>();
             var command = builder.ToCommand();
 
             Property = Assert.Single(

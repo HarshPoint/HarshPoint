@@ -8,10 +8,10 @@ using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class HarshProvisionerMetadata : HarshObjectMetadata
+    public sealed class HarshProvisionerMetadata : HarshParametrizedObjectMetadata
     {
         internal HarshProvisionerMetadata(Type type)
-            : base(type)
+            : base(type, ProvisioningDefaultValuePolicy.Instance)
         {
             if (!HarshProvisionerBaseTypeInfo.IsAssignableFrom(ObjectTypeInfo))
             {
@@ -22,10 +22,6 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
-            ParameterSets = new ParameterSetBuilder(this, ProvisioningDefaultValuePolicy.Instance)
-                .Build()
-                .ToImmutableArray();
-
             ContextType = ObjectType.GetRuntimeBaseTypeChain()
                 .FirstOrDefault(t =>
                     t.IsGenericType &&
@@ -33,12 +29,6 @@ namespace HarshPoint.Provisioning.Implementation
                 )?
                 .GenericTypeArguments
                 .First();
-
-            PropertyParameters = Parameters.ToLookup(p => p.PropertyAccessor);
-
-            DefaultParameterSet = ParameterSets.SingleOrDefault(
-                set => set.IsDefault
-            );
 
             DefaultFromContextPropertyBinder = new DefaultFromContextPropertyBinder(
                 ReadableWritableInstancePropertiesWithSingle<DefaultFromContextAttribute>(inherit: true)
@@ -57,25 +47,14 @@ namespace HarshPoint.Provisioning.Implementation
 
             UnprovisionDeletesUserData = GetDeletesUserData("OnUnprovisioningAsync");
         }
+
         public Type ContextType { get; }
 
-        public DefaultFromContextPropertyBinder DefaultFromContextPropertyBinder { get; }
-
-        public ParameterSet DefaultParameterSet { get; }
-
-        public IEnumerable<Parameter> Parameters
-            => ParameterSets.SelectMany(set => set.Parameters);
-
-        public IEnumerable<ParameterSet> ParameterSets { get; }
-
-        public IEnumerable<PropertyAccessor> ParameterProperties
-            => PropertyParameters.Select(g => g.Key);
-
-        public ILookup<PropertyAccessor, Parameter> PropertyParameters { get; }
-
-        public ResolvedPropertyBinder ResolvedPropertyBinder { get; }
-
         public Boolean UnprovisionDeletesUserData { get; }
+
+        internal DefaultFromContextPropertyBinder DefaultFromContextPropertyBinder { get; }
+
+        internal ResolvedPropertyBinder ResolvedPropertyBinder { get; }
 
         public Boolean IsMandatoryWhenCreating(Parameter parameter)
         {

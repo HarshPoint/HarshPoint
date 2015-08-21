@@ -16,7 +16,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             property.DefaultValue = DefaultValue;
         }
 
-        internal override ParameterBuilder WithNext(ParameterBuilder next)
+        public override ParameterBuilder WithNext(ParameterBuilder next)
         {
             if (next?.HasElementOfType<ParameterBuilderFixed>() ?? false)
             {

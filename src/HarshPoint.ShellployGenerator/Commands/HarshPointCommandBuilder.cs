@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace HarshPoint.ShellployGenerator.Commands
 {
-    internal abstract class HarshPointCommandBuilder<T> : CommandBuilder<T>
+    internal abstract class HarshPointCommandBuilder<T> : NewProvisionerCommandBuilder<T>
         where T : HarshProvisionerBase
     {
         public HarshPointCommandBuilder()

@@ -14,14 +14,14 @@ namespace CommandBuilding
 {
     public class With_parent : SeriloggedTest
     {
-        private readonly CommandBuilder<Parent> _parent;
-        private readonly CommandBuilder<Child> _child;
+        private readonly NewObjectCommandBuilder<Parent> _parent;
+        private readonly NewObjectCommandBuilder<Child> _child;
 
         public With_parent(ITestOutputHelper output) : base(output)
         {
-            _parent = new CommandBuilder<Parent>();
+            _parent = new NewObjectCommandBuilder<Parent>();
 
-            _child = new CommandBuilder<Child>();
+            _child = new NewObjectCommandBuilder<Child>();
             _child.AsChildOf<Parent>();
 
             var context = new CommandBuilderContext();

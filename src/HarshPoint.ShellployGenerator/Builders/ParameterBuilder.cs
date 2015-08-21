@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal abstract class ParameterBuilder : Chain<ParameterBuilder>
+    public abstract class ParameterBuilder : Chain<ParameterBuilder>
     {
         protected ParameterBuilder() { }
 
@@ -22,7 +22,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Int32? SortOrder { get; private set; }
 
-        internal ParameterBuilder Append(ParameterBuilder other)
+        public ParameterBuilder Append(ParameterBuilder other)
             => (ParameterBuilder)base.Append(other);
 
         public virtual IEnumerable<ShellployCommandProperty> Synthesize()
@@ -46,11 +46,11 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
         }
 
-        internal Boolean HasElementOfType<T>()
+        public Boolean HasElementOfType<T>()
             where T : ParameterBuilder
             => Elements.OfType<T>().Any();
 
-        internal virtual ParameterBuilder WithNext(ParameterBuilder next)
+        public virtual ParameterBuilder WithNext(ParameterBuilder next)
         {
             var result = this;
 
@@ -63,7 +63,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             return result;
         }
 
-        internal ParameterBuilder WithSortOrder(Int32? sortOrder)
+        public ParameterBuilder WithSortOrder(Int32? sortOrder)
             => this.With(pb => pb.SortOrder = sortOrder);
 
         private static readonly HarshLogger Logger

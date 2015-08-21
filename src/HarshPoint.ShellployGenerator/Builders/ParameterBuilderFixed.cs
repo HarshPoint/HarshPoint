@@ -11,7 +11,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Object Value { get; }
 
-        internal override ParameterBuilder WithNext(ParameterBuilder next)
+        public override ParameterBuilder WithNext(ParameterBuilder next)
         {
             if (next?.HasElementOfType<ParameterBuilderDefaultValue>() ?? false)
             {
@@ -28,7 +28,6 @@ namespace HarshPoint.ShellployGenerator.Builders
             property.HasFixedValue = true;
             property.FixedValue = Value;
         }
-
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ParameterBuilderFixed));

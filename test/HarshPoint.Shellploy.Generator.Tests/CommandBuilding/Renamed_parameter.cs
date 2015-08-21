@@ -19,7 +19,7 @@ namespace CommandBuilding
         [Fact]
         public void Can_rename_nonexistent_param()
         {
-            var builder = new CommandBuilder<TestProvisioner>();
+            var builder = new NewObjectCommandBuilder<TestProvisioner>();
             builder.Parameter("DoesNotExist").Rename("StillDoesNot");
 
             var command = builder.ToCommand();
@@ -31,7 +31,7 @@ namespace CommandBuilding
         [Fact]
         public void Has_new_PropertyName()
         {
-            var builder = new CommandBuilder<TestProvisioner>();
+            var builder = new NewObjectCommandBuilder<TestProvisioner>();
             builder.Parameter(x => x.RenamedParam).Rename("NewName");
 
             var command = builder.ToCommand();
@@ -43,7 +43,7 @@ namespace CommandBuilding
         [Fact]
         public void Has_original_Identifier()
         {
-            var builder = new CommandBuilder<TestProvisioner>();
+            var builder = new NewObjectCommandBuilder<TestProvisioner>();
             builder.Parameter(x => x.RenamedParam).Rename("NewName");
 
             var command = builder.ToCommand();
@@ -57,7 +57,7 @@ namespace CommandBuilding
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                var builder = new CommandBuilder<TestProvisioner>();
+                var builder = new NewObjectCommandBuilder<TestProvisioner>();
                 builder.Parameter(x => x.RenamedParam).Rename(null);
             });
         }
@@ -67,7 +67,7 @@ namespace CommandBuilding
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                var builder = new CommandBuilder<TestProvisioner>();
+                var builder = new NewObjectCommandBuilder<TestProvisioner>();
                 builder.Parameter(x => x.RenamedParam).Rename(String.Empty);
             });
         }
@@ -78,7 +78,7 @@ namespace CommandBuilding
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                var builder = new CommandBuilder<TestProvisioner>();
+                var builder = new NewObjectCommandBuilder<TestProvisioner>();
                 builder.Parameter(x => x.RenamedParam).Rename(" \t \r \n ");
             });
         }
@@ -88,7 +88,7 @@ namespace CommandBuilding
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                var builder = new CommandBuilder<TestProvisioner>();
+                var builder = new NewObjectCommandBuilder<TestProvisioner>();
                 builder.Parameter(x => x.RenamedParam).Rename("InputObject");
             });
         }

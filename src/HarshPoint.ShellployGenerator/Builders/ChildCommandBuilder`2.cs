@@ -6,13 +6,13 @@ namespace HarshPoint.ShellployGenerator.Builders
     public sealed class ChildCommandBuilder<TProvisioner, TParent> :
         IChildCommandBuilder
     {
-        private readonly ParameterBuilderContainer<TParent> _parameters
-            = new ParameterBuilderContainer<TParent>();
+        private readonly ParameterBuilderContainer _parameterBuilders
+            = new ParameterBuilderContainer();
 
         internal ChildCommandBuilder()
         {
-            _parameters.Update(
-                ShellployCommand.InputObjectPropertyName,
+            _parameterBuilders.Update(
+                CommandBuilder.InputObjectPropertyName,
                 new ParameterBuilderIgnored()
             );
         }
@@ -20,17 +20,17 @@ namespace HarshPoint.ShellployGenerator.Builders
         public IChildParameterBuilderFactory<TParent> Parameter(
             Expression<Func<TParent, Object>> expression
         )
-            => _parameters.GetFactory(expression);
+            => _parameterBuilders.GetFactory(expression);
 
-        public IChildParameterBuilderFactory<TParent> Parameter(
+        public IChildParameterBuilderFactory sParameter(
             String name
         )
-            => _parameters.GetFactory(name);
+            => _parameterBuilders.GetFactory(name);
 
-        ParameterBuilderContainer IChildCommandBuilder.Parameters
-            => _parameters;
+        ParameterBuilderContainer IChildCommandBuilder.ParameterBuilders
+            => _parameterBuilders;
 
-        Type IChildCommandBuilder.ProvisionerType => typeof(TParent);
+        Type IChildCommandBuilder.ParentType => typeof(TParent);
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ChildCommandBuilder<,>));

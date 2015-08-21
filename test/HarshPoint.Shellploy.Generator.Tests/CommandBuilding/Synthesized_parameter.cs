@@ -18,7 +18,7 @@ namespace CommandBuilding
         [Fact]
         public void Has_Name()
         {
-            var builder = new CommandBuilder<EmptyProvisioner>();
+            var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
             builder.Parameter("Synth").Synthesize(typeof(Int32));
 
             var command = builder.ToCommand();
@@ -30,7 +30,7 @@ namespace CommandBuilding
         [Fact]
         public void Has_Type()
         {
-            var builder = new CommandBuilder<EmptyProvisioner>();
+            var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
             builder.Parameter("Synth").Synthesize(typeof(Int32));
 
             var command = builder.ToCommand();
@@ -42,7 +42,7 @@ namespace CommandBuilding
         [Fact]
         public void Has_no_ProvisionerType()
         {
-            var builder = new CommandBuilder<EmptyProvisioner>();
+            var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
             builder.Parameter("Synth").Synthesize(typeof(Int32));
 
             var command = builder.ToCommand();
@@ -54,7 +54,7 @@ namespace CommandBuilding
         [Fact]
         public void Is_created_even_when_not_first_in_the_list()
         {
-            var builder = new CommandBuilder<EmptyProvisioner>();
+            var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
 
             builder.Parameter("Synth")
                 .SetDefaultValue(42)
@@ -70,7 +70,7 @@ namespace CommandBuilding
         [Fact]
         public void Can_not_have_reserved_name_InputObject()
         {
-            var builder = new CommandBuilder<EmptyProvisioner>();
+            var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
 
             Assert.Throws<ArgumentException>(() =>
                 builder.Parameter("InputObject").Synthesize(typeof(Int32))
@@ -81,7 +81,7 @@ namespace CommandBuilding
         [Fact]
         public void Can_not_have_existing_name()
         {
-            var builder = new CommandBuilder<TestProvisioner>();
+            var builder = new NewObjectCommandBuilder<TestProvisioner>();
 
             Assert.Throws<InvalidOperationException>(() =>
                 builder.Parameter("Param").Synthesize(typeof(Int32))

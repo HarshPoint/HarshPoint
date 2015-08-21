@@ -17,7 +17,7 @@ namespace CommandBuilding
 
         public Default_parameter_set(ITestOutputHelper output) : base(output)
         {
-            _command = new CommandBuilder<ParameterSetProvisioner>().ToCommand();
+            _command = new NewObjectCommandBuilder<ParameterSetProvisioner>().ToCommand();
         }
 
         private Boolean WithAttributeType<T>(AttributeData attr)

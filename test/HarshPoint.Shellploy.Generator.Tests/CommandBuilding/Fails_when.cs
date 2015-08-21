@@ -19,7 +19,7 @@ namespace CommandBuilding
         public void Has_InputObject_parameter()
         {
             Assert.Throws<ArgumentException>(() =>
-                new CommandBuilder<InputObjectProvisioner>()
+                new NewObjectCommandBuilder<InputObjectProvisioner>()
             );
         }
 
@@ -29,7 +29,7 @@ namespace CommandBuilding
         {
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var builder = new CommandBuilder<Provisioner>();
+                var builder = new NewObjectCommandBuilder<Provisioner>();
 
                 builder.Parameter(x => x.Param)
                     .SetDefaultValue("42")
@@ -43,7 +43,7 @@ namespace CommandBuilding
         {
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var builder = new CommandBuilder<Provisioner>();
+                var builder = new NewObjectCommandBuilder<Provisioner>();
 
                 builder.Parameter(x => x.Param)
                     .SetFixedValue("4242")

@@ -14,7 +14,7 @@ namespace CommandBuilding
     {
         public With_multiple_parameter_sets(ITestOutputHelper output) : base(output)
         {
-            var builder = new CommandBuilder<TestProvisioner>();
+            var builder = new NewObjectCommandBuilder<TestProvisioner>();
             Command = builder.ToCommand();
 
             Assert.Equal(3, Command.Properties.Count);

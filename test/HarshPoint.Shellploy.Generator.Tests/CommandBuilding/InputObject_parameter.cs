@@ -14,7 +14,7 @@ namespace CommandBuilding
 
         public InputObject_parameter(ITestOutputHelper output) : base(output)
         {
-            var builder = new CommandBuilder<EmptyProvisioner>();
+            var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
             builder.HasInputObject = true;
 
             var command = builder.ToCommand();
@@ -34,7 +34,7 @@ namespace CommandBuilding
         public void Has_identifier()
         {
             Assert.Equal(
-                ShellployCommand.InputObjectPropertyName,
+                CommandBuilder.InputObjectPropertyName,
                 _property.Identifier
             );
         }
@@ -43,7 +43,7 @@ namespace CommandBuilding
         public void Has_name()
         {
             Assert.Equal(
-                ShellployCommand.InputObjectPropertyName, 
+                CommandBuilder.InputObjectPropertyName, 
                 _property.PropertyName
             );
         }

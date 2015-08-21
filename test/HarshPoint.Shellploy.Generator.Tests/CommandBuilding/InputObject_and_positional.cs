@@ -12,13 +12,13 @@ namespace CommandBuilding
 {
     public sealed class InputObject_and_positional : SeriloggedTest
     {
-        private readonly CommandBuilder<WithPositional> _builder;
+        private readonly NewObjectCommandBuilder<WithPositional> _builder;
         private readonly ShellployCommand _command;
         private readonly ShellployCommandProperty _inputObject;
 
         public InputObject_and_positional(ITestOutputHelper output) : base(output)
         {
-            _builder = new CommandBuilder<WithPositional>();
+            _builder = new NewObjectCommandBuilder<WithPositional>();
             _builder.HasInputObject = true;
             _builder.PositionalParameter(x => x.Pos0);
             _builder.PositionalParameter(x => x.Pos1);

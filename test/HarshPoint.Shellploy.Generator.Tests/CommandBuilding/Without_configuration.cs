@@ -16,7 +16,7 @@ namespace CommandBuilding
 
         public Without_configuration(ITestOutputHelper output) : base(output)
         {
-            _command = new CommandBuilder<EmptyProvisioner>().ToCommand();
+            _command = new NewObjectCommandBuilder<EmptyProvisioner>().ToCommand();
         }
 
         [Fact]

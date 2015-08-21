@@ -55,7 +55,7 @@ namespace HarshPoint.ShellployGenerator.Builders
                 }
             );
 
-        internal override ParameterBuilder WithNext(ParameterBuilder next)
+        public override ParameterBuilder WithNext(ParameterBuilder next)
         {
             if (next == null)
             {

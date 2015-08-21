@@ -18,7 +18,7 @@ namespace CommandBuilding
         [Fact]
         public void Is_ignored()
         {
-            var builder = new CommandBuilder<TestProvisioner>();
+            var builder = new NewObjectCommandBuilder<TestProvisioner>();
             builder.Parameter(x => x.IgnoredParam).Ignore();
 
             var command = builder.ToCommand();

@@ -18,7 +18,7 @@ namespace CommandBuilding
         {
             var ns = "MyNamespace";
 
-            var builder = new CommandBuilder<EmptyProvisioner>();
+            var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
             builder.Namespace = ns;
 
             var command = builder.ToCommand();

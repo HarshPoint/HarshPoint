@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public sealed class ParameterBuilderFactory<TProvisioner> :
-        IChildParameterBuilderFactory<TProvisioner>
+    public class ParameterBuilderFactory
+        : IChildParameterBuilderFactory
     {
         internal ParameterBuilderFactory(
             ParameterBuilderContainer container,
@@ -15,49 +15,49 @@ namespace HarshPoint.ShellployGenerator.Builders
             Name = name;
         }
 
-        public ParameterBuilderFactory<TProvisioner> Ignore()
+        public ParameterBuilderFactory Ignore()
         {
             Set(new ParameterBuilderIgnored());
             return this;
         }
 
-        public ParameterBuilderFactory<TProvisioner> Rename(String propertyName)
+        public ParameterBuilderFactory Rename(String propertyName)
         {
             CommandBuilder.ValidateParameterName(propertyName);
             Set(new ParameterBuilderRenamed(propertyName));
             return this;
         }
 
-        public ParameterBuilderFactory<TProvisioner> SetDefaultValue(Object value)
+        public ParameterBuilderFactory SetDefaultValue(Object value)
         {
             Set(new ParameterBuilderDefaultValue(value));
             return this;
         }
 
-        public ParameterBuilderFactory<TProvisioner> SetFixedValue(Object value)
+        public ParameterBuilderFactory SetFixedValue(Object value)
         {
             Set(new ParameterBuilderFixed(value));
             return this;
         }
 
-        public ParameterBuilderFactory<TProvisioner> SynthesizeMandatory(
-            Type parameterType
-        )
+        public ParameterBuilderFactory SynthesizeMandatory(Type parameterType)
         {
             if (parameterType == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(parameterType));
             }
 
-            return Synthesize(
+            Synthesize(
                 parameterType,
                 new AttributeData(typeof(SMA.ParameterAttribute))
                 {
-                    NamedArguments = { ["Mandatory"] = true }
+                    NamedArguments = {["Mandatory"] = true }
                 }
             );
+            return this;
         }
-        public ParameterBuilderFactory<TProvisioner> Synthesize(
+
+        public ParameterBuilderFactory Synthesize(
             Type parameterType,
             params AttributeData[] attributeData
         )
@@ -74,32 +74,31 @@ namespace HarshPoint.ShellployGenerator.Builders
 
             Set(new ParameterBuilderSynthesized(
                 Name,
-                parameterType, 
+                parameterType,
                 attributes: attributeData
             ));
 
             return this;
         }
 
+        IChildParameterBuilderFactory IChildParameterBuilderFactory.Ignore()
+            => Ignore();
+
+        IChildParameterBuilderFactory IChildParameterBuilderFactory.SetFixedValue(
+            Object value
+        )
+            => SetFixedValue(value);
+
         private void Set(ParameterBuilder parameter)
         {
             Container.Update(Name, parameter);
         }
 
-        IChildParameterBuilderFactory<TProvisioner>
-        IChildParameterBuilderFactory<TProvisioner>.Ignore()
-            => Ignore();
-
-        IChildParameterBuilderFactory<TProvisioner>
-        IChildParameterBuilderFactory<TProvisioner>.SetFixedValue(Object value)
-            => SetFixedValue(value);
-
         private ParameterBuilderContainer Container { get; }
 
         private String Name { get; }
 
-
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(ParameterBuilderFactory<>));
+            = HarshLog.ForContext(typeof(ParameterBuilderFactory));
     }
 }

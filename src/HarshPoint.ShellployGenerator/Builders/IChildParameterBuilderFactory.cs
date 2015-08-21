@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public interface IChildParameterBuilderFactory<TParent>
+    public interface IChildParameterBuilderFactory
     {
-        IChildParameterBuilderFactory<TParent> Ignore();
-        IChildParameterBuilderFactory<TParent> SetFixedValue(Object value);
+        IChildParameterBuilderFactory Ignore();
+        IChildParameterBuilderFactory SetFixedValue(Object value);
     }
 }

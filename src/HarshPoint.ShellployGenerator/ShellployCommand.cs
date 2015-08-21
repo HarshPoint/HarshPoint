@@ -4,10 +4,8 @@ using System.Collections.Immutable;
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal class ShellployCommand
+    public sealed class ShellployCommand
     {
-        public const String InputObjectPropertyName = "InputObject";
-
         public IEnumerable<String> Aliases { get; set; }
         public IImmutableList<AttributeData> Attributes { get; set; }
         public String ClassName { get; set; }

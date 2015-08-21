@@ -18,7 +18,7 @@ namespace CommandBuilding
         [Fact]
         public void Default_value_is_set()
         {
-            var builder = new CommandBuilder<TestProvisioner>();
+            var builder = new NewObjectCommandBuilder<TestProvisioner>();
             builder.Parameter(x => x.DefaultValueParam).SetDefaultValue(42);
 
             var command = builder.ToCommand();

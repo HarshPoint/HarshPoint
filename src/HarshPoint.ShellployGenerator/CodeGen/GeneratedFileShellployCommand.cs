@@ -168,7 +168,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                             resultVar,
                             new CodePropertyReferenceExpression(
                                 This,
-                                ShellployCommand.InputObjectPropertyName
+                                Builders.CommandBuilder.InputObjectPropertyName
                             )
                         )
                     );

@@ -13,7 +13,7 @@ namespace CommandBuilding
     {
         public Fixed_value_parameter(ITestOutputHelper output) : base(output)
         {
-            var builder = new CommandBuilder<TestProvisioner>();
+            var builder = new NewObjectCommandBuilder<TestProvisioner>();
             builder.Parameter(x => x.FixedValueParam).SetFixedValue(42);
 
             var command = builder.ToCommand();

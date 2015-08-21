@@ -15,7 +15,7 @@ namespace CommandBuilding
 {
     public class Positional_parameters : SeriloggedTest
     {
-        private readonly CommandBuilder<TestProvisioner> _builder;
+        private readonly NewObjectCommandBuilder<TestProvisioner> _builder;
         private readonly ShellployCommand _command;
 
         private readonly ShellployCommandProperty _named;
@@ -24,7 +24,7 @@ namespace CommandBuilding
 
         public Positional_parameters(ITestOutputHelper output) : base(output)
         {
-            _builder = new CommandBuilder<TestProvisioner>();
+            _builder = new NewObjectCommandBuilder<TestProvisioner>();
             _builder.PositionalParameter(x => x.Pos0);
             _builder.PositionalParameter(x => x.Pos1);
 
