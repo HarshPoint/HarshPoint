@@ -1,42 +1,104 @@
-﻿using System;
+﻿using HarshPoint.Provisioning;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
-using HarshPoint.Provisioning;
-using SMA = System.Management.Automation;
+using System.Threading;
+using SMAParameter = System.Management.Automation.ParameterAttribute;
 
 namespace HarshPoint.Shellploy
 {
-    [CmdletAttribute(VerbsLifecycle.Invoke, "Provisioner")]
+    [Cmdlet(VerbsLifecycle.Invoke, "Provisioner")]
     public sealed class InvokeProvisionerCommand : ClientContextCmdlet
     {
-        [SMA.Parameter(Mandatory = true, Position = 1, ValueFromPipelineByPropertyName = true)]
-        public ScriptBlock Children { get; set; }
+        [SMAParameter(Mandatory = true, Position = 1, ValueFromPipeline = true)]
+        public Object InputObject { get; set; }
+
+        [SMAParameter]
+        public SwitchParameter Unprovision { get; set; }
+
+        protected override void BeginProcessing()
+        {
+            Provisioner = new HarshProvisioner();
+        }
 
         protected override void ProcessRecord()
+        {
+            AddChildren(Provisioner, InputObject);
+        }
+
+        protected override void EndProcessing()
         {
             using (var clientContext = CreateClientContext())
             {
                 var context = new HarshProvisionerContext(clientContext);
-                    //.WithOutputSink(new PowerShellOutputSink(this));
-
-                var provisioner = new HarshProvisioner();
-                AddChildren(provisioner, Children);
+                var cts = new CancellationTokenSource();
 
                 try
                 {
-                    provisioner.ProvisionAsync(context).Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    foreach (var iex in ex.InnerExceptions)
+                    var sequence = ProvisionerAction(context, cts.Token);
+
+                    foreach (var item in sequence)
                     {
-                        WriteError(new ErrorRecord(iex, null, ErrorCategory.OperationStopped, null));
+                        if (Stopping)
+                        {
+                            cts.Cancel();
+                            break;
+                        }
+
+                        if (item != null)
+                        {
+                            WriteObject(item);
+                        }
                     }
+                }
+                catch (PipelineStoppedException)
+                {
+                    cts.Cancel();
+                    throw;
                 }
                 catch (Exception ex)
                 {
-                    WriteError(new ErrorRecord(ex, null, ErrorCategory.OperationStopped, null));
+                    WriteMaybeAggregateException(ex);
                 }
             }
         }
+
+        private HarshProvisioner Provisioner { get; set; }
+
+        private IEnumerable<HarshProvisionerOutput> ProvisionerAction(
+            HarshProvisionerContext context,
+            CancellationToken token
+        )
+            => Unprovision ?
+                Provisioner.Unprovision(context, token, PollIsStoppingInterval) :
+                Provisioner.Provision(context, token, PollIsStoppingInterval);
+
+        private void WriteMaybeAggregateException(Exception exception)
+        {
+            var exceptions = new[] { exception }.AsEnumerable();
+
+            var aggregate = (exception as AggregateException);
+            if (aggregate != null)
+            {
+                exceptions = aggregate.InnerExceptions;
+            }
+
+            foreach (var exc in exceptions)
+            {
+                WriteError(CreateErrorRecord(exc));
+            }
+        }
+
+        private static ErrorRecord CreateErrorRecord(Exception exc)
+            => new ErrorRecord(
+                exception: exc,
+                errorId: null,
+                errorCategory: ErrorCategory.OperationStopped,
+                targetObject: null
+            );
+
+        private static readonly TimeSpan PollIsStoppingInterval
+            = TimeSpan.FromMilliseconds(250);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.SharePoint.Client;
 using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
@@ -55,28 +56,44 @@ namespace HarshPoint.Provisioning
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        protected sealed override Task ProvisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
+        protected sealed override Task ProvisionChild(
+            HarshProvisionerBase provisioner, 
+            HarshProvisionerContext context,
+            CancellationToken token
+        )
         {
             if (provisioner == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(provisioner));
             }
 
-            return ((HarshProvisioner)(provisioner)).ProvisionAsync(context);
+            return ((HarshProvisioner)(provisioner)).ProvisionAsync(
+                context,
+                token
+            );
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        protected sealed override Task UnprovisionChild(HarshProvisionerBase provisioner, HarshProvisionerContext context)
+        protected sealed override Task UnprovisionChild(
+            HarshProvisionerBase provisioner, 
+            HarshProvisionerContext context,
+            CancellationToken token
+        )
         {
             if (provisioner == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(provisioner));
             }
 
-            return ((HarshProvisioner)(provisioner)).UnprovisionAsync(context);
+            return ((HarshProvisioner)(provisioner)).UnprovisionAsync(
+                context,
+                token
+            );
         }
 
-        internal sealed override ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
+        internal sealed override ManualResolver CreateManualResolver(
+            Func<IResolveContext> resolveContextFactory
+        )
             => new ClientObjectManualResolver(
                 () => (ClientObjectResolveContext)resolveContextFactory()
             );

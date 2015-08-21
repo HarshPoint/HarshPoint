@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -99,6 +100,9 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         public Task ProvisionAsync(TContext context)
+            => ProvisionAsync(context, CancellationToken.None);
+
+        public Task ProvisionAsync(TContext context, CancellationToken token)
         {
             if (context == null)
             {
@@ -107,12 +111,15 @@ namespace HarshPoint.Provisioning.Implementation
 
             return RunSelfAndChildren(
                 context,
+                token,
                 OnProvisioningAsync,
                 ProvisionChildrenAsync
             );
         }
+        public Task UnprovisionAsync(TContext context)
+            => UnprovisionAsync(context, CancellationToken.None);
 
-        public async Task UnprovisionAsync(TContext context)
+        public async Task UnprovisionAsync(TContext context, CancellationToken token)
         {
             if (context == null)
             {
@@ -123,6 +130,7 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 await RunSelfAndChildren(
                     context,
+                    token,
                     OnUnprovisioningAsync,
                     UnprovisionChildrenAsync
                 );
@@ -189,9 +197,17 @@ namespace HarshPoint.Provisioning.Implementation
 
         internal virtual Task OnResolvedPropertiesBound() => HarshTask.Completed;
 
-        protected abstract Task ProvisionChild(HarshProvisionerBase provisioner, TContext context);
+        protected abstract Task ProvisionChild(
+            HarshProvisionerBase provisioner,
+            TContext context,
+            CancellationToken cancellationToken
+        );
 
-        protected abstract Task UnprovisionChild(HarshProvisionerBase provisioner, TContext context);
+        protected abstract Task UnprovisionChild(
+            HarshProvisionerBase provisioner,
+            TContext context,
+            CancellationToken cancellationToken
+        );
 
         private ParameterSet ResolveParameterSet()
         {
@@ -242,14 +258,15 @@ namespace HarshPoint.Provisioning.Implementation
                 );
         }
 
-        private Task ProvisionChildrenAsync()
-            => RunChildren(ProvisionChild);
+        private Task ProvisionChildrenAsync(CancellationToken token)
+            => RunChildren(ProvisionChild, token);
 
-        private Task UnprovisionChildrenAsync()
-            => RunChildren(UnprovisionChild, reverse: true);
+        private Task UnprovisionChildrenAsync(CancellationToken token)
+            => RunChildren(UnprovisionChild, token, reverse: true);
 
         private async Task RunChildren(
-            Func<HarshProvisionerBase, TContext, Task> action,
+            Func<HarshProvisionerBase, TContext, CancellationToken, Task> action,
+            CancellationToken token,
             Boolean reverse = false)
         {
             if (!HasChildren)
@@ -262,11 +279,15 @@ namespace HarshPoint.Provisioning.Implementation
 
             foreach (var child in children)
             {
-                await action(child, context);
+                token.ThrowIfCancellationRequested();
+                await action(child, context, token);
             }
         }
 
-        private async Task RunWithContext(TContext context, Func<Task> action)
+        private async Task RunWithContext(
+            TContext context,
+            Func<Task> action
+        )
         {
             var contextLogger = Logger.ForContext(
                 new PropertyEnricher("ProvisionerContext", context),
@@ -281,10 +302,15 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         private Task RunSelfAndChildren(
-            TContext context, Func<Task> action, Func<Task> childAction
+            TContext context,
+            CancellationToken token,
+            Func<Task> action,
+            Func<CancellationToken, Task> childAction
         )
             => RunWithContext(context, async delegate
             {
+                token.ThrowIfCancellationRequested();
+
                 Metadata.DefaultFromContextPropertyBinder.Bind(
                     this,
                     Context
@@ -296,6 +322,7 @@ namespace HarshPoint.Provisioning.Implementation
                 );
 
                 await OnResolvedPropertiesBound();
+                token.ThrowIfCancellationRequested();
 
                 // parameter set resolving depends on values
                 // from context being already set
@@ -308,7 +335,10 @@ namespace HarshPoint.Provisioning.Implementation
                         OnValidating();
 
                         await InitializeAsync();
+                        token.ThrowIfCancellationRequested();
+
                         await action();
+                        token.ThrowIfCancellationRequested();
                     }
                     finally
                     {
@@ -316,7 +346,7 @@ namespace HarshPoint.Provisioning.Implementation
                     }
                 }
 
-                await childAction();
+                await childAction(token);
             });
 
         PropertyValueSource ITrackValueSource.GetValueSource(PropertyInfo property)

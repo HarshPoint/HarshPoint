@@ -74,6 +74,13 @@ namespace HarshPoint.Shellploy
                 throw Logger.Fatal.ArgumentNull(nameof(child));
             }
 
+            var psobject = (child as PSObject);
+
+            if (psobject != null)
+            {
+                child = psobject.BaseObject;
+            }
+
             var provisioner = (child as HarshProvisionerBase);
             var defaultFromContextTag = (child as IDefaultFromContextTag);
 

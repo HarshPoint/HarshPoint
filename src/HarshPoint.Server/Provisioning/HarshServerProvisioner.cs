@@ -4,6 +4,7 @@ using Microsoft.SharePoint.Administration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Server.Provisioning
@@ -67,7 +68,11 @@ namespace HarshPoint.Server.Provisioning
             }
         }
 
-        protected sealed override async Task ProvisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
+        protected sealed override async Task ProvisionChild(
+            HarshProvisionerBase provisioner, 
+            HarshServerProvisionerContext context,
+            CancellationToken token
+        )
         {
             if (provisioner == null)
             {
@@ -78,11 +83,15 @@ namespace HarshPoint.Server.Provisioning
 
             if (ShouldProvisionChild(serverProvisioner))
             {
-                await serverProvisioner.ProvisionAsync(context);
+                await serverProvisioner.ProvisionAsync(context, token);
             }
         }
 
-        protected sealed override async Task UnprovisionChild(HarshProvisionerBase provisioner, HarshServerProvisionerContext context)
+        protected sealed override async Task UnprovisionChild(
+            HarshProvisionerBase provisioner, 
+            HarshServerProvisionerContext context,
+            CancellationToken token
+        )
         {
             if (provisioner == null)
             {
@@ -93,7 +102,7 @@ namespace HarshPoint.Server.Provisioning
 
             if (ShouldUnprovisionChild(serverProvisioner))
             {
-                await serverProvisioner.UnprovisionAsync(context);
+                await serverProvisioner.UnprovisionAsync(context, token);
             }
         }
     }
