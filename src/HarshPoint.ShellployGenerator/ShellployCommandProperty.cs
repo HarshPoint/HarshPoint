@@ -4,6 +4,7 @@ using System.Linq;
 using SMA = System.Management.Automation;
 namespace HarshPoint.ShellployGenerator
 {
+    [Obsolete]
     public sealed class ShellployCommandProperty
     {
         public IEnumerable<AttributeData> ParameterAttributes

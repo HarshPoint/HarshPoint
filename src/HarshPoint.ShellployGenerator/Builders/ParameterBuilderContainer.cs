@@ -93,7 +93,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             {
                 _parameters = _parameters.SetItem(
                     name,
-                    parameter.WithNext(existing)
+                    parameter.WithNextElement(existing)
                 );
             }
         }

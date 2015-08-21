@@ -11,8 +11,9 @@ namespace HarshPoint.ShellployGenerator.Builders
         protected ParameterBuilder() { }
 
         protected ParameterBuilder(ParameterBuilder next)
+            : base(next)
         {
-            PrependTo(next);
+            SortOrder = next?.SortOrder;
         }
 
         protected ParameterBuilder(Int32? sortOrder)
@@ -25,6 +26,10 @@ namespace HarshPoint.ShellployGenerator.Builders
         public ParameterBuilder Append(ParameterBuilder other)
             => (ParameterBuilder)base.Append(other);
 
+        protected internal new ParameterBuilder NextElement
+            => base.NextElement;
+
+        [Obsolete]
         public virtual IEnumerable<ShellployCommandProperty> Synthesize()
         {
             if (NextElement == null)
@@ -42,6 +47,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             return properties;
         }
 
+        [Obsolete]
         protected virtual void Process(ShellployCommandProperty property)
         {
         }
@@ -50,21 +56,24 @@ namespace HarshPoint.ShellployGenerator.Builders
             where T : ParameterBuilder
             => Elements.OfType<T>().Any();
 
-        public virtual ParameterBuilder WithNext(ParameterBuilder next)
+        public virtual ParameterBuilder WithNextElement(ParameterBuilder next)
         {
-            var result = this;
+            var result = (ParameterBuilder)WithNext(next);
 
-            if (next != null && !SortOrder.HasValue)
+            if (!result.SortOrder.HasValue)
             {
-                result = WithSortOrder(next.SortOrder);
+                result = result.WithSortOrder(next.SortOrder);
             }
 
-            result.PrependTo(next);
             return result;
         }
 
         public ParameterBuilder WithSortOrder(Int32? sortOrder)
             => this.With(pb => pb.SortOrder = sortOrder);
+
+        protected internal abstract ParameterBuilder Accept(
+            ParameterBuilderVisitor visitor
+        );
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ParameterBuilder));

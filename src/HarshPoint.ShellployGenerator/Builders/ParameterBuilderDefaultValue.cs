@@ -2,7 +2,7 @@ using System;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class ParameterBuilderDefaultValue : ParameterBuilder
+    public sealed class ParameterBuilderDefaultValue : ParameterBuilder
     {
         internal ParameterBuilderDefaultValue(Object defaultValue)
         {
@@ -16,7 +16,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             property.DefaultValue = DefaultValue;
         }
 
-        public override ParameterBuilder WithNext(ParameterBuilder next)
+        public override ParameterBuilder WithNextElement(ParameterBuilder next)
         {
             if (next?.HasElementOfType<ParameterBuilderFixed>() ?? false)
             {
@@ -25,9 +25,18 @@ namespace HarshPoint.ShellployGenerator.Builders
                 );
             }
 
-            return base.WithNext(next);
+            return base.WithNextElement(next);
         }
 
+        protected internal override ParameterBuilder Accept(ParameterBuilderVisitor visitor)
+        {
+            if (visitor == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(visitor));
+            }
+
+            return visitor.VisitDefaultValue(this);
+        }
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ParameterBuilderDefaultValue));

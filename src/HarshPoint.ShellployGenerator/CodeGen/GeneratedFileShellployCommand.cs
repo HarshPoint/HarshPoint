@@ -38,7 +38,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 Types = { CreateClass() },
             };
 
-            var imports = Command.Usings
+            var imports = Command.ImportedNamespace
                 .Select(n => new CodeNamespaceImport(n))
                 .ToArray();
 

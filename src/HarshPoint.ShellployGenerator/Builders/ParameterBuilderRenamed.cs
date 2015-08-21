@@ -2,7 +2,7 @@
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class ParameterBuilderRenamed : ParameterBuilder
+    public sealed class ParameterBuilderRenamed : ParameterBuilder
     {
         internal ParameterBuilderRenamed(String propertyName)
         {
@@ -15,5 +15,20 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
             property.PropertyName = PropertyName;
         }
+
+        protected internal override ParameterBuilder Accept(
+            ParameterBuilderVisitor visitor
+        )
+        {
+            if (visitor == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(visitor));
+            }
+
+            return visitor.VisitRenamed(this);
+        }
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(ParameterBuilderRenamed));
     }
 }

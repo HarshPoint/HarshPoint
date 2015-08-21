@@ -2,7 +2,7 @@
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class ParameterBuilderInputObject : ParameterBuilder
+    public sealed class ParameterBuilderInputObject : ParameterBuilder
     {
         public ParameterBuilderInputObject(ParameterBuilder next)
             : base(next)
@@ -14,5 +14,20 @@ namespace HarshPoint.ShellployGenerator.Builders
             property.IsInputObject = true;
             property.IsPositional = true;
         }
+
+        protected internal override ParameterBuilder Accept(
+            ParameterBuilderVisitor visitor
+        )
+        {
+            if (visitor == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(visitor));
+            }
+
+            return visitor.VisitInputObject(this);
+        }
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(ParameterBuilderInputObject));
     }
 }

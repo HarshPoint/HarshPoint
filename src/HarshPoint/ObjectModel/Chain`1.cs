@@ -7,7 +7,12 @@ namespace HarshPoint.ObjectModel
 {
     public class Chain<TElement> : IHarshCloneable
     {
-        private static readonly HarshLogger Logger = HarshLog.ForContext<Chain<TElement>>();
+        protected Chain() { }
+
+        protected Chain(Chain<TElement> next)
+        {
+            Next = next;
+        }
 
         protected Chain<TElement> Append(Chain<TElement> other)
         {
@@ -32,16 +37,14 @@ namespace HarshPoint.ObjectModel
             return clone;
         }
 
-        protected void PrependTo(Chain<TElement> other)
+        protected Chain<TElement> WithNext(Chain<TElement> next)
         {
-            if (Next != null)
+            if (Next == next)
             {
-                throw Logger.Fatal.InvalidOperation(
-                    SR.Chain_AlreadyHasNext
-                );
+                return this;
             }
 
-            Next = other;
+            return this.With(c => c.Next = next);
         }
 
         protected IEnumerable<TElement> Elements => GetChainElements().Cast<TElement>();
@@ -69,5 +72,8 @@ namespace HarshPoint.ObjectModel
         }
 
         Object IHarshCloneable.Clone() => Clone();
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext<Chain<TElement>>();
     }
 }

@@ -119,6 +119,7 @@
     <Compile Include="Builders\NewProvisionerCommandBuilder`1.cs" />
     <Compile Include="Builders\ParameterBuilderContainer.cs" />
     <Compile Include="Builders\ParameterBuilderFactory.cs" />
+    <Compile Include="Builders\ParameterBuilderVisitor.cs" />
     <Compile Include="CodeGen\AttributeDataToCodeDom.cs" />
     <Compile Include="CodeGen\CodeGeneratorContext.cs" />
     <Compile Include="CodeGen\CodeLiteralExpression.cs" />

@@ -163,12 +163,17 @@ namespace HarshPoint.ShellployGenerator.Builders
                 Name = Name,
                 Namespace = Namespace,
                 Properties = propertyArray,
-                Usings = ImportedNamespaces.ToImmutableArray(),
+                ImportedNamespace = ImportedNamespaces.ToImmutableArray(),
             };
         }
 
         protected virtual IEnumerable<ShellployCommandProperty> CreateProperties()
             => Enumerable.Empty<ShellployCommandProperty>();
+
+        internal virtual CommandBuilder Accept(ParameterBuilderVisitor visitor)
+        {
+            return this;
+        }
 
         private static void AssignParameterPositions(
             IEnumerable<ShellployCommandProperty> properties

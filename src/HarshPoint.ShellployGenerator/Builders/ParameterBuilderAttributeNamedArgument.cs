@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
+    [Obsolete]
     internal sealed class ParameterBuilderAttributeNamedArgument : ParameterBuilder
     {
         public ParameterBuilderAttributeNamedArgument(
@@ -33,5 +34,16 @@ namespace HarshPoint.ShellployGenerator.Builders
                 attr.NamedArguments[Name] = Value;
             }
         }
+
+        protected internal override ParameterBuilder Accept(
+            ParameterBuilderVisitor visitor
+        )
+        {
+            throw new NotImplementedException();
+        }
+
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(ParameterBuilderAttributeNamedArgument));
     }
 }

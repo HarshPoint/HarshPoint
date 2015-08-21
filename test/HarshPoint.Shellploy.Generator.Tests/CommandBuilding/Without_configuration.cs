@@ -12,23 +12,25 @@ namespace CommandBuilding
 {
     public class Without_configuration : SeriloggedTest
     {
+        private readonly CommandBuilder _builder;
         private readonly ShellployCommand _command;
 
         public Without_configuration(ITestOutputHelper output) : base(output)
         {
-            _command = new NewObjectCommandBuilder<EmptyProvisioner>().ToCommand();
+            _builder = new NewObjectCommandBuilder<EmptyProvisioner>();
+            _command = _builder.ToCommand();
         }
 
         [Fact]
         public void Has_ClassName()
         {
-            Assert.Equal($"New{nameof(EmptyProvisioner)}Command", _command.ClassName);
+            Assert.Equal($"New{nameof(EmptyProvisioner)}Command", _builder.ClassName);
         }
 
         [Fact]
         public void Doesnt_have_InputObject()
         {
-            Assert.False(_command.HasInputObject);
+            Assert.False(_builder.HasInputObject);
         }
 
         [Fact]
@@ -40,7 +42,7 @@ namespace CommandBuilding
         [Fact]
         public void Has_name()
         {
-            Assert.Equal($"New-{nameof(EmptyProvisioner)}", _command.Name);
+            Assert.Equal($"New-{nameof(EmptyProvisioner)}", _builder.Name);
         }
 
         [Fact]

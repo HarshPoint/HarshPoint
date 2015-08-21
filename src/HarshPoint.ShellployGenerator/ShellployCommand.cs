@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 
 namespace HarshPoint.ShellployGenerator
 {
+    [Obsolete]
     public sealed class ShellployCommand
     {
         public IEnumerable<String> Aliases { get; set; }
@@ -15,6 +16,6 @@ namespace HarshPoint.ShellployGenerator
         public Type ProvisionerType { get; set; }
         public String Namespace { get; set; }
         public IImmutableList<ShellployCommandProperty> Properties { get; set; }
-        public IImmutableList<String> Usings { get; set; }
+        public IImmutableList<String> ImportedNamespace { get; set; }
     }
 }

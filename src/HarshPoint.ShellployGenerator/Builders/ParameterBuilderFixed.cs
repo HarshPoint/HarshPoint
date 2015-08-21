@@ -2,7 +2,7 @@ using System;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class ParameterBuilderFixed : ParameterBuilder
+    public sealed class ParameterBuilderFixed : ParameterBuilder
     {
         internal ParameterBuilderFixed(Object value)
         {
@@ -11,7 +11,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Object Value { get; }
 
-        public override ParameterBuilder WithNext(ParameterBuilder next)
+        public override ParameterBuilder WithNextElement(ParameterBuilder next)
         {
             if (next?.HasElementOfType<ParameterBuilderDefaultValue>() ?? false)
             {
@@ -20,13 +20,23 @@ namespace HarshPoint.ShellployGenerator.Builders
                 );
             }
 
-            return base.WithNext(next);
+            return base.WithNextElement(next);
         }
 
         protected override void Process(ShellployCommandProperty property)
         {
             property.HasFixedValue = true;
             property.FixedValue = Value;
+        }
+
+        protected internal override ParameterBuilder Accept(ParameterBuilderVisitor visitor)
+        {
+            if (visitor == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(visitor));
+            }
+
+            return visitor.VisitFixed(this);
         }
 
         private static readonly HarshLogger Logger

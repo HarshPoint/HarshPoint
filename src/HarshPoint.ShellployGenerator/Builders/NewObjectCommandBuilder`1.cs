@@ -104,6 +104,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Type TargetType => typeof(TTarget);
 
+
         private void InitializeFromMetadata(HarshParametrizedObjectMetadata metadata)
         {
             if ((metadata.DefaultParameterSet != null) &&

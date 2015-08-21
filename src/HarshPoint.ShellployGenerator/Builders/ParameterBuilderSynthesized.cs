@@ -6,7 +6,7 @@ using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class ParameterBuilderSynthesized : ParameterBuilder
+    public sealed class ParameterBuilderSynthesized : ParameterBuilder
     {
         internal ParameterBuilderSynthesized(
             String name,
@@ -55,7 +55,13 @@ namespace HarshPoint.ShellployGenerator.Builders
                 }
             );
 
-        public override ParameterBuilder WithNext(ParameterBuilder next)
+        /// <summary>
+        /// <see cref="ParameterBuilderSynthesized"/> Always has to be at the end
+        /// of the chain
+        /// </summary>
+        /// <param name="next"></param>
+        /// <returns></returns>
+        public override ParameterBuilder WithNextElement(ParameterBuilder next)
         {
             if (next == null)
             {
@@ -70,6 +76,16 @@ namespace HarshPoint.ShellployGenerator.Builders
             }
 
             return next.Append(WithSortOrder(next.SortOrder));
+        }
+
+        protected internal override ParameterBuilder Accept(ParameterBuilderVisitor visitor)
+        {
+            if (visitor == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(visitor));
+            }
+
+            return visitor.VisitSynthesized(this);
         }
 
         private static Boolean IsParameterAttribute(AttributeData data)
