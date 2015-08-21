@@ -19,7 +19,7 @@ namespace HarshPoint.Tests.Provisioning
             var sets = Build<OnlyDefaultParameterSet>();
             var set = Assert.Single(sets);
 
-            Assert.Equal(ParameterSet.ImplicitParameterSetName, set.Name);
+            Assert.True(set.IsImplicit);
             Assert.True(set.IsDefault);
             Assert.Equal(2, set.Parameters.Count);
 
@@ -36,7 +36,7 @@ namespace HarshPoint.Tests.Provisioning
             var sets = Build<NoParameters>();
             var set = Assert.Single(sets);
 
-            Assert.Equal("__DefaultParameterSet", set.Name);
+            Assert.True(set.IsImplicit);
             Assert.True(set.IsDefault);
             Assert.Empty(set.Parameters);
         }

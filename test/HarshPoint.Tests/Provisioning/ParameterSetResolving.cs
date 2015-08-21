@@ -18,7 +18,7 @@ namespace HarshPoint.Tests.Provisioning
             var set = Resolve(new ImplicitEmptyParamSet());
             Assert.NotNull(set);
             Assert.True(set.IsDefault);
-            Assert.Equal(ParameterSet.ImplicitParameterSetName, set.Name);
+            Assert.True(set.IsImplicit);
             Assert.Empty(set.Parameters);
         }
 
@@ -32,7 +32,7 @@ namespace HarshPoint.Tests.Provisioning
             });
             Assert.NotNull(set);
             Assert.True(set.IsDefault);
-            Assert.Equal(ParameterSet.ImplicitParameterSetName, set.Name);
+            Assert.True(set.IsImplicit);
             Assert.Equal(2, set.Parameters.Count);
         }
 

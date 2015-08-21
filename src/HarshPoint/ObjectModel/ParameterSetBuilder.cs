@@ -288,10 +288,8 @@ namespace HarshPoint.ObjectModel
             );
 
             return ImmutableArray.Create(
-                new ParameterSet(
-                    ParameterSet.ImplicitParameterSetName,
-                    commonParameters,
-                    true
+                ParameterSet.CreateImplicit(
+                    commonParameters
                 )
             );
         }

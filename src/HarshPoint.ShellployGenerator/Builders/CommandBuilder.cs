@@ -33,7 +33,12 @@ namespace HarshPoint.ShellployGenerator.Builders
                 ConstructorArguments = { metadata.ObjectType }
             });
 
-            DefaultParameterSetName = metadata.DefaultParameterSet?.Name;
+            if ((metadata.DefaultParameterSet != null) &&
+                (!metadata.DefaultParameterSet.IsImplicit))
+            {
+                DefaultParameterSetName = metadata.DefaultParameterSet.Name;
+            }
+
             Noun = metadata.ObjectType.Name;
             Verb = SMA.VerbsCommon.New;
 

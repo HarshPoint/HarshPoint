@@ -105,6 +105,20 @@ namespace CommandBuilding
             Assert.Equal(typeof(EmptyProvisioner), attr.ConstructorArguments[0]);
         }
 
+        [Fact]
+        public void Doesnt_have_DefaultParameterSet()
+        {
+            var attr = Assert.Single(
+                _command.Attributes,
+                WithAttributeType<SMA.CmdletAttribute>
+            );
+
+            Assert.DoesNotContain(
+                attr.NamedArguments,
+                a => a.Key == "DefaultParameterSetName"
+            );
+        }
+
         private class EmptyProvisioner : HarshProvisioner
         {
         }

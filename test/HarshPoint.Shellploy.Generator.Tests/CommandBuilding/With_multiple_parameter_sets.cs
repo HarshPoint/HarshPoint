@@ -15,22 +15,22 @@ namespace CommandBuilding
         public With_multiple_parameter_sets(ITestOutputHelper output) : base(output)
         {
             var builder = new CommandBuilder<TestProvisioner>();
-            var command = builder.ToCommand();
+            Command = builder.ToCommand();
 
-            Assert.Equal(3, command.Properties.Count);
+            Assert.Equal(3, Command.Properties.Count);
 
             Common = Assert.Single(
-                command.Properties,
+                Command.Properties,
                 p => p.Identifier == "Common"
             );
 
             SetA_Mandatory = Assert.Single(
-                command.Properties,
+                Command.Properties,
                 p => p.Identifier == "SetA_Mandatory"
             );
 
             SetAB_MandatoryB = Assert.Single(
-                command.Properties,
+                Command.Properties,
                 p => p.Identifier == "SetAB_MandatoryB"
             );
         }
@@ -38,6 +38,7 @@ namespace CommandBuilding
         private ShellployCommandProperty Common { get; }
         private ShellployCommandProperty SetA_Mandatory { get; }
         private ShellployCommandProperty SetAB_MandatoryB { get; }
+        internal ShellployCommand Command { get; }
 
         [Fact]
         public void Common_has_single_attribute()
@@ -109,6 +110,21 @@ namespace CommandBuilding
 
             Assert.Equal(true, mandatory.Value);
         }
+
+        [Fact]
+        public void Doesnt_have_DefaultParameterSet()
+        {
+            var attr = Assert.Single(
+                Command.Attributes,
+                a => a.AttributeType == typeof(SMA.CmdletAttribute)
+            );
+
+            Assert.DoesNotContain(
+                attr.NamedArguments,
+                a => a.Key == "DefaultParameterSetName"
+            );
+        }
+
         private sealed class TestProvisioner : HarshProvisioner
         {
             [Parameter]

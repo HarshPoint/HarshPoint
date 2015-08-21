@@ -9,9 +9,7 @@ namespace HarshPoint.ShellployGenerator.Commands
     {
         public HarshPointCommandBuilder()
         {
-            Aliases.Add(
-                Regex.Replace(ProvisionerType.Name, "^Harsh(Modify)?", "")
-            );
+            Aliases.Add(Regex.Replace(typeof(T).Name, "^Harsh(Modify)?", ""));
 
             Namespace = "HarshPoint.Shellploy";
             ImportedNamespaces.Add("HarshPoint.Provisioning");
