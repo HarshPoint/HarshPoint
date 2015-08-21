@@ -166,7 +166,7 @@
     <Compile Include="Provisioning\DateTimeFieldProvisioning.cs" />
     <Compile Include="Provisioning\DefaultFromContextTests.cs" />
     <Compile Include="Provisioning\FieldProvisionerTests.cs" />
-    <Compile Include="Provisioning\Implementation\ChainTests.cs" />
+    <Compile Include="ObjectModel\ChainTests.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectUpdating.cs" />
     <Compile Include="Provisioning\Implementation\ManualResolving.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveResults.cs" />

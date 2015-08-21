@@ -71,6 +71,7 @@
     <Compile Include="Diagnostics\HarshLoggerFatal.cs" />
     <Compile Include="Diagnostics\HarshLoggerError.cs" />
     <Compile Include="HarshExpression.cs" />
+    <Compile Include="HarshKeyValuePair.cs" />
     <Compile Include="HarshLazy.cs" />
     <Compile Include="HarshLog.cs" />
     <Compile Include="HarshLogger.cs" />
@@ -105,7 +106,7 @@
     <Compile Include="Provisioning\HarshModifyFieldMultilineText.cs" />
     <Compile Include="Provisioning\HarshProvisionerOutputSink.cs" />
     <Compile Include="Provisioning\HarshProvisionerOutput.cs" />
-    <Compile Include="Provisioning\Implementation\Chain`1.cs" />
+    <Compile Include="ObjectModel\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectUpdater.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectUpdater_Builder`2.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyValueSource.cs" />

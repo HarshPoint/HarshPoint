@@ -12,8 +12,11 @@ namespace HarshPoint.ShellployGenerator.Commands
         {
             AsChildOf<HarshField>(parent =>
             {
-                parent.SetFixedValue(x => x.Type, FieldType.Lookup);
-                parent.Ignore(x => x.TypeName);
+                parent.Parameter(x => x.Type)
+                    .SetFixedValue(FieldType.Lookup);
+
+                parent.Parameter(x => x.TypeName)
+                    .Ignore();
             });
 
             Parameter("TargetListUrl")

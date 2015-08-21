@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace HarshPoint.Provisioning.Implementation
+namespace HarshPoint.ObjectModel
 {
-    public class Chain<TElement>
+    public class Chain<TElement> : IHarshCloneable
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext<Chain<TElement>>();
 
@@ -31,7 +32,21 @@ namespace HarshPoint.Provisioning.Implementation
             return clone;
         }
 
+        protected void PrependTo(Chain<TElement> other)
+        {
+            if (Next != null)
+            {
+                throw Logger.Fatal.InvalidOperation(
+                    SR.Chain_AlreadyHasNext
+                );
+            }
+
+            Next = other;
+        }
+
         protected IEnumerable<TElement> Elements => GetChainElements().Cast<TElement>();
+
+        protected TElement NextElement => (TElement)(Object)Next;
 
         private Chain<TElement> Next { get; set; }
 
@@ -52,5 +67,7 @@ namespace HarshPoint.Provisioning.Implementation
                 current = current.Next;
             }
         }
+
+        Object IHarshCloneable.Clone() => Clone();
     }
 }

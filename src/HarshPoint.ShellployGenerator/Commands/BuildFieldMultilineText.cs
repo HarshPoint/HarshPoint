@@ -10,8 +10,8 @@ namespace HarshPoint.ShellployGenerator.Commands
         {
             AsChildOf<HarshField>(p =>
             {
-                p.SetFixedValue(x => x.Type, FieldType.Note);
-                p.Ignore(x => x.TypeName);
+                p.Parameter(x => x.Type).SetFixedValue(FieldType.Note);
+                p.Parameter(x => x.TypeName).Ignore();
             });
         }
     }

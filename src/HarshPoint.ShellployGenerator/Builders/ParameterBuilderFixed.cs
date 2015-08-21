@@ -11,7 +11,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Object Value { get; }
 
-        internal override void Process(ShellployCommandProperty property)
+        protected override void Process(ShellployCommandProperty property)
         {
             property.HasFixedValue = true;
             property.FixedValue = Value;

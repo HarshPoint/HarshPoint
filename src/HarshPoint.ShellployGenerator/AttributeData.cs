@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace HarshPoint.ShellployGenerator
 {
-    internal sealed class AttributeData
+    public sealed class AttributeData
     {
         private readonly Collection<Object> _ctorArgs
             = new Collection<Object>();

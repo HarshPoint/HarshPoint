@@ -9,85 +9,70 @@ using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal partial class CommandBuilder<TProvisioner> : CommandBuilder
+    internal partial class CommandBuilder<TTarget> : CommandBuilder
     {
-        private Int32 _nextPositionalParam;
+        private readonly ParameterBuilderContainer<TTarget> _parameters
+            = new ParameterBuilderContainer<TTarget>();
 
-        public CommandBuilder() : base(SharedMetadata) { }
+        public CommandBuilder() : base(Metadata) { }
 
-        public override Type ProvisionerType => typeof(TProvisioner);
+        public override Type ProvisionerType => typeof(TTarget);
+
+        public void AsChildOf<TParent>()
+        {
+            AsChildOf<TParent>(null);
+        }
 
         public void AsChildOf<TParent>(
-            Action<ChildCommandBuilder<TProvisioner, TParent>> action
+            Action<ChildCommandBuilder<TTarget, TParent>> action
         )
         {
-            var result = new ChildCommandBuilder<TProvisioner, TParent>();
-            ChildBuilder = result;
-            action(result);
+            if (ChildBuilder == null)
+            {
+                ChildBuilder = new ChildCommandBuilder<TTarget, TParent>();
+            }
+
+            var builder = (ChildBuilder as ChildCommandBuilder<TTarget, TParent>);
+            if (builder == null)
+            {
+                throw Logger.Fatal.InvalidOperationFormat(
+                    SR.CommandBuilder_AlreadyChildOf,
+                    ChildBuilder.ProvisionerType
+                );
+            }
+
+            if (action != null)
+            {
+                action(builder);
+            }
         }
 
-        public ParameterBuilderFactory<TProvisioner> Parameter(
-            Expression<Func<TProvisioner, Object>> expression
+        public ParameterBuilderFactory<TTarget> Parameter(
+            Expression<Func<TTarget, Object>> expression
         )
-            => GetParameterFactory(expression);
+            => _parameters.GetFactory(expression);
 
-        public ParameterBuilderFactory<TProvisioner> PositionalParameter(
-            Expression<Func<TProvisioner, Object>> expression
+        public ParameterBuilderFactory<TTarget> PositionalParameter(
+            Expression<Func<TTarget, Object>> expression
         )
-            => GetParameterFactory(expression, isPositional: true);
+            => _parameters.GetFactory(expression, isPositional: true);
 
-        public ParameterBuilderFactory<TProvisioner> Parameter(String name)
-            => GetParameterFactory(name);
+        public ParameterBuilderFactory<TTarget> Parameter(String name)
+            => _parameters.GetFactory(name);
 
-        public ParameterBuilderFactory<TProvisioner> PositionalParameter(
+        public ParameterBuilderFactory<TTarget> PositionalParameter(
             String name
         )
-            => GetParameterFactory(name, isPositional: true);
+            => _parameters.GetFactory(name, isPositional: true);
 
-        private ParameterBuilderFactory<TProvisioner> GetParameterFactory(
-            Expression<Func<TProvisioner, Object>> expression,
-            Boolean isPositional = false
-        )
-        {
-            if (expression == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(expression));
-            }
+        protected sealed override ParameterBuilderContainer Parameters
+            => _parameters;
 
-            var name = expression.ExtractLastPropertyAccess().Name;
-            return GetParameterFactory(name, isPositional);
-        }
-
-        private ParameterBuilderFactory<TProvisioner> GetParameterFactory(
-            String name,
-            Boolean isPositional = false
-        )
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
-            }
-
-            if (isPositional)
-            {
-                SetParameter(
-                    name,
-                    new ParameterBuilderPositional(_nextPositionalParam)
-                );
-
-                _nextPositionalParam++;
-            }
-
-            return new ParameterBuilderFactory<TProvisioner>(
-                this,
-                name
-            );
-        }
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(CommandBuilder<>));
 
-        private static readonly HarshProvisionerMetadata SharedMetadata
-           = HarshProvisionerMetadataRepository.Get(typeof(TProvisioner));
+        private static readonly HarshProvisionerMetadata Metadata
+           = HarshProvisionerMetadataRepository.Get(typeof(TTarget));
     }
 }

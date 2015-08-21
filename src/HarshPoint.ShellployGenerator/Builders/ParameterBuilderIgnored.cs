@@ -5,7 +5,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     internal sealed class ParameterBuilderIgnored : ParameterBuilder
     {
-        internal override IEnumerable<ShellployCommandProperty> Synthesize()
+        public override IEnumerable<ShellployCommandProperty> Synthesize()
             => ImmutableArray<ShellployCommandProperty>.Empty;
     }
 }

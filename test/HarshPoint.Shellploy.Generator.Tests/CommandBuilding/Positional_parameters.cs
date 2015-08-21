@@ -15,18 +15,20 @@ namespace CommandBuilding
 {
     public class Positional_parameters : SeriloggedTest
     {
+        private readonly CommandBuilder<TestProvisioner> _builder;
+        private readonly ShellployCommand _command;
+
         private readonly ShellployCommandProperty _named;
         private readonly ShellployCommandProperty _pos0;
         private readonly ShellployCommandProperty _pos1;
-        private readonly ShellployCommand _command;
 
         public Positional_parameters(ITestOutputHelper output) : base(output)
         {
-            var builder = new CommandBuilder<TestProvisioner>();
-            builder.PositionalParameter(x => x.Pos0);
-            builder.PositionalParameter(x => x.Pos1);
+            _builder = new CommandBuilder<TestProvisioner>();
+            _builder.PositionalParameter(x => x.Pos0);
+            _builder.PositionalParameter(x => x.Pos1);
 
-            _command = builder.ToCommand();
+            _command = _builder.ToCommand();
 
             _pos0 = Assert.Single(
                 _command.Properties, 
@@ -52,7 +54,6 @@ namespace CommandBuilding
             Assert.Same(_named, _command.Properties[2]);
         }
 
-
         [Fact]
         public void Pos0_has_position_0()
         {
@@ -65,7 +66,6 @@ namespace CommandBuilding
 
             Assert.Equal(0, pos.Value);
         }
-
 
         [Fact]
         public void Pos0_is_positional()
@@ -103,6 +103,8 @@ namespace CommandBuilding
                 na => na.Key == "Position"
             );
         }
+
+
 
         private sealed class TestProvisioner : HarshProvisioner
         {

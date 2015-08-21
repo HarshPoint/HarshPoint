@@ -11,8 +11,13 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     internal abstract partial class CommandBuilder
     {
-        private ImmutableDictionary<String, ParameterBuilder> _parameters
-            = ImmutableDictionary<String, ParameterBuilder>.Empty;
+        private readonly AttributeData _cmdletAttribute
+            = new AttributeData(typeof(SMA.CmdletAttribute))
+            {
+                ConstructorArguments = { null, null }
+            };
+
+        private CommandBuilderContext _context = EmptyContext;
 
         protected CommandBuilder(HarshProvisionerMetadata metadata)
         {
@@ -21,13 +26,23 @@ namespace HarshPoint.ShellployGenerator.Builders
                 throw Logger.Fatal.ArgumentNull(nameof(metadata));
             }
 
-            Metadata = metadata;
+            Attributes.Add(_cmdletAttribute);
+
+            Attributes.Add(new AttributeData(typeof(SMA.OutputTypeAttribute))
+            {
+                ConstructorArguments = { metadata.ObjectType }
+            });
+
             DefaultParameterSetName = metadata.DefaultParameterSet?.Name;
+            Noun = metadata.ObjectType.Name;
+            Verb = SMA.VerbsCommon.New;
 
             foreach (var grouping in metadata.PropertyParameters)
             {
                 var property = grouping.Key;
                 var parameters = grouping.AsEnumerable();
+
+                ValidateParameterName(property.Name);
 
                 if (parameters.Any(p => p.IsCommonParameter))
                 {
@@ -39,11 +54,11 @@ namespace HarshPoint.ShellployGenerator.Builders
                 var synthesized = new ParameterBuilderSynthesized(
                     property.Name,
                     property.PropertyType,
-                    Metadata.ObjectType,
+                    metadata.ObjectType,
                     attributes
                 );
 
-                SetParameter(property.Name, synthesized);
+                Parameters.Update(property.Name, synthesized);
             }
         }
 
@@ -53,7 +68,19 @@ namespace HarshPoint.ShellployGenerator.Builders
         public Collection<AttributeData> Attributes { get; }
             = new Collection<AttributeData>();
 
-        public String DefaultParameterSetName { get; set; }
+        public String DefaultParameterSetName
+        {
+            get
+            {
+                return (String)_cmdletAttribute.NamedArguments
+                    .GetValueOrDefault("DefaultParameterSetName");
+            }
+            set
+            {
+                _cmdletAttribute.NamedArguments["DefaultParameterSetName"]
+                    = value;
+            }
+        }
 
         public Boolean HasInputObject { get; set; }
 
@@ -62,30 +89,121 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public String Namespace { get; set; }
 
-        protected IChildCommandBuilder ChildBuilder { get; set; }
-
-        protected HarshProvisionerMetadata Metadata { get; }
+        public String Noun
+        {
+            get { return (String)_cmdletAttribute.ConstructorArguments[1]; }
+            set { _cmdletAttribute.ConstructorArguments[1] = value; }
+        }
 
         public abstract Type ProvisionerType { get; }
 
-        internal void SetParameter(
-            String name,
-            ParameterBuilder parameter
-        )
+        public String Verb
         {
-            ValidateParameterName(name);
+            get { return (String)_cmdletAttribute.ConstructorArguments[0]; }
+            set { _cmdletAttribute.ConstructorArguments[0] = value; }
+        }
 
-            var existing = _parameters.GetValueOrDefault(name);
+        protected IChildCommandBuilder ChildBuilder { get; set; }
 
-            if (parameter == existing)
+        protected internal CommandBuilderContext Context
+        {
+            get
             {
-                return;
+                if (_context == null)
+                {
+                    throw Logger.Fatal.InvalidOperation(
+                        SR.CommandBuilder_NoContext
+                    );
+                }
+
+                return _context;
+            }
+            internal set { _context = value; }
+        }
+
+        protected abstract ParameterBuilderContainer Parameters
+        {
+            get;
+        }
+
+        protected CommandBuilder ParentBuilder
+        {
+            get
+            {
+                if (ChildBuilder != null)
+                {
+
+                    return Context.GetBuilder(ChildBuilder.ProvisionerType);
+                }
+
+                return null;
+            }
+        }
+
+        internal IImmutableList<Type> ParentProvisionerTypes
+        {
+            get
+            {
+                if (ParentBuilder != null)
+                {
+                    return ParentBuilder
+                        .ParentProvisionerTypes
+                        .Add(ParentBuilder.ProvisionerType);
+                }
+
+                return ImmutableList<Type>.Empty;
+            }
+        }
+
+        internal ShellployCommand ToCommand()
+        {
+            var properties = GetParametersRecursively()
+                .SelectMany(p => p.Value.Synthesize())
+                .ToImmutableArray();
+
+            AssignParameterPositions(properties);
+
+            return new ShellployCommand
+            {
+                Attributes = Attributes.ToImmutableArray(),
+                Aliases = Aliases.ToImmutableArray(),
+                ClassName = $"{Verb}{Noun}Command",
+                HasInputObject = properties.Any(p => p.IsInputObject),
+                Name = $"{Verb}-{Noun}",
+                Namespace = Namespace,
+                Properties = properties,
+                ParentProvisionerTypes = ParentProvisionerTypes,
+                ProvisionerType = ProvisionerType,
+                Usings = ImportedNamespaces.ToImmutableArray(),
+            };
+        }
+
+        internal ImmutableList<KeyValuePair<String, ParameterBuilder>> 
+        GetParametersRecursively()
+        {
+            var parametersSorted
+                = ImmutableList<KeyValuePair<String, ParameterBuilder>>.Empty;
+
+            if (ChildBuilder != null)
+            {
+                parametersSorted = ChildBuilder.Parameters
+                    .ApplyTo(ParentBuilder.GetParametersRecursively())
+                    .ToImmutableList();
             }
 
-            _parameters = _parameters.SetItem(
-                name,
-                parameter.CreateFrom(existing)
+            parametersSorted = parametersSorted.AddRange(
+                from param in Parameters
+                select param.WithValue(
+                    SetValueFromPipelineByPropertyName(param.Value)
+                )
             );
+
+            if (HasInputObject)
+            {
+                parametersSorted = parametersSorted.Add(InputObjectParameter);
+            }
+
+            return parametersSorted;
         }
 
         private static void AssignParameterPositions(
@@ -102,23 +220,6 @@ namespace HarshPoint.ShellployGenerator.Builders
                 }
 
                 currentPosition++;
-            }
-        }
-
-        internal static void ValidateParameterName(String name)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
-            }
-
-            if (ReservedNames.Contains(name))
-            {
-                throw Logger.Fatal.ArgumentFormat(
-                    nameof(name),
-                    SR.CommandBuilder_ReservedName,
-                    name
-                );
             }
         }
 
@@ -148,6 +249,42 @@ namespace HarshPoint.ShellployGenerator.Builders
                 true,
                 parameter
             );
+
+        internal static void ValidateParameterName(String name)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
+            }
+
+            if (ReservedNames.Contains(name))
+            {
+                throw Logger.Fatal.ArgumentFormat(
+                    nameof(name),
+                    SR.CommandBuilder_ReservedName,
+                    name
+                );
+            }
+        }
+
+        private static readonly KeyValuePair<String, ParameterBuilder> InputObjectParameter
+            = new KeyValuePair<String, ParameterBuilder>(
+                ShellployCommand.InputObjectPropertyName,
+                new ParameterBuilderInputObject(
+                    new ParameterBuilderAttributeNamedArgument(
+                        typeof(SMA.ParameterAttribute),
+                        "ValueFromPipeline",
+                        true,
+                        new ParameterBuilderSynthesized(
+                            ShellployCommand.InputObjectPropertyName,
+                            typeof(Object)
+                        )
+                    )
+                )
+            );
+
+        private static readonly CommandBuilderContext EmptyContext
+            = new CommandBuilderContext();
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(CommandBuilder));

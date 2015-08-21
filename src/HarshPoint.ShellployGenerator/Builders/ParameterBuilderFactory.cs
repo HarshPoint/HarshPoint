@@ -3,14 +3,15 @@ using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class ParameterBuilderFactory<TProvisioner>
+    public sealed class ParameterBuilderFactory<TProvisioner> :
+        IChildParameterBuilderFactory<TProvisioner>
     {
         internal ParameterBuilderFactory(
-            CommandBuilder<TProvisioner> builder,
+            ParameterBuilderContainer container,
             String name
         )
         {
-            Builder = builder;
+            Container = container;
             Name = name;
         }
 
@@ -82,12 +83,21 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         private void Set(ParameterBuilder parameter)
         {
-            Builder.SetParameter(Name, parameter);
+            Container.Update(Name, parameter);
         }
 
-        private CommandBuilder<TProvisioner> Builder { get; }
+        IChildParameterBuilderFactory<TProvisioner>
+        IChildParameterBuilderFactory<TProvisioner>.Ignore()
+            => Ignore();
+
+        IChildParameterBuilderFactory<TProvisioner>
+        IChildParameterBuilderFactory<TProvisioner>.SetFixedValue(Object value)
+            => SetFixedValue(value);
+
+        private ParameterBuilderContainer Container { get; }
 
         private String Name { get; }
+
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ParameterBuilderFactory<>));

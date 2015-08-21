@@ -1,20 +1,18 @@
-﻿using HarshPoint;
-using HarshPoint.Provisioning;
+﻿using HarshPoint.Provisioning;
 using HarshPoint.ShellployGenerator;
 using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
-using System;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace CommandBuilding
 {
-    public class With_InputObject : SeriloggedTest
+    public class InputObject_parameter : SeriloggedTest
     {
         private readonly ShellployCommandProperty _property;
         private readonly AttributeData _paramAttr;
 
-        public With_InputObject(ITestOutputHelper output) : base(output)
+        public InputObject_parameter(ITestOutputHelper output) : base(output)
         {
             var builder = new CommandBuilder<EmptyProvisioner>();
             builder.HasInputObject = true;
@@ -93,6 +91,8 @@ namespace CommandBuilding
                 na => na.Key == "ValueFromPipelineByPropertyName"
             );
         }
+
+
 
         private sealed class EmptyProvisioner : HarshProvisioner
         {

@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
     internal interface IChildCommandBuilder
     {
-        IEnumerable<ShellployCommandProperty> Process(
-            IEnumerable<ShellployCommandProperty> parentProperties
-        );
+        ParameterBuilderContainer Parameters { get; }
         Type ProvisionerType { get; }
-
-//        IChildParameterBuilder Parameter(String name)
-    }
-
-    internal interface IChildParameterBuilder
-    {
-        void Ignore();
     }
 }

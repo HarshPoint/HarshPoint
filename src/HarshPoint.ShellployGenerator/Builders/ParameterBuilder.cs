@@ -1,23 +1,38 @@
+using HarshPoint.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal abstract class ParameterBuilder
+    internal abstract class ParameterBuilder : Chain<ParameterBuilder>
     {
-        internal ParameterBuilder Previous { get; set; }
+        protected ParameterBuilder() { }
 
-        internal Int32? SortOrder { get; set; }
-
-        internal virtual IEnumerable<ShellployCommandProperty> Synthesize()
+        protected ParameterBuilder(ParameterBuilder next)
         {
-            if (Previous == null)
+            PrependTo(next);
+        }
+
+        protected ParameterBuilder(Int32? sortOrder)
+        {
+            SortOrder = sortOrder;
+        }
+
+        public Int32? SortOrder { get; private set; }
+
+        internal ParameterBuilder Append(ParameterBuilder other)
+            => (ParameterBuilder)base.Append(other);
+
+        public virtual IEnumerable<ShellployCommandProperty> Synthesize()
+        {
+            if (NextElement == null)
             {
                 return ImmutableArray<ShellployCommandProperty>.Empty;
             }
 
-            var properties = Previous.Synthesize();
+            var properties = NextElement.Synthesize();
 
             foreach (var prop in properties)
             {
@@ -27,23 +42,31 @@ namespace HarshPoint.ShellployGenerator.Builders
             return properties;
         }
 
-        internal virtual void Process(ShellployCommandProperty property)
+        protected virtual void Process(ShellployCommandProperty property)
         {
         }
 
-        internal virtual ParameterBuilder CreateFrom(ParameterBuilder previous)
-        {
-            InitializeFrom(previous);
-            return this;
-        }
+        internal Boolean HasElementOfType<T>()
+            where T : ParameterBuilder
+            => Elements.OfType<T>().Any();
 
-        internal virtual void InitializeFrom(ParameterBuilder previous)
+        internal virtual ParameterBuilder WithNext(ParameterBuilder next)
         {
-            if (previous != null)
+            var result = this;
+
+            if (next != null && !SortOrder.HasValue)
             {
-                Previous = previous;
-                SortOrder = SortOrder ?? previous.SortOrder;
+                result = WithSortOrder(next.SortOrder);
             }
+
+            result.PrependTo(next);
+            return result;
         }
+
+        internal ParameterBuilder WithSortOrder(Int32? sortOrder)
+            => this.With(pb => pb.SortOrder = sortOrder);
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(ParameterBuilder));
     }
 }

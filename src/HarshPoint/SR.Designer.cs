@@ -62,6 +62,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This Chain instance already has a Next element..
+        /// </summary>
+        internal static string Chain_AlreadyHasNext {
+            get {
+                return ResourceManager.GetString("Chain_AlreadyHasNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified argument contains elements already contained in this chain..
         /// </summary>
         internal static string Chain_ElementAlreadyContained {

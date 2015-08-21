@@ -1,68 +1,38 @@
-﻿using HarshPoint.Provisioning.Implementation;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System;
 using System.Linq.Expressions;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal class ChildCommandBuilder<TProvisioner, TParent> :
+    public sealed class ChildCommandBuilder<TProvisioner, TParent> :
         IChildCommandBuilder
     {
-        private ImmutableDictionary<String, Object> _fixedParameters
-            = ImmutableDictionary<String, Object>.Empty;
+        private readonly ParameterBuilderContainer<TParent> _parameters
+            = new ParameterBuilderContainer<TParent>();
 
-        private ImmutableHashSet<String> _ignoredParameters
-            = ImmutableHashSet<String>.Empty;
-
-
-        public ChildCommandBuilder()
+        internal ChildCommandBuilder()
         {
-            Ignore(ShellployCommand.InputObjectPropertyName);
-        }
-        public Type ProvisionerType => typeof(TParent);
-
-        public void SetFixedValue<TValue>(
-            Expression<Func<TParent, TValue>> parameter,
-            TValue value
-        )
-        {
-            _fixedParameters = _fixedParameters.SetItem(
-                parameter.ExtractLastPropertyAccess().Name, value
+            _parameters.Update(
+                ShellployCommand.InputObjectPropertyName,
+                new ParameterBuilderIgnored()
             );
         }
 
-        public void Ignore(Expression<Func<TParent, Object>> parameter)
-        {
-            Ignore(parameter.ExtractLastPropertyAccess().Name);
-        }
-
-        public void Ignore(String parameter)
-        {
-            _ignoredParameters = _ignoredParameters.Add(
-                parameter
-            );
-        }
-
-        IEnumerable<ShellployCommandProperty> IChildCommandBuilder.Process(
-            IEnumerable<ShellployCommandProperty> parentProperties
+        public IChildParameterBuilderFactory<TParent> Parameter(
+            Expression<Func<TParent, Object>> expression
         )
-        {
-            var result = parentProperties
-                .Where(p => !_ignoredParameters.Contains(p.Identifier))
-                .ToImmutableArray();
+            => _parameters.GetFactory(expression);
 
-            foreach (var property in result)
-            {
-                if (_fixedParameters.ContainsKey(property.Identifier))
-                {
-                    property.HasFixedValue = true;
-                    property.FixedValue = _fixedParameters[property.Identifier];
-                }
-            }
+        public IChildParameterBuilderFactory<TParent> Parameter(
+            String name
+        )
+            => _parameters.GetFactory(name);
 
-            return result;
-        }
+        ParameterBuilderContainer IChildCommandBuilder.Parameters
+            => _parameters;
+
+        Type IChildCommandBuilder.ProvisionerType => typeof(TParent);
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(ChildCommandBuilder<,>));
     }
 }

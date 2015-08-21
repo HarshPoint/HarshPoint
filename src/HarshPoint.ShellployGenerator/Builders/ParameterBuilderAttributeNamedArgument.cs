@@ -9,11 +9,10 @@ namespace HarshPoint.ShellployGenerator.Builders
             Type attributeType, 
             String name, 
             Object value,
-            ParameterBuilder previous
+            ParameterBuilder next
         )
+            : base(next)
         {
-            InitializeFrom(previous);
-
             AttributeType = attributeType;
             Name = name;
             Value = value;
@@ -23,7 +22,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         public String Name { get; }
         public Object Value { get; }
 
-        internal override void Process(ShellployCommandProperty property)
+        protected override void Process(ShellployCommandProperty property)
         {
             var attributes = property.Attributes.Where(
                 a => a.AttributeType == AttributeType

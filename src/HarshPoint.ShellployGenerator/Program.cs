@@ -66,7 +66,7 @@ namespace HarshPoint.ShellployGenerator
             builderContext.AddBuildersFrom(typeof(Program).Assembly);
 
             return builderContext.Builders
-                .Select(b => b.ToCommand(builderContext))
+                .Select(b => b.ToCommand())
                 .ToArray();
         }
 

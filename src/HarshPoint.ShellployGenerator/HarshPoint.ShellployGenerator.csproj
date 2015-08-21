@@ -112,7 +112,9 @@
   <ItemGroup>
     <Compile Include="AttributeData.cs" />
     <Compile Include="Builders\CommandBuilder.cs" />
-    <Compile Include="Builders\CommandBuilder_ICommandBuilder.cs" />
+    <Compile Include="Builders\IChildParameterBuilderFactory.cs" />
+    <Compile Include="Builders\ParameterBuilderContainer.cs" />
+    <Compile Include="Builders\ParameterBuilderContainer`1.cs" />
     <Compile Include="CodeGen\AttributeDataToCodeDom.cs" />
     <Compile Include="CodeGen\CodeGeneratorContext.cs" />
     <Compile Include="CodeGen\CodeLiteralExpression.cs" />
@@ -126,7 +128,6 @@
     <Compile Include="Builders\ParameterBuilderFixed.cs" />
     <Compile Include="Builders\ParameterBuilderRenamed.cs" />
     <Compile Include="Builders\ParameterBuilderAttributeNamedArgument.cs" />
-    <Compile Include="Builders\ICommandBuilder.cs" />
     <Compile Include="Builders\ParameterBuilder.cs" />
     <Compile Include="Builders\IChildCommandBuilder.cs" />
     <Compile Include="CodeGen\GeneratedFileCodeDom.cs" />

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.Linq;
 using SMA = System.Management.Automation;
 
@@ -44,7 +43,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Type ProvisionerType { get; }
 
-        internal override IEnumerable<ShellployCommandProperty> Synthesize()
+        public override IEnumerable<ShellployCommandProperty> Synthesize()
             => ImmutableArray.Create(
                 new ShellployCommandProperty()
                 {
@@ -53,45 +52,24 @@ namespace HarshPoint.ShellployGenerator.Builders
                     ProvisionerType = ProvisionerType,
                     Type = ParameterType,
                     Attributes = Attributes,
-                    IsPositional = SortOrder.HasValue
                 }
             );
 
-        internal override ParameterBuilder CreateFrom(ParameterBuilder previous)
+        internal override ParameterBuilder WithNext(ParameterBuilder next)
         {
-            if (previous == null)
+            if (next == null)
             {
                 return this;
             }
 
-            AppendThisTo(previous);
-            SortOrder = previous.SortOrder;
-
-            return previous;
-        }
-
-        private void AppendThisTo(ParameterBuilder appendTo)
-        {
-            if (appendTo is ParameterBuilderSynthesized)
+            if (next.HasElementOfType<ParameterBuilderSynthesized>())
             {
                 throw Logger.Fatal.InvalidOperation(
                     SR.CommandParameterSynthesized_AttemptedToNest
                 );
             }
 
-            while (appendTo.Previous != null)
-            {
-                if (appendTo is ParameterBuilderSynthesized)
-                {
-                    throw Logger.Fatal.InvalidOperation(
-                        SR.CommandParameterSynthesized_AttemptedToNest
-                    );
-                }
-
-                appendTo = appendTo.Previous;
-            }
-
-            appendTo.Previous = this;
+            return next.Append(WithSortOrder(next.SortOrder));
         }
 
         private static Boolean IsParameterAttribute(AttributeData data)

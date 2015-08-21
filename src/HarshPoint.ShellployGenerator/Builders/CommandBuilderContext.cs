@@ -8,29 +8,41 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     internal sealed class CommandBuilderContext
     {
-        private ImmutableDictionary<Type, ICommandBuilder> _builders
-            = ImmutableDictionary<Type, ICommandBuilder>.Empty;
+        private ImmutableDictionary<Type, CommandBuilder> _builders
+            = ImmutableDictionary<Type, CommandBuilder>.Empty;
 
         public void AddBuildersFrom(Assembly assembly)
         {
             _builders = _builders.AddRange(
                 from type in assembly.DefinedTypes
                 where
-                    ICommandBuilderTypeInfo.IsAssignableFrom(type) &&
+                    CommandBuilderTypeInfo.IsAssignableFrom(type) &&
                     !type.ContainsGenericParameters &&
                     !type.IsAbstract
 
-                let instance = (ICommandBuilder)Activator.CreateInstance(type)
-                select new KeyValuePair<Type, ICommandBuilder>(
+                let instance = CreateBuilder(type)
+                
+                select new KeyValuePair<Type, CommandBuilder>(
                     instance.ProvisionerType,
                     instance
                 )
             );
         }
 
-        public IEnumerable<ICommandBuilder> Builders => _builders.Values;
+        public void Add(CommandBuilder builder)
+        {
+            if (builder == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(builder));
+            }
 
-        public ICommandBuilder GetBuilder(Type provisionerType)
+            builder.Context = this;
+            _builders = _builders.Add(builder.ProvisionerType, builder);
+        }
+
+        public IEnumerable<CommandBuilder> Builders => _builders.Values;
+
+        public CommandBuilder GetBuilder(Type provisionerType)
         {
             if (provisionerType == null)
             {
@@ -51,10 +63,17 @@ namespace HarshPoint.ShellployGenerator.Builders
             return builder;
         }
 
+        private CommandBuilder CreateBuilder(Type builderType)
+        {
+            var result = (CommandBuilder)Activator.CreateInstance(builderType);
+            result.Context = this;
+            return result;
+        }
+
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(CommandBuilderContext));
 
-        private static readonly TypeInfo ICommandBuilderTypeInfo
-            = typeof(ICommandBuilder).GetTypeInfo();
+        private static readonly TypeInfo CommandBuilderTypeInfo
+            = typeof(CommandBuilder).GetTypeInfo();
     }
 }

@@ -11,7 +11,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Object DefaultValue { get; }
 
-        internal override void Process(ShellployCommandProperty property)
+        protected override void Process(ShellployCommandProperty property)
         {
             property.DefaultValue = DefaultValue;
         }

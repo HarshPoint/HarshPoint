@@ -9,7 +9,7 @@ namespace HarshPoint.ShellployGenerator.Commands
         public BuildFieldDateTime()
         {
             AsChildOf<HarshField>(
-                parent => parent.SetFixedValue(x => x.Type, FieldType.DateTime)
+                p => p.Parameter(x => x.Type).SetFixedValue(FieldType.DateTime)
             );
         }
     }

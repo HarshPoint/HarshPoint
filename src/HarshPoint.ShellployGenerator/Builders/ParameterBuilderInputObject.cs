@@ -4,23 +4,15 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     internal sealed class ParameterBuilderInputObject : ParameterBuilder
     {
-        public ParameterBuilderInputObject(ParameterBuilder previous)
+        public ParameterBuilderInputObject(ParameterBuilder next)
+            : base(next)
         {
-            InitializeFrom(previous);
         }
 
-        internal override void Process(ShellployCommandProperty property)
+        protected override void Process(ShellployCommandProperty property)
         {
             property.IsInputObject = true;
             property.IsPositional = true;
-
-            foreach (var attr in property.ParameterAttributes)
-            {
-                attr.NamedArguments["ValueFromPipeline"] = true;
-            }
         }
-
-        public static readonly String Name
-            = ShellployCommand.InputObjectPropertyName;
     }
 }

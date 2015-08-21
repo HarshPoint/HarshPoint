@@ -1,10 +1,10 @@
-﻿using HarshPoint.Provisioning.Implementation;
+﻿using HarshPoint.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace HarshPoint.Tests.Provisioning.Implementation
+namespace HarshPoint.Tests.ObjectModel
 {
     public class ChainTests
     {

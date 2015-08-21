@@ -132,6 +132,12 @@
   <data name="CommandBuilderContext_NoBuilder" xml:space="preserve">
     <value>There is no ICommandBuilder for the specified provisioner type '{0}'.</value>
   </data>
+  <data name="CommandBuilder_AlreadyChildOf" xml:space="preserve">
+    <value>The current CommandBuilder already is a child of '{0}'.</value>
+  </data>
+  <data name="CommandBuilder_NoContext" xml:space="preserve">
+    <value>This method can only be called when Context is not null.</value>
+  </data>
   <data name="CommandBuilder_ReservedName" xml:space="preserve">
     <value>The specified name '{0}' is reserved.</value>
   </data>

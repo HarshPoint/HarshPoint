@@ -97,6 +97,24 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The current CommandBuilder already is a child of &apos;{0}&apos;..
+        /// </summary>
+        internal static string CommandBuilder_AlreadyChildOf {
+            get {
+                return ResourceManager.GetString("CommandBuilder_AlreadyChildOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This method can only be called when Context is not null..
+        /// </summary>
+        internal static string CommandBuilder_NoContext {
+            get {
+                return ResourceManager.GetString("CommandBuilder_NoContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified name &apos;{0}&apos; is reserved..
         /// </summary>
         internal static string CommandBuilder_ReservedName {
