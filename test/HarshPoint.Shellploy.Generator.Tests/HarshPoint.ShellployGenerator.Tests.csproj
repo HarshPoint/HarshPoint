@@ -81,6 +81,7 @@
     <Compile Include="CommandBuilding\Fails_when.cs" />
     <Compile Include="CommandBuilding\Positional_parameters.cs" />
     <Compile Include="CommandBuilding\Renamed_parameter.cs" />
+    <Compile Include="CommandBuilding\Without_configuration.cs" />
     <Compile Include="CommandBuilding\With_InputObject.cs" />
     <Compile Include="CommandBuilding\With_multiple_parameter_sets.cs" />
     <Compile Include="CommandBuilding\Fixed_value_parameter.cs" />
@@ -89,7 +90,7 @@
     <Compile Include="CommandBuilding\Mandatory_parameter.cs" />
     <Compile Include="CommandBuilding\Basic_parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CommandBuilding\Without_configuration.cs" />
+    <Compile Include="CommandBuilding\Default_parameter_set.cs" />
     <Compile Include="CommandBuilding\With_namespace.cs" />
   </ItemGroup>
   <ItemGroup>

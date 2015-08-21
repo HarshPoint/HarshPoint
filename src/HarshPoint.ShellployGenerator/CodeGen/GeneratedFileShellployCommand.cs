@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Reflection;
-using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
@@ -51,21 +50,11 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         {
             var commandClass = new CodeTypeDeclaration(Command.ClassName)
             {
-                CustomAttributes =
-                {
-                    {
-                        typeof(CmdletAttribute),
-                        new CodeFieldReferenceExpression(
-                            new CodeTypeReferenceExpression(Command.Verb.Item1),
-                            Command.Verb.Item2
-                        ),
-                        Command.Noun
-                    },
-                    {
-                        typeof(OutputTypeAttribute),
-                        Command.ProvisionerType
-                    },
-                },
+                CustomAttributes = new CodeAttributeDeclarationCollection(
+                    Command.Attributes
+                    .Select(attr => attr.ToCodeAttributeDeclaration())
+                    .ToArray()
+                ),
                 IsClass = true,
                 TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed,
                 BaseTypes =
@@ -245,7 +234,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         }
 
         private static CodeMemberProperty CreateProperty(
-            CodeTypeDeclaration targetClass, 
+            CodeTypeDeclaration targetClass,
             ShellployCommandProperty property
         )
         {
@@ -264,7 +253,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             };
 
             codeProperty.GenerateBackingField(
-                targetClass, 
+                targetClass,
                 property.DefaultValue
             );
 
@@ -280,7 +269,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         private static readonly CodeThisReferenceExpression This
             = new CodeThisReferenceExpression();
 
-        private static readonly HarshLogger Logger 
+        private static readonly HarshLogger Logger
             = HarshLog.ForContext<GeneratedFileShellployCommand>();
 
         private const String BaseTypeName = "HarshProvisionerCmdlet";

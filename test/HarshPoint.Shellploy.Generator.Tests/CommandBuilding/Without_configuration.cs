@@ -2,6 +2,8 @@ using HarshPoint.Provisioning;
 using HarshPoint.ShellployGenerator;
 using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
+using System;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using SMA = System.Management.Automation;
@@ -36,11 +38,8 @@ namespace CommandBuilding
         }
 
         [Fact]
-        public void Has_verb_noun_name()
+        public void Has_name()
         {
-            Assert.Equal(typeof(SMA.VerbsCommon), _command.Verb.Item1);
-            Assert.Equal(nameof(SMA.VerbsCommon.New), _command.Verb.Item2);
-            Assert.Equal(nameof(EmptyProvisioner), _command.Noun);
             Assert.Equal($"New-{nameof(EmptyProvisioner)}", _command.Name);
         }
 
@@ -60,6 +59,50 @@ namespace CommandBuilding
         public void Has_no_Namespace()
         {
             Assert.Null(_command.Namespace);
+        }
+
+        [Fact]
+        public void Has_CmdletAttribute()
+        {
+            Assert.Single(
+                _command.Attributes
+                    .Where(attr =>
+                        attr.AttributeType == typeof(SMA.CmdletAttribute))
+            );
+        }
+
+        [Fact]
+        public void Has_OutputTypeAttribute()
+        {
+            Assert.Single(
+                _command.Attributes
+                    .Where(attr =>
+                        attr.AttributeType == typeof(SMA.OutputTypeAttribute))
+            );
+        }
+
+        private Boolean WithAttributeType<T>(AttributeData attr)
+            => attr.AttributeType == typeof(T);
+
+        [Fact]
+        public void Has_noun_verb()
+        {
+            var attr = Assert.Single(
+                _command.Attributes,
+                WithAttributeType<SMA.CmdletAttribute>
+            );
+            Assert.Equal(SMA.VerbsCommon.New, attr.ConstructorArguments[0]);
+            Assert.Equal(nameof(EmptyProvisioner), attr.ConstructorArguments[1]);
+        }
+
+        [Fact]
+        public void Has_output_type()
+        {
+            var attr = Assert.Single(
+                _command.Attributes,
+                WithAttributeType<SMA.OutputTypeAttribute>
+            );
+            Assert.Equal(typeof(EmptyProvisioner), attr.ConstructorArguments[0]);
         }
 
         private class EmptyProvisioner : HarshProvisioner

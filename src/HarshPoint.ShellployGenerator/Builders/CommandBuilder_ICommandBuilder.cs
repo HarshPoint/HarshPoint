@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Management.Automation;
 using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
@@ -85,25 +86,65 @@ namespace HarshPoint.ShellployGenerator.Builders
             var verb = SMA.VerbsCommon.New;
             var noun = ProvisionerType.Name;
 
+            if (
+                !Attributes
+                    .Where(attr => attr.AttributeType == typeof(CmdletAttribute))
+                    .Any()
+            )
+            {
+                Attributes.Add(CreateCmdletAttributeData(verb, noun));
+            }
+
+            if (
+                !Attributes
+                    .Where(attr => attr.AttributeType == typeof(OutputTypeAttribute))
+                    .Any()
+            )
+            {
+                Attributes.Add(CreateOutputTypeAttributeData());
+            }
+
             return new ShellployCommand
             {
+                Attributes = Attributes.ToImmutableArray(),
                 Aliases = Aliases.ToImmutableArray(),
                 ClassName = $"{verb}{noun}Command",
                 ContextType = Metadata.ContextType,
                 HasInputObject = properties.Any(p => p.IsInputObject),
                 Name = $"{verb}-{noun}",
                 Namespace = Namespace,
-                Noun = noun,
                 Properties = properties.ToImmutableArray(),
                 ParentProvisionerTypes = self.GetParentProvisionerTypes(context),
                 ProvisionerType = ProvisionerType,
                 Usings = ImportedNamespaces.ToImmutableArray(),
-                Verb = Tuple.Create(
-                    typeof(SMA.VerbsCommon),
-                    nameof(SMA.VerbsCommon.New)
-                ),
             };
         }
+
+        private AttributeData CreateCmdletAttributeData(
+            String verb,
+            String noun
+        )
+            => new AttributeData(typeof(CmdletAttribute))
+            {
+                ConstructorArguments =
+                {
+                    verb,
+                    noun,
+                },
+                NamedArguments =
+                {
+                    ["DefaultParameterSetName"] = DefaultParameterSetName,
+                },
+            };
+
+        private AttributeData CreateOutputTypeAttributeData()
+            => new AttributeData(typeof(OutputTypeAttribute))
+            {
+                ConstructorArguments =
+                {
+                    ProvisionerType,
+                }
+            };
 
         private ICommandBuilder GetParentBuilder(CommandBuilderContext context)
         {
