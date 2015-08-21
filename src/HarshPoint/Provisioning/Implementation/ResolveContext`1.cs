@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace HarshPoint.Provisioning
 {
     public class ResolveContext<TProvisionerContext> : IResolveContext
-        where TProvisionerContext : HarshProvisionerContextBase
+        where TProvisionerContext : IHarshProvisionerContext
     {
         private List<ResolveFailure> _failures;
 
@@ -40,7 +40,7 @@ namespace HarshPoint.Provisioning
 
         }
 
-        HarshProvisionerContextBase IResolveContext.ProvisionerContext => ProvisionerContext;
+        IHarshProvisionerContext IResolveContext.ProvisionerContext => ProvisionerContext;
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveContext<>));
 

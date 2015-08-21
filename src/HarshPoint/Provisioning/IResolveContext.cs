@@ -10,6 +10,6 @@ namespace HarshPoint.Provisioning
 
         IReadOnlyCollection<ResolveFailure> Failures { get; }
 
-        HarshProvisionerContextBase ProvisionerContext { get; }
+        IHarshProvisionerContext ProvisionerContext { get; }
     }
 }

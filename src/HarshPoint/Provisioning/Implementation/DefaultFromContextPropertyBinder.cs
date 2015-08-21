@@ -20,7 +20,7 @@ namespace HarshPoint.Provisioning.Implementation
             Properties = properties.ToImmutableArray();
         }
 
-        public void Bind(ITrackValueSource target, HarshProvisionerContextBase context)
+        public void Bind(ITrackValueSource target, IHarshProvisionerContext context)
         {
             if (target == null)
             {
@@ -74,7 +74,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         }
 
-        private static Object GetValueFromContext(DefaultFromContextProperty prop, HarshProvisionerContextBase context)
+        private static Object GetValueFromContext(DefaultFromContextProperty prop, IHarshProvisionerContext context)
         {
             if (prop.TagType != null)
             {

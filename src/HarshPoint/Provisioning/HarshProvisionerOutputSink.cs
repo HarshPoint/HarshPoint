@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning
 {
     public abstract class HarshProvisionerOutputSink
     {
-        public void WriteOutput(HarshProvisionerContextBase context, HarshProvisionerOutput output)
+        public void WriteOutput(IHarshProvisionerContext context, HarshProvisionerOutput output)
         {
             if (context == null)
             {

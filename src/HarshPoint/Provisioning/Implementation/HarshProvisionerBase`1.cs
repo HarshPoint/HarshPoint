@@ -18,7 +18,7 @@ namespace HarshPoint.Provisioning.Implementation
     /// classes provisioning SharePoint artifacts.
     /// </summary>
     public abstract class HarshProvisionerBase<TContext> : HarshProvisionerBase, ITrackValueSource
-        where TContext : HarshProvisionerContextBase
+        where TContext : HarshProvisionerContextBase<TContext>
     {
         private readonly HarshScopedValue<TContext> _context;
         private readonly HarshScopedValue<HarshLogger> _logger;

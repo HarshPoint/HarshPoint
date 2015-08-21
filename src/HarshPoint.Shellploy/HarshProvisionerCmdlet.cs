@@ -14,7 +14,7 @@ namespace HarshPoint.Shellploy
             HarshProvisionerBase<TContext> parent,
             Object children
         )
-            where TContext : HarshProvisionerContextBase
+            where TContext : HarshProvisionerContextBase<TContext>
         {
             if (children == null)
             {
@@ -50,7 +50,7 @@ namespace HarshPoint.Shellploy
             HarshProvisionerBase<TContext> parent,
             IEnumerable children
         )
-            where TContext : HarshProvisionerContextBase
+            where TContext : HarshProvisionerContextBase<TContext>
         {
             foreach (var child in children)
             {
@@ -62,7 +62,7 @@ namespace HarshPoint.Shellploy
             HarshProvisionerBase<TContext> parent,
             Object child
         )
-            where TContext : HarshProvisionerContextBase
+            where TContext : HarshProvisionerContextBase<TContext>
         {
             if (parent == null)
             {

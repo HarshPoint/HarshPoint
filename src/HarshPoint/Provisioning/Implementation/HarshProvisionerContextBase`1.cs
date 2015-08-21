@@ -1,47 +1,82 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
+using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class HarshProvisionerContextBase<TSelf> :
-        HarshProvisionerContextBase, IHarshCloneable
+        IHarshProvisionerContext, IHarshCloneable
         where TSelf : HarshProvisionerContextBase<TSelf>
     {
         private Boolean _mayDeleteUserData;
         private HarshProvisionerOutputSink _outputSink;
         private IImmutableStack<Object> _stateStack = ImmutableStack<Object>.Empty;
 
-        public sealed override Boolean MayDeleteUserData
-            => _mayDeleteUserData;
+        public Boolean MayDeleteUserData => _mayDeleteUserData;
 
         public TSelf AllowDeleteUserData()
             => (TSelf)this.With(c => c._mayDeleteUserData, true);
 
-        public TSelf WithOutputSink(HarshProvisionerOutputSink sink)
-            => (TSelf)this.With(c => c._outputSink, sink);
-
-        public new TSelf PushState(Object state)
-            => (TSelf)PushStateCore(state);
-
         public virtual TSelf Clone()
             => (TSelf)MemberwiseClone();
 
-        public override void WriteOutput(HarshProvisionerOutput output)
+        public IEnumerable<T> GetState<T>()
         {
-            _outputSink?.WriteOutput(this, output);
+            var results = new List<T>();
+
+            foreach (var state in StateStack)
+            {
+                var typedCollection = (state as IEnumerable<T>);
+
+                if (typedCollection != null)
+                {
+                    results.AddRange(typedCollection);
+                }
+                else if (state is T)
+                {
+                    results.Add((T)(state));
+                }
+            }
+
+            return results;
         }
 
-        internal sealed override IImmutableStack<Object> StateStack => _stateStack;
+        public IEnumerable<Object> GetState(Type type)
+        {
+            if (type == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(type));
+            }
 
-        internal sealed override HarshProvisionerContextBase PushStateCore(Object state)
+            var info = type.GetTypeInfo();
+
+            return GetState<Object>()
+                .Where(state =>
+                    info.IsAssignableFrom(state.GetType().GetTypeInfo())
+                );
+        }
+
+        public TSelf PushState(Object state)
         {
             if (state == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(state));
             }
 
-            return this.With(c => c._stateStack, _stateStack.Push(state));
+            return (TSelf)this.With(c => c._stateStack, _stateStack.Push(state));
         }
+
+        public TSelf WithOutputSink(HarshProvisionerOutputSink sink)
+            => (TSelf)this.With(c => c._outputSink, sink);
+
+        public void WriteOutput(HarshProvisionerOutput output)
+        {
+            _outputSink?.WriteOutput(this, output);
+        }
+
+        internal IImmutableStack<Object> StateStack => _stateStack;
 
         Object IHarshCloneable.Clone() => Clone();
 

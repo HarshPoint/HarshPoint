@@ -233,7 +233,7 @@
     <Compile Include="Provisioning\HarshProvisioner.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerBase`1.cs" />
     <Compile Include="Provisioning\HarshProvisionerContext.cs" />
-    <Compile Include="Provisioning\Implementation\HarshProvisionerContextBase.cs" />
+    <Compile Include="Provisioning\Implementation\IHarshProvisionerContext.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerMetadata.cs" />
     <Compile Include="Provisioning\NeverDeletesUserDataAttribute.cs" />
     <Compile Include="Reflection\TypeInfoExtensions.cs" />
