@@ -16,6 +16,8 @@ namespace HarshPoint.ShellployGenerator.Builders
             };
 
         private CommandBuilderContext _context = EmptyContext;
+        private String _className;
+        private String _name;
 
         protected CommandBuilder()
         {
@@ -27,6 +29,25 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Collection<AttributeData> Attributes { get; }
             = new Collection<AttributeData>();
+
+        public String ClassName
+        {
+            get
+            {
+                if (_className != null)
+                {
+                    return _className;
+                }
+
+                if (Verb != null && Noun != null)
+                {
+                    return $"{Verb}${Noun}Command";
+                }
+
+                return null;
+            }
+            set { _className = value; }
+        }
 
         public String DefaultParameterSetName
         {
@@ -46,6 +67,25 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public HashSet<String> ImportedNamespaces { get; }
             = new HashSet<String>(StringComparer.Ordinal);
+
+        public String Name
+        {
+            get
+            {
+                if (_name != null)
+                {
+                    return _name;
+                }
+
+                if (Verb != null && Noun != null)
+                {
+                    return $"{Verb}-{Noun}";
+                }
+
+                return null;
+            }
+            set { _name = value; }
+        }
 
         public String Namespace { get; set; }
 
@@ -80,10 +120,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         internal ParameterBuilderContainer ParameterBuilders { get; }
             = new ParameterBuilderContainer();
 
-
-        public ParameterBuilderFactory Parameter(
-            String name
-        )
+        public ParameterBuilderFactory Parameter(String name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -93,9 +130,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             return ParameterBuilders.GetFactory(name);
         }
 
-        public ParameterBuilderFactory PositionalParameter(
-            String name
-        )
+        public ParameterBuilderFactory PositionalParameter(String name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
@@ -123,9 +158,9 @@ namespace HarshPoint.ShellployGenerator.Builders
             {
                 Attributes = Attributes.ToImmutableArray(),
                 Aliases = Aliases.ToImmutableArray(),
-                ClassName = $"{Verb}{Noun}Command",
-                HasInputObject = properties.Any(p => p.IsInputObject),
-                Name = $"{Verb}-{Noun}",
+                ClassName = ClassName,
+                HasInputObject = HasInputObject,
+                Name = Name,
                 Namespace = Namespace,
                 Properties = propertyArray,
                 Usings = ImportedNamespaces.ToImmutableArray(),
