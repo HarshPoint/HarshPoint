@@ -13,6 +13,9 @@ namespace HarshPoint.Shellploy
         HarshProvisionerOutputSink,
         IDisposable
     {
+        private readonly Subject<HarshProvisionerOutput> _subject
+            = new Subject<HarshProvisionerOutput>();
+
         public ReactiveOutputSink() { }
 
         public ReactiveOutputSink(CancellationToken token)
@@ -76,18 +79,18 @@ namespace HarshPoint.Shellploy
 
         public void Dispose()
         {
-            Subject.Dispose();
+            _subject.Dispose();
         }
 
         protected override void WriteOutputCore(HarshProvisionerOutput output)
         {
             CancellationToken.ThrowIfCancellationRequested();
-            Subject.OnNext(output);
+            _subject.OnNext(output);
         }
 
         private IEnumerable<HarshProvisionerOutput> AsEnumerable()
         {
-            var observable = Subject.AsObservable();
+            var observable = _subject.AsObservable();
 
             if (PollInterval.HasValue)
             {
@@ -122,20 +125,17 @@ namespace HarshPoint.Shellploy
         {
             if (t.IsFaulted)
             {
-                Subject.OnError(t.Exception);
+                _subject.OnError(t.Exception);
             }
             else if (!t.IsCanceled)
             {
-                Subject.OnCompleted();
+                _subject.OnCompleted();
             }
         }
 
         private CancellationToken CancellationToken { get; }
 
         private TimeSpan? PollInterval { get; }
-
-        private Subject<HarshProvisionerOutput> Subject { get; }
-            = new Subject<HarshProvisionerOutput>();
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ReactiveOutputSink));
