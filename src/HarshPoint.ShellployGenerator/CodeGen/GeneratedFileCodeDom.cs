@@ -34,13 +34,14 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 FileName = $"{type.Name}.cs";
             }
 
-            var provider = new CSharpCodeProvider();
-
-            provider.GenerateCodeFromCompileUnit(
-                unit,
-                writer,
-                CodeGeneratorOptions
-            );
+            using (var provider = new CSharpCodeProvider())
+            {
+                provider.GenerateCodeFromCompileUnit(
+                    unit,
+                    writer,
+                    CodeGeneratorOptions
+                );
+            }
         }
 
         protected abstract CodeCompileUnit Generate();
@@ -51,9 +52,6 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 BlankLinesBetweenMembers = true,
                 BracingStyle = "C",
             };
-
-        private static readonly CodeDomProvider CodeProvider
-            = new CSharpCodeProvider();
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(GeneratedFileCodeDom));

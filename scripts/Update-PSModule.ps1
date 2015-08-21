@@ -36,11 +36,11 @@ try {
 	$ProjectOutputDir = (Split-Path -Parent $ProjectOutputPath)
 	$ProjectOutputDir = (Resolve-Path $ProjectOutputDir).Path
 
-	$AssemblyFileName = (Split-Path -Leaf   $ProjectOutputPath)
+	$AssemblyFileName = (Split-Path -Leaf $ProjectOutputPath)
 
 	New-Item -ItemType Directory $ModuleRoot -Force -ErrorAction Stop
 
-	Get-ChildItem -LiteralPath $ProjectOutputDir -Filter '*.dll' `
+	Get-ChildItem -Path $ProjectOutputDir -Recurse -Include '*.dll', '*.psm1' `
 	| Copy-Item -Destination $ModuleRoot -PassThru -ErrorAction Stop
 
 	$ModuleRoot   = (Resolve-Path $ModuleRoot).Path
@@ -63,6 +63,7 @@ try {
 	$NuSpec         = [xml](Get-Content $NuSpecTemplate)
 
 	$ModulePath = (Join-Path $ModuleRoot "$($AssemblyName.Name).psd1")
+	$ScriptPath = (Join-Path $ModuleRoot "$($AssemblyName.Name).psm1")
 	$NuSpecPath = (Join-Path $ModuleRoot "$($AssemblyName.Name).nuspec")
 
 	if ($PSVersionTable.PSVersion.Major -ge 5) {
@@ -71,7 +72,8 @@ try {
 		$AssemblyInfo['Tags']          = $NuSpec.package.metadata.tags
 	}
 
-	New-ModuleManifest -RootModule    $AssemblyFileName `
+	New-ModuleManifest -NestedModules $AssemblyFileName `
+					   -RootModule    $ScriptPath `
 					   -Path          $ModulePath `
 					   -ModuleVersion $AssemblyName.Version `
 					   @AssemblyInfo

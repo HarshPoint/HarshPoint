@@ -17,7 +17,6 @@ namespace HarshPoint.ShellployGenerator
         public Type ProvisionerType { get; set; }
         public String Namespace { get; set; }
         public IImmutableList<ShellployCommandProperty> Properties { get; set; }
-        public Type ContextType { get; set; }
         public IImmutableList<String> Usings { get; set; }
     }
 }

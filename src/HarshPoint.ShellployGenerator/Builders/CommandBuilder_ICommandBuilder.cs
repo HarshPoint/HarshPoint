@@ -7,7 +7,7 @@ using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    partial class CommandBuilder<TProvisioner> : ICommandBuilder
+    partial class CommandBuilder : ICommandBuilder
     {
         IEnumerable<ShellployCommandProperty> ICommandBuilder.GetProperties(
             CommandBuilderContext context
@@ -86,20 +86,12 @@ namespace HarshPoint.ShellployGenerator.Builders
             var verb = SMA.VerbsCommon.New;
             var noun = ProvisionerType.Name;
 
-            if (
-                !Attributes
-                    .Where(attr => attr.AttributeType == typeof(CmdletAttribute))
-                    .Any()
-            )
+            if (!Attributes.Any(attr => attr.AttributeType == typeof(CmdletAttribute)))
             {
                 Attributes.Add(CreateCmdletAttributeData(verb, noun));
             }
 
-            if (
-                !Attributes
-                    .Where(attr => attr.AttributeType == typeof(OutputTypeAttribute))
-                    .Any()
-            )
+            if (!Attributes.Any(attr => attr.AttributeType == typeof(OutputTypeAttribute)))
             {
                 Attributes.Add(CreateOutputTypeAttributeData());
             }
@@ -109,7 +101,6 @@ namespace HarshPoint.ShellployGenerator.Builders
                 Attributes = Attributes.ToImmutableArray(),
                 Aliases = Aliases.ToImmutableArray(),
                 ClassName = $"{verb}{noun}Command",
-                ContextType = Metadata.ContextType,
                 HasInputObject = properties.Any(p => p.IsInputObject),
                 Name = $"{verb}-{noun}",
                 Namespace = Namespace,
@@ -153,19 +144,19 @@ namespace HarshPoint.ShellployGenerator.Builders
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            if (_childBuilder == null)
+            if (ChildBuilder == null)
             {
                 return null;
             }
 
-            return context.GetBuilder(_childBuilder.ProvisionerType);
+            return context.GetBuilder(ChildBuilder.ProvisionerType);
         }
 
         private IEnumerable<ShellployCommandProperty> GetParentProperties(
             CommandBuilderContext context
         )
         {
-            if (_childBuilder != null)
+            if (ChildBuilder != null)
             {
                 var parentBuilder = GetParentBuilder(context);
 
@@ -173,7 +164,7 @@ namespace HarshPoint.ShellployGenerator.Builders
                     context
                 );
 
-                return _childBuilder.Process(
+                return ChildBuilder.Process(
                     parentProperties
                 );
             }

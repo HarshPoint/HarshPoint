@@ -1,5 +1,4 @@
-﻿using HarshPoint.Provisioning.Implementation;
-using System;
+﻿using System;
 using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
@@ -15,8 +14,6 @@ namespace HarshPoint.ShellployGenerator.Builders
             Name = name;
         }
 
-        public String Name { get; }
-
         public ParameterBuilderFactory<TProvisioner> Ignore()
         {
             Set(new ParameterBuilderIgnored());
@@ -25,7 +22,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public ParameterBuilderFactory<TProvisioner> Rename(String propertyName)
         {
-            Builder.ValidateParameterName(propertyName);
+            CommandBuilder.ValidateParameterName(propertyName);
             Set(new ParameterBuilderRenamed(propertyName));
             return this;
         }
@@ -83,12 +80,14 @@ namespace HarshPoint.ShellployGenerator.Builders
             return this;
         }
 
-        private CommandBuilder<TProvisioner> Builder { get; }
-
         private void Set(ParameterBuilder parameter)
         {
             Builder.SetParameter(Name, parameter);
         }
+
+        private CommandBuilder<TProvisioner> Builder { get; }
+
+        private String Name { get; }
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ParameterBuilderFactory<>));

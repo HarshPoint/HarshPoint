@@ -9,5 +9,12 @@ namespace HarshPoint.ShellployGenerator.Builders
             IEnumerable<ShellployCommandProperty> parentProperties
         );
         Type ProvisionerType { get; }
+
+//        IChildParameterBuilder Parameter(String name)
+    }
+
+    internal interface IChildParameterBuilder
+    {
+        void Ignore();
     }
 }
