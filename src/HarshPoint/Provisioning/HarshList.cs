@@ -61,7 +61,7 @@ namespace HarshPoint.Provisioning
                     Url = Url,
                 });
 
-                WriteOutput(
+                ReportProgress(
                     Result.Added(Url, List)
                 );
 
@@ -71,7 +71,7 @@ namespace HarshPoint.Provisioning
             {
                 List = ExistingList.Value;
 
-                WriteOutput(
+                ReportProgress(
                     Result.AlreadyExists<List>(Url, List)
                 );
             }

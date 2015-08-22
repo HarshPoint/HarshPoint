@@ -1,5 +1,5 @@
 ﻿using HarshPoint.Provisioning;
-using HarshPoint.Provisioning.Output;
+using HarshPoint.Provisioning.ProgressReporting;
 using Microsoft.SharePoint.Client;
 using System;
 using System.Linq;

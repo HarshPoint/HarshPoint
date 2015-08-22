@@ -89,7 +89,7 @@ namespace HarshPoint.Provisioning
             {
                 Field = ExistingField.Value;
 
-                WriteOutput(
+                ReportProgress(
                     Result.AlreadyExists(FieldIdentifier, Field)
                 );
             }
@@ -118,7 +118,7 @@ namespace HarshPoint.Provisioning
 
                 Field = reResolvedField.Value;
 
-                WriteOutput(
+                ReportProgress(
                     Result.Added(FieldIdentifier, Field)
                 );
             }
@@ -132,13 +132,13 @@ namespace HarshPoint.Provisioning
 
                 await ClientContext.ExecuteQueryAsync();
 
-                WriteOutput(
+                ReportProgress(
                     Result.Removed(FieldIdentifier)
                 );
             }
             else
             {
-                WriteOutput(
+                ReportProgress(
                     Result.DidNotExist(FieldIdentifier)
                 );
             }
