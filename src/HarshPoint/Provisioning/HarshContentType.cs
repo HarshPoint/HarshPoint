@@ -61,7 +61,7 @@ namespace HarshPoint.Provisioning
                 });
 
                 ReportProgress(
-                    Result.Added(
+                    ProgressReport.Added(
                         Id?.ToString() ?? Name,
                         ContentType
                     )
@@ -74,7 +74,7 @@ namespace HarshPoint.Provisioning
                 ContentType = ExistingContentType.Value;
 
                 ReportProgress(
-                    Result.AlreadyExists(ContentType.StringId, ContentType)
+                    ProgressReport.AlreadyExists(ContentType.StringId, ContentType)
                 );
             }
         }
