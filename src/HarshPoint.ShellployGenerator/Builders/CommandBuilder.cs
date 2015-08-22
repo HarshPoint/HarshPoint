@@ -9,10 +9,10 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     public abstract class CommandBuilder
     {
-        private readonly AttributeData _cmdletAttribute
-            = new AttributeData(typeof(SMA.CmdletAttribute))
+        private readonly AttributeBuilder _cmdletAttribute
+            = new AttributeBuilder(typeof(SMA.CmdletAttribute))
             {
-                ConstructorArguments = { null, null }
+                Arguments = { null, null }
             };
 
         private CommandBuilderContext _context = EmptyContext;
@@ -27,8 +27,8 @@ namespace HarshPoint.ShellployGenerator.Builders
         public HashSet<String> Aliases { get; }
             = new HashSet<String>(StringComparer.OrdinalIgnoreCase);
 
-        public Collection<AttributeData> Attributes { get; }
-            = new Collection<AttributeData>();
+        public Collection<AttributeBuilder> Attributes { get; }
+            = new Collection<AttributeBuilder>();
 
         public String ClassName
         {
@@ -53,12 +53,12 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
             get
             {
-                return (String)_cmdletAttribute.NamedArguments
+                return (String)_cmdletAttribute.Properties
                     .GetValueOrDefault("DefaultParameterSetName");
             }
             set
             {
-                _cmdletAttribute.NamedArguments["DefaultParameterSetName"]
+                _cmdletAttribute.Properties["DefaultParameterSetName"]
                     = value;
             }
         }
@@ -91,14 +91,14 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public String Noun
         {
-            get { return (String)_cmdletAttribute.ConstructorArguments[1]; }
-            set { _cmdletAttribute.ConstructorArguments[1] = value; }
+            get { return (String)_cmdletAttribute.Arguments[1]; }
+            set { _cmdletAttribute.Arguments[1] = value; }
         }
 
         public String Verb
         {
-            get { return (String)_cmdletAttribute.ConstructorArguments[0]; }
-            set { _cmdletAttribute.ConstructorArguments[0] = value; }
+            get { return (String)_cmdletAttribute.Arguments[0]; }
+            set { _cmdletAttribute.Arguments[0] = value; }
         }
 
         public CommandBuilderContext Context
@@ -117,80 +117,55 @@ namespace HarshPoint.ShellployGenerator.Builders
             internal set { _context = value; }
         }
 
-        internal ParameterBuilderContainer ParameterBuilders { get; }
-            = new ParameterBuilderContainer();
+        internal PropertyModelContainer PropertyContainer { get; }
+            = new PropertyModelContainer();
 
-        public ParameterBuilderFactory Parameter(String name)
+        public ParameterBuilder Parameter(String name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
                 throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
             }
 
-            return ParameterBuilders.GetFactory(name);
+            return PropertyContainer.GetParameterBuilder(name);
         }
 
-        public ParameterBuilderFactory PositionalParameter(String name)
+        public ParameterBuilder PositionalParameter(String name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
                 throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
             }
 
-            return ParameterBuilders.GetFactory(name, isPositional: true);
+            return PropertyContainer.GetParameterBuilder(name, isPositional: true);
         }
 
-        public virtual ShellployCommand ToCommand()
+        public virtual CommandModel ToCommand()
         {
             var properties = CreateProperties();
 
             if (HasInputObject)
             {
                 properties = properties.Concat(
-                    InputObjectParameter.Synthesize()
+                    InputObjectProperty
                 );
             }
 
-            var propertyArray = properties.ToImmutableArray();
-            AssignParameterPositions(propertyArray);
+            properties = new ParameterPositionVisitor().Visit(properties);
 
-            return new ShellployCommand
-            {
-                Attributes = Attributes.ToImmutableArray(),
-                Aliases = Aliases.ToImmutableArray(),
-                ClassName = ClassName,
-                HasInputObject = HasInputObject,
-                Name = Name,
-                Namespace = Namespace,
-                Properties = propertyArray,
-                ImportedNamespace = ImportedNamespaces.ToImmutableArray(),
-            };
+            return new CommandModel(
+                Aliases,
+                Attributes.Select(a => a.ToModel()),
+                ClassName,
+                ImportedNamespaces,
+                Name,
+                Namespace,
+                properties
+            );
         }
 
-        protected virtual IEnumerable<ShellployCommandProperty> CreateProperties()
-            => Enumerable.Empty<ShellployCommandProperty>();
-
-        internal virtual CommandBuilder Accept(ParameterBuilderVisitor visitor)
-        {
-            return this;
-        }
-
-        private static void AssignParameterPositions(
-            IEnumerable<ShellployCommandProperty> properties
-        )
-        {
-            var currentPosition = 0;
-
-            foreach (var prop in properties.Where(p => p.IsPositional))
-            {
-                foreach (var attr in prop.ParameterAttributes)
-                {
-                    attr.NamedArguments["Position"] = currentPosition;
-                }
-
-                currentPosition++;
-            }
-        }
+        protected virtual IEnumerable<PropertyModel> CreateProperties()
+            => PropertyContainer;
 
         internal static void ValidateParameterName(String name)
         {
@@ -209,23 +184,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             }
         }
 
-        public const String InputObjectPropertyName = "InputObject";
-
-        private static readonly ParameterBuilder InputObjectParameter
-            = new ParameterBuilderInputObject(
-                new ParameterBuilderSynthesized(
-                    InputObjectPropertyName,
-                    typeof(Object),
-                    null,
-                    new AttributeData(typeof(SMA.ParameterAttribute))
-                    {
-                        NamedArguments =
-                        {
-                            ["ValueFromPipeline"] = true
-                        }
-                    }
-                )
-            );
+        public const String InputObjectIdentifier = "InputObject";
 
         private static readonly CommandBuilderContext EmptyContext
             = new CommandBuilderContext();
@@ -236,7 +195,23 @@ namespace HarshPoint.ShellployGenerator.Builders
         private static readonly ImmutableHashSet<String> ReservedNames
             = ImmutableHashSet.Create(
                 StringComparer.OrdinalIgnoreCase,
-                InputObjectPropertyName
+                InputObjectIdentifier
+            );
+
+        private static readonly AttributeModel ValueFromPipeline
+            = new AttributeModel(typeof(SMA.ParameterAttribute))
+                .SetProperty("ValueFromPipeline", true);
+
+        private static readonly PropertyModel InputObjectProperty
+            = new PropertyModelPositional(
+                Int32.MaxValue,
+                new PropertyModelInputObject(
+                    new PropertyModelSynthesized(
+                        InputObjectIdentifier,
+                        typeof(Object),
+                        ValueFromPipeline
+                    )
+                )
             );
     }
 }

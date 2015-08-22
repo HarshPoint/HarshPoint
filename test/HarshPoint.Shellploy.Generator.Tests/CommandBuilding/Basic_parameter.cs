@@ -1,6 +1,5 @@
 using HarshPoint;
 using HarshPoint.Provisioning;
-using HarshPoint.ShellployGenerator;
 using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
 using System;
@@ -23,61 +22,78 @@ namespace CommandBuilding
             );
         }
 
-        private ShellployCommandProperty Property { get; }
+        private PropertyModel Property { get; }
+
+
+        [Fact]
+        public void Has_Identifier()
+        {
+            Assert.Equal("BasicParam", Property.Identifier);
+        }
+
+
+        [Fact]
+        public void Has_no_SortOrder()
+        {
+            Assert.Null(Property.SortOrder);
+        }
 
         [Fact]
         public void Is_not_positional()
         {
-            Assert.False(Property.IsPositional);
+            Assert.False(
+                Property.HasElementsOfType<PropertyModelPositional>()
+            );
         }
 
         [Fact]
         public void Has_no_default_value()
         {
-            Assert.Null(Property.DefaultValue);
+            Assert.False(
+                Property.HasElementsOfType<PropertyModelDefaultValue>()
+            );
         }
 
         [Fact]
         public void Has_no_fixed_value()
         {
-            Assert.Null(Property.FixedValue);
-            Assert.False(Property.HasFixedValue);
+            Assert.False(
+                Property.HasElementsOfType<PropertyModelFixed>()
+            );
         }
 
         [Fact]
-        public void Has_default_PropertyName()
+        public void Has_PropertyType()
         {
-            Assert.Equal("BasicParam", Property.PropertyName);
-        }
-
-        [Fact]
-        public void Has_ProvisionerType()
-        {
-            Assert.Equal(typeof(TestProvisioner), Property.ProvisionerType);
-        }
-
-        [Fact]
-        public void Has_Type()
-        {
-            Assert.Equal(typeof(String), Property.Type);
+            var synth = Assert.Single(
+                Property.ElementsOfType<PropertyModelSynthesized>()
+            );
+            Assert.Equal(typeof(String), synth.PropertyType);
         }
 
         [Fact]
         public void Has_Parameter_Attribute()
         {
-            var attr = Assert.Single(Property.Attributes);
+            var synth = Assert.Single(
+                Property.ElementsOfType<PropertyModelSynthesized>()
+            );
+            var attr = Assert.Single(synth.Attributes);
             Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
         }
 
         [Fact]
         public void Is_ValueFromPipelineByPropertyName()
         {
+            var synth = Assert.Single(
+                Property.ElementsOfType<PropertyModelSynthesized>()
+            );
+
             var attr = Assert.Single(
-                Property.Attributes,
+                synth.Attributes,
                 a => a.AttributeType == typeof(SMA.ParameterAttribute)
             );
 
-            var namedArg = Assert.Single(attr.NamedArguments);
+            var namedArg = Assert.Single(attr.Properties);
             Assert.Equal("ValueFromPipelineByPropertyName", namedArg.Key);
             Assert.Equal(true, namedArg.Value);
         }

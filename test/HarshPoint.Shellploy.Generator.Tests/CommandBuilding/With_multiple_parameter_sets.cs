@@ -12,49 +12,67 @@ namespace CommandBuilding
 {
     public class With_multiple_parameter_sets : SeriloggedTest
     {
+        private readonly CommandModel _command;
+
+        private readonly PropertyModel _common;
+        private readonly PropertyModelSynthesized _commonSynth;
+
+        private readonly PropertyModel _setA_Mandatory;
+        private readonly PropertyModelSynthesized _setA_MandatorySynth;
+
+        private readonly PropertyModel _setAB_MandatoryB;
+        private readonly PropertyModelSynthesized _setAB_MandatoryBSynth;
+
         public With_multiple_parameter_sets(ITestOutputHelper output) : base(output)
         {
             var builder = new NewObjectCommandBuilder<TestProvisioner>();
-            Command = builder.ToCommand();
+            _command = builder.ToCommand();
 
-            Assert.Equal(3, Command.Properties.Count);
+            Assert.Equal(3, _command.Properties.Count);
 
-            Common = Assert.Single(
-                Command.Properties,
+            _common = Assert.Single(
+                _command.Properties,
                 p => p.Identifier == "Common"
             );
 
-            SetA_Mandatory = Assert.Single(
-                Command.Properties,
+            _commonSynth = Assert.Single(
+                _common.ElementsOfType<PropertyModelSynthesized>()
+            );
+
+            _setA_Mandatory = Assert.Single(
+                _command.Properties,
                 p => p.Identifier == "SetA_Mandatory"
             );
 
-            SetAB_MandatoryB = Assert.Single(
-                Command.Properties,
+            _setA_MandatorySynth = Assert.Single(
+                _setA_Mandatory.ElementsOfType<PropertyModelSynthesized>()
+            );
+
+            _setAB_MandatoryB = Assert.Single(
+                _command.Properties,
                 p => p.Identifier == "SetAB_MandatoryB"
             );
-        }
 
-        private ShellployCommandProperty Common { get; }
-        private ShellployCommandProperty SetA_Mandatory { get; }
-        private ShellployCommandProperty SetAB_MandatoryB { get; }
-        internal ShellployCommand Command { get; }
+            _setAB_MandatoryBSynth = Assert.Single(
+                _setAB_MandatoryB.ElementsOfType<PropertyModelSynthesized>()
+            );
+        }
 
         [Fact]
         public void Common_has_single_attribute()
         {
-            var attr = Assert.Single(Common.Attributes);
+            var attr = Assert.Single(_commonSynth.Attributes);
             Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
         }
 
         [Fact]
         public void SetA_Mandatory_is_mandatory()
         {
-            var attr = Assert.Single(SetA_Mandatory.Attributes);
+            var attr = Assert.Single(_setA_MandatorySynth.Attributes);
             Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
 
             var mandatory = Assert.Single(
-                attr.NamedArguments,
+                attr.Properties,
                 na => na.Key == "Mandatory"
             );
             Assert.Equal(true, mandatory.Value);
@@ -63,11 +81,11 @@ namespace CommandBuilding
         [Fact]
         public void SetA_Mandatory_is_set_A()
         {
-            var attr = Assert.Single(SetA_Mandatory.Attributes);
+            var attr = Assert.Single(_setA_MandatorySynth.Attributes);
             Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
 
             var psn = Assert.Single(
-                attr.NamedArguments,
+                attr.Properties,
                 na => na.Key == "ParameterSetName"
             );
             Assert.Equal("A", psn.Value);
@@ -76,8 +94,8 @@ namespace CommandBuilding
         [Fact]
         public void SetAB_MandatoryB_has_two_ParameterAttributes()
         {
-            Assert.Equal(2, SetAB_MandatoryB.Attributes.Count);
-            Assert.All(SetAB_MandatoryB.Attributes, a =>
+            Assert.Equal(2, _setAB_MandatoryBSynth.Attributes.Length);
+            Assert.All(_setAB_MandatoryBSynth.Attributes, a =>
                 Assert.Equal(typeof(SMA.ParameterAttribute), a.AttributeType)
             );
         }
@@ -86,8 +104,8 @@ namespace CommandBuilding
         public void SetAB_MandatoryB_is_set_A()
         {
             var attr = Assert.Single(
-                SetAB_MandatoryB.Attributes,
-                a => Equals("A", a.NamedArguments.GetValueOrDefault("ParameterSetName"))
+                _setAB_MandatoryBSynth.Attributes,
+                a => Equals("A", a.Properties["ParameterSetName"])
             );
 
             Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
@@ -97,14 +115,14 @@ namespace CommandBuilding
         public void SetAB_MandatoryB_is_mandatory_in_set_B()
         {
             var attr = Assert.Single(
-                SetAB_MandatoryB.Attributes,
-                a => Equals("B", a.NamedArguments.GetValueOrDefault("ParameterSetName"))
+                _setAB_MandatoryBSynth.Attributes,
+                a => Equals("B", a.Properties["ParameterSetName"])
             );
 
             Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
 
             var mandatory = Assert.Single(
-                attr.NamedArguments,
+                attr.Properties,
                 na => na.Key == "Mandatory"
             );
 
@@ -115,12 +133,12 @@ namespace CommandBuilding
         public void Doesnt_have_DefaultParameterSet()
         {
             var attr = Assert.Single(
-                Command.Attributes,
+                _command.Attributes,
                 a => a.AttributeType == typeof(SMA.CmdletAttribute)
             );
 
             Assert.DoesNotContain(
-                attr.NamedArguments,
+                attr.Properties,
                 a => a.Key == "DefaultParameterSetName"
             );
         }

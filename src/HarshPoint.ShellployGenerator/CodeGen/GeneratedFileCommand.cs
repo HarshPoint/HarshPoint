@@ -46,6 +46,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
         private CodeTypeDeclaration CreateClass()
         {
+#if false
             var commandClass = new CodeTypeDeclaration(Command.ClassName)
             {
                 BaseTypes = { HarshProvisionerCmdlet },
@@ -54,19 +55,18 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 IsClass = true,
                 TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed,
             };
-#if false
             commandClass.Members.AddRange(
                 Command.Properties
                 .Where(p => !p.HasFixedValue)
                 .Select(p => CreateProperty(commandClass, p))
                 .ToArray()
             );
-#endif
             commandClass.Members.AddRange(
                 CreateProvisionerMethods().ToArray()
             );
 
-            return commandClass;
+#endif
+            return null;
         }
 #if false
         private CodeMemberMethod CreateProcessRecordMethod()
@@ -93,11 +93,9 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
             return method;
         }
-#endif
         private IEnumerable<CodeMemberMethod> CreateProvisionerMethods()
         {
             var methods = new List<CodeMemberMethod>();
-#if false
             methods.Add(CreateProcessRecordMethod());
 
             var resultVar = new CodeVariableReferenceExpression("result");
@@ -189,7 +187,6 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 methods.Add(method);
                 previousType = type;
             }
-#endif
             return methods;
         }
 
@@ -258,6 +255,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
             return codeProperty;
         }
+#endif
 
         private static readonly CodeThisReferenceExpression This
             = new CodeThisReferenceExpression();

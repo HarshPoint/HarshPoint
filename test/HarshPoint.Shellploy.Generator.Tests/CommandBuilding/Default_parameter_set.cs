@@ -13,24 +13,21 @@ namespace CommandBuilding
 {
     public class Default_parameter_set : SeriloggedTest
     {
-        private readonly ShellployCommand _command;
+        private readonly CommandModel _command;
 
         public Default_parameter_set(ITestOutputHelper output) : base(output)
         {
             _command = new NewObjectCommandBuilder<ParameterSetProvisioner>().ToCommand();
         }
 
-        private Boolean WithAttributeType<T>(AttributeData attr)
-            => attr.AttributeType == typeof(T);
-
         [Fact]
         public void Has_default_parameter_set_name()
         {
             var attr = Assert.Single(
                 _command.Attributes,
-                WithAttributeType<SMA.CmdletAttribute>
+                a => a.AttributeType == typeof(SMA.CmdletAttribute)
             );
-            Assert.Equal("ParamSet2", attr.NamedArguments["DefaultParameterSetName"]);
+            Assert.Equal("ParamSet2", attr.Properties["DefaultParameterSetName"]);
         }
 
         [DefaultParameterSet("ParamSet2")]

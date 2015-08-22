@@ -4,13 +4,10 @@ using System.Collections.Immutable;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public sealed class ParameterBuilderIgnored : ParameterBuilder
+    public sealed class PropertyModelIgnored : PropertyModel
     {
-        public override IEnumerable<ShellployCommandProperty> Synthesize()
-            => ImmutableArray<ShellployCommandProperty>.Empty;
-
-        protected internal override ParameterBuilder Accept(
-            ParameterBuilderVisitor visitor
+        protected internal override PropertyModel Accept(
+            PropertyModelVisitor visitor
         )
         {
             if (visitor == null)
@@ -22,6 +19,6 @@ namespace HarshPoint.ShellployGenerator.Builders
         }
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(ParameterBuilderIgnored));
+            = HarshLog.ForContext(typeof(PropertyModelIgnored));
     }
 }

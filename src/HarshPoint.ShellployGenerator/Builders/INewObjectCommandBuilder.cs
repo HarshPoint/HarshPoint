@@ -6,7 +6,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     public interface INewObjectCommandBuilder
     {
-        IEnumerable<ParameterBuilder> GetParametersRecursively();
+        IEnumerable<PropertyModel> CreatePropertiesRecursively();
         IImmutableList<Type> ParentTargetTypes { get; }
         Type TargetType { get; }
     }

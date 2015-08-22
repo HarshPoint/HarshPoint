@@ -1,15 +1,11 @@
 ﻿using HarshPoint;
 using HarshPoint.Provisioning;
-using HarshPoint.ShellployGenerator;
 using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using SMA = System.Management.Automation;
 
 namespace CommandBuilding
 {
@@ -17,7 +13,7 @@ namespace CommandBuilding
     {
         private readonly NewObjectCommandBuilder<Parent> _parent;
         private readonly NewObjectCommandBuilder<Child> _child;
-        private readonly ShellployCommand _childCommand;
+        private readonly CommandModel _childCommand;
 
         public With_parent_and_positional(ITestOutputHelper output) : base(output)
         {
@@ -51,7 +47,7 @@ namespace CommandBuilding
 
 
         private void AssertParamPosition(
-            Int32 expectedPosition, 
+            Int32 expectedPosition,
             String propertyId
         )
         {
@@ -60,10 +56,17 @@ namespace CommandBuilding
                 p => p.Identifier == propertyId
             );
 
-            var attr = Assert.Single(param.ParameterAttributes);
+            var synth = Assert.Single(
+                param.ElementsOfType<PropertyModelSynthesized>()
+            );
 
-            var actualPosition = 
-                (Int32?)attr.NamedArguments.GetValueOrDefault("Position");
+            var attr = Assert.Single(
+                synth.Attributes,
+                a => a.AttributeType == typeof(SMA.ParameterAttribute)
+            );
+
+            var actualPosition =
+                (Int32?)attr.Properties["Position"];
 
             Assert.Equal(expectedPosition, actualPosition);
         }
@@ -80,7 +83,7 @@ namespace CommandBuilding
             public String Parent0 { get; set; }
         }
 
-        private sealed class Child :HarshProvisioner
+        private sealed class Child : HarshProvisioner
         {
             [Parameter]
             public String Child1 { get; set; }

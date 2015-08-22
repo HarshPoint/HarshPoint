@@ -1,13 +1,14 @@
-﻿using System.CodeDom;
+﻿using HarshPoint.ShellployGenerator.Builders;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.CodeGen
 {
-    internal static class AttributeDataCodeDom
+    internal static class AttributeModelCodeDom
     {
         public static CodeAttributeDeclaration ToCodeAttributeDeclaration(
-            this AttributeData attribute
+            this AttributeModel attribute
         )
         {
             if (attribute == null)
@@ -19,7 +20,7 @@ namespace HarshPoint.ShellployGenerator
                 new CodeTypeReference(attribute.AttributeType)
             );
 
-            foreach (var ctorArg in attribute.ConstructorArguments)
+            foreach (var ctorArg in attribute.Arguments)
             {
                 result.Arguments.Add(
                     new CodeAttributeArgument(
@@ -28,7 +29,7 @@ namespace HarshPoint.ShellployGenerator
                 );
             }
 
-            foreach (var namedArg in attribute.NamedArguments)
+            foreach (var namedArg in attribute.Properties)
             {
                 result.Arguments.Add(
                     new CodeAttributeArgument(
@@ -42,7 +43,7 @@ namespace HarshPoint.ShellployGenerator
         }
 
         public static CodeAttributeDeclarationCollection ToCodeAttributeDeclarations(
-            this IEnumerable<AttributeData> attributes
+            this IEnumerable<AttributeModel> attributes
         )
         {
             if (attributes == null)
@@ -56,6 +57,6 @@ namespace HarshPoint.ShellployGenerator
         }
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(AttributeDataCodeDom));
+            = HarshLog.ForContext(typeof(AttributeModelCodeDom));
     }
 }

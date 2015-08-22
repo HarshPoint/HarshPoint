@@ -11,8 +11,8 @@ namespace HarshPoint.ShellployGenerator.Builders
         private ImmutableList<CommandBuilder> _builders
             = ImmutableList<CommandBuilder>.Empty;
 
-        private ImmutableDictionary<Type, INewObjectCommandBuilder> _newObjectBuilders
-            = ImmutableDictionary<Type, INewObjectCommandBuilder>.Empty;
+        private ImmutableDictionary<Type, NewObjectCommandBuilder> _newObjectBuilders
+            = ImmutableDictionary<Type, NewObjectCommandBuilder>.Empty;
 
         public void AddBuildersFrom(Assembly assembly)
         {
@@ -29,8 +29,8 @@ namespace HarshPoint.ShellployGenerator.Builders
 
             _newObjectBuilders = _newObjectBuilders.AddRange(
                 builders
-                .OfType<INewObjectCommandBuilder>()
-                .Select(incb => HarshKeyValuePair.Create(incb.TargetType, incb))
+                .OfType<NewObjectCommandBuilder>()
+                .Select(nocb => HarshKeyValuePair.Create(nocb.TargetType, nocb))
             );
         }
 
@@ -41,7 +41,7 @@ namespace HarshPoint.ShellployGenerator.Builders
                 throw Logger.Fatal.ArgumentNull(nameof(builder));
             }
 
-            var newObjectBuilder = (builder as INewObjectCommandBuilder);
+            var newObjectBuilder = (builder as NewObjectCommandBuilder);
 
             if (newObjectBuilder != null)
             {
@@ -57,7 +57,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public IEnumerable<CommandBuilder> Builders => _builders;
 
-        public INewObjectCommandBuilder GetNewObjectCommandBuilder(
+        public NewObjectCommandBuilder GetNewObjectCommandBuilder(
             Type targetType
         )
         {
@@ -94,6 +94,6 @@ namespace HarshPoint.ShellployGenerator.Builders
             = typeof(CommandBuilder).GetTypeInfo();
 
         private static readonly TypeInfo NewObjectCommandBuilderTypeInfo
-            = typeof(INewObjectCommandBuilder).GetTypeInfo();
+            = typeof(NewObjectCommandBuilder).GetTypeInfo();
     }
 }

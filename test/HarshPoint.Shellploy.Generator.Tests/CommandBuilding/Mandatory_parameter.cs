@@ -23,17 +23,21 @@ namespace CommandBuilding
             );
         }
 
-        private ShellployCommandProperty Property { get; }
+        private PropertyModel Property { get; }
 
         [Fact]
         public void Has_Mandatory_Parameter_Attribute()
         {
-            var attr = Assert.Single(Property.Attributes);
-            Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
-            Assert.Empty(attr.ConstructorArguments);
+            var synth = Assert.Single(
+                Property.ElementsOfType<PropertyModelSynthesized>()
+            );
 
-            Assert.Equal(2, attr.NamedArguments.Count);
-            Assert.Equal(true, attr.NamedArguments["Mandatory"]);
+            var attr = Assert.Single(synth.Attributes);
+            Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
+            Assert.Empty(attr.Arguments);
+
+            Assert.Equal(2, attr.Properties.Count);
+            Assert.Equal(true, attr.Properties["Mandatory"]);
         }
 
         private sealed class TestProvisioner : HarshProvisioner

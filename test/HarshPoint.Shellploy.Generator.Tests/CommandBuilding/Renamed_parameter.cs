@@ -1,6 +1,5 @@
 ﻿using HarshPoint;
 using HarshPoint.Provisioning;
-using HarshPoint.ShellployGenerator;
 using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
 using System;
@@ -25,7 +24,7 @@ namespace CommandBuilding
             var command = builder.ToCommand();
             var property = Assert.Single(command.Properties);
 
-            Assert.Equal("RenamedParam", property.PropertyName);
+            Assert.Equal("RenamedParam", property.Identifier);
         }
 
         [Fact]
@@ -37,7 +36,11 @@ namespace CommandBuilding
             var command = builder.ToCommand();
             var property = Assert.Single(command.Properties);
 
-            Assert.Equal("NewName", property.PropertyName);
+            var renamed = Assert.Single(
+                property.ElementsOfType<PropertyModelRenamed>()
+            );
+
+            Assert.Equal("NewName", renamed.PropertyName);
         }
 
         [Fact]
@@ -92,7 +95,6 @@ namespace CommandBuilding
                 builder.Parameter(x => x.RenamedParam).Rename("InputObject");
             });
         }
-
 
         private sealed class TestProvisioner : HarshProvisioner
         {

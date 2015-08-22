@@ -5,13 +5,13 @@
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
       </SnippetTypes>
-      <Title>ArgumentNull</Title>
+      <Title>ArgumentNullOrWhiteSpace</Title>
       <Author>Julie</Author>
       <Description>
       </Description>
       <HelpUrl>
       </HelpUrl>
-      <Shortcut>argnull</Shortcut>
+      <Shortcut>argwhite</Shortcut>
     </Header>
     <Snippet>
       <Declarations>
@@ -23,10 +23,10 @@
           </Function>
         </Literal>
       </Declarations>
-      <Code Language="csharp" Delimiter="$"><![CDATA[if ($param$ == null)
+      <Code Language="csharp" Delimiter="$"><![CDATA[if (String.IsNullOrWhiteSpace($param$))
 {
-    throw Logger.Fatal.ArgumentNull(nameof($param$));
-}$end$]]></Code>
+    throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof($param$));
+}]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

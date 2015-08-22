@@ -22,7 +22,11 @@ namespace CommandBuilding
             builder.Parameter(x => x.IgnoredParam).Ignore();
 
             var command = builder.ToCommand();
-            Assert.Empty(command.Properties);
+            var prop = Assert.Single(command.Properties);
+
+            var ignored = Assert.Single(
+                prop.ElementsOfType<PropertyModelIgnored>()
+            );
         }
 
         private sealed class TestProvisioner : HarshProvisioner

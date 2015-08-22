@@ -84,7 +84,7 @@
     <Compile Include="Linq\HarshExpressionEqualityComparer.cs" />
     <Compile Include="Linq\HarshQueryable.cs" />
     <Compile Include="ObjectModel\HarshObjectMetadata.cs" />
-    <Compile Include="ObjectModel\HarshParametrizedObjectMetadata.cs" />
+    <Compile Include="ObjectModel\HarshParameterizedObjectMetadata.cs" />
     <Compile Include="ObjectModel\IDefaultValuePolicy.cs" />
     <Compile Include="ObjectModel\ITrackValueSource.cs" />
     <Compile Include="ObjectModel\NullDefaultValuePolicy.cs" />

@@ -1,5 +1,4 @@
 using HarshPoint.Provisioning;
-using HarshPoint.ShellployGenerator;
 using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
 using System;
@@ -13,7 +12,7 @@ namespace CommandBuilding
     public class Without_configuration : SeriloggedTest
     {
         private readonly CommandBuilder _builder;
-        private readonly ShellployCommand _command;
+        private readonly CommandModel _command;
 
         public Without_configuration(ITestOutputHelper output) : base(output)
         {
@@ -34,21 +33,9 @@ namespace CommandBuilding
         }
 
         [Fact]
-        public void Has_no_parents()
-        {
-            Assert.Empty(_command.ParentProvisionerTypes);
-        }
-
-        [Fact]
         public void Has_name()
         {
             Assert.Equal($"New-{nameof(EmptyProvisioner)}", _builder.Name);
-        }
-
-        [Fact]
-        public void Has_ProvisionerType()
-        {
-            Assert.Equal(typeof(EmptyProvisioner), _command.ProvisionerType);
         }
 
         [Fact]
@@ -63,18 +50,25 @@ namespace CommandBuilding
             Assert.Null(_command.Namespace);
         }
 
-        private Boolean WithAttributeType<T>(AttributeData attr)
-            => attr.AttributeType == typeof(T);
+        [Fact]
+        public void Has_CmdletAttribute()
+        {
+            Assert.Single(
+                _command.Attributes
+                    .Where(attr =>
+                        attr.AttributeType == typeof(SMA.CmdletAttribute))
+            );
+        }
 
         [Fact]
         public void Has_noun_verb()
         {
             var attr = Assert.Single(
                 _command.Attributes,
-                WithAttributeType<SMA.CmdletAttribute>
+                a => a.AttributeType == typeof(SMA.CmdletAttribute)
             );
-            Assert.Equal(SMA.VerbsCommon.New, attr.ConstructorArguments[0]);
-            Assert.Equal(nameof(EmptyProvisioner), attr.ConstructorArguments[1]);
+            Assert.Equal(SMA.VerbsCommon.New, attr.Arguments[0]);
+            Assert.Equal(nameof(EmptyProvisioner), attr.Arguments[1]);
         }
 
         [Fact]
@@ -82,9 +76,9 @@ namespace CommandBuilding
         {
             var attr = Assert.Single(
                 _command.Attributes,
-                WithAttributeType<SMA.OutputTypeAttribute>
+                a => a.AttributeType == typeof(SMA.OutputTypeAttribute)
             );
-            Assert.Equal(typeof(EmptyProvisioner), attr.ConstructorArguments[0]);
+            Assert.Equal(typeof(EmptyProvisioner), attr.Arguments[0]);
         }
 
         [Fact]
@@ -92,11 +86,11 @@ namespace CommandBuilding
         {
             var attr = Assert.Single(
                 _command.Attributes,
-                WithAttributeType<SMA.CmdletAttribute>
+                a => a.AttributeType == typeof(SMA.CmdletAttribute)
             );
 
             Assert.DoesNotContain(
-                attr.NamedArguments,
+                attr.Properties,
                 a => a.Key == "DefaultParameterSetName"
             );
         }

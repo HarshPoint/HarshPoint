@@ -20,18 +20,22 @@ namespace CommandBuilding
             Property = Assert.Single(command.Properties);
         }
 
-        private ShellployCommandProperty Property { get; }
+        private PropertyModel Property { get; }
 
         [Fact]
         public void FixedValue_is_set()
         {
-            Assert.Equal(42, Property.FixedValue);
+            var fix = Assert.Single(
+                Property.ElementsOfType<PropertyModelFixed>()
+            );
+
+            Assert.Equal(42, fix.Value);
         }
 
         [Fact]
-        public void HasFixedValue_is_true()
+        public void Has_FixedValue()
         {
-            Assert.True(Property.HasFixedValue);
+            Assert.True(Property.HasElementsOfType<PropertyModelFixed>());
         }
 
         private sealed class TestProvisioner : HarshProvisioner

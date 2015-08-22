@@ -6,28 +6,28 @@ namespace HarshPoint.ShellployGenerator.Builders
     public sealed class ChildCommandBuilder<TProvisioner, TParent> :
         IChildCommandBuilder
     {
-        private readonly ParameterBuilderContainer _parameterBuilders
-            = new ParameterBuilderContainer();
+        private readonly PropertyModelContainer _parameterBuilders
+            = new PropertyModelContainer();
 
         internal ChildCommandBuilder()
         {
             _parameterBuilders.Update(
-                CommandBuilder.InputObjectPropertyName,
-                new ParameterBuilderIgnored()
+                CommandBuilder.InputObjectIdentifier,
+                new PropertyModelIgnored()
             );
         }
 
-        public IChildParameterBuilderFactory<TParent> Parameter(
+        public IChildParameterBuilder<TParent> Parameter(
             Expression<Func<TParent, Object>> expression
         )
-            => _parameterBuilders.GetFactory(expression);
+            => _parameterBuilders.GetParameterBuilder(expression);
 
-        public IChildParameterBuilderFactory Parameter(
+        public IChildParameterBuilder Parameter(
             String name
         )
-            => _parameterBuilders.GetFactory(name);
+            => _parameterBuilders.GetParameterBuilder(name);
 
-        ParameterBuilderContainer IChildCommandBuilder.ParameterBuilders
+        PropertyModelContainer IChildCommandBuilder.ParameterBuilders
             => _parameterBuilders;
 
         Type IChildCommandBuilder.ParentType => typeof(TParent);

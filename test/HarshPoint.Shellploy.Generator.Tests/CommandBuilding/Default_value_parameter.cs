@@ -1,6 +1,5 @@
 ﻿using HarshPoint;
 using HarshPoint.Provisioning;
-using HarshPoint.ShellployGenerator;
 using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
 using System;
@@ -24,7 +23,11 @@ namespace CommandBuilding
             var command = builder.ToCommand();
             var property = Assert.Single(command.Properties);
 
-            Assert.Equal(42, property.DefaultValue);
+            var defVal = Assert.Single(
+                property.ElementsOfType<PropertyModelDefaultValue>()
+            );
+
+            Assert.Equal(42, defVal.DefaultValue);
         }
 
         private sealed class TestProvisioner : HarshProvisioner

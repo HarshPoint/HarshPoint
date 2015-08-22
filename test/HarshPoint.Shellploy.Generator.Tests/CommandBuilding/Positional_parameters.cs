@@ -1,26 +1,24 @@
 ﻿using HarshPoint;
 using HarshPoint.Provisioning;
-using HarshPoint.ShellployGenerator;
 using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using SMA = System.Management.Automation;
 
 namespace CommandBuilding
 {
     public class Positional_parameters : SeriloggedTest
     {
         private readonly NewObjectCommandBuilder<TestProvisioner> _builder;
-        private readonly ShellployCommand _command;
+        private readonly CommandModel _command;
 
-        private readonly ShellployCommandProperty _named;
-        private readonly ShellployCommandProperty _pos0;
-        private readonly ShellployCommandProperty _pos1;
+        private readonly PropertyModel _named;
+        private readonly PropertyModel _pos0;
+        private readonly PropertyModel _pos1;
 
         public Positional_parameters(ITestOutputHelper output) : base(output)
         {
@@ -57,10 +55,10 @@ namespace CommandBuilding
         [Fact]
         public void Pos0_has_position_0()
         {
-            var attr = Assert.Single(_pos0.ParameterAttributes);
+            var attr = Assert.Single(GetParameterAttributes(_pos0));
 
             var pos = Assert.Single(
-                attr.NamedArguments, 
+                attr.Properties, 
                 na => na.Key == "Position"
             );
 
@@ -70,16 +68,16 @@ namespace CommandBuilding
         [Fact]
         public void Pos0_is_positional()
         {
-            Assert.True(_pos0.IsPositional);
+            Assert.True(_pos0.HasElementsOfType<PropertyModelPositional>());
         }
 
         [Fact]
         public void Pos1_has_position_1()
         {
-            var attr = Assert.Single(_pos1.ParameterAttributes);
+            var attr = Assert.Single(GetParameterAttributes(_pos1));
 
             var pos = Assert.Single(
-                attr.NamedArguments,
+                attr.Properties,
                 na => na.Key == "Position"
             );
 
@@ -90,21 +88,40 @@ namespace CommandBuilding
         [Fact]
         public void Pos1_is_positional()
         {
-            Assert.True(_pos1.IsPositional);
+            Assert.True(_pos1.HasElementsOfType<PropertyModelPositional>());
         }
+
+
+        [Fact]
+        public void Named_is_not_positional()
+        {
+            Assert.False(_named.HasElementsOfType<PropertyModelPositional>());
+        }
+
 
         [Fact]
         public void Named_has_no_position()
         {
-            var attr = Assert.Single(_named.ParameterAttributes);
+            var attr = Assert.Single(GetParameterAttributes(_named));
 
             Assert.DoesNotContain(
-                attr.NamedArguments,
+                attr.Properties,
                 na => na.Key == "Position"
             );
         }
 
+        private static IEnumerable<AttributeModel> GetParameterAttributes(
+            PropertyModel property
+        )
+        {
+            var synth = Assert.Single(
+                property.ElementsOfType<PropertyModelSynthesized>()
+            );
 
+            return synth.Attributes.Where(
+                a => a.AttributeType == typeof(SMA.ParameterAttribute)
+            );
+        }
 
         private sealed class TestProvisioner : HarshProvisioner
         {

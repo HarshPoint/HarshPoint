@@ -2,26 +2,21 @@ using System;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public sealed class ParameterBuilderDefaultValue : ParameterBuilder
+    public sealed class PropertyModelDefaultValue : PropertyModel
     {
-        internal ParameterBuilderDefaultValue(Object defaultValue)
+        internal PropertyModelDefaultValue(Object defaultValue)
         {
             DefaultValue = defaultValue;
         }
 
         public Object DefaultValue { get; }
 
-        protected override void Process(ShellployCommandProperty property)
-        {
-            property.DefaultValue = DefaultValue;
-        }
-
-        public override ParameterBuilder InsertIntoContainer(
-            ParameterBuilder existing
+        public override PropertyModel InsertIntoContainer(
+            PropertyModel existing
         )
         {
             if ((existing != null) &&
-                (existing.HasElementsOfType<ParameterBuilderFixed>()))
+                (existing.HasElementsOfType<PropertyModelFixed>()))
             {
                 throw Logger.Fatal.InvalidOperation(
                     SR.ParameterBuilderDefaultValue_AttemptedToNestFixed
@@ -31,7 +26,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             return base.InsertIntoContainer(existing);
         }
 
-        protected internal override ParameterBuilder Accept(ParameterBuilderVisitor visitor)
+        protected internal override PropertyModel Accept(PropertyModelVisitor visitor)
         {
             if (visitor == null)
             {
@@ -42,6 +37,6 @@ namespace HarshPoint.ShellployGenerator.Builders
         }
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(ParameterBuilderDefaultValue));
+            = HarshLog.ForContext(typeof(PropertyModelDefaultValue));
     }
 }

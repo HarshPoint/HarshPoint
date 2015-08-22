@@ -2,20 +2,20 @@
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public sealed class ParameterBuilderPositional : ParameterBuilder
+    public sealed class PropertyModelPositional : PropertyModel
     {
-        public ParameterBuilderPositional(Int32 sortOrder)
+        public PropertyModelPositional(Int32 sortOrder)
             : base(sortOrder: sortOrder)
         {
         }
 
-        protected override void Process(ShellployCommandProperty property)
+        public PropertyModelPositional(Int32 sortOrder, PropertyModel next)
+            : base(next, sortOrder: sortOrder)
         {
-            property.IsPositional = true;
         }
 
-        protected internal override ParameterBuilder Accept(
-            ParameterBuilderVisitor visitor
+        protected internal override PropertyModel Accept(
+            PropertyModelVisitor visitor
         )
         {
             if (visitor == null)
@@ -27,6 +27,6 @@ namespace HarshPoint.ShellployGenerator.Builders
         }
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(ParameterBuilderPositional));
+            = HarshLog.ForContext(typeof(PropertyModelPositional));
     }
 }

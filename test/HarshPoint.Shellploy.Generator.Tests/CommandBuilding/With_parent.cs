@@ -1,14 +1,10 @@
-﻿using HarshPoint.Provisioning;
+﻿using HarshPoint;
+using HarshPoint.Provisioning;
+using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using HarshPoint.ShellployGenerator.Builders;
-using HarshPoint;
 
 namespace CommandBuilding
 {
@@ -57,10 +53,9 @@ namespace CommandBuilding
             _parent.HasInputObject = true;
 
             var cmd = _child.ToCommand();
-            Assert.False(cmd.HasInputObject);
             Assert.DoesNotContain(
                 cmd.Properties,
-                p => p.IsInputObject
+                p => p.HasElementsOfType<PropertyModelInputObject>()
             );
         }
 
@@ -81,9 +76,13 @@ namespace CommandBuilding
 
             var command = _child.ToCommand();
 
-            Assert.DoesNotContain(
+            var prop = Assert.Single(
                 command.Properties,
                 p => p.Identifier == "ParentParam"
+            );
+
+            Assert.Single(
+                prop.ElementsOfType<PropertyModelIgnored>()
             );
         }
 
@@ -101,8 +100,11 @@ namespace CommandBuilding
                 p => p.Identifier == "ParentParam"
             );
 
-            Assert.True(prop.HasFixedValue);
-            Assert.Equal("42", prop.FixedValue);
+            var fixVal = Assert.Single(
+                prop.ElementsOfType<PropertyModelFixed>()
+            );
+
+            Assert.Equal("42", fixVal.Value);
         }
 
         [Fact]
@@ -134,7 +136,9 @@ namespace CommandBuilding
                 p => p.Identifier == "ParentParam"
             );
 
-            Assert.False(prop.HasFixedValue);
+            Assert.Empty(
+                prop.ElementsOfType<PropertyModelFixed>()
+            );
         }
 
         public class Parent : HarshProvisioner

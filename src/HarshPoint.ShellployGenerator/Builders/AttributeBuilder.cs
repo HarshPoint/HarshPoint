@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace HarshPoint.ShellployGenerator
+namespace HarshPoint.ShellployGenerator.Builders
 {
-    public sealed class AttributeData
+    public sealed class AttributeBuilder
     {
         private readonly Collection<Object> _ctorArgs
             = new Collection<Object>();
@@ -12,7 +12,7 @@ namespace HarshPoint.ShellployGenerator
         private readonly Dictionary<String, Object> _namedArgs
             = new Dictionary<String, Object>(StringComparer.Ordinal);
 
-        public AttributeData(Type attributeType)
+        public AttributeBuilder(Type attributeType)
         {
             if (attributeType == null)
             {
@@ -22,23 +22,16 @@ namespace HarshPoint.ShellployGenerator
             AttributeType = attributeType;
         }
 
-        public AttributeData Clone()
-        {
-            var clone = new AttributeData(AttributeType);
-            clone.ConstructorArguments.AddRange(ConstructorArguments);
-            clone.NamedArguments.AddRange(NamedArguments);
-            return clone;
-        }
-
         public Type AttributeType { get; }
 
-        public Collection<Object> ConstructorArguments
-            => _ctorArgs;
+        public Collection<Object> Arguments => _ctorArgs;
 
-        public Dictionary<String, Object> NamedArguments
-            => _namedArgs;
+        public Dictionary<String, Object> Properties => _namedArgs;
+
+        public AttributeModel ToModel()
+            => new AttributeModel(AttributeType, Arguments, Properties);
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(AttributeData));
+            = HarshLog.ForContext(typeof(AttributeBuilder));
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
-    internal sealed class ParameterPropertyGenerator : ParameterBuilderVisitor
+    internal sealed class ParameterPropertyGenerator : PropertyModelVisitor
     {
         private readonly HarshScopedValue<String> _renaming
             = new HarshScopedValue<String>();
@@ -25,18 +25,18 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
         public CodeTypeDeclaration TypeDeclaration { get; }
 
-        protected internal override ParameterBuilder VisitIgnored(
-            ParameterBuilderIgnored ignoredBuilder
+        protected internal override PropertyModel VisitIgnored(
+            PropertyModelIgnored ignoredBuilder
         )
             => null; // do not generate properties for ignored parameters
 
-        protected internal override ParameterBuilder VisitFixed(
-            ParameterBuilderFixed fixedBuilder
+        protected internal override PropertyModel VisitFixed(
+            PropertyModelFixed fixedBuilder
         )
             => null; // do not generate properties for fixed parameters
 
-        protected internal override ParameterBuilder VisitRenamed(
-            ParameterBuilderRenamed renamedBuilder
+        protected internal override PropertyModel VisitRenamed(
+            PropertyModelRenamed renamedBuilder
         )
         {
             using (_renaming.EnterIfDefault(renamedBuilder.PropertyName))
@@ -45,12 +45,12 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             }
         }
 
-        protected internal override ParameterBuilder VisitSynthesized(
-            ParameterBuilderSynthesized synthesizedBuilder
+        protected internal override PropertyModel VisitSynthesized(
+            PropertyModelSynthesized synthesizedBuilder
         )
         {
-            var name = _renaming.Value ?? synthesizedBuilder.Name;
-            var type = new CodeTypeReference(synthesizedBuilder.ParameterType);
+            var name = _renaming.Value ?? synthesizedBuilder.Identifier;
+            var type = new CodeTypeReference(synthesizedBuilder.PropertyType);
 
             var property = new CodeMemberProperty()
             {

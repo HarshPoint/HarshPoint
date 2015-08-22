@@ -2,15 +2,19 @@
 using HarshPoint.ShellployGenerator;
 using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
+using SMA = System.Management.Automation;
 
 namespace CommandBuilding
 {
     public class InputObject_parameter : SeriloggedTest
     {
-        private readonly ShellployCommandProperty _property;
-        private readonly AttributeData _paramAttr;
+        private readonly PropertyModel _property;
+        private readonly PropertyModelSynthesized _synthesized;
+
+        private readonly AttributeModel _paramAttr;
 
         public InputObject_parameter(ITestOutputHelper output) : base(output)
         {
@@ -20,13 +24,24 @@ namespace CommandBuilding
             var command = builder.ToCommand();
 
             _property = Assert.Single(command.Properties);
-            _paramAttr = Assert.Single(_property.ParameterAttributes);
+
+            _synthesized = Assert.Single(
+                _property.ElementsOfType<PropertyModelSynthesized>()
+            );
+
+            _paramAttr = Assert.Single(
+                _synthesized.Attributes.Where(
+                    a => a.AttributeType == typeof(SMA.ParameterAttribute)
+                )
+            );
         }
 
         [Fact]
         public void Has_InputObject()
         {
-            Assert.True(_property.IsInputObject);
+            Assert.True(
+                _property.HasElementsOfType<PropertyModelInputObject>()
+            );
         }
 
 
@@ -34,38 +49,22 @@ namespace CommandBuilding
         public void Has_identifier()
         {
             Assert.Equal(
-                CommandBuilder.InputObjectPropertyName,
+                CommandBuilder.InputObjectIdentifier,
                 _property.Identifier
             );
         }
 
         [Fact]
-        public void Has_name()
-        {
-            Assert.Equal(
-                CommandBuilder.InputObjectPropertyName, 
-                _property.PropertyName
-            );
-        }
-
-
-        [Fact]
         public void Is_Positional()
         {
-            Assert.True(_property.IsPositional);
-        }
-
-        [Fact]
-        public void Has_no_ProvisionerType()
-        {
-            Assert.Null(_property.ProvisionerType);
+            Assert.True(_property.HasElementsOfType<PropertyModelPositional>());
         }
 
         [Fact]
         public void Has_Position()
         {
             var pos = Assert.Single(
-                _paramAttr.NamedArguments, 
+                _paramAttr.Properties,
                 na => na.Key == "Position"
             );
 
@@ -76,7 +75,7 @@ namespace CommandBuilding
         public void Is_ValueFromPipeline()
         {
             var vfp = Assert.Single(
-                _paramAttr.NamedArguments,
+                _paramAttr.Properties,
                 na => na.Key == "ValueFromPipeline"
             );
 
@@ -87,12 +86,10 @@ namespace CommandBuilding
         public void Is_not_ValueFromPipelineByPropertyName()
         {
             Assert.DoesNotContain(
-                _paramAttr.NamedArguments,
+                _paramAttr.Properties,
                 na => na.Key == "ValueFromPipelineByPropertyName"
             );
         }
-
-
 
         private sealed class EmptyProvisioner : HarshProvisioner
         {

@@ -13,8 +13,8 @@ namespace CommandBuilding
     public sealed class InputObject_and_positional : SeriloggedTest
     {
         private readonly NewObjectCommandBuilder<WithPositional> _builder;
-        private readonly ShellployCommand _command;
-        private readonly ShellployCommandProperty _inputObject;
+        private readonly CommandModel _command;
+        private readonly PropertyModel _inputObject;
 
         public InputObject_and_positional(ITestOutputHelper output) : base(output)
         {
@@ -36,8 +36,8 @@ namespace CommandBuilding
         {
             var last = _command.Properties.Last();
             Assert.Same(_inputObject, last);
-            Assert.True(last.IsInputObject);
-            Assert.True(last.IsPositional);
+            Assert.True(last.HasElementsOfType<PropertyModelInputObject>());
+            Assert.True(last.HasElementsOfType<PropertyModelPositional>());
         }
 
         private sealed class WithPositional : HarshProvisioner

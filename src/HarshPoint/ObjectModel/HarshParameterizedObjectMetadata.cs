@@ -2,20 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HarshPoint.ObjectModel
 {
-    public class HarshParametrizedObjectMetadata : HarshObjectMetadata
+    public class HarshParameterizedObjectMetadata : HarshObjectMetadata
     {
-        public HarshParametrizedObjectMetadata(Type type)
+        public HarshParameterizedObjectMetadata(Type type)
             : this(type, null)
         {
         }
 
-        public HarshParametrizedObjectMetadata(
+        public HarshParameterizedObjectMetadata(
             Type type, 
             IDefaultValuePolicy defaultValuePolicy
         )

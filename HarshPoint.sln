@@ -53,6 +53,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Snippets", ".Snippets", "{B241E1B4-7BAD-433B-BA3E-4FDD2C42E97E}"
 	ProjectSection(SolutionItems) = preProject
 		snippets\ArgumentNull.snippet = snippets\ArgumentNull.snippet
+		snippets\ArgumentNullOrWhiteSpace.snippet = snippets\ArgumentNullOrWhiteSpace.snippet
 		snippets\Fact.snippet = snippets\Fact.snippet
 		snippets\HarshLogger.snippet = snippets\HarshLogger.snippet
 	EndProjectSection

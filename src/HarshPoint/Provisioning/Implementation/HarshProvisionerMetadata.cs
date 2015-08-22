@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public sealed class HarshProvisionerMetadata : HarshParametrizedObjectMetadata
+    public sealed class HarshProvisionerMetadata : HarshParameterizedObjectMetadata
     {
         internal HarshProvisionerMetadata(Type type)
             : base(type, ProvisioningDefaultValuePolicy.Instance)

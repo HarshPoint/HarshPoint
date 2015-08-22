@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class AttributeNamedArgumentVisitor : ParameterBuilderVisitor
+    internal sealed class AttributeNamedArgumentVisitor : PropertyModelVisitor
     {
         public AttributeNamedArgumentVisitor(
             Type attributeType, 
@@ -30,23 +30,20 @@ namespace HarshPoint.ShellployGenerator.Builders
         public String Name { get; }
         public Object Value { get; }
 
-        protected internal override ParameterBuilder VisitSynthesized(ParameterBuilderSynthesized synthesizedBuilder)
-            => new ParameterBuilderSynthesized(
-                synthesizedBuilder.Name,
-                synthesizedBuilder.ParameterType,
-                synthesizedBuilder.ProvisionerType,
-                synthesizedBuilder.Attributes
-                    .Select(UpdateAttributeData)
-                    .ToArray()
+        protected internal override PropertyModel VisitSynthesized(
+            PropertyModelSynthesized property
+        )
+            => new PropertyModelSynthesized(
+                property.Identifier,
+                property.PropertyType,
+                property.Attributes.Select(UpdateAttributeData)
             );
 
-        private AttributeData UpdateAttributeData(AttributeData data)
+        private AttributeModel UpdateAttributeData(AttributeModel data)
         {
             if (data?.AttributeType == AttributeType)
             {
-                var result = data.Clone();
-                result.NamedArguments[Name] = Value;
-                return result;
+                return data.SetProperty(Name, Value);
             }
 
             return data;

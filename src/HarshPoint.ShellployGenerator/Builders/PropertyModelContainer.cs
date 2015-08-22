@@ -7,18 +7,18 @@ using System.Linq.Expressions;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class ParameterBuilderContainer :
-        IEnumerable<ParameterBuilder>
+    internal sealed class PropertyModelContainer :
+        IEnumerable<PropertyModel>
     {
-        private ImmutableDictionary<String, ParameterBuilder> _parameters
-           = ImmutableDictionary.Create<String, ParameterBuilder>(
+        private ImmutableDictionary<String, PropertyModel> _parameters
+           = ImmutableDictionary.Create<String, PropertyModel>(
                StringComparer.Ordinal
             );
 
         private Int32 _nextPositionalParam;
 
-        public IEnumerable<ParameterBuilder> ApplyTo(
-            IEnumerable<ParameterBuilder> other
+        public IEnumerable<PropertyModel> ApplyTo(
+            IEnumerable<PropertyModel> other
         )
         {
             if (other == null)
@@ -27,20 +27,17 @@ namespace HarshPoint.ShellployGenerator.Builders
             }
 
             return from p in other
-                   let ours = _parameters.GetValueOrDefault(p.Name)
+                   let ours = _parameters.GetValueOrDefault(p.Identifier)
                    select ours?.Append(p) ?? p;
         }
 
-        public ParameterBuilderContainer Clone()
-            => (ParameterBuilderContainer)MemberwiseClone();
-
-        public IEnumerator<ParameterBuilder> GetEnumerator()
+        public IEnumerator<PropertyModel> GetEnumerator()
             => _parameters
                 .Values
                 .OrderBy(p => p.SortOrder ?? Int32.MaxValue)
                 .GetEnumerator();
 
-        public ParameterBuilderFactory<TTarget> GetFactory<TTarget>(
+        public ParameterBuilder<TTarget> GetParameterBuilder<TTarget>(
             Expression<Func<TTarget, Object>> expression,
             Boolean isPositional = false
         )
@@ -57,10 +54,10 @@ namespace HarshPoint.ShellployGenerator.Builders
                 SetPositional(name);
             }
 
-            return new ParameterBuilderFactory<TTarget>(this, name);
+            return new ParameterBuilder<TTarget>(this, name);
         }
 
-        public ParameterBuilderFactory GetFactory(
+        public ParameterBuilder GetParameterBuilder(
             String name,
             Boolean isPositional = false
         )
@@ -72,20 +69,20 @@ namespace HarshPoint.ShellployGenerator.Builders
                 SetPositional(name);
             }
 
-            return new ParameterBuilderFactory(this, name);
+            return new ParameterBuilder(this, name);
         }
 
         private void SetPositional(String name)
         {
             Update(
                 name,
-                new ParameterBuilderPositional(_nextPositionalParam)
+                new PropertyModelPositional(_nextPositionalParam)
             );
 
             _nextPositionalParam++;
         }
 
-        public void Update(String name, ParameterBuilder parameter)
+        public void Update(String name, PropertyModel parameter)
         {
             var existing = _parameters.GetValueOrDefault(name);
 
@@ -101,6 +98,6 @@ namespace HarshPoint.ShellployGenerator.Builders
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(ParameterBuilderContainer));
+            = HarshLog.ForContext(typeof(PropertyModelContainer));
     }
 }

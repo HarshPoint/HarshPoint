@@ -16,7 +16,7 @@ namespace CommandBuilding
 
 
         [Fact]
-        public void Has_Name()
+        public void Has_Identifier()
         {
             var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
             builder.Parameter("Synth").Synthesize(typeof(Int32));
@@ -24,7 +24,7 @@ namespace CommandBuilding
             var command = builder.ToCommand();
 
             var prop = Assert.Single(command.Properties);
-            Assert.Equal("Synth", prop.PropertyName);
+            Assert.Equal("Synth", prop.Identifier);
         }
 
         [Fact]
@@ -36,19 +36,11 @@ namespace CommandBuilding
             var command = builder.ToCommand();
 
             var prop = Assert.Single(command.Properties);
-            Assert.Equal(typeof(Int32), prop.Type);
-        }
+            var synth = Assert.Single(
+                prop.ElementsOfType<PropertyModelSynthesized>()
+            );
 
-        [Fact]
-        public void Has_no_ProvisionerType()
-        {
-            var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
-            builder.Parameter("Synth").Synthesize(typeof(Int32));
-
-            var command = builder.ToCommand();
-
-            var prop = Assert.Single(command.Properties);
-            Assert.Null(prop.ProvisionerType);
+            Assert.Equal(typeof(Int32), synth.PropertyType);
         }
 
         [Fact]
@@ -63,8 +55,17 @@ namespace CommandBuilding
             var command = builder.ToCommand();
 
             var prop = Assert.Single(command.Properties);
-            Assert.Equal(42, prop.DefaultValue);
-            Assert.Equal("Synth", prop.PropertyName);
+
+            var defVal = Assert.Single(
+                prop.ElementsOfType<PropertyModelDefaultValue>()
+            );
+
+            var synth = Assert.Single(
+                prop.ElementsOfType<PropertyModelSynthesized>()
+            );
+
+            Assert.Equal(42, defVal.DefaultValue);
+            Assert.Equal("Synth", synth.Identifier);
         }
 
         [Fact]
