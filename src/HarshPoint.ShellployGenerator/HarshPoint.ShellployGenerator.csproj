@@ -122,6 +122,7 @@
     <Compile Include="Builders\ParameterBuilderVisitor.cs" />
     <Compile Include="CodeGen\AttributeDataToCodeDom.cs" />
     <Compile Include="CodeGen\CodeGeneratorContext.cs" />
+    <Compile Include="CodeGen\ParameterPropertyGenerator.cs" />
     <Compile Include="CodeGen\CodeLiteralExpression.cs" />
     <Compile Include="CodeGen\CodeDomExtensions.cs" />
     <Compile Include="Builders\ParameterBuilderFactory`1.cs" />
@@ -132,11 +133,11 @@
     <Compile Include="Builders\ParameterBuilderDefaultValue.cs" />
     <Compile Include="Builders\ParameterBuilderFixed.cs" />
     <Compile Include="Builders\ParameterBuilderRenamed.cs" />
-    <Compile Include="Builders\ParameterBuilderAttributeNamedArgument.cs" />
+    <Compile Include="Builders\AttributeNamedArgumentVisitor.cs" />
     <Compile Include="Builders\ParameterBuilder.cs" />
     <Compile Include="Builders\IChildCommandBuilder.cs" />
     <Compile Include="CodeGen\GeneratedFileCodeDom.cs" />
-    <Compile Include="CodeGen\GeneratedFileShellployCommand.cs" />
+    <Compile Include="CodeGen\GeneratedFileCommand.cs" />
     <Compile Include="CodeGen\GeneratedFile.cs" />
     <Compile Include="Commands\BuildEnableWebFeature.cs" />
     <Compile Include="Commands\BuildList.cs" />

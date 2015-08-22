@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.ShellployGenerator.Builders;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Reflection;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
-    internal sealed class GeneratedFileShellployCommand : GeneratedFileCodeDom
+    internal sealed class GeneratedFileCommand : GeneratedFileCodeDom
     {
-        public GeneratedFileShellployCommand(ShellployCommand command)
+        public GeneratedFileCommand(CommandBuilder command)
         {
             if (command == null)
             {
@@ -20,15 +21,12 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             FileName = $"{command.ClassName}.cs";
         }
 
-        public ShellployCommand Command { get; }
+        public CommandBuilder Command { get; }
 
         protected override CodeCompileUnit Generate()
             => new CodeCompileUnit()
             {
-                Namespaces =
-                {
-                    CreateNamespace()
-                },
+                Namespaces = { CreateNamespace() },
             };
 
         private CodeNamespace CreateNamespace()
@@ -38,11 +36,11 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 Types = { CreateClass() },
             };
 
-            var imports = Command.ImportedNamespace
-                .Select(n => new CodeNamespaceImport(n))
-                .ToArray();
+            foreach (var imported in Command.ImportedNamespaces.OrderBy(s => s))
+            {
+                ns.Imports.Add(new CodeNamespaceImport(imported));
+            }
 
-            ns.Imports.AddRange(imports);
             return ns;
         }
 
@@ -50,33 +48,27 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         {
             var commandClass = new CodeTypeDeclaration(Command.ClassName)
             {
-                CustomAttributes = new CodeAttributeDeclarationCollection(
-                    Command.Attributes
-                    .Select(attr => attr.ToCodeAttributeDeclaration())
-                    .ToArray()
-                ),
+                BaseTypes = { HarshProvisionerCmdlet },
+                CustomAttributes =
+                    Command.Attributes.ToCodeAttributeDeclarations(),
                 IsClass = true,
                 TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed,
-                BaseTypes =
-                {
-                    new CodeTypeReference(BaseTypeName),
-                },
             };
-
+#if false
             commandClass.Members.AddRange(
                 Command.Properties
                 .Where(p => !p.HasFixedValue)
                 .Select(p => CreateProperty(commandClass, p))
                 .ToArray()
             );
-
+#endif
             commandClass.Members.AddRange(
                 CreateProvisionerMethods().ToArray()
             );
 
             return commandClass;
         }
-
+#if false
         private CodeMemberMethod CreateProcessRecordMethod()
         {
             var method = new CodeMemberMethod()
@@ -101,10 +93,11 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
             return method;
         }
-
+#endif
         private IEnumerable<CodeMemberMethod> CreateProvisionerMethods()
         {
             var methods = new List<CodeMemberMethod>();
+#if false
             methods.Add(CreateProcessRecordMethod());
 
             var resultVar = new CodeVariableReferenceExpression("result");
@@ -196,7 +189,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 methods.Add(method);
                 previousType = type;
             }
-
+#endif
             return methods;
         }
 
@@ -270,8 +263,9 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             = new CodeThisReferenceExpression();
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext<GeneratedFileShellployCommand>();
+            = HarshLog.ForContext<GeneratedFileCommand>();
 
-        private const String BaseTypeName = "HarshProvisionerCmdlet";
+        private static readonly CodeTypeReference HarshProvisionerCmdlet
+            = new CodeTypeReference("HarshProvisionerCmdlet");
     }
 }

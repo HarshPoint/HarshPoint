@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 namespace HarshPoint.ShellployGenerator.Builders
 {
     internal sealed class ParameterBuilderContainer :
-        IEnumerable<KeyValuePair<String, ParameterBuilder>>
+        IEnumerable<ParameterBuilder>
     {
         private ImmutableDictionary<String, ParameterBuilder> _parameters
            = ImmutableDictionary.Create<String, ParameterBuilder>(
@@ -17,8 +17,8 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         private Int32 _nextPositionalParam;
 
-        public IEnumerable<KeyValuePair<String, ParameterBuilder>> ApplyTo(
-            IEnumerable<KeyValuePair<String, ParameterBuilder>> other
+        public IEnumerable<ParameterBuilder> ApplyTo(
+            IEnumerable<ParameterBuilder> other
         )
         {
             if (other == null)
@@ -26,18 +26,18 @@ namespace HarshPoint.ShellployGenerator.Builders
                 throw Logger.Fatal.ArgumentNull(nameof(other));
             }
 
-            return
-                from p in other
-                let ours = _parameters.GetValueOrDefault(p.Key)
-                select ours == null ? p : p.WithValue(ours.Append(p.Value));
+            return from p in other
+                   let ours = _parameters.GetValueOrDefault(p.Name)
+                   select ours?.Append(p) ?? p;
         }
 
         public ParameterBuilderContainer Clone()
             => (ParameterBuilderContainer)MemberwiseClone();
 
-        public IEnumerator<KeyValuePair<String, ParameterBuilder>> GetEnumerator()
+        public IEnumerator<ParameterBuilder> GetEnumerator()
             => _parameters
-                .OrderBy(p => p.Value.SortOrder ?? Int32.MaxValue)
+                .Values
+                .OrderBy(p => p.SortOrder ?? Int32.MaxValue)
                 .GetEnumerator();
 
         public ParameterBuilderFactory<TTarget> GetFactory<TTarget>(
@@ -93,7 +93,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             {
                 _parameters = _parameters.SetItem(
                     name,
-                    parameter.WithNextElement(existing)
+                    parameter.InsertIntoContainer(existing)
                 );
             }
         }

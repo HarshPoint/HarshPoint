@@ -41,7 +41,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
                 if (Verb != null && Noun != null)
                 {
-                    return $"{Verb}${Noun}Command";
+                    return $"{Verb}{Noun}Command";
                 }
 
                 return null;
@@ -147,7 +147,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             if (HasInputObject)
             {
                 properties = properties.Concat(
-                    InputObjectParameter.Value.Synthesize()
+                    InputObjectParameter.Synthesize()
                 );
             }
 
@@ -209,19 +209,21 @@ namespace HarshPoint.ShellployGenerator.Builders
             }
         }
 
-        private static readonly KeyValuePair<String, ParameterBuilder> InputObjectParameter
-            = new KeyValuePair<String, ParameterBuilder>(
-                InputObjectPropertyName,
-                new ParameterBuilderInputObject(
-                    new ParameterBuilderAttributeNamedArgument(
-                        typeof(SMA.ParameterAttribute),
-                        "ValueFromPipeline",
-                        true,
-                        new ParameterBuilderSynthesized(
-                            InputObjectPropertyName,
-                            typeof(Object)
-                        )
-                    )
+        public const String InputObjectPropertyName = "InputObject";
+
+        private static readonly ParameterBuilder InputObjectParameter
+            = new ParameterBuilderInputObject(
+                new ParameterBuilderSynthesized(
+                    InputObjectPropertyName,
+                    typeof(Object),
+                    null,
+                    new AttributeData(typeof(SMA.ParameterAttribute))
+                    {
+                        NamedArguments =
+                        {
+                            ["ValueFromPipeline"] = true
+                        }
+                    }
                 )
             );
 
@@ -236,7 +238,5 @@ namespace HarshPoint.ShellployGenerator.Builders
                 StringComparer.OrdinalIgnoreCase,
                 InputObjectPropertyName
             );
-
-        public const String InputObjectPropertyName = "InputObject";
     }
 }

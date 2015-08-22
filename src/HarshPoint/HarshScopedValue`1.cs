@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint
 {
     public sealed class HarshScopedValue<T>
     {
-        public HarshScopedValue()
-        {
-        }
+        public HarshScopedValue() { }
 
         public HarshScopedValue(T value)
         {
@@ -20,14 +20,32 @@ namespace HarshPoint
             return scope;
         }
 
+        public Scope EnterIfDefault(T value)
+            => EnterIfDefault(value, null);
+
+        public Scope EnterIfDefault(T value, IEqualityComparer<T> equalityComparer)
+        {
+            if (equalityComparer == null)
+            {
+                equalityComparer = EqualityComparer<T>.Default;
+            }
+
+            if (equalityComparer.Equals(Value, default(T)))
+            {
+                return Enter(value);
+            }
+
+            return Scope.Empty;
+        }
+
         public T Value
         {
             get;
             private set;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
+        [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
         public struct Scope : IDisposable
         {
             private T OldValue;
@@ -49,6 +67,8 @@ namespace HarshPoint
                     OldValue = default(T);
                 }
             }
+
+            internal static readonly Scope Empty;
         }
     }
 }

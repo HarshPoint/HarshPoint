@@ -22,6 +22,14 @@ namespace HarshPoint.ShellployGenerator
             AttributeType = attributeType;
         }
 
+        public AttributeData Clone()
+        {
+            var clone = new AttributeData(AttributeType);
+            clone.ConstructorArguments.AddRange(ConstructorArguments);
+            clone.NamedArguments.AddRange(NamedArguments);
+            return clone;
+        }
+
         public Type AttributeType { get; }
 
         public Collection<Object> ConstructorArguments

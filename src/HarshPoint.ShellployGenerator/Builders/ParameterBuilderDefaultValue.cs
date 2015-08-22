@@ -16,16 +16,19 @@ namespace HarshPoint.ShellployGenerator.Builders
             property.DefaultValue = DefaultValue;
         }
 
-        public override ParameterBuilder WithNextElement(ParameterBuilder next)
+        public override ParameterBuilder InsertIntoContainer(
+            ParameterBuilder existing
+        )
         {
-            if (next?.HasElementOfType<ParameterBuilderFixed>() ?? false)
+            if ((existing != null) &&
+                (existing.HasElementsOfType<ParameterBuilderFixed>()))
             {
                 throw Logger.Fatal.InvalidOperation(
                     SR.ParameterBuilderDefaultValue_AttemptedToNestFixed
                 );
             }
 
-            return base.WithNextElement(next);
+            return base.InsertIntoContainer(existing);
         }
 
         protected internal override ParameterBuilder Accept(ParameterBuilderVisitor visitor)

@@ -38,13 +38,28 @@ namespace HarshPoint.ObjectModel
         }
 
         protected Chain<TElement> WithNext(Chain<TElement> next)
+            => WithNext(next, null);
+
+        protected Chain<TElement> WithNext(
+            Chain<TElement> next,
+            Action<TElement> modifier
+        )
         {
             if (Next == next)
             {
                 return this;
             }
 
-            return this.With(c => c.Next = next);
+            if (modifier == null)
+            {
+                return this.With(c => c.Next = next);
+            }
+
+            return this.With(c =>
+            {
+                c.Next = next;
+                modifier((TElement)(Object)c);
+            });
         }
 
         protected IEnumerable<TElement> Elements => GetChainElements().Cast<TElement>();

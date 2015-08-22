@@ -100,7 +100,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         protected override IEnumerable<ShellployCommandProperty> CreateProperties()
             => ((INewObjectCommandBuilder)(this))
                 .GetParametersRecursively()
-                .SelectMany(p => p.Value.Synthesize());
+                .SelectMany(p => p.Synthesize());
 
         public Type TargetType => typeof(TTarget);
 
@@ -131,31 +131,25 @@ namespace HarshPoint.ShellployGenerator.Builders
                     property.Name,
                     property.PropertyType,
                     metadata.ObjectType,
-                    attributes
+                    attributes.ToArray()
                 );
 
                 ParameterBuilders.Update(property.Name, synthesized);
             }
         }
 
-        private ImmutableList<KeyValuePair<String, ParameterBuilder>>
-        GetParametersRecursively()
+        private IEnumerable<ParameterBuilder> GetParametersRecursively()
         {
-            var parametersSorted
-                = ImmutableList<KeyValuePair<String, ParameterBuilder>>.Empty;
+            var parametersSorted = Enumerable.Empty<ParameterBuilder>();
 
             if (ChildBuilder != null)
             {
                 parametersSorted = ChildBuilder.ParameterBuilders
-                    .ApplyTo(ParentBuilder.GetParametersRecursively())
-                    .ToImmutableList();
+                    .ApplyTo(ParentBuilder.GetParametersRecursively());
             }
 
-            parametersSorted = parametersSorted.AddRange(
-                from param in ParameterBuilders
-                select param.WithValue(
-                    SetValueFromPipelineByPropertyName(param.Value)
-                )
+            parametersSorted = parametersSorted.Concat(
+                SetValueFromPipelineByPropertyName.Visit(ParameterBuilders)
             );
 
             return parametersSorted;
@@ -194,8 +188,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         IImmutableList<Type> INewObjectCommandBuilder.ParentTargetTypes
             => ParentTargetTypes;
 
-        ImmutableList<KeyValuePair<String, ParameterBuilder>>
-        INewObjectCommandBuilder.GetParametersRecursively()
+        IEnumerable<ParameterBuilder> INewObjectCommandBuilder.GetParametersRecursively()
             => GetParametersRecursively();
 
         private static AttributeData CreateParameterAttribute(Parameter param)
@@ -215,14 +208,11 @@ namespace HarshPoint.ShellployGenerator.Builders
             return data;
         }
 
-        private static ParameterBuilder SetValueFromPipelineByPropertyName(
-            ParameterBuilder parameter
-        )
-            => new ParameterBuilderAttributeNamedArgument(
+        private static readonly ParameterBuilderVisitor SetValueFromPipelineByPropertyName 
+            = new AttributeNamedArgumentVisitor(
                 typeof(SMA.ParameterAttribute),
                 "ValueFromPipelineByPropertyName",
-                true,
-                parameter
+                true
             );
 
         private static readonly HarshLogger Logger

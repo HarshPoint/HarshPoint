@@ -1,4 +1,4 @@
-﻿using System;
+﻿using HarshPoint.ShellployGenerator.Builders;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -8,13 +8,13 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 {
     internal sealed class GeneratedFileAliases : GeneratedFile
     {
-        public GeneratedFileAliases(IEnumerable<ShellployCommand> commands)
+        public GeneratedFileAliases(IEnumerable<CommandBuilder> commands)
         {
             Commands = commands;
             FileName = "HarshPoint.Shellploy.psm1";
         }
 
-        public IEnumerable<ShellployCommand> Commands { get; }
+        public IEnumerable<CommandBuilder> Commands { get; }
 
         protected override void Write(TextWriter writer)
         {
@@ -22,7 +22,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 from cmd in Commands
                 from alias in cmd.Aliases
                 orderby alias
-                select new KeyValuePair<String, ShellployCommand>(
+                select HarshKeyValuePair.Create(
                     alias, cmd
                 )
             );

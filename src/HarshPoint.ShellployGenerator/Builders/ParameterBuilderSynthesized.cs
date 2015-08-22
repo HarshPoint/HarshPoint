@@ -12,15 +12,15 @@ namespace HarshPoint.ShellployGenerator.Builders
             String name,
             Type type,
             Type provisionerType = null,
-            IEnumerable<AttributeData> attributes = null
+            params AttributeData[] attributes
         )
+            : base(name)
         {
             if (type == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(type));
             }
 
-            Name = name;
             ParameterType = type;
             ProvisionerType = provisionerType;
 
@@ -37,7 +37,6 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public ImmutableArray<AttributeData> Attributes { get; }
 
-        public String Name { get; }
 
         public Type ParameterType { get; }
 
@@ -56,26 +55,26 @@ namespace HarshPoint.ShellployGenerator.Builders
             );
 
         /// <summary>
-        /// <see cref="ParameterBuilderSynthesized"/> Always has to be at the end
-        /// of the chain
+        /// <see cref="ParameterBuilderSynthesized"/> Always has to be at the 
+        /// end of the chain.
         /// </summary>
-        /// <param name="next"></param>
-        /// <returns></returns>
-        public override ParameterBuilder WithNextElement(ParameterBuilder next)
+        public override ParameterBuilder InsertIntoContainer(
+            ParameterBuilder existing
+        )
         {
-            if (next == null)
+            if (existing == null)
             {
                 return this;
             }
 
-            if (next.HasElementOfType<ParameterBuilderSynthesized>())
+            if (existing.HasElementsOfType<ParameterBuilderSynthesized>())
             {
                 throw Logger.Fatal.InvalidOperation(
                     SR.CommandParameterSynthesized_AttemptedToNest
                 );
             }
 
-            return next.Append(WithSortOrder(next.SortOrder));
+            return existing.Append(this);
         }
 
         protected internal override ParameterBuilder Accept(ParameterBuilderVisitor visitor)

@@ -22,7 +22,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         )
             => _parameterBuilders.GetFactory(expression);
 
-        public IChildParameterBuilderFactory sParameter(
+        public IChildParameterBuilderFactory Parameter(
             String name
         )
             => _parameterBuilders.GetFactory(name);

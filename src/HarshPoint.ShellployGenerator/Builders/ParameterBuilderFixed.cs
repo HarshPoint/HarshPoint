@@ -11,16 +11,19 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Object Value { get; }
 
-        public override ParameterBuilder WithNextElement(ParameterBuilder next)
+        public override ParameterBuilder InsertIntoContainer(
+            ParameterBuilder existing
+        )
         {
-            if (next?.HasElementOfType<ParameterBuilderDefaultValue>() ?? false)
+            if ((existing != null) &&
+                (existing.HasElementsOfType<ParameterBuilderDefaultValue>()))
             {
                 throw Logger.Fatal.InvalidOperation(
                     SR.ParameterBuilderFixed_AttemptedToNestDefaultValue
                 );
             }
 
-            return base.WithNextElement(next);
+            return base.InsertIntoContainer(existing);
         }
 
         protected override void Process(ShellployCommandProperty property)
@@ -29,7 +32,9 @@ namespace HarshPoint.ShellployGenerator.Builders
             property.FixedValue = Value;
         }
 
-        protected internal override ParameterBuilder Accept(ParameterBuilderVisitor visitor)
+        protected internal override ParameterBuilder Accept(
+            ParameterBuilderVisitor visitor
+        )
         {
             if (visitor == null)
             {

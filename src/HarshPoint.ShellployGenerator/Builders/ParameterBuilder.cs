@@ -8,23 +8,31 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     public abstract class ParameterBuilder : Chain<ParameterBuilder>
     {
+        private readonly String _name;
+        private readonly Int32? _sortOrder;
+
         protected ParameterBuilder() { }
 
         protected ParameterBuilder(ParameterBuilder next)
             : base(next)
         {
-            SortOrder = next?.SortOrder;
         }
 
-        protected ParameterBuilder(Int32? sortOrder)
+        protected ParameterBuilder(String name = null, Int32? sortOrder = null)
         {
-            SortOrder = sortOrder;
+            _name = name;
+            _sortOrder = sortOrder;
         }
 
-        public Int32? SortOrder { get; private set; }
+        public String Name => _name ?? NextElement?.Name;
 
-        public ParameterBuilder Append(ParameterBuilder other)
+        public Int32? SortOrder => _sortOrder ?? NextElement?.SortOrder;
+
+        internal ParameterBuilder Append(ParameterBuilder other)
             => (ParameterBuilder)base.Append(other);
+
+        internal ParameterBuilder WithNext(ParameterBuilder next)
+            => (ParameterBuilder)base.WithNext(next);
 
         protected internal new ParameterBuilder NextElement
             => base.NextElement;
@@ -52,24 +60,14 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
         }
 
-        public Boolean HasElementOfType<T>()
+        public Boolean HasElementsOfType<T>()
             where T : ParameterBuilder
             => Elements.OfType<T>().Any();
 
-        public virtual ParameterBuilder WithNextElement(ParameterBuilder next)
-        {
-            var result = (ParameterBuilder)WithNext(next);
-
-            if (!result.SortOrder.HasValue)
-            {
-                result = result.WithSortOrder(next.SortOrder);
-            }
-
-            return result;
-        }
-
-        public ParameterBuilder WithSortOrder(Int32? sortOrder)
-            => this.With(pb => pb.SortOrder = sortOrder);
+        public virtual ParameterBuilder InsertIntoContainer(
+            ParameterBuilder existing
+        )
+            => (ParameterBuilder)WithNext(existing);
 
         protected internal abstract ParameterBuilder Accept(
             ParameterBuilderVisitor visitor

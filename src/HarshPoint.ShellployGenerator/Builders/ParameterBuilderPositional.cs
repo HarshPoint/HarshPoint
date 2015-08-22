@@ -5,7 +5,7 @@ namespace HarshPoint.ShellployGenerator.Builders
     public sealed class ParameterBuilderPositional : ParameterBuilder
     {
         public ParameterBuilderPositional(Int32 sortOrder)
-            : base(sortOrder)
+            : base(sortOrder: sortOrder)
         {
         }
 

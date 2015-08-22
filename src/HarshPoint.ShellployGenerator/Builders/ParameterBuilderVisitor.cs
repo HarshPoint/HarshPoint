@@ -1,13 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
     public abstract class ParameterBuilderVisitor
     {
+        public IEnumerable<ParameterBuilder> Visit(
+            IEnumerable<ParameterBuilder> builders
+        )
+        {
+            if (builders == null)
+            {
+                return Enumerable.Empty<ParameterBuilder>();
+            }
+
+            return builders.Select(Visit).Where(b => b != null);
+        }
+
         public virtual ParameterBuilder Visit(ParameterBuilder builder)
         {
             if (builder != null)
@@ -57,7 +66,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
             if (builder?.NextElement != null)
             {
-                return builder.WithNextElement(
+                return builder.WithNext(
                     Visit(builder.NextElement)
                 );
             }
