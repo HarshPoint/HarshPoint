@@ -63,26 +63,6 @@ namespace CommandBuilding
             Assert.Null(_command.Namespace);
         }
 
-        [Fact]
-        public void Has_CmdletAttribute()
-        {
-            Assert.Single(
-                _command.Attributes
-                    .Where(attr =>
-                        attr.AttributeType == typeof(SMA.CmdletAttribute))
-            );
-        }
-
-        [Fact]
-        public void Has_OutputTypeAttribute()
-        {
-            Assert.Single(
-                _command.Attributes
-                    .Where(attr =>
-                        attr.AttributeType == typeof(SMA.OutputTypeAttribute))
-            );
-        }
-
         private Boolean WithAttributeType<T>(AttributeData attr)
             => attr.AttributeType == typeof(T);
 
