@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.Provisioning.ProgressReporting;
+using System;
 
 namespace HarshPoint.Provisioning
 {
