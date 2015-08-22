@@ -89,8 +89,8 @@ namespace HarshPoint.Provisioning
             {
                 Field = ExistingField.Value;
 
-                WriteOutput(
-                    Result.AlreadyExists(FieldIdentifier, Field)
+                ReportProgress(
+                    ProgressReport.AlreadyExists(FieldIdentifier, Field)
                 );
             }
             else
@@ -118,8 +118,8 @@ namespace HarshPoint.Provisioning
 
                 Field = reResolvedField.Value;
 
-                WriteOutput(
-                    Result.Added(FieldIdentifier, Field)
+                ReportProgress(
+                    ProgressReport.Added(FieldIdentifier, Field)
                 );
             }
         }
@@ -132,14 +132,14 @@ namespace HarshPoint.Provisioning
 
                 await ClientContext.ExecuteQueryAsync();
 
-                WriteOutput(
-                    Result.Removed(FieldIdentifier)
+                ReportProgress(
+                    ProgressReport.Removed(FieldIdentifier)
                 );
             }
             else
             {
-                WriteOutput(
-                    Result.DidNotExist(FieldIdentifier)
+                ReportProgress(
+                    ProgressReport.DidNotExist(FieldIdentifier)
                 );
             }
         }

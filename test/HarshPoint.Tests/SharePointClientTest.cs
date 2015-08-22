@@ -1,6 +1,6 @@
 ﻿using HarshPoint.Provisioning;
 using HarshPoint.Provisioning.Implementation;
-using HarshPoint.Provisioning.Output;
+using HarshPoint.Provisioning.ProgressReporting;
 using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
@@ -23,14 +23,14 @@ namespace HarshPoint.Tests
             Fixture = new SharePointClientFixture();
             ManualResolver = new ClientObjectManualResolver(CreateResolveContext);
 
-            var listSink = new HarshProvisionerOutputSinkList();
-            Output = listSink.Output;
+            var progressBuffer = new ProgressBuffer();
+            Output = progressBuffer.Reports;
 
             Context = new HarshProvisionerContext(ClientContext)
-                .WithOutputSink(
-                    new HarshProvisionerOutputSinkComposite(
-                        new HarshProvisionerOutputSinkSerilog(HarshLog.ForContext("ProvisionerOutput", true)),
-                        listSink
+                .WithProgress(
+                    new ProgressComposite(
+                        new ProgressSerilog(HarshLog.ForContext("ProvisionerOutput", true)),
+                        progressBuffer
                     )
                 );
         }
@@ -43,7 +43,7 @@ namespace HarshPoint.Tests
 
         public HarshProvisionerContext Context { get; set; }
         public ClientContext ClientContext => Fixture.ClientContext;
-        public IReadOnlyCollection<HarshProvisionerOutput> Output { get; set; }
+        public IReadOnlyCollection<ProgressReport> Output { get; set; }
         public Site Site => ClientContext.Site;
         public TaxonomySession TaxonomySession => Context.TaxonomySession;
         public Web Web => ClientContext.Web;
@@ -146,11 +146,11 @@ namespace HarshPoint.Tests
             AddDisposable(list.DeleteObject);
         }
 
-        protected IdentifiedOutputBase LastIdentifiedOutput()
-            => Output.OfType<IdentifiedOutputBase>().Last();
+        protected IdentifiedProgressReportBase LastIdentifiedOutput()
+            => Output.OfType<IdentifiedProgressReportBase>().Last();
 
-        protected IdentifiedObjectOutputBase<T> LastObjectOutput<T>()
-            => Output.OfType<IdentifiedObjectOutputBase<T>>().Last();
+        protected IdentifiedObjectProgressReportBase<T> LastObjectOutput<T>()
+            => Output.OfType<IdentifiedObjectProgressReportBase<T>>().Last();
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<SharePointClientTest>();
     }

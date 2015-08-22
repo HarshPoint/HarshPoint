@@ -9,27 +9,27 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Shellploy
 {
-    internal sealed class ReactiveOutputSink :
-        HarshProvisionerOutputSink,
+    internal sealed class ProgressReactive :
+        IProgress<ProgressReport>,
         IDisposable
     {
-        private readonly Subject<HarshProvisionerOutput> _subject
-            = new Subject<HarshProvisionerOutput>();
+        private readonly Subject<ProgressReport> _subject
+            = new Subject<ProgressReport>();
 
-        public ReactiveOutputSink() { }
+        public ProgressReactive() { }
 
-        public ReactiveOutputSink(CancellationToken token)
+        public ProgressReactive(CancellationToken token)
         {
             CancellationToken = token;
         }
 
-        public ReactiveOutputSink(TimeSpan? pollInterval)
+        public ProgressReactive(TimeSpan? pollInterval)
         {
             PollInterval = pollInterval;
         }
 
-        public ReactiveOutputSink(
-            CancellationToken token, 
+        public ProgressReactive(
+            CancellationToken token,
             TimeSpan? pollInterval
         )
         {
@@ -37,7 +37,7 @@ namespace HarshPoint.Shellploy
             PollInterval = pollInterval;
         }
 
-        public IEnumerable<HarshProvisionerOutput> Provision<TProvisioner, TContext>(
+        public IEnumerable<ProgressReport> Provision<TProvisioner, TContext>(
             TProvisioner provisioner,
             TContext context
         )
@@ -57,7 +57,7 @@ namespace HarshPoint.Shellploy
             return Invoke(provisioner, context, provisioner.ProvisionAsync);
         }
 
-        public IEnumerable<HarshProvisionerOutput> Unprovision<TProvisioner, TContext>(
+        public IEnumerable<ProgressReport> Unprovision<TProvisioner, TContext>(
             TProvisioner provisioner,
             TContext context
         )
@@ -82,13 +82,13 @@ namespace HarshPoint.Shellploy
             _subject.Dispose();
         }
 
-        protected override void WriteOutputCore(HarshProvisionerOutput output)
+        public void Report(ProgressReport report)
         {
             CancellationToken.ThrowIfCancellationRequested();
-            _subject.OnNext(output);
+            _subject.OnNext(report);
         }
 
-        private IEnumerable<HarshProvisionerOutput> AsEnumerable()
+        private IEnumerable<ProgressReport> AsEnumerable()
         {
             var observable = _subject.AsObservable();
 
@@ -96,7 +96,7 @@ namespace HarshPoint.Shellploy
             {
                 var interval = Observable
                     .Interval(PollInterval.Value)
-                    .Select(n => (HarshProvisionerOutput)null);
+                    .Select(n => (ProgressReport)null);
 
                 observable = observable.Merge(interval);
             }
@@ -104,7 +104,7 @@ namespace HarshPoint.Shellploy
             return observable.Next();
         }
 
-        private IEnumerable<HarshProvisionerOutput> Invoke<TProvisioner, TContext>(
+        private IEnumerable<ProgressReport> Invoke<TProvisioner, TContext>(
             TProvisioner provisioner,
             TContext context,
             Func<TContext, CancellationToken, Task> action
@@ -112,7 +112,7 @@ namespace HarshPoint.Shellploy
             where TProvisioner : HarshProvisionerBase<TContext>
             where TContext : HarshProvisionerContextBase<TContext>
         {
-            context = context.WithOutputSink(this);
+            context = context.WithProgress(this);
 
             action(context, CancellationToken).ContinueWith(
                 OnProvisioningComplete
@@ -138,6 +138,6 @@ namespace HarshPoint.Shellploy
         private TimeSpan? PollInterval { get; }
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(ReactiveOutputSink));
+            = HarshLog.ForContext(typeof(ProgressReactive));
     }
 }

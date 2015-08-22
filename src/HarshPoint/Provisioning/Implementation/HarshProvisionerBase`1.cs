@@ -158,11 +158,11 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        protected void WriteOutput(HarshProvisionerOutput result)
+        protected void ReportProgress(ProgressReport value)
         {
-            if (result == null)
+            if (value == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(result));
+                throw Logger.Fatal.ArgumentNull(nameof(value));
             }
 
             if (Context == null)
@@ -172,7 +172,7 @@ namespace HarshPoint.Provisioning.Implementation
                 );
             }
 
-            Context.WriteOutput(result);
+            Context.ReportProgress(value);
         }
 
         protected virtual Task InitializeAsync() => HarshTask.Completed;
