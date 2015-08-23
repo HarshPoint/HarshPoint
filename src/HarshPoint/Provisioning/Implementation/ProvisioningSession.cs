@@ -6,7 +6,6 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public sealed class ProvisioningSession
     {
-        private readonly IHarshProvisionerContext _context;
         private readonly HarshProvisionerBase _rootProvisioner;
         private readonly HarshProvisionerAction _action;
 
@@ -19,21 +18,14 @@ namespace HarshPoint.Provisioning.Implementation
             => GetFlattenedTree(_rootProvisioner);
 
         internal ProvisioningSession(
-            IHarshProvisionerContext context,
             HarshProvisionerBase rootProvisioner,
             HarshProvisionerAction action)
         {
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
             if (rootProvisioner == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(rootProvisioner));
             }
 
-            _context = context;
             _rootProvisioner = rootProvisioner;
             _action = action;
         }
@@ -51,37 +43,37 @@ namespace HarshPoint.Provisioning.Implementation
                 .AddRange(children);
         }
 
-        public void OnSessionStarting()
+        public void OnSessionStarting(IHarshProvisionerContext context)
         {
-            NotifyInspectors(si => si.OnSessionStarting());
+            NotifyInspectors(context, si => si.OnSessionStarting(context));
         }
 
-        public void OnSessionEnded()
+        public void OnSessionEnded(IHarshProvisionerContext context)
         {
-            NotifyInspectors(si => si.OnSessionEnded());
+            NotifyInspectors(context, si => si.OnSessionEnded(context));
         }
 
-        public void OnProvisioningStarting(HarshProvisionerBase provisioner)
+        public void OnProvisioningStarting(IHarshProvisionerContext context, HarshProvisionerBase provisioner)
         {
-            NotifyInspectors(si => si.OnProvisioningStarting(provisioner));
+            NotifyInspectors(context, si => si.OnProvisioningStarting(context, provisioner));
         }
 
-        public void OnProvisioningEnded(HarshProvisionerBase provisioner)
+        public void OnProvisioningEnded(IHarshProvisionerContext context, HarshProvisionerBase provisioner)
         {
-            NotifyInspectors(si => si.OnProvisioningEnded(provisioner));
+            NotifyInspectors(context, si => si.OnProvisioningEnded(context, provisioner));
         }
 
-        public void OnProvisioningSkipped(HarshProvisionerBase provisioner)
+        public void OnProvisioningSkipped(IHarshProvisionerContext context, HarshProvisionerBase provisioner)
         {
             foreach (var p in GetFlattenedTree(provisioner))
             {
-                NotifyInspectors(si => si.OnProvisioningSkipped(p));
+                NotifyInspectors(context, si => si.OnProvisioningSkipped(context, p));
             }
         }
 
-        public void NotifyInspectors(Action<IProvisioningSessionInspector> action)
+        public void NotifyInspectors(IHarshProvisionerContext context, Action<IProvisioningSessionInspector> action)
         {
-            foreach (var sessionInspector in _context.SessionInspectors)
+            foreach (var sessionInspector in context.SessionInspectors)
             {
                 action(sessionInspector);
             }

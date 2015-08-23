@@ -131,7 +131,7 @@ namespace HarshPoint.Provisioning.Implementation
         public Task UnprovisionAsync(TContext context)
             => Run(
                 context,
-                HarshProvisionerAction.Provision,
+                HarshProvisionerAction.Unprovision,
                 (ctx) =>
                 {
                     if (MayDeleteUserData || ctx.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
@@ -143,7 +143,7 @@ namespace HarshPoint.Provisioning.Implementation
                     }
                     else
                     {
-                        ctx.Session?.OnProvisioningSkipped(this);
+                        ctx.Session?.OnProvisioningSkipped(context, this);
                         return HarshTask.Completed;
                     }
                 }
@@ -163,15 +163,15 @@ namespace HarshPoint.Provisioning.Implementation
             var isSessionRoot = (context.Session == null);
             if (isSessionRoot)
             {
-                context = context.WithSession(new ProvisioningSession(context, this, action));
-                context.Session.OnSessionStarting();
+                context = context.WithSession(new ProvisioningSession(this, action));
+                context.Session.OnSessionStarting(context);
             }
 
             await runAction(context);
 
             if (isSessionRoot)
             {
-                context.Session.OnSessionEnded();
+                context.Session.OnSessionEnded(context);
             }
         }
 
@@ -293,7 +293,7 @@ namespace HarshPoint.Provisioning.Implementation
                 }
                 else
                 {
-                    await ProvisionChild(child, context);
+                    await UnprovisionChild(child, context);
                 }
             }
         }
@@ -349,7 +349,7 @@ namespace HarshPoint.Provisioning.Implementation
                         ValidateParameters();
                         OnValidating();
 
-                        context.Session?.OnProvisioningStarting(this);
+                        context.Session?.OnProvisioningStarting(context, this);
                         await InitializeAsync();
                         context.Token.ThrowIfCancellationRequested();
 
@@ -368,7 +368,7 @@ namespace HarshPoint.Provisioning.Implementation
                         Complete();
                     }
                 }
-                context.Session?.OnProvisioningEnded(this);
+                context.Session?.OnProvisioningEnded(context, this);
 
                 await RunChildren(action);
             });
