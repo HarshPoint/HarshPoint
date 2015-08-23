@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace HarshPoint.Provisioning.Implementation
 {
     /// <summary>
-    /// Provides common initialization and completion logic for 
+    /// Provides common initialization and completion logic for
     /// classes provisioning SharePoint artifacts.
     /// </summary>
     public abstract class HarshProvisionerBase<TContext> : HarshProvisionerBase, ITrackValueSource
@@ -118,38 +118,40 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         public Task ProvisionAsync(TContext context)
-            => ProvisionAsync(context, CancellationToken.None);
-
-        public Task ProvisionAsync(TContext context, CancellationToken token)
         {
             if (context == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
+            if (context.Session == null)
+            {
+                context = context.WithSession(new ProvisioningSession<TContext>(this));
+            }
+
             return RunSelfAndChildren(
                 context,
-                token,
                 OnProvisioningAsync,
                 ProvisionChildrenAsync
             );
         }
 
-        public Task UnprovisionAsync(TContext context)
-            => UnprovisionAsync(context, CancellationToken.None);
-
-        public async Task UnprovisionAsync(TContext context, CancellationToken token)
+        public async Task UnprovisionAsync(TContext context)
         {
             if (context == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
+            if (context.Session == null)
+            {
+                context = context.WithSession(new ProvisioningSession<TContext>(this));
             }
 
             if (MayDeleteUserData || context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
             {
                 await RunSelfAndChildren(
                     context,
-                    token,
                     OnUnprovisioningAsync,
                     UnprovisionChildrenAsync
                 );
@@ -201,14 +203,12 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected abstract Task ProvisionChild(
             HarshProvisionerBase provisioner,
-            TContext context,
-            CancellationToken cancellationToken
+            TContext context
         );
 
         protected abstract Task UnprovisionChild(
             HarshProvisionerBase provisioner,
-            TContext context,
-            CancellationToken cancellationToken
+            TContext context
         );
 
         private ParameterSet ResolveParameterSet()
@@ -260,15 +260,14 @@ namespace HarshPoint.Provisioning.Implementation
                 );
         }
 
-        private Task ProvisionChildrenAsync(CancellationToken token)
-            => RunChildren(ProvisionChild, token);
+        private Task ProvisionChildrenAsync()
+            => RunChildren(ProvisionChild);
 
-        private Task UnprovisionChildrenAsync(CancellationToken token)
-            => RunChildren(UnprovisionChild, token, reverse: true);
+        private Task UnprovisionChildrenAsync()
+            => RunChildren(UnprovisionChild, reverse: true);
 
         private async Task RunChildren(
-            Func<HarshProvisionerBase, TContext, CancellationToken, Task> action,
-            CancellationToken token,
+            Func<HarshProvisionerBase, TContext, Task> action,
             Boolean reverse = false)
         {
             if (!HasChildren)
@@ -281,9 +280,14 @@ namespace HarshPoint.Provisioning.Implementation
 
             foreach (var child in children)
             {
-                token.ThrowIfCancellationRequested();
-                await action(child, context, token);
+                context.Token.ThrowIfCancellationRequested();
+                await action(child, context);
             }
+        }
+
+        internal IImmutableList<HarshProvisionerBase<TContext>> GetProvisionersInOrder()
+        {
+            throw new NotImplementedException();
         }
 
         private async Task RunWithContext(
@@ -308,13 +312,12 @@ namespace HarshPoint.Provisioning.Implementation
 
         private Task RunSelfAndChildren(
             TContext context,
-            CancellationToken token,
             Func<Task> action,
-            Func<CancellationToken, Task> childAction
+            Func<Task> childAction
         )
             => RunWithContext(context, async delegate
             {
-                token.ThrowIfCancellationRequested();
+                context.Token.ThrowIfCancellationRequested();
 
                 Metadata.DefaultFromContextPropertyBinder.Bind(
                     this,
@@ -327,7 +330,7 @@ namespace HarshPoint.Provisioning.Implementation
                 );
 
                 await OnResolvedPropertiesBound();
-                token.ThrowIfCancellationRequested();
+                context.Token.ThrowIfCancellationRequested();
 
                 // parameter set resolving depends on values
                 // from context being already set
@@ -340,10 +343,10 @@ namespace HarshPoint.Provisioning.Implementation
                         OnValidating();
 
                         await InitializeAsync();
-                        token.ThrowIfCancellationRequested();
+                        context.Token.ThrowIfCancellationRequested();
 
                         await action();
-                        token.ThrowIfCancellationRequested();
+                        context.Token.ThrowIfCancellationRequested();
                     }
                     finally
                     {
@@ -351,7 +354,7 @@ namespace HarshPoint.Provisioning.Implementation
                     }
                 }
 
-                await childAction(token);
+                await childAction();
             });
 
         PropertyValueSource ITrackValueSource.GetValueSource(PropertyInfo property)

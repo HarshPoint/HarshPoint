@@ -107,14 +107,16 @@ namespace HarshPoint.Shellploy
         private IEnumerable<HarshProvisionerRecord> Invoke<TProvisioner, TContext>(
             TProvisioner provisioner,
             TContext context,
-            Func<TContext, CancellationToken, Task> action
+            Func<TContext, Task> action
         )
             where TProvisioner : HarshProvisionerBase<TContext>
             where TContext : HarshProvisionerContextBase<TContext>
         {
-            context = context.WithProgress(this);
+            context = context
+                .WithProgress(this)
+                .WithToken(CancellationToken);
 
-            action(context, CancellationToken).ContinueWith(
+            action(context).ContinueWith(
                 OnProvisioningComplete
             );
 

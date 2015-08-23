@@ -69,9 +69,8 @@ namespace HarshPoint.Server.Provisioning
         }
 
         protected sealed override async Task ProvisionChild(
-            HarshProvisionerBase provisioner, 
-            HarshServerProvisionerContext context,
-            CancellationToken token
+            HarshProvisionerBase provisioner,
+            HarshServerProvisionerContext context
         )
         {
             if (provisioner == null)
@@ -83,14 +82,13 @@ namespace HarshPoint.Server.Provisioning
 
             if (ShouldProvisionChild(serverProvisioner))
             {
-                await serverProvisioner.ProvisionAsync(context, token);
+                await serverProvisioner.ProvisionAsync(context);
             }
         }
 
         protected sealed override async Task UnprovisionChild(
-            HarshProvisionerBase provisioner, 
-            HarshServerProvisionerContext context,
-            CancellationToken token
+            HarshProvisionerBase provisioner,
+            HarshServerProvisionerContext context
         )
         {
             if (provisioner == null)
@@ -102,7 +100,7 @@ namespace HarshPoint.Server.Provisioning
 
             if (ShouldUnprovisionChild(serverProvisioner))
             {
-                await serverProvisioner.UnprovisionAsync(context, token);
+                await serverProvisioner.UnprovisionAsync(context);
             }
         }
     }
