@@ -110,6 +110,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfo.Shared.cs">
+      <Link>Properties\AssemblyInfo.Shared.cs</Link>
+    </Compile>
     <Compile Include="Builders\AttributeBuilder.cs" />
     <Compile Include="Builders\AttributeModel.cs" />
     <Compile Include="Builders\CommandBuilder.cs" />
@@ -184,7 +187,11 @@
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml">
+      <Link>CodeAnalysisDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>"$(OutDir)HarshPoint.ShellployGenerator" "$(SolutionDir)src\HarshPoint.Shellploy\Generated"</PostBuildEvent>
   </PropertyGroup>
