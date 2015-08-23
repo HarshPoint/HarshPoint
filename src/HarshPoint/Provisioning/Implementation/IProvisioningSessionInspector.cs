@@ -1,14 +1,11 @@
-﻿using Microsoft.SharePoint.Client;
-using System.Collections.Generic;
-
-namespace HarshPoint.Provisioning.Implementation
+﻿namespace HarshPoint.Provisioning.Implementation
 {
-    internal interface IProvisioningSessionInspector<TContext>
-        where TContext : HarshProvisionerContextBase<TContext>
+    public interface IProvisioningSessionInspector
     {
         void OnSessionStarting();
         void OnSessionEnded();
-        void OnProvisioningStarting(HarshProvisionerBase<TContext> provisioner);
-        void OnProvisioningEnded(HarshProvisionerBase<TContext> provisioner);
+        void OnProvisioningStarting(HarshProvisionerBase provisioner);
+        void OnProvisioningEnded(HarshProvisionerBase provisioner);
+        void OnProvisioningSkipped(HarshProvisionerBase provisioner);
     }
 }
