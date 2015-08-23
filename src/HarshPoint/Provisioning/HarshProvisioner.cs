@@ -57,9 +57,8 @@ namespace HarshPoint.Provisioning
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected sealed override Task ProvisionChild(
-            HarshProvisionerBase provisioner, 
-            HarshProvisionerContext context,
-            CancellationToken token
+            HarshProvisionerBase provisioner,
+            HarshProvisionerContext context
         )
         {
             if (provisioner == null)
@@ -68,16 +67,14 @@ namespace HarshPoint.Provisioning
             }
 
             return ((HarshProvisioner)(provisioner)).ProvisionAsync(
-                context,
-                token
+                context
             );
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected sealed override Task UnprovisionChild(
-            HarshProvisionerBase provisioner, 
-            HarshProvisionerContext context,
-            CancellationToken token
+            HarshProvisionerBase provisioner,
+            HarshProvisionerContext context
         )
         {
             if (provisioner == null)
@@ -86,8 +83,7 @@ namespace HarshPoint.Provisioning
             }
 
             return ((HarshProvisioner)(provisioner)).UnprovisionAsync(
-                context,
-                token
+                context
             );
         }
 

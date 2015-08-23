@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -11,9 +12,12 @@ namespace HarshPoint.Provisioning.Implementation
         where TSelf : HarshProvisionerContextBase<TSelf>
     {
         private Boolean _mayDeleteUserData;
-        private IProgress<HarshProvisionerRecord> _progress;
         private ImmutableStack<Object> _stateStack
             = ImmutableStack<Object>.Empty;
+        private IProgress<HarshProvisionerRecord> _progress;
+        private ProvisioningSession<TSelf> _session;
+        private CancellationToken _token = CancellationToken.None;
+        private IImmutableStack<Object> _stateStack = ImmutableStack<Object>.Empty;
 
         internal HarshProvisionerContextBase() { }
 
@@ -90,6 +94,18 @@ namespace HarshPoint.Provisioning.Implementation
 
             _progress.Report(value);
         }
+
+        internal TSelf WithSession(ProvisioningSession<TSelf> session)
+            => (TSelf)this.With(c => c._session, session);
+
+        public ProvisioningSession<TSelf> Session
+            => _session;
+
+        public TSelf WithToken(CancellationToken token)
+            => (TSelf)this.With(c => c._token, token);
+
+        public CancellationToken Token
+            => _token;
 
         internal ImmutableStack<Object> StateStack => _stateStack;
 
