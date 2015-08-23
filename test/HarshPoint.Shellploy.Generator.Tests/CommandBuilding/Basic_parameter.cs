@@ -13,7 +13,7 @@ namespace CommandBuilding
     {
         public Basic_parameter(ITestOutputHelper output) : base(output)
         {
-            var builder = new NewObjectCommandBuilder<TestProvisioner>();
+            var builder = new NewObjectCommandBuilder<TestObject>();
             var command = builder.ToCommand();
 
             Property = Assert.Single(
@@ -81,24 +81,8 @@ namespace CommandBuilding
             Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
         }
 
-        [Fact]
-        public void Is_ValueFromPipelineByPropertyName()
-        {
-            var synth = Assert.Single(
-                Property.ElementsOfType<PropertyModelSynthesized>()
-            );
 
-            var attr = Assert.Single(
-                synth.Attributes,
-                a => a.AttributeType == typeof(SMA.ParameterAttribute)
-            );
-
-            var namedArg = Assert.Single(attr.Properties);
-            Assert.Equal("ValueFromPipelineByPropertyName", namedArg.Key);
-            Assert.Equal(true, namedArg.Value);
-        }
-
-        private sealed class TestProvisioner : HarshProvisioner
+        private sealed class TestObject
         {
             [Parameter()]
             public String BasicParam { get; set; }

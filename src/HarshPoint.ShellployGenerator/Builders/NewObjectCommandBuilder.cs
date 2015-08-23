@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Linq.Expressions;
 using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
@@ -62,61 +63,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             }
         }
 
-        protected sealed override IEnumerable<PropertyModel> CreateProperties()
-            => CreatePropertiesRecursively();
-
-        protected virtual IEnumerable<PropertyModel> CreatePropertiesLocal()
-            => RemoveIgnoredUnsynthesized.Visit(PropertyContainer);
-
-        internal IChildCommandBuilder ChildBuilder { get; set; }
-
         internal Type TargetType { get; }
-
-        private IEnumerable<PropertyModel> CreatePropertiesRecursively()
-        {
-            var localProperties = CreatePropertiesLocal();
-
-            if (ChildBuilder != null)
-            {
-                var parentProperties = ChildBuilder.ParameterBuilders.ApplyTo(
-                    ParentBuilder.CreatePropertiesRecursively()
-                );
-
-                return parentProperties.Concat(localProperties);
-            }
-
-            return localProperties;
-        }
-
-        private NewObjectCommandBuilder ParentBuilder
-        {
-            get
-            {
-                if (ChildBuilder != null)
-                {
-                    return Context.GetNewObjectCommandBuilder(
-                        ChildBuilder.ParentType
-                    );
-                }
-
-                return null;
-            }
-        }
-
-        private IImmutableList<Type> ParentTargetTypes
-        {
-            get
-            {
-                if (ParentBuilder != null)
-                {
-                    return ParentBuilder
-                        .ParentTargetTypes
-                        .Add(ParentBuilder.TargetType);
-                }
-
-                return ImmutableList<Type>.Empty;
-            }
-        }
 
         private static AttributeModel CreateParameterAttribute(Parameter param)
         {
@@ -151,8 +98,5 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(NewObjectCommandBuilder));
-
-        private static readonly PropertyModelVisitor RemoveIgnoredUnsynthesized
-            = new RemoveIgnoredOrUnsynthesizedVisitor();
     }
 }

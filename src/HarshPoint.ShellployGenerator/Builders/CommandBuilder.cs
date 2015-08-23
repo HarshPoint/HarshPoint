@@ -147,6 +147,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         public virtual CommandModel ToCommand()
         {
             var properties = CreateProperties();
+            var methods = CreateMethods();
 
             if (HasInputObject)
             {
@@ -163,14 +164,18 @@ namespace HarshPoint.ShellployGenerator.Builders
                 BaseTypes,
                 ClassName,
                 ImportedNamespaces,
+                methods,
                 Name,
                 Namespace,
                 properties
             );
         }
 
+        protected virtual IEnumerable<MethodModel> CreateMethods()
+            => Enumerable.Empty<MethodModel>();
+
         protected virtual IEnumerable<PropertyModel> CreateProperties()
-            => PropertyContainer;
+            => RemoveIgnoredUnsynthesized.Visit(PropertyContainer);
 
         internal static void ValidateParameterName(String name)
         {
@@ -202,6 +207,9 @@ namespace HarshPoint.ShellployGenerator.Builders
                 StringComparer.OrdinalIgnoreCase,
                 InputObjectIdentifier
             );
+
+        private static readonly PropertyModelVisitor RemoveIgnoredUnsynthesized
+            = new RemoveIgnoredOrUnsynthesizedVisitor();
 
         private static readonly AttributeModel ValueFromPipeline
             = new AttributeModel(typeof(SMA.ParameterAttribute))

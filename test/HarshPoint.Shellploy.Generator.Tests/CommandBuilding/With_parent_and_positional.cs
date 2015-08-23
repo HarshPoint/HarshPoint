@@ -11,17 +11,17 @@ namespace CommandBuilding
 {
     public class With_parent_and_positional : SeriloggedTest
     {
-        private readonly NewObjectCommandBuilder<Parent> _parent;
-        private readonly NewObjectCommandBuilder<Child> _child;
+        private readonly NewProvisionerCommandBuilder<Parent> _parent;
+        private readonly NewProvisionerCommandBuilder<Child> _child;
         private readonly CommandModel _childCommand;
 
         public With_parent_and_positional(ITestOutputHelper output) : base(output)
         {
-            _parent = new NewObjectCommandBuilder<Parent>();
+            _parent = new NewProvisionerCommandBuilder<Parent>();
             _parent.PositionalParameter(x => x.Parent0);
             _parent.PositionalParameter(x => x.Parent1);
 
-            _child = new NewObjectCommandBuilder<Child>();
+            _child = new NewProvisionerCommandBuilder<Child>();
             _child.AsChildOf<Parent>();
             _child.PositionalParameter(x => x.Child0);
             _child.PositionalParameter(x => x.Child1);

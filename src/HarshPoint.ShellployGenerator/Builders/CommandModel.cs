@@ -12,6 +12,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             IEnumerable<String> baseTypes,
             String className,
             IEnumerable<String> importedNamespaces,
+            IEnumerable<MethodModel> methods,
             String name,
             String @namespace,
             IEnumerable<PropertyModel> properties
@@ -22,18 +23,20 @@ namespace HarshPoint.ShellployGenerator.Builders
             BaseTypes = baseTypes.ToImmutableArray();
             ClassName = className;
             ImportedNamespaces = importedNamespaces.ToImmutableArray();
+            Methods = methods.ToImmutableArray();
             Name = name;
             Namespace = @namespace;
             Properties = properties.ToImmutableArray();
         }
 
-        public IImmutableList<String> Aliases { get; }
-        public IImmutableList<AttributeModel> Attributes { get; }
-        public IImmutableList<String> BaseTypes { get; }
+        public ImmutableArray<String> Aliases { get; }
+        public ImmutableArray<AttributeModel> Attributes { get; }
+        public ImmutableArray<String> BaseTypes { get; }
         public String ClassName { get; }
-        public IImmutableList<String> ImportedNamespaces { get; }
+        public ImmutableArray<String> ImportedNamespaces { get; }
+        public ImmutableArray<MethodModel> Methods { get; }
         public String Name { get; }
         public String Namespace { get; }
-        public IImmutableList<PropertyModel> Properties { get; }
+        public ImmutableArray<PropertyModel> Properties { get; }
     }
 }

@@ -8,17 +8,17 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CommandBuilding
+namespace ProvisionerCommandBuilding
 {
     public sealed class InputObject_and_positional : SeriloggedTest
     {
-        private readonly NewObjectCommandBuilder<WithPositional> _builder;
+        private readonly NewProvisionerCommandBuilder<WithPositional> _builder;
         private readonly CommandModel _command;
         private readonly PropertyModel _inputObject;
 
         public InputObject_and_positional(ITestOutputHelper output) : base(output)
         {
-            _builder = new NewObjectCommandBuilder<WithPositional>();
+            _builder = new NewProvisionerCommandBuilder<WithPositional>();
             _builder.HasInputObject = true;
             _builder.PositionalParameter(x => x.Pos0);
             _builder.PositionalParameter(x => x.Pos1);

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-
-namespace HarshPoint.ShellployGenerator.Builders
+﻿namespace HarshPoint.ShellployGenerator.Builders
 {
-    public interface INewObjectCommandBuilder
+    internal interface INewObjectCommandBuilder<TTarget>
     {
-        IEnumerable<PropertyModel> CreatePropertiesRecursively();
-        IImmutableList<Type> ParentTargetTypes { get; }
-        Type TargetType { get; }
+        PropertyModelContainer PropertyContainer { get; }
     }
 }

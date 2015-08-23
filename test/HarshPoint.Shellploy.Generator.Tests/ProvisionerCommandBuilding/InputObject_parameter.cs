@@ -7,7 +7,7 @@ using Xunit;
 using Xunit.Abstractions;
 using SMA = System.Management.Automation;
 
-namespace CommandBuilding
+namespace ProvisionerCommandBuilding
 {
     public class InputObject_parameter : SeriloggedTest
     {
@@ -18,7 +18,7 @@ namespace CommandBuilding
 
         public InputObject_parameter(ITestOutputHelper output) : base(output)
         {
-            var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
+            var builder = new NewProvisionerCommandBuilder<EmptyProvisioner>();
             builder.HasInputObject = true;
 
             var command = builder.ToCommand();

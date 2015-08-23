@@ -119,8 +119,12 @@
     <Compile Include="Builders\IChildParameterBuilder.cs" />
     <Compile Include="Builders\IChildParameterBuilder`1.cs" />
     <Compile Include="Builders\INewObjectCommandBuilder.cs" />
+    <Compile Include="Builders\MethodModel.cs" />
+    <Compile Include="Builders\MethodModelNewObject.cs" />
     <Compile Include="Builders\NewObjectCommandBuilder.cs" />
+    <Compile Include="Builders\TypedPropertyModelFactory.cs" />
     <Compile Include="Builders\NewObjectCommandBuilder`1.cs" />
+    <Compile Include="Builders\NewProvisionerCommandBuilder.cs" />
     <Compile Include="Builders\NewProvisionerCommandBuilder`1.cs" />
     <Compile Include="Builders\ParameterPositionVisitor.cs" />
     <Compile Include="Builders\Visitors\ChangePropertyTypeVisitor.cs" />
@@ -130,7 +134,8 @@
     <Compile Include="Builders\Visitors\RemoveIgnoredOrUnsynthesizedVisitor.cs" />
     <Compile Include="CodeGen\AttributeModelCodeDom.cs" />
     <Compile Include="CodeGen\CodeGeneratorContext.cs" />
-    <Compile Include="CodeGen\ParameterPropertyGenerator.cs" />
+    <Compile Include="CodeGen\ExpressionCodeGenerator.cs" />
+    <Compile Include="CodeGen\PropertyCodeGenerator.cs" />
     <Compile Include="CodeGen\CodeLiteralExpression.cs" />
     <Compile Include="CodeGen\CodeDomExtensions.cs" />
     <Compile Include="Builders\ParameterBuilder`1.cs" />

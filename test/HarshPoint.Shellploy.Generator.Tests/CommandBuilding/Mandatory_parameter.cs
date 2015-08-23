@@ -36,7 +36,6 @@ namespace CommandBuilding
             Assert.Equal(typeof(SMA.ParameterAttribute), attr.AttributeType);
             Assert.Empty(attr.Arguments);
 
-            Assert.Equal(2, attr.Properties.Count);
             Assert.Equal(true, attr.Properties["Mandatory"]);
         }
 

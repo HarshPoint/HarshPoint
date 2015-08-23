@@ -1,33 +1,62 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using System;
-using System.Collections.Generic;
-using SMA = System.Management.Automation;
+using System.Linq.Expressions;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public abstract class NewProvisionerCommandBuilder<TProvisioner> :
-        NewObjectCommandBuilder<TProvisioner>
+
+    public class NewProvisionerCommandBuilder<TProvisioner> :
+        NewProvisionerCommandBuilder,
+        INewObjectCommandBuilder<TProvisioner>
         where TProvisioner : HarshProvisionerBase
     {
-        public NewProvisionerCommandBuilder()
-            : base(Metadata)
+        public NewProvisionerCommandBuilder() : base(Metadata) { }
+
+        public void AsChildOf<TParent>()
         {
-            BaseTypes.Remove(typeof(SMA.PSCmdlet).FullName);
-            BaseTypes.Add(HarshProvisionerCmdlet);
+            AsChildOf<TParent>(null);
         }
 
-        protected override IEnumerable<PropertyModel> CreatePropertiesLocal()
-            => BoolToSwitchVisitor.Visit(
-                base.CreatePropertiesLocal()
+        public void AsChildOf<TParent>(
+            Action<ChildCommandBuilder<TProvisioner, TParent>> action
+        )
+        {
+            if (ChildBuilder == null)
+            {
+                ChildBuilder = new ChildCommandBuilder<TProvisioner, TParent>();
+            }
+
+            var builder = (ChildBuilder as ChildCommandBuilder<TProvisioner, TParent>);
+
+            if (builder == null)
+            {
+                throw Logger.Fatal.InvalidOperationFormat(
+                    SR.CommandBuilder_AlreadyChildOf,
+                    ChildBuilder.ParentType
+                );
+            }
+
+            if (action != null)
+            {
+                action(builder);
+            }
+        }
+
+        public ParameterBuilder<TProvisioner> Parameter(
+            Expression<Func<TProvisioner, Object>> expression
+        )
+            => TypedPropertyModelFactory.Parameter(this, expression);
+
+        public ParameterBuilder<TProvisioner> PositionalParameter(
+            Expression<Func<TProvisioner, Object>> expression
+        )
+            => TypedPropertyModelFactory.PositionalParameter(
+                this, 
+                expression
             );
 
-        private const String HarshProvisionerCmdlet = "HarshProvisionerCmdlet";
-
-        private static readonly ChangePropertyTypeVisitor BoolToSwitchVisitor =
-            new ChangePropertyTypeVisitor(
-                typeof(Boolean),
-                typeof(SMA.SwitchParameter)
-            );
+        PropertyModelContainer INewObjectCommandBuilder<TProvisioner>.PropertyContainer
+            => PropertyContainer;
 
         private static readonly HarshProvisionerMetadata Metadata
            = HarshProvisionerMetadataRepository.Get(typeof(TProvisioner));

@@ -59,7 +59,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 codeType.BaseTypes.Add(new CodeTypeReference(baseType));
             }
 
-            new ParameterPropertyGenerator(codeType).Visit(Command.Properties);
+            new PropertyCodeGenerator(codeType).Visit(Command.Properties);
 
             return codeType;
         }

@@ -28,7 +28,7 @@ namespace CommandBuilding
             var builder = new NewObjectCommandBuilder<TestProvisioner>();
             _command = builder.ToCommand();
 
-            Assert.Equal(3, _command.Properties.Count);
+            Assert.Equal(3, _command.Properties.Length);
 
             _common = Assert.Single(
                 _command.Properties,
