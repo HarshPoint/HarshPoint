@@ -37,6 +37,11 @@ namespace HarshPoint.ShellployGenerator.Builders
         )
             => VisitNext(property);
 
+        internal virtual PropertyModel VisitIdentifiedPlaceholder(
+            PropertyModelIdentifiedPlaceholder property
+        )
+            => VisitNext(property);
+
         protected internal virtual PropertyModel VisitIgnored(
             PropertyModelIgnored property
         )

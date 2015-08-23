@@ -36,10 +36,18 @@ namespace HarshPoint.ShellployGenerator.Builders
             {
                 throw Logger.Fatal.ArgumentNull(nameof(other));
             }
+            
+            var result = new PropertyModelContainer(_owner)
+            {
+                _parameters = other.ToImmutableDictionary(p => p.Identifier)
+            };
 
-            return from p in other
-                   let ours = _parameters.GetValueOrDefault(p.Identifier)
-                   select ours?.Append(p) ?? p;
+            foreach (var x in this)
+            {
+                result.Update(x.Identifier, x);
+            }
+
+            return result.ToImmutableArray();
         }
 
         public IEnumerator<PropertyModel> GetEnumerator()
@@ -106,9 +114,24 @@ namespace HarshPoint.ShellployGenerator.Builders
 
             if (parameter != existing)
             {
+                var toInsert = parameter.InsertIntoContainer(existing);
+
+                if (toInsert.Identifier == null)
+                {
+                    // if there is no synthesized property in the chain,
+                    // create a dummy placeholder to store the identifier.
+
+                    // if the property becomes synthesized later, the 
+                    // PMIP will be replaced by PMS.InsertIntoContainer.
+
+                    toInsert = toInsert.Append(
+                        new PropertyModelIdentifiedPlaceholder(name)
+                    );
+                }
+
                 _parameters = _parameters.SetItem(
                     name,
-                    parameter.InsertIntoContainer(existing)
+                    toInsert
                 );
             }
         }

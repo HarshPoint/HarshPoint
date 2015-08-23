@@ -122,6 +122,7 @@
     <Compile Include="Builders\NewObjectCommandBuilder.cs" />
     <Compile Include="Builders\NewObjectCommandModel.cs" />
     <Compile Include="Builders\PropertyModelAssignedTo.cs" />
+    <Compile Include="Builders\PropertyModelIdentifiedPlaceholder.cs" />
     <Compile Include="Builders\TypedPropertyModelFactory.cs" />
     <Compile Include="Builders\NewObjectCommandBuilder`1.cs" />
     <Compile Include="Builders\NewProvisionerCommandBuilder.cs" />

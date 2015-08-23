@@ -55,7 +55,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         public Type PropertyType { get; }
 
         /// <summary>
-        /// <see cref="PropertyModelSynthesized"/> Always has to be at the 
+        /// <see cref="PropertyModelSynthesized"/> always has to be at the 
         /// end of the chain.
         /// </summary>
         public override PropertyModel InsertIntoContainer(
@@ -73,6 +73,8 @@ namespace HarshPoint.ShellployGenerator.Builders
                     SR.CommandParameterSynthesized_AttemptedToNest
                 );
             }
+
+            existing = new RemovePlaceholder().Visit(existing);
 
             return existing.Append(this);
         }
@@ -92,5 +94,13 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext<PropertyModelSynthesized>();
+
+        private sealed class RemovePlaceholder : PropertyModelVisitor
+        {
+            internal override PropertyModel VisitIdentifiedPlaceholder(
+                PropertyModelIdentifiedPlaceholder property
+            )
+                => Visit(property?.NextElement);
+        }
     }
 }

@@ -135,7 +135,9 @@ namespace HarshPoint.ShellployGenerator.Builders
         public virtual CommandModel ToCommand()
         {
             var properties = new ParameterPositionVisitor().Visit(
-                CreateProperties()
+                RemoveIgnoredUnsynthesized.Visit(
+                    CreateProperties()
+                )
             );
 
             return new CommandModel()
@@ -157,7 +159,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             );
 
         protected virtual IEnumerable<PropertyModel> CreateProperties()
-            => RemoveIgnoredUnsynthesized.Visit(PropertyContainer);
+            => PropertyContainer;
 
         protected internal virtual void ValidatePropertyName(String name)
         {
