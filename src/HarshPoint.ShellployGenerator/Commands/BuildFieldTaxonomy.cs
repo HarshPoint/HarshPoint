@@ -12,7 +12,6 @@ namespace HarshPoint.ShellployGenerator.Commands
             AsChildOf<HarshField>(p =>
             {
                 p.Parameter(x => x.TypeName).SetFixedValue("TaxonomyFieldType");
-                p.Parameter(x => x.Type).Ignore();
             });
 
             Parameter("TermSetId").Synthesize(typeof(Guid));

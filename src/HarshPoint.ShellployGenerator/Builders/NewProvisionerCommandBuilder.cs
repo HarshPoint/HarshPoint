@@ -37,11 +37,12 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         protected virtual IEnumerable<PropertyModel> CreatePropertiesLocal()
         {
-            var properties = BoolToSwitchVisitor.Visit(
-                SetValueFromPipelineByPropertyName.Visit(
-                    base.CreateProperties()
-                )
-            );
+            var properties = base.CreateProperties();
+
+            properties = IgnoreUnfixedParameterSets.Visit(properties);
+            properties = RemoveIgnoredUnsynthesized.Visit(properties);
+            properties = SetValueFromPipelineByPropertyName.Visit(properties);
+            properties = BoolToSwitchVisitor.Visit(properties);
 
             if (HasInputObject)
             {
@@ -63,6 +64,20 @@ namespace HarshPoint.ShellployGenerator.Builders
             {
                 var parentProperties = ChildBuilder.PropertyContainer.ApplyTo(
                     ParentBuilder.CreatePropertiesRecursively()
+                );
+
+                // need to call this here again to apply any fixed values 
+                // specified by ChildBuilder.
+
+                parentProperties = IgnoreUnfixedParameterSets.Visit(
+                    parentProperties
+                );
+
+                // remove any ignored properties right away, don't want them
+                // to get processed by any children
+
+                parentProperties = RemoveIgnoredUnsynthesized.Visit(
+                    parentProperties
                 );
 
                 return parentProperties.Concat(localProperties);
@@ -109,6 +124,9 @@ namespace HarshPoint.ShellployGenerator.Builders
                 typeof(SMA.SwitchParameter)
             );
 
+        private static readonly PropertyModelVisitor IgnoreUnfixedParameterSets
+            = new IgnoreUnfixedParameterSetPropertiesVisitor();
+
         private static readonly PropertyModelVisitor SetValueFromPipelineByPropertyName
             = new AttributeNamedArgumentVisitor(
                 typeof(SMA.ParameterAttribute),
@@ -131,7 +149,6 @@ namespace HarshPoint.ShellployGenerator.Builders
                     )
                 )
             );
-
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(NewProvisionerCommandBuilder));

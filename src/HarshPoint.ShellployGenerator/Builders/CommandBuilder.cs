@@ -134,11 +134,10 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public virtual CommandModel ToCommand()
         {
-            var properties = new ParameterPositionVisitor().Visit(
-                RemoveIgnoredUnsynthesized.Visit(
-                    CreateProperties()
-                )
-            );
+            var properties = CreateProperties();
+
+            properties = RemoveIgnoredUnsynthesized.Visit(properties);
+            properties = new ParameterPositionVisitor().Visit(properties);
 
             return new CommandModel()
             {
@@ -175,7 +174,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(CommandBuilder));
 
-        private static readonly PropertyModelVisitor RemoveIgnoredUnsynthesized
+        protected static readonly PropertyModelVisitor RemoveIgnoredUnsynthesized
             = new RemoveIgnoredOrUnsynthesizedVisitor();
     }
 }

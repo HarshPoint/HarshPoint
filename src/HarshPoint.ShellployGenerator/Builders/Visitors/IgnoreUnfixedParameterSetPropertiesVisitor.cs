@@ -23,6 +23,11 @@ namespace HarshPoint.ShellployGenerator.Builders
             var allSets = new FindAllParameterSets();
             allSets.Visit(properties);
 
+            if (allSets.ParameterSets.IsEmpty || !allSets.HasFixedProperties)
+            {
+                return properties;
+            }
+
             var unfixedSets = new FindUnfixedParameterSets(
                 allSets.ParameterSets
             );
@@ -33,7 +38,9 @@ namespace HarshPoint.ShellployGenerator.Builders
             return base.Visit(properties);
         }
 
-        protected internal override PropertyModel VisitSynthesized(PropertyModelSynthesized property)
+        protected internal override PropertyModel VisitSynthesized(
+            PropertyModelSynthesized property
+        )
         {
             if (property == null)
             {
@@ -50,14 +57,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
             return base.VisitSynthesized(property);
         }
-
-        protected internal override PropertyModel VisitFixed(
-            PropertyModelFixed property
-        )
-        {
-            return base.VisitFixed(property);
-        }
-
+        
         private static IEnumerable<String> GetPropertyParameterSets(
             PropertyModelSynthesized property
         )
@@ -73,6 +73,14 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
             public ImmutableHashSet<String> ParameterSets { get; private set; }
                 = ImmutableHashSet.Create<String>(StringComparer.OrdinalIgnoreCase);
+
+            public Boolean HasFixedProperties { get; private set; }
+
+            protected internal override PropertyModel VisitFixed(PropertyModelFixed property)
+            {
+                HasFixedProperties = true;
+                return base.VisitFixed(property);
+            }
 
             protected internal override PropertyModel VisitSynthesized(
                 PropertyModelSynthesized property

@@ -66,13 +66,11 @@ namespace HarshPoint.ShellployGenerator.Builders
             }
         }
 
-        public virtual NewObjectCommandModel ToNewObjectCommand()
-        {
-            return new NewObjectCommandModel(
+        public virtual NewObjectCommandModel ToNewObjectCommand() 
+            => new NewObjectCommandModel(
                 ToCommand(),
                 TargetType
             );
-        }
 
         public override CommandCodeGenerator ToCodeGenerator()
         {

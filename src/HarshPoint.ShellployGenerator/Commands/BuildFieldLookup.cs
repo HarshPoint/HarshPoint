@@ -14,9 +14,6 @@ namespace HarshPoint.ShellployGenerator.Commands
             {
                 parent.Parameter(x => x.Type)
                     .SetFixedValue(FieldType.Lookup);
-
-                parent.Parameter(x => x.TypeName)
-                    .Ignore();
             });
 
             Parameter("TargetListUrl")
