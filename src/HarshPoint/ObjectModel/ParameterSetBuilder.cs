@@ -124,7 +124,7 @@ namespace HarshPoint.ObjectModel
             {
                 if (parameterSets.Length == 0)
                 {
-                    parameterSets = 
+                    parameterSets =
                         CreateImplicitParameterSet(commonParameters);
                 }
                 else if (parameterSets.Length == 1)
@@ -168,7 +168,7 @@ namespace HarshPoint.ObjectModel
             var single = parameterSets.Single();
 
             Logger.Debug(
-                "{ProcessedType}: Single parameter set, " + 
+                "{ProcessedType}: Single parameter set, " +
                 "making it default: {@ParameterSet}",
                 Metadata,
                 single
