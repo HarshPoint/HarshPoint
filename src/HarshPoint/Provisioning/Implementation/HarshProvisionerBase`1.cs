@@ -2,10 +2,6 @@
 using HarshPoint.Provisioning.Records;
 using Serilog.Core.Enrichers;
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -26,8 +22,6 @@ namespace HarshPoint.Provisioning.Implementation
         private readonly HarshScopedValue<ParameterSet> _parameterSet;
         private readonly HarshScopedValue<RecordWriter<TContext>> _recordWriter;
 
-        private ICollection<HarshProvisionerBase> _children;
-        private ICollection<Func<Object>> _childrenContextStateModifiers;
         private ManualResolver _manualResolver;
         private HarshProvisionerMetadata _metadata;
         private PropertyValueSourceTracker _valueSourceTracker;
@@ -44,9 +38,6 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         public TContext Context => _context.Value;
-
-        public ICollection<HarshProvisionerBase> Children
-            => HarshLazy.Initialize(ref _children, CreateChildrenCollection);
 
         public HarshLogger Logger => _logger.Value;
 
@@ -77,9 +68,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         internal HarshProvisionerBase<TContext> ForwardTarget { get; private set; }
 
-        internal Boolean HasChildren
-            => (_children != null) && _children.Any();
-
         internal ParameterSet ParameterSet
             => _parameterSet.Value;
 
@@ -92,30 +80,24 @@ namespace HarshPoint.Provisioning.Implementation
         internal PropertyValueSourceTracker ValueSourceTracker
             => HarshLazy.Initialize(ref _valueSourceTracker);
 
-        public void ModifyChildrenContextState(Func<Object> modifier)
-        {
-            if (modifier == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(modifier));
-            }
+        public Task ProvisionAsync(TContext context, CancellationToken token)
+            => ProvisionAsync(context.WithToken(token));
 
-            if (_childrenContextStateModifiers == null)
-            {
-                _childrenContextStateModifiers = new Collection<Func<Object>>();
-            }
+        public Task ProvisionAsync(
+            TContext context,
+            IProgress<ProgressReport> progress
+        )
+            => ProvisionAsync(context.WithProgress(progress));
 
-            _childrenContextStateModifiers.Add(modifier);
-        }
-
-        public void ModifyChildrenContextState(Object state)
-        {
-            if (state == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(state));
-            }
-
-            ModifyChildrenContextState(() => state);
-        }
+        public Task ProvisionAsync(
+            TContext context,
+            CancellationToken token,
+            IProgress<ProgressReport> progress
+        )
+            => ProvisionAsync(context
+                .WithToken(token)
+                .WithProgress(progress)
+            );
 
         public Task ProvisionAsync(TContext context)
         {
@@ -126,15 +108,33 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (context.Session == null)
             {
-                context = context.WithSession(new ProvisioningSession<TContext>(this));
+                context = context.WithSession(new ProvisioningSession(this, HarshProvisionerAction.Provision));
             }
 
             return RunSelfAndChildren(
                 context,
-                OnProvisioningAsync,
-                ProvisionChildrenAsync
+                HarshProvisionerAction.Provision
             );
         }
+
+        public Task UnprovisionAsync(TContext context, CancellationToken token)
+            => UnprovisionAsync(context.WithToken(token));
+
+        public Task UnprovisionAsync(
+            TContext context,
+            IProgress<ProgressReport> progress
+        )
+            => UnprovisionAsync(context.WithProgress(progress));
+
+        public Task UnprovisionAsync(
+            TContext context,
+            CancellationToken token,
+            IProgress<ProgressReport> progress
+        )
+            => UnprovisionAsync(context
+                .WithToken(token)
+                .WithProgress(progress)
+            );
 
         public async Task UnprovisionAsync(TContext context)
         {
@@ -145,15 +145,14 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (context.Session == null)
             {
-                context = context.WithSession(new ProvisioningSession<TContext>(this));
+                context = context.WithSession(new ProvisioningSession(this, HarshProvisionerAction.Unprovision));
             }
 
             if (MayDeleteUserData || context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
             {
                 await RunSelfAndChildren(
                     context,
-                    OnUnprovisioningAsync,
-                    UnprovisionChildrenAsync
+                    HarshProvisionerAction.Unprovision
                 );
             }
         }
@@ -189,9 +188,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         [NeverDeletesUserData]
         protected virtual Task OnUnprovisioningAsync() => HarshTask.Completed;
-
-        protected virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
-            => new Collection<HarshProvisionerBase>();
 
         protected virtual ResolveContext<TContext> CreateResolveContext()
             => new ResolveContext<TContext>(Context);
@@ -247,12 +243,12 @@ namespace HarshPoint.Provisioning.Implementation
 
         private TContext PrepareChildrenContext()
         {
-            if (_childrenContextStateModifiers == null)
+            if (ChildrenContextStateModifiers == null)
             {
                 return Context;
             }
 
-            return _childrenContextStateModifiers
+            return ChildrenContextStateModifiers
                 .Select(fn => fn())
                 .Where(state => state != null)
                 .Aggregate(
@@ -260,34 +256,29 @@ namespace HarshPoint.Provisioning.Implementation
                 );
         }
 
-        private Task ProvisionChildrenAsync()
-            => RunChildren(ProvisionChild);
-
-        private Task UnprovisionChildrenAsync()
-            => RunChildren(UnprovisionChild, reverse: true);
-
         private async Task RunChildren(
-            Func<HarshProvisionerBase, TContext, Task> action,
-            Boolean reverse = false)
+            HarshProvisionerAction action)
         {
             if (!HasChildren)
             {
                 return;
             }
 
-            var children = reverse ? _children.Reverse() : _children;
+            var children = (action == HarshProvisionerAction.Provision) ? Children : Children.Reverse();
             var context = PrepareChildrenContext();
 
             foreach (var child in children)
             {
                 context.Token.ThrowIfCancellationRequested();
-                await action(child, context);
+                if (action == HarshProvisionerAction.Provision)
+                {
+                    await ProvisionChild(child, context);
+                }
+                else
+                {
+                    await ProvisionChild(child, context);
+                }
             }
-        }
-
-        internal IImmutableList<HarshProvisionerBase<TContext>> GetProvisionersInOrder()
-        {
-            throw new NotImplementedException();
         }
 
         private async Task RunWithContext(
@@ -312,8 +303,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         private Task RunSelfAndChildren(
             TContext context,
-            Func<Task> action,
-            Func<Task> childAction
+            HarshProvisionerAction action
         )
             => RunWithContext(context, async delegate
             {
@@ -345,7 +335,14 @@ namespace HarshPoint.Provisioning.Implementation
                         await InitializeAsync();
                         context.Token.ThrowIfCancellationRequested();
 
-                        await action();
+                        if (action == HarshProvisionerAction.Provision)
+                        {
+                            await OnProvisioningAsync();
+                        }
+                        else
+                        {
+                            await OnUnprovisioningAsync();
+                        }
                         context.Token.ThrowIfCancellationRequested();
                     }
                     finally
@@ -354,7 +351,7 @@ namespace HarshPoint.Provisioning.Implementation
                     }
                 }
 
-                await childAction();
+                await RunChildren(action);
             });
 
         PropertyValueSource ITrackValueSource.GetValueSource(PropertyInfo property)
@@ -362,9 +359,5 @@ namespace HarshPoint.Provisioning.Implementation
 
         void ITrackValueSource.SetValueSource(PropertyInfo property, PropertyValueSource source)
             => ValueSourceTracker.SetValueSource(property, source);
-
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        protected static readonly ICollection<HarshProvisionerBase> NoChildren =
-            ImmutableArray<HarshProvisionerBase>.Empty;
     }
 }

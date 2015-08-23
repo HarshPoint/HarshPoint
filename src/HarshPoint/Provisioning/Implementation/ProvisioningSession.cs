@@ -3,31 +3,23 @@ using System.Collections.Immutable;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public sealed class ProvisioningSession<TContext>
-        where TContext : HarshProvisionerContextBase<TContext>
+    public sealed class ProvisioningSession
     {
-        private readonly HarshProvisionerBase<TContext> _rootProvisioner;
+        private readonly HarshProvisionerBase _rootProvisioner;
+        private readonly HarshProvisionerAction _action;
 
-        private IImmutableList<HarshProvisionerBase<TContext>> _provisioners;
+        private IImmutableList<HarshProvisionerBase> _provisioners;
 
-        internal ProvisioningSession()
-        {
-        }
+        internal ProvisioningSession() { }
 
-        public IImmutableList<HarshProvisionerBase<TContext>> Provisioners
-        {
-            get
-            {
-                if (_provisioners == null)
-                {
-                    _provisioners = _rootProvisioner.GetProvisionersInOrder();
-                }
+        public IImmutableList<HarshProvisionerBase> Provisioners
+            => HarshLazy.Initialize(ref _provisioners, CreateProvisionersCollection);
 
-                return _provisioners;
-            }
-        }
-
-        public ProvisioningSession(HarshProvisionerBase<TContext> rootProvisioner)
+        private IImmutableList<HarshProvisionerBase> CreateProvisionersCollection()
+            => _rootProvisioner.GetProvisionersInOrder(_action);
+        public ProvisioningSession(
+            HarshProvisionerBase rootProvisioner,
+            HarshProvisionerAction action)
         {
             if (rootProvisioner == null)
             {
@@ -35,10 +27,12 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             _rootProvisioner = rootProvisioner;
+            _action = action;
         }
 
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(ProvisioningSession<>));
+            = HarshLog.ForContext(typeof(ProvisioningSession));
     }
+
 }

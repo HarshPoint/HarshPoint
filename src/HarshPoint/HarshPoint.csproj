@@ -115,6 +115,7 @@
     <Compile Include="ObjectModel\ObjectMapping.cs" />
     <Compile Include="ObjectModel\ObjectMapper`2.cs" />
     <Compile Include="Provisioning\HarshProvisionerRecord.cs" />
+    <Compile Include="Provisioning\Implementation\HarshProvisionerAction.cs" />
     <Compile Include="Provisioning\Implementation\ProvisioningSession.cs" />
     <Compile Include="Provisioning\Implementation\IProvisioningSessionInspector.cs" />
     <Compile Include="Provisioning\ProgressReport.cs" />
