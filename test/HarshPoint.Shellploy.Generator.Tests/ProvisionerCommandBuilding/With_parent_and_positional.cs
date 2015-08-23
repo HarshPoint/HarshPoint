@@ -3,11 +3,11 @@ using HarshPoint.Provisioning;
 using HarshPoint.ShellployGenerator.Builders;
 using HarshPoint.Tests;
 using System;
-using Xunit;
+using Xunit;    
 using Xunit.Abstractions;
 using SMA = System.Management.Automation;
 
-namespace CommandBuilding
+namespace ProvisionerCommandBuilding
 {
     public class With_parent_and_positional : SeriloggedTest
     {

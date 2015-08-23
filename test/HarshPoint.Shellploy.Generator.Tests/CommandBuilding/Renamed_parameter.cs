@@ -86,15 +86,6 @@ namespace CommandBuilding
             });
         }
 
-        [Fact]
-        public void Cannot_rename_to_InputObject()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var builder = new NewObjectCommandBuilder<TestProvisioner>();
-                builder.Parameter(x => x.RenamedParam).Rename("InputObject");
-            });
-        }
 
         private sealed class TestProvisioner : HarshProvisioner
         {

@@ -4,15 +4,16 @@ using System.Linq.Expressions;
 namespace HarshPoint.ShellployGenerator.Builders
 {
     public sealed class ChildCommandBuilder<TProvisioner, TParent> :
-        IChildCommandBuilder
+        IChildProvisionerCommandBuilder
     {
-        private readonly PropertyModelContainer _parameterBuilders
-            = new PropertyModelContainer();
+        private readonly PropertyModelContainer _parameterBuilders;
 
-        internal ChildCommandBuilder()
+        internal ChildCommandBuilder(NewProvisionerCommandBuilder owner)
         {
+            _parameterBuilders = new PropertyModelContainer(owner);
+
             _parameterBuilders.Update(
-                CommandBuilder.InputObjectIdentifier,
+                NewProvisionerCommandBuilder.InputObjectName,
                 new PropertyModelIgnored()
             );
         }
@@ -27,10 +28,10 @@ namespace HarshPoint.ShellployGenerator.Builders
         )
             => _parameterBuilders.GetParameterBuilder(name);
 
-        PropertyModelContainer IChildCommandBuilder.ParameterBuilders
+        PropertyModelContainer IChildProvisionerCommandBuilder.PropertyContainer
             => _parameterBuilders;
 
-        Type IChildCommandBuilder.ParentType => typeof(TParent);
+        Type IChildProvisionerCommandBuilder.ParentType => typeof(TParent);
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ChildCommandBuilder<,>));

@@ -24,7 +24,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public ParameterBuilder Rename(String propertyName)
         {
-            CommandBuilder.ValidateParameterName(propertyName);
+            Container.ValidatePropertyName(propertyName);
             Update(new PropertyModelRenamed(propertyName));
             return this;
         }

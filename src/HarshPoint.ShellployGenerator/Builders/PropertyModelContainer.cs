@@ -7,15 +7,26 @@ using System.Linq.Expressions;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class PropertyModelContainer :
-        IEnumerable<PropertyModel>
+    internal sealed class PropertyModelContainer : IEnumerable<PropertyModel>
     {
+        private readonly CommandBuilder _owner;
+
         private ImmutableDictionary<String, PropertyModel> _parameters
            = ImmutableDictionary.Create<String, PropertyModel>(
                StringComparer.Ordinal
             );
 
         private Int32 _nextPositionalParam;
+
+        public PropertyModelContainer(CommandBuilder owner)
+        {
+            if (owner == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(owner));
+            }
+
+            _owner = owner;
+        }
 
         public IEnumerable<PropertyModel> ApplyTo(
             IEnumerable<PropertyModel> other
@@ -49,6 +60,8 @@ namespace HarshPoint.ShellployGenerator.Builders
 
             var name = expression.ExtractLastPropertyAccess().Name;
 
+            ValidatePropertyName(name);
+
             if (isPositional)
             {
                 SetPositional(name);
@@ -62,7 +75,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             Boolean isPositional = false
         )
         {
-            CommandBuilder.ValidateParameterName(name);
+            ValidatePropertyName(name);
 
             if (isPositional)
             {
@@ -70,6 +83,11 @@ namespace HarshPoint.ShellployGenerator.Builders
             }
 
             return new ParameterBuilder(this, name);
+        }
+
+        public void ValidatePropertyName(String name)
+        {
+            _owner.ValidatePropertyName(name);
         }
 
         private void SetPositional(String name)

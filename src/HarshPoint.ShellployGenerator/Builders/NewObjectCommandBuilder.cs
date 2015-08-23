@@ -44,7 +44,7 @@ namespace HarshPoint.ShellployGenerator.Builders
                 var property = grouping.Key;
                 var parameters = grouping.AsEnumerable();
 
-                ValidateParameterName(property.Name);
+                ValidatePropertyName(property.Name);
 
                 if (parameters.Any(p => p.IsCommonParameter))
                 {

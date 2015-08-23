@@ -21,6 +21,8 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         protected CommandBuilder()
         {
+            PropertyContainer = new PropertyModelContainer(this);
+
             Attributes.Add(_cmdletAttribute);
             BaseTypes.Add(typeof(SMA.PSCmdlet).FullName);
         }
@@ -122,40 +124,19 @@ namespace HarshPoint.ShellployGenerator.Builders
         }
 
         internal PropertyModelContainer PropertyContainer { get; }
-            = new PropertyModelContainer();
 
-        public ParameterBuilder Parameter(String name)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
-            }
-
-            return PropertyContainer.GetParameterBuilder(name);
-        }
+        public ParameterBuilder Parameter(String name) 
+            => PropertyContainer.GetParameterBuilder(name);
 
         public ParameterBuilder PositionalParameter(String name)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
-            }
-
-            return PropertyContainer.GetParameterBuilder(name, isPositional: true);
-        }
-
+            => PropertyContainer.GetParameterBuilder(name, isPositional: true);
+ 
         public virtual CommandModel ToCommand()
         {
             var properties = CreateProperties();
             var methods = CreateMethods();
 
-            if (HasInputObject)
-            {
-                properties = properties.Concat(
-                    InputObjectProperty
-                );
-            }
-
+            properties = RemoveIgnoredUnsynthesized.Visit(properties);
             properties = new ParameterPositionVisitor().Visit(properties);
 
             return new CommandModel(
@@ -175,26 +156,15 @@ namespace HarshPoint.ShellployGenerator.Builders
             => Enumerable.Empty<MethodModel>();
 
         protected virtual IEnumerable<PropertyModel> CreateProperties()
-            => RemoveIgnoredUnsynthesized.Visit(PropertyContainer);
+            => PropertyContainer;
 
-        internal static void ValidateParameterName(String name)
+        protected internal virtual void ValidatePropertyName(String name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
                 throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
             }
-
-            if (ReservedNames.Contains(name))
-            {
-                throw Logger.Fatal.ArgumentFormat(
-                    nameof(name),
-                    SR.CommandBuilder_ReservedName,
-                    name
-                );
-            }
         }
-
-        public const String InputObjectIdentifier = "InputObject";
 
         private static readonly CommandBuilderContext EmptyContext
             = new CommandBuilderContext();
@@ -202,29 +172,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(CommandBuilder));
 
-        private static readonly ImmutableHashSet<String> ReservedNames
-            = ImmutableHashSet.Create(
-                StringComparer.OrdinalIgnoreCase,
-                InputObjectIdentifier
-            );
-
         private static readonly PropertyModelVisitor RemoveIgnoredUnsynthesized
             = new RemoveIgnoredOrUnsynthesizedVisitor();
-
-        private static readonly AttributeModel ValueFromPipeline
-            = new AttributeModel(typeof(SMA.ParameterAttribute))
-                .SetProperty("ValueFromPipeline", true);
-
-        private static readonly PropertyModel InputObjectProperty
-            = new PropertyModelPositional(
-                Int32.MaxValue,
-                new PropertyModelInputObject(
-                    new PropertyModelSynthesized(
-                        InputObjectIdentifier,
-                        typeof(Object),
-                        ValueFromPipeline
-                    )
-                )
-            );
     }
 }

@@ -68,15 +68,6 @@ namespace CommandBuilding
             Assert.Equal("Synth", synth.Identifier);
         }
 
-        [Fact]
-        public void Can_not_have_reserved_name_InputObject()
-        {
-            var builder = new NewObjectCommandBuilder<EmptyProvisioner>();
-
-            Assert.Throws<ArgumentException>(() =>
-                builder.Parameter("InputObject").Synthesize(typeof(Int32))
-            );
-        }
 
 
         [Fact]

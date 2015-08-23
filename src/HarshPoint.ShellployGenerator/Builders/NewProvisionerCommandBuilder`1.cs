@@ -23,7 +23,9 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
             if (ChildBuilder == null)
             {
-                ChildBuilder = new ChildCommandBuilder<TProvisioner, TParent>();
+                ChildBuilder = new ChildCommandBuilder<TProvisioner, TParent>(
+                    this
+                );
             }
 
             var builder = (ChildBuilder as ChildCommandBuilder<TProvisioner, TParent>);

@@ -6,7 +6,7 @@ using System;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CommandBuilding
+namespace ProvisionerCommandBuilding
 {
     public class With_parent : SeriloggedTest
     {
@@ -76,13 +76,9 @@ namespace CommandBuilding
 
             var command = _child.ToCommand();
 
-            var prop = Assert.Single(
+            Assert.DoesNotContain(
                 command.Properties,
                 p => p.Identifier == "ParentParam"
-            );
-
-            Assert.Single(
-                prop.ElementsOfType<PropertyModelIgnored>()
             );
         }
 

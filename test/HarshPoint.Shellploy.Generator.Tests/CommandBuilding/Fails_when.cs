@@ -15,13 +15,6 @@ namespace CommandBuilding
         {
         }
 
-        [Fact]
-        public void Has_InputObject_parameter()
-        {
-            Assert.Throws<ArgumentException>(() =>
-                new NewObjectCommandBuilder<InputObjectProvisioner>()
-            );
-        }
 
 
         [Fact]
@@ -49,12 +42,6 @@ namespace CommandBuilding
                     .SetFixedValue("4242")
                     .SetDefaultValue("42");
             });
-        }
-
-        private sealed class InputObjectProvisioner : HarshProvisioner
-        {
-            [Parameter]
-            public String InputObject { get; set; }
         }
 
         private sealed class Provisioner : HarshProvisioner

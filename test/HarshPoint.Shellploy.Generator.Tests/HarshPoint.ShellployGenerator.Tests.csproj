@@ -91,8 +91,8 @@
     <Compile Include="CommandBuilding\Ignored_Parameter.cs" />
     <Compile Include="CommandBuilding\Mandatory_parameter.cs" />
     <Compile Include="CommandBuilding\Basic_parameter.cs" />
-    <Compile Include="CommandBuilding\With_parent.cs" />
-    <Compile Include="CommandBuilding\With_parent_and_positional.cs" />
+    <Compile Include="ProvisionerCommandBuilding\With_parent.cs" />
+    <Compile Include="ProvisionerCommandBuilding\With_parent_and_positional.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CommandBuilding\Default_parameter_set.cs" />
     <Compile Include="CommandBuilding\With_namespace.cs" />
