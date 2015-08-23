@@ -100,22 +100,14 @@ namespace HarshPoint.Provisioning.Implementation
             );
 
         public Task ProvisionAsync(TContext context)
-        {
-            if (context == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
-            }
-
-            if (context.Session == null)
-            {
-                context = context.WithSession(new ProvisioningSession(this, HarshProvisionerAction.Provision));
-            }
-
-            return RunSelfAndChildren(
+            => Run(
                 context,
-                HarshProvisionerAction.Provision
+                HarshProvisionerAction.Provision,
+                (ctx) => RunSelfAndChildren(
+                    ctx,
+                    HarshProvisionerAction.Provision
+                )
             );
-        }
 
         public Task UnprovisionAsync(TContext context, CancellationToken token)
             => UnprovisionAsync(context.WithToken(token));
@@ -136,24 +128,50 @@ namespace HarshPoint.Provisioning.Implementation
                 .WithProgress(progress)
             );
 
-        public async Task UnprovisionAsync(TContext context)
+        public Task UnprovisionAsync(TContext context)
+            => Run(
+                context,
+                HarshProvisionerAction.Provision,
+                (ctx) =>
+                {
+                    if (MayDeleteUserData || ctx.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
+                    {
+                        return RunSelfAndChildren(
+                            ctx,
+                            HarshProvisionerAction.Unprovision
+                        );
+                    }
+                    else
+                    {
+                        ctx.Session?.OnProvisioningSkipped(this);
+                        return HarshTask.Completed;
+                    }
+                }
+            );
+
+        private async Task Run(
+            TContext context,
+            HarshProvisionerAction action,
+            Func<TContext, Task> runAction
+        )
         {
             if (context == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            if (context.Session == null)
+            var isSessionRoot = (context.Session == null);
+            if (isSessionRoot)
             {
-                context = context.WithSession(new ProvisioningSession(this, HarshProvisionerAction.Unprovision));
+                context = context.WithSession(new ProvisioningSession(context, this, action));
+                context.Session.OnSessionStarting();
             }
 
-            if (MayDeleteUserData || context.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
+            await runAction(context);
+
+            if (isSessionRoot)
             {
-                await RunSelfAndChildren(
-                    context,
-                    HarshProvisionerAction.Unprovision
-                );
+                context.Session.OnSessionEnded();
             }
         }
 
@@ -264,10 +282,9 @@ namespace HarshPoint.Provisioning.Implementation
                 return;
             }
 
-            var children = (action == HarshProvisionerAction.Provision) ? Children : Children.Reverse();
             var context = PrepareChildrenContext();
 
-            foreach (var child in children)
+            foreach (var child in GetChildrenSorted(action))
             {
                 context.Token.ThrowIfCancellationRequested();
                 if (action == HarshProvisionerAction.Provision)
@@ -332,6 +349,7 @@ namespace HarshPoint.Provisioning.Implementation
                         ValidateParameters();
                         OnValidating();
 
+                        context.Session?.OnProvisioningStarting(this);
                         await InitializeAsync();
                         context.Token.ThrowIfCancellationRequested();
 
@@ -350,6 +368,7 @@ namespace HarshPoint.Provisioning.Implementation
                         Complete();
                     }
                 }
+                context.Session?.OnProvisioningEnded(this);
 
                 await RunChildren(action);
             });

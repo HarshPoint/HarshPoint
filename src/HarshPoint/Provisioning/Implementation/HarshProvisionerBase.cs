@@ -46,13 +46,24 @@ namespace HarshPoint.Provisioning.Implementation
             ModifyChildrenContextState(() => state);
         }
 
-        internal IImmutableList<HarshProvisionerBase> GetProvisionersInOrder(HarshProvisionerAction action)
-            => new[] { this }
-                .Concat(action == HarshProvisionerAction.Provision ?
-                    Children :
-                    Children.Reverse()
-                )
-                .ToImmutableArray();
+        internal IImmutableList<HarshProvisionerBase> GetChildrenSorted(
+            HarshProvisionerAction action
+        )
+        {
+            if (!HasChildren)
+            {
+                return ImmutableList<HarshProvisionerBase>.Empty;
+            }
+
+            if (action == HarshProvisionerAction.Provision)
+            {
+                return Children.ToImmutableList();
+            }
+            else
+            {
+                return Children.Reverse().ToImmutableList();
+            }
+        }
 
         protected virtual ICollection<HarshProvisionerBase> CreateChildrenCollection()
             => new Collection<HarshProvisionerBase>();

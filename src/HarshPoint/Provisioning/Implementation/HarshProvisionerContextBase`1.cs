@@ -16,6 +16,8 @@ namespace HarshPoint.Provisioning.Implementation
             = ImmutableStack<Object>.Empty;
         private IProgress<HarshProvisionerRecord> _progress;
         private ProvisioningSession _session;
+        private IImmutableList<IProvisioningSessionInspector> _sessionInspectors
+            = ImmutableList<IProvisioningSessionInspector>.Empty;
         private CancellationToken _token = CancellationToken.None;
         private IImmutableStack<Object> _stateStack = ImmutableStack<Object>.Empty;
 
@@ -100,6 +102,16 @@ namespace HarshPoint.Provisioning.Implementation
 
         public ProvisioningSession Session
             => _session;
+
+        public TSelf AddSessionInspector(
+            IProvisioningSessionInspector sessionInspector
+        )
+            => (TSelf)this.With(c =>
+                c._sessionInspectors, _sessionInspectors.Add(sessionInspector)
+            );
+
+        public IImmutableList<IProvisioningSessionInspector> SessionInspectors
+            => _sessionInspectors;
 
         public TSelf WithToken(CancellationToken token)
             => (TSelf)this.With(c => c._token, token);
