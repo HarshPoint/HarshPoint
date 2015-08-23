@@ -16,17 +16,13 @@ namespace CommandBuilding
         }
 
         [Fact]
-        public void Is_ignored()
+        public void Is_removed()
         {
             var builder = new NewObjectCommandBuilder<TestProvisioner>();
             builder.Parameter(x => x.IgnoredParam).Ignore();
 
             var command = builder.ToCommand();
-            var prop = Assert.Single(command.Properties);
-
-            var ignored = Assert.Single(
-                prop.ElementsOfType<PropertyModelIgnored>()
-            );
+            Assert.Empty(command.Properties);
         }
 
         private sealed class TestProvisioner : HarshProvisioner

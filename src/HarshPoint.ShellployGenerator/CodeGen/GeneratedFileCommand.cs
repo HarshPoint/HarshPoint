@@ -10,7 +10,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 {
     internal sealed class GeneratedFileCommand : GeneratedFileCodeDom
     {
-        public GeneratedFileCommand(CommandBuilder command)
+        public GeneratedFileCommand(CommandModel command)
         {
             if (command == null)
             {
@@ -21,7 +21,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             FileName = $"{command.ClassName}.cs";
         }
 
-        public CommandBuilder Command { get; }
+        public CommandModel Command { get; }
 
         protected override CodeCompileUnit Generate()
             => new CodeCompileUnit()
@@ -46,27 +46,22 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
         private CodeTypeDeclaration CreateClass()
         {
-#if false
-            var commandClass = new CodeTypeDeclaration(Command.ClassName)
+            var codeType = new CodeTypeDeclaration(Command.ClassName)
             {
-                BaseTypes = { HarshProvisionerCmdlet },
-                CustomAttributes =
+                CustomAttributes = 
                     Command.Attributes.ToCodeAttributeDeclarations(),
                 IsClass = true,
                 TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed,
             };
-            commandClass.Members.AddRange(
-                Command.Properties
-                .Where(p => !p.HasFixedValue)
-                .Select(p => CreateProperty(commandClass, p))
-                .ToArray()
-            );
-            commandClass.Members.AddRange(
-                CreateProvisionerMethods().ToArray()
-            );
 
-#endif
-            return null;
+            foreach (var baseType in Command.BaseTypes)
+            {
+                codeType.BaseTypes.Add(new CodeTypeReference(baseType));
+            }
+
+            new ParameterPropertyGenerator(codeType).Visit(Command.Properties);
+
+            return codeType;
         }
 #if false
         private CodeMemberMethod CreateProcessRecordMethod()
@@ -232,7 +227,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
             if (type == typeof(Boolean))
             {
-                type = typeof(SwitchParameter);
+                type = typeof(SwitchParameter); 
             }
 
             var codeProperty = new CodeMemberProperty()
@@ -263,7 +258,5 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         private static readonly HarshLogger Logger
             = HarshLog.ForContext<GeneratedFileCommand>();
 
-        private static readonly CodeTypeReference HarshProvisionerCmdlet
-            = new CodeTypeReference("HarshProvisionerCmdlet");
     }
 }

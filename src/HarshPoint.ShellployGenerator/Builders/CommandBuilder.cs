@@ -22,6 +22,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         protected CommandBuilder()
         {
             Attributes.Add(_cmdletAttribute);
+            BaseTypes.Add(typeof(SMA.PSCmdlet).FullName);
         }
 
         public HashSet<String> Aliases { get; }
@@ -29,6 +30,9 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Collection<AttributeBuilder> Attributes { get; }
             = new Collection<AttributeBuilder>();
+
+        public HashSet<String> BaseTypes { get; } 
+            = new HashSet<String>(StringComparer.Ordinal);
 
         public String ClassName
         {
@@ -156,6 +160,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             return new CommandModel(
                 Aliases,
                 Attributes.Select(a => a.ToModel()),
+                BaseTypes,
                 ClassName,
                 ImportedNamespaces,
                 Name,

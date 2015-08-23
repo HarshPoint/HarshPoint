@@ -66,7 +66,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             => CreatePropertiesRecursively();
 
         protected virtual IEnumerable<PropertyModel> CreatePropertiesLocal()
-            => PropertyContainer;
+            => RemoveIgnoredUnsynthesized.Visit(PropertyContainer);
 
         internal IChildCommandBuilder ChildBuilder { get; set; }
 
@@ -151,5 +151,8 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(NewObjectCommandBuilder));
+
+        private static readonly PropertyModelVisitor RemoveIgnoredUnsynthesized
+            = new RemoveIgnoredOrUnsynthesizedVisitor();
     }
 }

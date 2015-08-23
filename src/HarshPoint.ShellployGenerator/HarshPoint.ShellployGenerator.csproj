@@ -120,9 +120,11 @@
     <Compile Include="Builders\NewObjectCommandBuilder`1.cs" />
     <Compile Include="Builders\NewProvisionerCommandBuilder`1.cs" />
     <Compile Include="Builders\ParameterPositionVisitor.cs" />
+    <Compile Include="Builders\Visitors\ChangePropertyTypeVisitor.cs" />
     <Compile Include="Builders\PropertyModelContainer.cs" />
     <Compile Include="Builders\ParameterBuilder.cs" />
     <Compile Include="Builders\PropertyModelVisitor.cs" />
+    <Compile Include="Builders\Visitors\RemoveIgnoredOrUnsynthesizedVisitor.cs" />
     <Compile Include="CodeGen\AttributeModelCodeDom.cs" />
     <Compile Include="CodeGen\CodeGeneratorContext.cs" />
     <Compile Include="CodeGen\ParameterPropertyGenerator.cs" />
@@ -136,7 +138,7 @@
     <Compile Include="Builders\PropertyModelDefaultValue.cs" />
     <Compile Include="Builders\PropertyModelFixed.cs" />
     <Compile Include="Builders\PropertyModelRenamed.cs" />
-    <Compile Include="Builders\AttributeNamedArgumentVisitor.cs" />
+    <Compile Include="Builders\Visitors\AttributeNamedArgumentVisitor.cs" />
     <Compile Include="Builders\PropertyModel.cs" />
     <Compile Include="Builders\IChildCommandBuilder.cs" />
     <Compile Include="CodeGen\GeneratedFileCodeDom.cs" />

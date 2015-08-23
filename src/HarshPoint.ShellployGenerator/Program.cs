@@ -48,7 +48,7 @@ namespace HarshPoint.ShellployGenerator
         }
 
         private static IEnumerable<GeneratedFile> CreateFiles(
-            IEnumerable<CommandBuilder> commands
+            IEnumerable<CommandModel> commands
         )
         {
             var files = commands
@@ -60,12 +60,12 @@ namespace HarshPoint.ShellployGenerator
             return files;
         }
 
-        private static IEnumerable<CommandBuilder> CreateCommands()
+        private static IEnumerable<CommandModel> CreateCommands()
         {
             var builderContext = new CommandBuilderContext();
             builderContext.AddBuildersFrom(typeof(Program).Assembly);
 
-            return builderContext.Builders;
+            return builderContext.Builders.Select(b => b.ToCommand());
         }
 
         private static DirectoryInfo EnsureDirectoryEmpty(String path)

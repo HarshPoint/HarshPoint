@@ -8,13 +8,13 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 {
     internal sealed class GeneratedFileAliases : GeneratedFile
     {
-        public GeneratedFileAliases(IEnumerable<CommandBuilder> commands)
+        public GeneratedFileAliases(IEnumerable<CommandModel> commands)
         {
             Commands = commands;
             FileName = "HarshPoint.Shellploy.psm1";
         }
 
-        public IEnumerable<CommandBuilder> Commands { get; }
+        public IEnumerable<CommandModel> Commands { get; }
 
         protected override void Write(TextWriter writer)
         {

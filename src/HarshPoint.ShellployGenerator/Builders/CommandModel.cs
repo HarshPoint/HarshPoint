@@ -9,6 +9,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         internal CommandModel(
             IEnumerable<String> aliases,
             IEnumerable<AttributeModel> attributes,
+            IEnumerable<String> baseTypes,
             String className,
             IEnumerable<String> importedNamespaces,
             String name,
@@ -18,6 +19,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
             Aliases = aliases.ToImmutableArray();
             Attributes = attributes.ToImmutableArray();
+            BaseTypes = baseTypes.ToImmutableArray();
             ClassName = className;
             ImportedNamespaces = importedNamespaces.ToImmutableArray();
             Name = name;
@@ -27,6 +29,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public IImmutableList<String> Aliases { get; }
         public IImmutableList<AttributeModel> Attributes { get; }
+        public IImmutableList<String> BaseTypes { get; }
         public String ClassName { get; }
         public IImmutableList<String> ImportedNamespaces { get; }
         public String Name { get; }

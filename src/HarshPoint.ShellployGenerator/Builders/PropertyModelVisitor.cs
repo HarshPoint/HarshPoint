@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.Builders
@@ -14,7 +15,10 @@ namespace HarshPoint.ShellployGenerator.Builders
                 return Enumerable.Empty<PropertyModel>();
             }
 
-            return properties.Select(Visit).Where(b => b != null);
+            return properties
+                .Select(Visit)
+                .Where(b => b != null)
+                .ToArray();
         }
 
         public virtual PropertyModel Visit(PropertyModel property)
@@ -71,7 +75,7 @@ namespace HarshPoint.ShellployGenerator.Builders
                 );
             }
 
-            return null;
+            return property;
         }
     }
 }
