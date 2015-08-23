@@ -80,6 +80,7 @@
     <Compile Include="CodeGen\Renamed_property_assignment.cs" />
     <Compile Include="CodeGen\Simple_assignment.cs" />
     <Compile Include="CommandBuilding\Changed_PropertyType.cs" />
+    <Compile Include="CommandBuilding\Fixed_paramsets.cs" />
     <Compile Include="ProvisionerCommandBuilding\Basic_parameter.cs" />
     <Compile Include="ProvisionerCommandBuilding\InputObject_and_positional.cs" />
     <Compile Include="CommandBuilding\Synthesized_parameter.cs" />

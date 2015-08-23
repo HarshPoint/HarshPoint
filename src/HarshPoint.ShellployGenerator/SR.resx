@@ -147,6 +147,11 @@
   <data name="GeneratedFile_FileNameNotSet" xml:space="preserve">
     <value>FileName not set.</value>
   </data>
+  <data name="IgnoreUnfixedParameterSetPropertiesVisitor_ExclusivePropertiesAreFixed" xml:space="preserve">
+    <value>The following properties cannot all have a fixed value because they belong to exclusive parameter sets.
+
+Properties: {0}</value>
+  </data>
   <data name="ParameterBuilderDefaultValue_AttemptedToNestFixed" xml:space="preserve">
     <value>Attempted to set a default value on a parameter with a fixed value.</value>
   </data>

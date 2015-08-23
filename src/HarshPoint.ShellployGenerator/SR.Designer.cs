@@ -151,6 +151,17 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following properties cannot all have a fixed value because they belong to exclusive parameter sets.
+        ///
+        ///Properties: {0}.
+        /// </summary>
+        internal static string IgnoreUnfixedParameterSetPropertiesVisitor_ExclusivePropertiesAreFixed {
+            get {
+                return ResourceManager.GetString("IgnoreUnfixedParameterSetPropertiesVisitor_ExclusivePropertiesAreFixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempted to set a default value on a parameter with a fixed value..
         /// </summary>
         internal static string ParameterBuilderDefaultValue_AttemptedToNestFixed {

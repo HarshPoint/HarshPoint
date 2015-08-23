@@ -119,7 +119,6 @@
     <Compile Include="Builders\IChildParameterBuilder.cs" />
     <Compile Include="Builders\IChildParameterBuilder`1.cs" />
     <Compile Include="Builders\INewObjectCommandBuilder.cs" />
-    <Compile Include="Builders\IVisitor`1.cs" />
     <Compile Include="Builders\NewObjectCommandBuilder.cs" />
     <Compile Include="Builders\NewObjectCommandModel.cs" />
     <Compile Include="Builders\PropertyModelAssignedTo.cs" />
@@ -127,7 +126,7 @@
     <Compile Include="Builders\NewObjectCommandBuilder`1.cs" />
     <Compile Include="Builders\NewProvisionerCommandBuilder.cs" />
     <Compile Include="Builders\NewProvisionerCommandBuilder`1.cs" />
-    <Compile Include="Builders\VisitorExtensions.cs" />
+    <Compile Include="Builders\Visitors\IgnoreUnfixedParameterSetPropertiesVisitor.cs" />
     <Compile Include="Builders\Visitors\ParameterPositionVisitor.cs" />
     <Compile Include="Builders\Visitors\ChangePropertyTypeVisitor.cs" />
     <Compile Include="Builders\PropertyModelContainer.cs" />

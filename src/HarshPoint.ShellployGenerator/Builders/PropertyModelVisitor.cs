@@ -1,11 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public abstract class PropertyModelVisitor : IVisitor<PropertyModel>
+    public abstract class PropertyModelVisitor
     {
+        public virtual IEnumerable<PropertyModel> Visit(
+            IEnumerable<PropertyModel> properties
+        )
+        {
+            if (properties == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(properties));
+            }
+
+            return properties
+                .Select(Visit)
+                .Where(result => result != null)
+                .ToImmutableArray();
+        }
+
         public virtual PropertyModel Visit(PropertyModel property)
         {
             if (property != null)
@@ -68,5 +84,9 @@ namespace HarshPoint.ShellployGenerator.Builders
 
             return property;
         }
+
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(PropertyModelVisitor));
     }
 }

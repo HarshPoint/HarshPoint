@@ -1,11 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-
 namespace HarshPoint.ShellployGenerator.Builders
 {
     public sealed class PropertyModelIgnored : PropertyModel
     {
+        public PropertyModelIgnored() { }
+
+        public PropertyModelIgnored(PropertyModel next)
+            :base(next)
+        {
+        }
+
         protected internal override PropertyModel Accept(
             PropertyModelVisitor visitor
         )
