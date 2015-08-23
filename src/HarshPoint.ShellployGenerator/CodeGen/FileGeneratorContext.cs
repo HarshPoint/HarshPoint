@@ -2,9 +2,9 @@
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
-    internal sealed class CodeGeneratorContext
+    public sealed class FileGeneratorContext
     {
-        public CodeGeneratorContext(DirectoryInfo outputDirectory)
+        public FileGeneratorContext(DirectoryInfo outputDirectory)
         {
             if (outputDirectory == null)
             {
@@ -17,6 +17,6 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         public DirectoryInfo OutputDirectory { get; }
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(CodeGeneratorContext));
+            = HarshLog.ForContext(typeof(FileGeneratorContext));
     }
 }

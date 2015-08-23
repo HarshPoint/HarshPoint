@@ -1,0 +1,63 @@
+﻿using HarshPoint;
+using HarshPoint.ShellployGenerator.Builders;
+using HarshPoint.ShellployGenerator.CodeGen;
+using HarshPoint.Tests;
+using System;
+using System.CodeDom;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace CodeGen
+{
+    public class Simple_assignment : SeriloggedTest
+    {
+        private readonly CodeAssignStatement _assign;
+
+        public Simple_assignment(ITestOutputHelper output) : base(output)
+        {
+            var builder = new NewObjectCommandBuilder<Test>();
+            var command = builder.ToCommand();
+
+            var visitor = new NewObjectAssignmentVisitor(TargetObject);
+            visitor.Visit(command.Properties);
+
+            var statements = visitor.Statements;
+
+            var stmt = Assert.Single(statements);
+            _assign = Assert.IsType<CodeAssignStatement>(stmt);
+        }
+
+
+        [Fact]
+        public void Left_is_target_property_reference()
+        {
+            var lhs = Assert.IsType<CodePropertyReferenceExpression>(
+                _assign.Left
+            );
+
+            Assert.Same(TargetObject, lhs.TargetObject);
+            Assert.Equal("Param", lhs.PropertyName);
+        }
+
+
+        [Fact]
+        public void Right_is_source_property_reference()
+        {
+            var rhs = Assert.IsType<CodePropertyReferenceExpression>(
+                _assign.Right
+            );
+
+            Assert.IsType<CodeThisReferenceExpression>(rhs.TargetObject);
+            Assert.Equal("Param", rhs.PropertyName);
+        }
+
+        private static readonly CodeExpression TargetObject
+            = new CodeVariableReferenceExpression("target");
+
+        private class Test
+        {
+            [Parameter]
+            public String Param { get; set; }
+        }
+    }
+}

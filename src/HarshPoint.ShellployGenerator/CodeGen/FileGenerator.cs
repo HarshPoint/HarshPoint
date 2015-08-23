@@ -3,13 +3,13 @@ using System.IO;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
-    internal abstract class GeneratedFile
+    public abstract class FileGenerator
     {
         protected String FileName { get; set; }
 
         protected abstract void Write(TextWriter writer);
 
-        public virtual void Write(CodeGeneratorContext context)
+        public virtual void Write(FileGeneratorContext context)
         {
             if (context == null)
             {
@@ -26,7 +26,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             }
         }
 
-        private string GetFilePath(CodeGeneratorContext context)
+        private String GetFilePath(FileGeneratorContext context)
         {
             if (FileName == null)
             {
@@ -44,7 +44,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         }
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(GeneratedFile));
+            = HarshLog.ForContext(typeof(FileGenerator));
 
     }
 }

@@ -44,7 +44,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         public virtual PropertyModel InsertIntoContainer(
             PropertyModel existing
         )
-            => (PropertyModel)WithNext(existing);
+            => existing == null ? this : Append(existing);
 
         protected internal abstract PropertyModel Accept(
             PropertyModelVisitor visitor

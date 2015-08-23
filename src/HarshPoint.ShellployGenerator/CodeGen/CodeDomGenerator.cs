@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
-    internal abstract class GeneratedFileCodeDom : GeneratedFile
+    public abstract class CodeDomGenerator : FileGenerator
     {
         protected override void Write(TextWriter writer)
         {
@@ -15,7 +15,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 throw Logger.Fatal.ArgumentNull(nameof(writer));
             }
 
-            var unit = Generate();
+            var unit = ToCodeCompileUnit();
             
             if (FileName == null)
             {
@@ -44,7 +44,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             }
         }
 
-        protected abstract CodeCompileUnit Generate();
+        protected abstract CodeCompileUnit ToCodeCompileUnit();
 
         private static readonly CodeGeneratorOptions CodeGeneratorOptions
             = new CodeGeneratorOptions()
@@ -54,6 +54,6 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             };
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(GeneratedFileCodeDom));
+            = HarshLog.ForContext(typeof(CodeDomGenerator));
     }
 }

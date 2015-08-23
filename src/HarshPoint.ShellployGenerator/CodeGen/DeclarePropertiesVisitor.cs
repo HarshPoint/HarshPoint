@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
-    internal sealed class PropertyCodeGenerator : PropertyModelVisitor
+    internal sealed class DeclarePropertiesVisitor : PropertyModelVisitor
     {
         private readonly HarshScopedValue<Object> _defaultValue
             = new HarshScopedValue<Object>();
@@ -14,7 +14,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         private readonly HarshScopedValue<String> _renaming
             = new HarshScopedValue<String>();
 
-        public PropertyCodeGenerator(CodeTypeDeclaration typeDeclaration)
+        public DeclarePropertiesVisitor(CodeTypeDeclaration typeDeclaration)
         {
             if (typeDeclaration == null)
             {
@@ -30,7 +30,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             PropertyModelDefaultValue property
         )
         {
-            using (_defaultValue.EnterIfDefault(property.DefaultValue))
+            using (_defaultValue.EnterIfHasNoValue(property.DefaultValue))
             {
                 return base.VisitDefaultValue(property);
             }
@@ -53,7 +53,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             PropertyModelRenamed property
         )
         {
-            using (_renaming.EnterIfDefault(property.PropertyName))
+            using (_renaming.EnterIfHasNoValue(property.PropertyName))
             {
                 return base.VisitRenamed(property);
             }
@@ -178,6 +178,6 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             new CodePropertySetValueReferenceExpression();
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(PropertyCodeGenerator));
+            = HarshLog.ForContext(typeof(DeclarePropertiesVisitor));
     }
 }

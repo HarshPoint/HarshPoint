@@ -2,28 +2,45 @@
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Management.Automation;
 using System.Reflection;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
-    internal sealed class GeneratedFileCommand : GeneratedFileCodeDom
+    public sealed class CommandCodeGenerator : CodeDomGenerator
     {
-        public GeneratedFileCommand(CommandModel command)
+        public CommandCodeGenerator(CommandModel command)
+            : this(command, null)
+        {
+        }
+
+        public CommandCodeGenerator(
+            CommandModel command,
+            IEnumerable<CodeMemberMethod> methods
+        )
         {
             if (command == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(command));
             }
 
+            if (methods == null)
+            {
+                methods = Enumerable.Empty<CodeMemberMethod>();
+            }
+
             Command = command;
+            Methods = methods.ToImmutableArray();
             FileName = $"{command.ClassName}.cs";
         }
 
         public CommandModel Command { get; }
 
-        protected override CodeCompileUnit Generate()
+        public ImmutableArray<CodeMemberMethod> Methods { get; }
+
+        protected override CodeCompileUnit ToCodeCompileUnit()
             => new CodeCompileUnit()
             {
                 Namespaces = { CreateNamespace() },
@@ -33,7 +50,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         {
             var ns = new CodeNamespace(Command.Namespace)
             {
-                Types = { CreateClass() },
+                Types = { ToCodeTypeDeclaration() },
             };
 
             foreach (var imported in Command.ImportedNamespaces.OrderBy(s => s))
@@ -44,11 +61,11 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             return ns;
         }
 
-        private CodeTypeDeclaration CreateClass()
+        public CodeTypeDeclaration ToCodeTypeDeclaration()
         {
-            var codeType = new CodeTypeDeclaration(Command.ClassName)
+            var result = new CodeTypeDeclaration(Command.ClassName)
             {
-                CustomAttributes = 
+                CustomAttributes =
                     Command.Attributes.ToCodeAttributeDeclarations(),
                 IsClass = true,
                 TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed,
@@ -56,13 +73,19 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
             foreach (var baseType in Command.BaseTypes)
             {
-                codeType.BaseTypes.Add(new CodeTypeReference(baseType));
+                result.BaseTypes.Add(new CodeTypeReference(baseType));
             }
 
-            new PropertyCodeGenerator(codeType).Visit(Command.Properties);
+            new DeclarePropertiesVisitor(result).Visit(Command.Properties);
 
-            return codeType;
+            foreach (var method in Methods)
+            {
+                result.Members.Add(method);
+            }
+
+            return result;
         }
+
 #if false
         private CodeMemberMethod CreateProcessRecordMethod()
         {
@@ -256,7 +279,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             = new CodeThisReferenceExpression();
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext<GeneratedFileCommand>();
+            = HarshLog.ForContext<CommandCodeGenerator>();
 
     }
 }

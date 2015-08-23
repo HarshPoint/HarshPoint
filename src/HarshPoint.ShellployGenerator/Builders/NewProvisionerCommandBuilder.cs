@@ -7,8 +7,7 @@ using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public abstract class NewProvisionerCommandBuilder :
-        NewObjectCommandBuilder
+    public abstract class NewProvisionerCommandBuilder : NewObjectCommandBuilder
     {
         protected NewProvisionerCommandBuilder(
             HarshProvisionerMetadata metadata
@@ -40,7 +39,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
             var properties = BoolToSwitchVisitor.Visit(
                 SetValueFromPipelineByPropertyName.Visit(
-                    PropertyContainer
+                    base.CreateProperties()
                 )
             );
 
@@ -78,7 +77,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             {
                 if (ChildBuilder != null)
                 {
-                    var result= Context.GetNewObjectCommandBuilder(
+                    var result = Context.GetNewObjectCommandBuilder(
                         ChildBuilder.ParentType
                     );
 

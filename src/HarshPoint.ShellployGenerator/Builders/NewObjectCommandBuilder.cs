@@ -1,10 +1,8 @@
 using HarshPoint.ObjectModel;
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Linq.Expressions;
 using SMA = System.Management.Automation;
+using HarshPoint.ShellployGenerator.CodeGen;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
@@ -59,8 +57,30 @@ namespace HarshPoint.ShellployGenerator.Builders
                     attributes
                 );
 
-                PropertyContainer.Update(property.Name, synthesized);
+                var assigned = new PropertyModelAssignedTo(
+                    property.PropertyInfo,
+                    synthesized
+                );
+
+                PropertyContainer.Update(property.Name, assigned);
             }
+        }
+
+        public virtual NewObjectCommandModel ToNewObjectCommand()
+        {
+            return new NewObjectCommandModel(
+                ToCommand(),
+                TargetType
+            );
+        }
+
+        public override CommandCodeGenerator ToCodeGenerator()
+        {
+            var newObjectCodeGen = new NewObjectCommandCodeGenerator(
+                ToNewObjectCommand()
+            );
+
+            return newObjectCodeGen.ToCommandCodeGenerator();
         }
 
         internal Type TargetType { get; }
@@ -77,7 +97,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             if (!param.IsCommonParameter)
             {
                 attr = attr.SetProperty(
-                    "ParameterSetName", 
+                    "ParameterSetName",
                     param.ParameterSetName
                 );
             }

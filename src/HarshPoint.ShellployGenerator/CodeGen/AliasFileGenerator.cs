@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
-    internal sealed class GeneratedFileAliases : GeneratedFile
+    internal sealed class AliasFileGenerator : FileGenerator
     {
-        public GeneratedFileAliases(IEnumerable<CommandModel> commands)
+        public AliasFileGenerator(IEnumerable<CommandModel> commands)
         {
             Commands = commands;
             FileName = "HarshPoint.Shellploy.psm1";

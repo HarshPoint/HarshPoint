@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.ShellployGenerator.CodeGen;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
@@ -33,7 +34,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         public Collection<AttributeBuilder> Attributes { get; }
             = new Collection<AttributeBuilder>();
 
-        public HashSet<String> BaseTypes { get; } 
+        public HashSet<String> BaseTypes { get; }
             = new HashSet<String>(StringComparer.Ordinal);
 
         public String ClassName
@@ -125,38 +126,38 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         internal PropertyModelContainer PropertyContainer { get; }
 
-        public ParameterBuilder Parameter(String name) 
+        public ParameterBuilder Parameter(String name)
             => PropertyContainer.GetParameterBuilder(name);
 
         public ParameterBuilder PositionalParameter(String name)
             => PropertyContainer.GetParameterBuilder(name, isPositional: true);
- 
+
         public virtual CommandModel ToCommand()
         {
-            var properties = CreateProperties();
-            var methods = CreateMethods();
-
-            properties = RemoveIgnoredUnsynthesized.Visit(properties);
-            properties = new ParameterPositionVisitor().Visit(properties);
-
-            return new CommandModel(
-                Aliases,
-                Attributes.Select(a => a.ToModel()),
-                BaseTypes,
-                ClassName,
-                ImportedNamespaces,
-                methods,
-                Name,
-                Namespace,
-                properties
+            var properties = new ParameterPositionVisitor().Visit(
+                CreateProperties()
             );
+
+            return new CommandModel()
+            {
+                Aliases = Aliases.ToImmutableArray(),
+                Attributes = Attributes.Select(a => a.ToModel()).ToImmutableArray(),
+                BaseTypes = BaseTypes.ToImmutableArray(),
+                ClassName = ClassName,
+                ImportedNamespaces = ImportedNamespaces.ToImmutableArray(),
+                Name = Name,
+                Namespace = Namespace,
+                Properties = properties.ToImmutableArray()
+            };
         }
 
-        protected virtual IEnumerable<MethodModel> CreateMethods()
-            => Enumerable.Empty<MethodModel>();
+        public virtual CommandCodeGenerator ToCodeGenerator()
+            => new CommandCodeGenerator(
+                ToCommand()
+            );
 
         protected virtual IEnumerable<PropertyModel> CreateProperties()
-            => PropertyContainer;
+            => RemoveIgnoredUnsynthesized.Visit(PropertyContainer);
 
         protected internal virtual void ValidatePropertyName(String name)
         {

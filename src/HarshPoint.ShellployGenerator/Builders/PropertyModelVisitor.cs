@@ -4,23 +4,8 @@ using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public abstract class PropertyModelVisitor
+    public abstract class PropertyModelVisitor : IVisitor<PropertyModel>
     {
-        public IEnumerable<PropertyModel> Visit(
-            IEnumerable<PropertyModel> properties
-        )
-        {
-            if (properties == null)
-            {
-                return Enumerable.Empty<PropertyModel>();
-            }
-
-            return properties
-                .Select(Visit)
-                .Where(b => b != null)
-                .ToArray();
-        }
-
         public virtual PropertyModel Visit(PropertyModel property)
         {
             if (property != null)
@@ -46,15 +31,21 @@ namespace HarshPoint.ShellployGenerator.Builders
         )
             => VisitNext(property);
 
+
         protected internal virtual PropertyModel VisitPositional(
             PropertyModelPositional property
         )
             => VisitNext(property);
 
         protected internal virtual PropertyModel VisitInputObject(
-            PropertyModelInputObject inputObjectBuilder
+            PropertyModelInputObject property
         )
-            => VisitNext(inputObjectBuilder);
+            => VisitNext(property);
+
+        protected internal virtual PropertyModel VisitAssignedTo(
+            PropertyModelAssignedTo property
+        )
+            => VisitNext(property);
 
         protected internal virtual PropertyModel VisitFixed(
             PropertyModelFixed property

@@ -27,16 +27,24 @@ namespace HarshPoint.ShellployGenerator
 
             try
             {
-                var commands = CreateCommands();
-                var files = CreateFiles(commands);
+                var builderContext = new CommandBuilderContext();
+                builderContext.AddBuildersFrom(typeof(Program).Assembly);
+
+                var generators = builderContext.Builders
+                    .Select(b => b.ToCodeGenerator())
+                    .ToArray();
 
                 var directory = EnsureDirectoryEmpty(args[0]);
-                var codeGenContext = new CodeGeneratorContext(directory);
+                var fileGenContext = new FileGeneratorContext(directory);
 
-                foreach (var file in files)
+                foreach (var file in generators)
                 {
-                    file.Write(codeGenContext);
+                    file.Write(fileGenContext);
                 }
+
+                var aliases = new AliasFileGenerator(
+                    generators.Select(g => g.Command)
+                );
 
                 return 0;
             }
@@ -45,27 +53,6 @@ namespace HarshPoint.ShellployGenerator
                 Log.Fatal(exc, "Unhandled exception");
                 throw;
             }
-        }
-
-        private static IEnumerable<GeneratedFile> CreateFiles(
-            IEnumerable<CommandModel> commands
-        )
-        {
-            var files = commands
-                .Select(c => new GeneratedFileCommand(c))
-                .Cast<GeneratedFile>()
-                .ToList();
-
-            files.Add(new GeneratedFileAliases(commands));
-            return files;
-        }
-
-        private static IEnumerable<CommandModel> CreateCommands()
-        {
-            var builderContext = new CommandBuilderContext();
-            builderContext.AddBuildersFrom(typeof(Program).Assembly);
-
-            return builderContext.Builders.Select(b => b.ToCommand());
         }
 
         private static DirectoryInfo EnsureDirectoryEmpty(String path)

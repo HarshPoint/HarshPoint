@@ -11,26 +11,20 @@ namespace HarshPoint
         public HarshScopedValue(T value)
         {
             Value = value;
+            HasValue = true;
         }
 
         public Scope Enter(T value)
         {
-            var scope = new Scope(this, Value);
+            var scope = new Scope(this, Value, HasValue);
             Value = value;
+            HasValue = true;
             return scope;
         }
 
-        public Scope EnterIfDefault(T value)
-            => EnterIfDefault(value, null);
-
-        public Scope EnterIfDefault(T value, IEqualityComparer<T> equalityComparer)
+        public Scope EnterIfHasNoValue(T value)
         {
-            if (equalityComparer == null)
-            {
-                equalityComparer = EqualityComparer<T>.Default;
-            }
-
-            if (equalityComparer.Equals(Value, default(T)))
+            if (!HasValue)
             {
                 return Enter(value);
             }
@@ -44,17 +38,21 @@ namespace HarshPoint
             private set;
         }
 
+        public Boolean HasValue { get; private set; }
+
         [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
         public struct Scope : IDisposable
         {
             private T OldValue;
+            private Boolean OldHasValue;
             private HarshScopedValue<T> Owner;
 
-            internal Scope(HarshScopedValue<T> owner, T oldValue)
+            internal Scope(HarshScopedValue<T> owner, T oldValue, Boolean oldHasValue)
             {
                 Owner = owner;
                 OldValue = oldValue;
+                OldHasValue = oldHasValue;
             }
 
             public void Dispose()
@@ -62,6 +60,7 @@ namespace HarshPoint
                 if (Owner != null)
                 {
                     Owner.Value = OldValue;
+                    Owner.HasValue = OldHasValue;
 
                     Owner = null;
                     OldValue = default(T);
