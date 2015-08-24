@@ -11,25 +11,32 @@ namespace HarshPoint.ShellployGenerator.CodeGen
     {
         public AliasFileGenerator(IEnumerable<CommandModel> commands)
         {
-            Commands = commands;
+            Aliases = ImmutableArray.CreateRange(
+                from cmd in commands
+                from alias in cmd.Aliases.DefaultIfEmpty()
+                orderby alias
+                select Tuple.Create(alias, cmd.Name)
+            );
+
+            Aliases = Aliases.Add(
+                Tuple.Create("Provision", "Invoke-Provisioner")
+            );
+
+            Aliases = Aliases.Add(
+                Tuple.Create((String)null, "Invoke-WithProvisionerContext")
+            );
+
             FileName = "HarshPoint.Shellploy.psm1";
         }
 
-        public IEnumerable<CommandModel> Commands { get; }
+        public ImmutableArray<Tuple<String, String>> Aliases { get; }
 
         protected override void Write(TextWriter writer)
         {
-            var aliases = ImmutableArray.CreateRange(
-                from cmd in Commands
-                from alias in cmd.Aliases
-                orderby alias
-                select Tuple.Create(alias, cmd)
-            );
-
-            foreach (var a in aliases.OrderBy(a => a.Item1))
+            foreach (var a in Aliases.Where(a => a.Item1 != null))
             {
                 writer.WriteLine(
-                    $"Set-Alias -Name {a.Item1} -Value {a.Item2.Name}"
+                    $"Set-Alias -Name {a.Item1} -Value {a.Item2}"
                 );
             }
 
@@ -38,8 +45,10 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             writer.Write("-Alias");
 
             WriteStringArrayLiteral(
-                writer, 
-                aliases.Select(a => a.Item1)
+                writer,
+                Aliases
+                    .Select(a => a.Item1)
+                    .Where(s => s != null)
             );
 
             writer.WriteLine("`");
@@ -47,7 +56,10 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
             WriteStringArrayLiteral(
                 writer,
-                Commands.Select(c => c.Name).OrderBy(s => s)
+                Aliases
+                    .Select(a => a.Item2)
+                    .Distinct()
+                    .OrderBy(s => s)
             );
         }
 

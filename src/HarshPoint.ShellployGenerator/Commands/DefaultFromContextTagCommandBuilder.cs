@@ -11,7 +11,7 @@ namespace HarshPoint.ShellployGenerator.Commands
     {
         protected DefaultFromContextTagCommandBuilder()
         {
-            Aliases.Add(TagValueType.Name);
+            Aliases.Add(TargetType.Name);
             PropertyContainer.Update(ValuePropertyName, ValueProperty);
         }
         
