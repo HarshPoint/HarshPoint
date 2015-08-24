@@ -157,6 +157,8 @@
     <Compile Include="CodeGen\CommandCodeGenerator.cs" />
     <Compile Include="CodeGen\FileGenerator.cs" />
     <Compile Include="CodeGen\NewProvisionerCommandCodeGenerator.cs" />
+    <Compile Include="Commands\BuildDefaultFieldGroup.cs" />
+    <Compile Include="Commands\BuildDefaultContentTypeGroup.cs" />
     <Compile Include="Commands\BuildEnableWebFeature.cs" />
     <Compile Include="Commands\BuildList.cs" />
     <Compile Include="Commands\BuildFieldRef.cs" />

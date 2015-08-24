@@ -5,12 +5,13 @@ using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Commands
 {
-    internal abstract class DefaultFromContextTagCommandBuilder<TTag> : 
+    public abstract class DefaultFromContextTagCommandBuilder<TTag> : 
         NewObjectCommandBuilder<TTag>
         where TTag : IDefaultFromContextTag
     {
         protected DefaultFromContextTagCommandBuilder()
         {
+            Aliases.Add(TagValueType.Name);
             PropertyContainer.Update(ValuePropertyName, ValueProperty);
         }
         
