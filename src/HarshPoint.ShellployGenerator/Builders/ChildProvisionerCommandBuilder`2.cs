@@ -6,10 +6,12 @@ namespace HarshPoint.ShellployGenerator.Builders
     public sealed class ChildCommandBuilder<TProvisioner, TParent> :
         IChildProvisionerCommandBuilder
     {
+        private readonly NewProvisionerCommandBuilder _owner;
         private readonly PropertyModelContainer _parameterBuilders;
 
         internal ChildCommandBuilder(NewProvisionerCommandBuilder owner)
         {
+            _owner = owner;
             _parameterBuilders = new PropertyModelContainer(owner);
 
             _parameterBuilders.Update(
@@ -27,6 +29,9 @@ namespace HarshPoint.ShellployGenerator.Builders
             String name
         )
             => _parameterBuilders.GetParameterBuilder(name);
+
+        NewProvisionerCommandBuilder IChildProvisionerCommandBuilder.ParentBuilder
+            => (NewProvisionerCommandBuilder)_owner.Context.GetNewObjectCommandBuilder(typeof(TParent));
 
         PropertyModelContainer IChildProvisionerCommandBuilder.PropertyContainer
             => _parameterBuilders;

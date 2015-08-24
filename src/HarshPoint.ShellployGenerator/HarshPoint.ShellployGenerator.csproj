@@ -121,6 +121,7 @@
     <Compile Include="Builders\INewObjectCommandBuilder.cs" />
     <Compile Include="Builders\NewObjectCommandBuilder.cs" />
     <Compile Include="Builders\NewObjectCommandModel.cs" />
+    <Compile Include="Builders\NewProvisionerCommandModel.cs" />
     <Compile Include="Builders\PropertyModelAssignedTo.cs" />
     <Compile Include="Builders\PropertyModelIdentifiedPlaceholder.cs" />
     <Compile Include="Builders\TypedPropertyModelFactory.cs" />
@@ -136,9 +137,9 @@
     <Compile Include="Builders\Visitors\RemoveIgnoredOrUnsynthesizedVisitor.cs" />
     <Compile Include="CodeGen\AttributeModelCodeDom.cs" />
     <Compile Include="CodeGen\FileGeneratorContext.cs" />
-    <Compile Include="CodeGen\NewObjectAssignmentVisitor.cs" />
+    <Compile Include="CodeGen\Visitors\NewObjectAssignmentVisitor.cs" />
     <Compile Include="CodeGen\NewObjectCommandCodeGenerator.cs" />
-    <Compile Include="CodeGen\DeclarePropertiesVisitor.cs" />
+    <Compile Include="CodeGen\Visitors\DeclarePropertiesVisitor.cs" />
     <Compile Include="CodeGen\CodeLiteralExpression.cs" />
     <Compile Include="CodeGen\CodeDomExtensions.cs" />
     <Compile Include="Builders\ParameterBuilder`1.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="CodeGen\CodeDomGenerator.cs" />
     <Compile Include="CodeGen\CommandCodeGenerator.cs" />
     <Compile Include="CodeGen\FileGenerator.cs" />
+    <Compile Include="CodeGen\NewProvisionerCommandCodeGenerator.cs" />
     <Compile Include="Commands\BuildEnableWebFeature.cs" />
     <Compile Include="Commands\BuildList.cs" />
     <Compile Include="Commands\BuildFieldRef.cs" />

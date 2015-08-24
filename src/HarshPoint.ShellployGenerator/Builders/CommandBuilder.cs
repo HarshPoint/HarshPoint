@@ -132,9 +132,13 @@ namespace HarshPoint.ShellployGenerator.Builders
         public ParameterBuilder PositionalParameter(String name)
             => PropertyContainer.GetParameterBuilder(name, isPositional: true);
 
-        public virtual CommandModel ToCommand()
+        public CommandModel ToCommand() => ToCommand(null);
+        
+        public virtual CommandModel ToCommand(
+            IEnumerable<PropertyModel> properties
+        )
         {
-            var properties = CreateProperties();
+            properties = properties ?? CreateProperties();
 
             properties = RemoveIgnoredUnsynthesized.Visit(properties);
             properties = new ParameterPositionVisitor().Visit(properties);

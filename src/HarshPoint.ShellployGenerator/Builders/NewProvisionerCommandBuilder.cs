@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using SMA = System.Management.Automation;
+using HarshPoint.ShellployGenerator.CodeGen;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
@@ -19,7 +20,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         }
 
         protected sealed override IEnumerable<PropertyModel> CreateProperties()
-            => CreatePropertiesRecursively();
+            => CreatePropertiesRecursively().SelectMany(g => g);
 
         protected internal override void ValidatePropertyName(String name)
         {
@@ -54,16 +55,31 @@ namespace HarshPoint.ShellployGenerator.Builders
             return properties;
         }
 
+        public virtual NewProvisionerCommandModel ToNewProvisionerCommand()
+            => new NewProvisionerCommandModel(
+                ToCommand(),
+                CreatePropertiesRecursively().Select(
+                    g => g.Key.ToNewObjectCommand(g)
+                )
+            );
+
+        public override CommandCodeGenerator ToCodeGenerator()
+        {
+            var newProvCodeGen = new NewProvisionerCommandCodeGenerator(
+                ToNewProvisionerCommand()
+            );
+
+            return newProvCodeGen.ToCodeGenerator();
+        }
+
         internal IChildProvisionerCommandBuilder ChildBuilder { get; set; }
 
-        private IEnumerable<PropertyModel> CreatePropertiesRecursively()
+        private IEnumerable<IGrouping<NewProvisionerCommandBuilder, PropertyModel>> CreatePropertiesRecursively()
         {
-            var localProperties = CreatePropertiesLocal();
-
-            if (ChildBuilder != null)
+            foreach (var child in ChildBuilders)
             {
                 var parentProperties = ChildBuilder.PropertyContainer.ApplyTo(
-                    ParentBuilder.CreatePropertiesRecursively()
+                    ChildBuilder.ParentBuilder.CreatePropertiesLocal()
                 );
 
                 // need to call this here again to apply any fixed values 
@@ -80,41 +96,29 @@ namespace HarshPoint.ShellployGenerator.Builders
                     parentProperties
                 );
 
-                return parentProperties.Concat(localProperties);
+                yield return HarshGrouping.Create(
+                    child.ParentBuilder,
+                    parentProperties
+                );
             }
 
-            return localProperties;
+            yield return HarshGrouping.Create(
+                this,
+                CreatePropertiesLocal()
+            );
         }
 
-        private NewProvisionerCommandBuilder ParentBuilder
+        private IEnumerable<IChildProvisionerCommandBuilder> ChildBuilders
         {
             get
             {
-                if (ChildBuilder != null)
+                var child = ChildBuilder;
+
+                while (child != null)
                 {
-                    var result = Context.GetNewObjectCommandBuilder(
-                        ChildBuilder.ParentType
-                    );
-
-                    return (NewProvisionerCommandBuilder)result;
+                    yield return child;
+                    child = child.ParentBuilder.ChildBuilder;
                 }
-
-                return null;
-            }
-        }
-
-        private IImmutableList<Type> ParentTargetTypes
-        {
-            get
-            {
-                if (ParentBuilder != null)
-                {
-                    return ParentBuilder
-                        .ParentTargetTypes
-                        .Add(ParentBuilder.TargetType);
-                }
-
-                return ImmutableList<Type>.Empty;
             }
         }
 

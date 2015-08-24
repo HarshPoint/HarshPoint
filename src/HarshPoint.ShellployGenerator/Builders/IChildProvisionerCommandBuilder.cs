@@ -4,7 +4,8 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     internal interface IChildProvisionerCommandBuilder
     {
-        PropertyModelContainer PropertyContainer { get; }
+        NewProvisionerCommandBuilder ParentBuilder { get; }
         Type ParentType { get; }
+        PropertyModelContainer PropertyContainer { get; }
     }
 }

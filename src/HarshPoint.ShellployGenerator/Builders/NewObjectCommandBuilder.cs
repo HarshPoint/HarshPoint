@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using SMA = System.Management.Automation;
 using HarshPoint.ShellployGenerator.CodeGen;
+using System.Collections.Generic;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
@@ -66,9 +67,14 @@ namespace HarshPoint.ShellployGenerator.Builders
             }
         }
 
-        public virtual NewObjectCommandModel ToNewObjectCommand() 
+        public NewObjectCommandModel ToNewObjectCommand()
+            => ToNewObjectCommand(null);
+
+        public virtual NewObjectCommandModel ToNewObjectCommand(
+            IEnumerable<PropertyModel> properties
+        ) 
             => new NewObjectCommandModel(
-                ToCommand(),
+                ToCommand(properties),
                 TargetType
             );
 

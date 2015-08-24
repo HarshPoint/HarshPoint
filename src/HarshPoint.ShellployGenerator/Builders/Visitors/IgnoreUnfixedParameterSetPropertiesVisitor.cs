@@ -47,7 +47,15 @@ namespace HarshPoint.ShellployGenerator.Builders
                 throw Logger.Fatal.ArgumentNull(nameof(property));
             }
 
-            var fixedSets = GetPropertyParameterSets(property)
+            var propertySets = GetPropertyParameterSets(property);
+
+            if (!propertySets.Any())
+            {
+                // property belongs to all parameter sets
+                return base.VisitSynthesized(property);
+            }
+
+            var fixedSets = propertySets
                 .Except(_unfixedSets, _unfixedSets.KeyComparer);
 
             if (!fixedSets.Any())

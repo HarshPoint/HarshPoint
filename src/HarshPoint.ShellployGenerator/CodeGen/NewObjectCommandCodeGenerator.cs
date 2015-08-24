@@ -48,11 +48,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
             var assignments = CreateNewObjectAssignments(resultRef);
 
-            var method = new CodeMemberMethod()
-            {
-                Name = "ProcessRecord",
-                ReturnType = Void,
-            };
+            var method = CommandCodeGenerator.CreateProcessRecord();
 
             method.Statements.Add(resultDeclaration);
 
@@ -61,8 +57,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 method.Statements.Add(assign);
             }
 
-            var writeObject = new CodeMethodInvokeExpression(
-                WriteObject,
+            var writeObject = CommandCodeGenerator.CreateWriteObjectCall(
                 resultRef
             );
 
@@ -80,13 +75,5 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(NewObjectCommandCodeGenerator));
 
-        private static readonly CodeTypeReference Void
-            = new CodeTypeReference(typeof(void));
-
-        private static readonly CodeMethodReferenceExpression WriteObject
-            = new CodeMethodReferenceExpression(
-                new CodeThisReferenceExpression(),
-                "WriteObject"
-            );
     }
 }

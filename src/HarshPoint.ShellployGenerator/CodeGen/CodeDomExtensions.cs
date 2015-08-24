@@ -6,6 +6,32 @@ namespace HarshPoint.ShellployGenerator
 {
     internal static class CodeDomExtensions
     {
+        public static CodeStatement ToStatement(
+            this CodeExpression expression
+        )
+        {
+            if (expression == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(expression));
+            }
+
+            return new CodeExpressionStatement(expression);
+        }
+
+        public static CodeExpression ToReference(
+            this CodeVariableDeclarationStatement declaration
+        )
+        {
+            if (declaration == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(declaration));
+            }
+
+            return new CodeVariableReferenceExpression(
+                declaration.Name
+            );
+        }
+
         public static Int32 Add(
             this CodeAttributeDeclarationCollection attributeCollection,
             Type attributeType,
