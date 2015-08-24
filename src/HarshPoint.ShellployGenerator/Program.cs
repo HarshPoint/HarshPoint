@@ -46,6 +46,8 @@ namespace HarshPoint.ShellployGenerator
                     generators.Select(g => g.Command)
                 );
 
+                aliases.Write(fileGenContext);
+
                 return 0;
             }
             catch (Exception exc)
