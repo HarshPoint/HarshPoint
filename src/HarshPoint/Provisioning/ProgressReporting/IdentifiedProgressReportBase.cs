@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace HarshPoint.Provisioning.Output
+namespace HarshPoint.Provisioning.ProgressReporting
 {
-    public abstract class IdentifiedOutputBase : HarshProvisionerOutput
+    public abstract class IdentifiedProgressReportBase : ProgressReport
     {
-        protected IdentifiedOutputBase(String identifier, Object parent)
+        protected IdentifiedProgressReportBase(String identifier, Object parent)
         {
             if (String.IsNullOrWhiteSpace(identifier))
             {
@@ -20,6 +20,6 @@ namespace HarshPoint.Provisioning.Output
         public Boolean ObjectRemoved { get; protected set; }
         public Object Parent { get; }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IdentifiedOutputBase));
+        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IdentifiedProgressReportBase));
     }
 }

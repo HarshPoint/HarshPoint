@@ -6,24 +6,24 @@ using System.Threading;
 
 namespace HarshPoint.Shellploy
 {
-    internal static class ReactiveOutputSinkExtensions
+    internal static class ProgressReactiveExtensions
     {
-        public static IEnumerable<HarshProvisionerOutput> Provision<TProvisioner, TContext>(
+        public static IEnumerable<ProgressReport> Provision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context
         )
             where TProvisioner : HarshProvisionerBase<TContext>
             where TContext : HarshProvisionerContextBase<TContext>
         {
-            var sink = new ReactiveOutputSink();
+            var progress = new ProgressReactive();
 
             return DisposeWhenEnumerated(
-                sink,
-                sink.Provision(provisioner, context)
+                progress,
+                progress.Provision(provisioner, context)
             );
         }
 
-        public static IEnumerable<HarshProvisionerOutput> Provision<TProvisioner, TContext>(
+        public static IEnumerable<ProgressReport> Provision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             CancellationToken token
@@ -31,15 +31,15 @@ namespace HarshPoint.Shellploy
             where TProvisioner : HarshProvisionerBase<TContext>
             where TContext : HarshProvisionerContextBase<TContext>
         {
-            var sink = new ReactiveOutputSink(token);
+            var progress = new ProgressReactive(token);
 
             return DisposeWhenEnumerated(
-                sink,
-                sink.Provision(provisioner, context)
+                progress,
+                progress.Provision(provisioner, context)
             );
         }
 
-        public static IEnumerable<HarshProvisionerOutput> Provision<TProvisioner, TContext>(
+        public static IEnumerable<ProgressReport> Provision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             CancellationToken token,
@@ -48,15 +48,15 @@ namespace HarshPoint.Shellploy
             where TProvisioner : HarshProvisionerBase<TContext>
             where TContext : HarshProvisionerContextBase<TContext>
         {
-            var sink = new ReactiveOutputSink(token, pollInterval);
+            var progress = new ProgressReactive(token, pollInterval);
 
             return DisposeWhenEnumerated(
-                sink,
-                sink.Provision(provisioner, context)
+                progress,
+                progress.Provision(provisioner, context)
             );
         }
 
-        public static IEnumerable<HarshProvisionerOutput> Provision<TProvisioner, TContext>(
+        public static IEnumerable<ProgressReport> Provision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             TimeSpan? pollInterval
@@ -64,30 +64,30 @@ namespace HarshPoint.Shellploy
             where TProvisioner : HarshProvisionerBase<TContext>
             where TContext : HarshProvisionerContextBase<TContext>
         {
-            var sink = new ReactiveOutputSink(pollInterval);
+            var progress = new ProgressReactive(pollInterval);
 
             return DisposeWhenEnumerated(
-                sink,
-                sink.Provision(provisioner, context)
+                progress,
+                progress.Provision(provisioner, context)
             );
         }
 
-        public static IEnumerable<HarshProvisionerOutput> Unprovision<TProvisioner, TContext>(
+        public static IEnumerable<ProgressReport> Unprovision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context
         )
             where TProvisioner : HarshProvisionerBase<TContext>
             where TContext : HarshProvisionerContextBase<TContext>
         {
-            var sink = new ReactiveOutputSink();
+            var progress = new ProgressReactive();
 
             return DisposeWhenEnumerated(
-                sink,
-                sink.Unprovision(provisioner, context)
+                progress,
+                progress.Unprovision(provisioner, context)
             );
         }
 
-        public static IEnumerable<HarshProvisionerOutput> Unprovision<TProvisioner, TContext>(
+        public static IEnumerable<ProgressReport> Unprovision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             CancellationToken token
@@ -95,15 +95,15 @@ namespace HarshPoint.Shellploy
             where TProvisioner : HarshProvisionerBase<TContext>
             where TContext : HarshProvisionerContextBase<TContext>
         {
-            var sink = new ReactiveOutputSink(token);
+            var progress = new ProgressReactive(token);
 
             return DisposeWhenEnumerated(
-                sink,
-                sink.Unprovision(provisioner, context)
+                progress,
+                progress.Unprovision(provisioner, context)
             );
         }
 
-        public static IEnumerable<HarshProvisionerOutput> Unprovision<TProvisioner, TContext>(
+        public static IEnumerable<ProgressReport> Unprovision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             CancellationToken token,
@@ -112,15 +112,15 @@ namespace HarshPoint.Shellploy
             where TProvisioner : HarshProvisionerBase<TContext>
             where TContext : HarshProvisionerContextBase<TContext>
         {
-            var sink = new ReactiveOutputSink(token, pollInterval);
+            var progress = new ProgressReactive(token, pollInterval);
 
             return DisposeWhenEnumerated(
-                sink,
-                sink.Unprovision(provisioner, context)
+                progress,
+                progress.Unprovision(provisioner, context)
             );
         }
 
-        public static IEnumerable<HarshProvisionerOutput> Unprovision<TProvisioner, TContext>(
+        public static IEnumerable<ProgressReport> Unprovision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             TimeSpan? pollInterval
@@ -128,11 +128,11 @@ namespace HarshPoint.Shellploy
             where TProvisioner : HarshProvisionerBase<TContext>
             where TContext : HarshProvisionerContextBase<TContext>
         {
-            var sink = new ReactiveOutputSink(pollInterval);
+            var progress = new ProgressReactive(pollInterval);
 
             return DisposeWhenEnumerated(
-                sink,
-                sink.Unprovision(provisioner, context)
+                progress,
+                progress.Unprovision(provisioner, context)
             );
         }
 

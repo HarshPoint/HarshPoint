@@ -127,9 +127,9 @@
     <Compile Include="ClientContextCmdlet.cs" />
     <Compile Include="Generated\*.cs" />
     <Compile Include="HarshProvisionerCmdlet.cs" />
-    <Compile Include="ReactiveOutputSink.cs" />
+    <Compile Include="ProgressReactive.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReactiveOutputSinkExtensions.cs" />
+    <Compile Include="ProgressReactiveExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

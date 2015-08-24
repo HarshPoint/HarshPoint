@@ -9,7 +9,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         IEnumerable<Object> GetState(Type type);
 
-        void WriteOutput(HarshProvisionerOutput output);
+        void ReportProgress(ProgressReport value);
 
         Boolean MayDeleteUserData { get; }
     }

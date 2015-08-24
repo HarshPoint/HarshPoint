@@ -11,7 +11,7 @@ namespace HarshPoint.Provisioning.Implementation
         where TSelf : HarshProvisionerContextBase<TSelf>
     {
         private Boolean _mayDeleteUserData;
-        private HarshProvisionerOutputSink _outputSink;
+        private IProgress<ProgressReport> _progress;
         private IImmutableStack<Object> _stateStack = ImmutableStack<Object>.Empty;
 
         public Boolean MayDeleteUserData => _mayDeleteUserData;
@@ -68,12 +68,20 @@ namespace HarshPoint.Provisioning.Implementation
             return (TSelf)this.With(c => c._stateStack, _stateStack.Push(state));
         }
 
-        public TSelf WithOutputSink(HarshProvisionerOutputSink sink)
-            => (TSelf)this.With(c => c._outputSink, sink);
+        public TSelf WithProgress(IProgress<ProgressReport> progress)
+            => (TSelf)this.With(c => c._progress, progress);
 
-        public void WriteOutput(HarshProvisionerOutput output)
+        public void ReportProgress(ProgressReport value)
         {
-            _outputSink?.WriteOutput(this, output);
+            if (value == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(value));
+            }
+
+            value.Context = ToString();
+            value.Timestamp = DateTimeOffset.Now;
+
+            _progress?.Report(value);
         }
 
         internal IImmutableStack<Object> StateStack => _stateStack;

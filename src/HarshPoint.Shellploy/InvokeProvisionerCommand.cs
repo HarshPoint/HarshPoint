@@ -66,7 +66,7 @@ namespace HarshPoint.Shellploy
 
         private HarshProvisioner Provisioner { get; set; }
 
-        private IEnumerable<HarshProvisionerOutput> ProvisionerAction(
+        private IEnumerable<ProgressReport> ProvisionerAction(
             HarshProvisionerContext context,
             CancellationToken token
         )
