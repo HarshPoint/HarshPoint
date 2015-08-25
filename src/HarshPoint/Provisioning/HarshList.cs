@@ -21,6 +21,7 @@ namespace HarshPoint.Provisioning
             TemplateType = ListTemplateType.GenericList;
         }
 
+        [MandatoryWhenCreating]
         [Parameter(ParameterSetName = "TemplateId")]
         public Int32? TemplateId
         {
@@ -28,6 +29,7 @@ namespace HarshPoint.Provisioning
             set;
         }
 
+        [MandatoryWhenCreating]
         [Parameter(ParameterSetName = "TemplateType")]
         public ListTemplateType TemplateType
         {
@@ -36,13 +38,14 @@ namespace HarshPoint.Provisioning
         }
 
         [Parameter]
+        [MandatoryWhenCreating]
         public String Title
         {
             get;
             set;
         }
 
-        [Parameter]
+        [Parameter(Mandatory = true)]
         [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
         public String Url
         {
@@ -54,6 +57,8 @@ namespace HarshPoint.Provisioning
         {
             if (ExistingList.Value.IsNull())
             {
+                ValidateMandatoryWhenCreatingParameters();
+
                 List = Web.Lists.Add(new ListCreationInformation()
                 {
                     TemplateType = TemplateId ?? (Int32)TemplateType,

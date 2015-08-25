@@ -660,6 +660,15 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The current property &apos;{0}&apos; is not writable..
+        /// </summary>
+        internal static string PropertyAccessor_PropertyNotWritable {
+            get {
+                return ResourceManager.GetString("PropertyAccessor_PropertyNotWritable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} resolved in more than one result..
         /// </summary>
         internal static string Resolvable_ManyResults {

@@ -16,7 +16,11 @@ namespace HarshPoint.ObjectModel
 
             PropertyInfo = propertyInfo;
             Getter = propertyInfo.MakeGetter();
-            Setter = propertyInfo.MakeSetter();
+
+            if (propertyInfo.CanWrite)
+            {
+                Setter = propertyInfo.MakeSetter();
+            }
         }
 
         public PropertyInfo PropertyInfo { get; }
@@ -59,6 +63,7 @@ namespace HarshPoint.ObjectModel
                 throw Logger.Fatal.ArgumentNull(nameof(target));
             }
 
+            ValidateWritable();
             Setter(target, value);
 
             var trackSource = (target as ITrackValueSource);
@@ -68,18 +73,34 @@ namespace HarshPoint.ObjectModel
             }
         }
 
-        public void SetValue(ITrackValueSource target, Object value, PropertyValueSource source)
+        public void SetValue(
+            ITrackValueSource target, 
+            Object value, 
+            PropertyValueSource source
+        )
         {
             if (target == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(target));
             }
 
+            ValidateWritable();
             Setter(target, value);
             SetValueSource(target, source);
         }
 
         public override String ToString() => PropertyInfo.ToString();
+
+        private void ValidateWritable()
+        {
+            if (Setter == null)
+            {
+                throw Logger.Fatal.InvalidOperationFormat(
+                    SR.PropertyAccessor_PropertyNotWritable,
+                    this
+                );
+            }
+        }
 
         private void SetValueSource(ITrackValueSource target, PropertyValueSource source)
         {

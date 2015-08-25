@@ -8,7 +8,6 @@ namespace HarshPoint.ShellployGenerator.Commands
     {
         public BuildList()
         {
-            PositionalParameter(x => x.Title);
             PositionalParameter(x => x.Url);
 
             Parameter(x => x.TemplateType)

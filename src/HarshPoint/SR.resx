@@ -325,6 +325,9 @@ Properties: {1}</value>
   <data name="ParameterSetResolver_Ambiguous" xml:space="preserve">
     <value>Parameter set cannot be resolved using the specified parameters.</value>
   </data>
+  <data name="PropertyAccessor_PropertyNotWritable" xml:space="preserve">
+    <value>The current property '{0}' is not writable.</value>
+  </data>
   <data name="Resolvable_ManyResults" xml:space="preserve">
     <value>The {0} resolved in more than one result.</value>
   </data>

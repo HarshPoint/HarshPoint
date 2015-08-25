@@ -1,5 +1,6 @@
 ﻿using HarshPoint.ObjectModel;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -28,6 +29,29 @@ namespace HarshPoint.Provisioning.Implementation
             return false;
         }
 
+        public IEnumerable<ObjectMappingAction> GetActions(
+            Object source, 
+            Object target
+        )
+        {
+            if (source == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(source));
+            }
+
+            if (target == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(target));
+            }
+
+            if (HasEntries)
+            {
+                return Mapping.GetActions(source, target);
+            }
+
+            return Enumerable.Empty<ObjectMappingAction>();
+        }
+
         public Expression<Func<TTarget,Object>>[] GetTargetExpressions()
         {
             if (HasEntries)
@@ -42,6 +66,26 @@ namespace HarshPoint.Provisioning.Implementation
             Expression<Func<TTarget, Object>> targetProperty
         )
             => Mapper.Map(targetProperty);
+
+        public Boolean WouldChange(Object source, Object target)
+        {
+            if (source == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(source));
+            }
+
+            if (target == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(target));
+            }
+
+            if (HasEntries)
+            {
+                return Mapping.WouldChange(source, target);
+            }
+
+            return false;
+        }
 
         private Boolean HasEntries => _mapper != null && !_mapper.IsEmpty;
 
@@ -72,5 +116,9 @@ namespace HarshPoint.Provisioning.Implementation
                 return _mapping;
             }
         }
+
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(LazyObjectMapping<,>));
     }
 }

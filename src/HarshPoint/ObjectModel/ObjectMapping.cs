@@ -29,34 +29,9 @@ namespace HarshPoint.ObjectModel
             Entries = entries.ToImmutableArray();
         }
 
-        public IEnumerable<Expression<Func<T, Object>>> GetTargetExpressions<T>()
-            => Entries.Select(
-                m => m.TargetAccessor.MakeGetterExpression<T, Object>()
-            );
-
         public Boolean Apply(Object source, Object target)
         {
-            var actions =
-                from e in Entries
-                where HasSourceValue(e, source)
-
-                let sourceValue = e.SourceSelector(source)
-                where !IsSourceValueDefault(e, sourceValue)
-
-                let targetValue = e.TargetAccessor.GetValue(
-                    target
-                )
-
-                let valuesEqual = ValuesEqual(e, sourceValue, targetValue)
-
-                select new
-                {
-                    e.TargetAccessor,
-                    SourceValue = sourceValue,
-                    TargetValue = targetValue,
-                    ValuesEqual = valuesEqual,
-                };
-
+            var actions = GetActions(source, target);
             var result = false;
 
             foreach (var a in actions)
@@ -76,6 +51,46 @@ namespace HarshPoint.ObjectModel
 
             return result;
         }
+
+        public IEnumerable<ObjectMappingAction> GetActions(
+            Object source,
+            Object target
+        )
+        {
+            if (source == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(source));
+            }
+
+            if (target == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(target));
+            }
+
+            return from e in Entries
+                   where HasSourceValue(e, source)
+
+                   let sourceValue = e.SourceSelector(source)
+                   where !IsSourceValueDefault(e, sourceValue)
+
+                   let targetValue = e.TargetAccessor.GetValue(
+                       target
+                   )
+
+                   select new ObjectMappingAction(
+                       e.TargetAccessor,
+                       sourceValue,
+                       targetValue
+                   );
+        }
+
+        public IEnumerable<Expression<Func<T, Object>>> GetTargetExpressions<T>()
+            => Entries.Select(
+                m => m.TargetAccessor.MakeGetterExpression<T, Object>()
+            );
+
+        public Boolean WouldChange(Object source, Object target)
+            => GetActions(source, target).Any(a => !a.ValuesEqual);
 
         public IDefaultValuePolicy DefaultValuePolicy { get; }
 

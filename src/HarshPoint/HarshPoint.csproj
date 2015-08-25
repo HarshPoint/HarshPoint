@@ -88,6 +88,8 @@
     <Compile Include="ObjectModel\IDefaultValuePolicy.cs" />
     <Compile Include="ObjectModel\ITrackValueSource.cs" />
     <Compile Include="ObjectModel\NullDefaultValuePolicy.cs" />
+    <Compile Include="ObjectModel\ObjectMappingAction.cs" />
+    <Compile Include="Provisioning\HarshEventReceiver.cs" />
     <Compile Include="Provisioning\Implementation\ObjectMappingLazy.cs" />
     <Compile Include="ObjectModel\PropertyValueSource.cs" />
     <Compile Include="ObjectModel\PropertyAccessor.cs" />
