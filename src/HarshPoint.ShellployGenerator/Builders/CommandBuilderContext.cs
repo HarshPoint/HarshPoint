@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarshPoint.Provisioning.Implementation;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -11,26 +12,33 @@ namespace HarshPoint.ShellployGenerator.Builders
         private ImmutableList<CommandBuilder> _builders
             = ImmutableList<CommandBuilder>.Empty;
 
-        private ImmutableDictionary<Type, NewObjectCommandBuilder> _newObjectBuilders
-            = ImmutableDictionary<Type, NewObjectCommandBuilder>.Empty;
+        private ImmutableDictionary<Type, NewProvisionerCommandBuilder> _provisionerBuilders
+            = ImmutableDictionary<Type, NewProvisionerCommandBuilder>.Empty;
 
         public void AddBuildersFrom(Assembly assembly)
         {
-            var builders =
+            var builderTypes =
                 from type in assembly.DefinedTypes
                 where
                     CommandBuilderTypeInfo.IsAssignableFrom(type) &&
                     !type.ContainsGenericParameters &&
-                    !type.IsAbstract
+                    !type.IsAbstract &&
+                    type.DeclaredConstructors.Any(
+                        ctor => !ctor.IsStatic && !ctor.GetParameters().Any()
+                    )
 
-                select CreateBuilder(type);
+                select type;
+
+            var builders = builderTypes
+                .Select(CreateBuilder)
+                .ToArray();
 
             _builders = _builders.AddRange(builders);
 
-            _newObjectBuilders = _newObjectBuilders.AddRange(
+            _provisionerBuilders = _provisionerBuilders.AddRange(
                 builders
-                .OfType<NewObjectCommandBuilder>()
-                .Select(nocb => HarshKeyValuePair.Create(nocb.TargetType, nocb))
+                .OfType<NewProvisionerCommandBuilder>()
+                .Select(npcb => HarshKeyValuePair.Create(npcb.TargetType, npcb))
             );
         }
 
@@ -41,13 +49,13 @@ namespace HarshPoint.ShellployGenerator.Builders
                 throw Logger.Fatal.ArgumentNull(nameof(builder));
             }
 
-            var newObjectBuilder = (builder as NewObjectCommandBuilder);
+            var provisionerBuilder = (builder as NewProvisionerCommandBuilder);
 
-            if (newObjectBuilder != null)
+            if (provisionerBuilder != null)
             {
-                _newObjectBuilders = _newObjectBuilders.Add(
-                    newObjectBuilder.TargetType,
-                    newObjectBuilder
+                _provisionerBuilders = _provisionerBuilders.Add(
+                    provisionerBuilder.TargetType,
+                    provisionerBuilder
                 );
             }
 
@@ -57,7 +65,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public IEnumerable<CommandBuilder> Builders => _builders;
 
-        public NewObjectCommandBuilder GetNewObjectCommandBuilder(
+        public NewObjectCommandBuilder GetNewProvisionerCommandBuilder(
             Type targetType
         )
         {
@@ -66,14 +74,18 @@ namespace HarshPoint.ShellployGenerator.Builders
                 throw Logger.Fatal.ArgumentNull(nameof(targetType));
             }
 
-            var builder = _newObjectBuilders.GetValueOrDefault(targetType);
+            var builder = _provisionerBuilders.GetValueOrDefault(targetType);
 
             if (builder == null)
             {
-                throw Logger.Fatal.ArgumentFormat(
-                    nameof(targetType),
-                    SR.CommandBuilderContext_NoBuilder,
-                    targetType
+                builder = new NewProvisionerCommandBuilder(
+                    HarshProvisionerMetadataRepository.Get(targetType)
+                );
+
+                _builders = _builders.Add(builder);
+                _provisionerBuilders = _provisionerBuilders.Add(
+                    targetType,
+                    builder
                 );
             }
 

@@ -16,14 +16,19 @@ namespace HarshPoint.Provisioning
             Map(f => f.RichText);
         }
 
+        [Parameter]
         public Boolean? AllowHyperlink { get; set; }
 
+        [Parameter]
         public Boolean? AppendOnly { get; set; }
 
+        [Parameter]
         public Int32? NumberOfLines { get; set; }
 
+        [Parameter]
         public Boolean? RestrictedMode { get; set; }
 
+        [Parameter]
         public Boolean? RichText { get; set; }
     }
 }

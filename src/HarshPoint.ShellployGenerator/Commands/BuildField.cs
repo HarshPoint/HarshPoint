@@ -3,7 +3,11 @@
 namespace HarshPoint.ShellployGenerator.Commands
 {
     internal sealed class BuildField :
-        HarshPointCommandBuilder<HarshField>
+        HarshPointCommandBuilder<HarshModifyField>
     {
+        public BuildField()
+        {
+            AsChildOf<HarshField>();
+        }
     }
 }

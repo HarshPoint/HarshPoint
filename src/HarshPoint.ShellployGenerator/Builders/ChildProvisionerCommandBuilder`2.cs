@@ -31,7 +31,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             => _parameterBuilders.GetParameterBuilder(name);
 
         NewProvisionerCommandBuilder IChildProvisionerCommandBuilder.ParentBuilder
-            => (NewProvisionerCommandBuilder)_owner.Context.GetNewObjectCommandBuilder(typeof(TParent));
+            => (NewProvisionerCommandBuilder)_owner.Context.GetNewProvisionerCommandBuilder(typeof(TParent));
 
         PropertyModelContainer IChildProvisionerCommandBuilder.PropertyContainer
             => _parameterBuilders;

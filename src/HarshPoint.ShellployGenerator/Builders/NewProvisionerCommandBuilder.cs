@@ -8,9 +8,9 @@ using HarshPoint.ShellployGenerator.CodeGen;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public abstract class NewProvisionerCommandBuilder : NewObjectCommandBuilder
+    public class NewProvisionerCommandBuilder : NewObjectCommandBuilder
     {
-        protected NewProvisionerCommandBuilder(
+        public NewProvisionerCommandBuilder(
             HarshProvisionerMetadata metadata
         )
             : base(metadata)
