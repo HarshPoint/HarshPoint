@@ -30,7 +30,7 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             Properties = new HarshObjectMetadata(type)
-                .ReadableWritableInstanceProperties
+                .ModelProperties
                 .Where(p => ResolvedPropertyTypeInfo.IsResolveType(p.PropertyTypeInfo))
                 .ToImmutableArray();
         }

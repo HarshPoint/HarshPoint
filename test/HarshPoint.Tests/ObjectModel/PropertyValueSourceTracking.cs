@@ -20,7 +20,7 @@ namespace HarshPoint.Tests.ObjectModel
             var source = new TestSource();
             var metadata = new HarshObjectMetadata(typeof(Tracker));
 
-            var accessor = metadata.ReadableWritableInstanceProperties.Single();
+            var accessor = metadata.ModelProperties.Single();
 
             accessor.SetValue(target, "42", source);
 

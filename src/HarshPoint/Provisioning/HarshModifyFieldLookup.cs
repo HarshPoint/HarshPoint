@@ -1,18 +1,27 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-    public sealed class HarshModifyFieldLookup : HarshModifyField<FieldLookup>
+    public sealed class HarshModifyFieldLookup :
+        HarshModifyField<FieldLookup, HarshModifyFieldLookup>
     {
-        [Parameter(Mandatory = true)]
-        public IResolveSingle<Tuple<List, Field>> LookupTarget
+        public HarshModifyFieldLookup()
         {
-            get;
-            set;
+            Map(f => f.LookupList)
+                .From(p => p.LookupTarget.Value.Item1.Id.ToStringInvariant("B"))
+                .When(p => p.LookupTarget != null);
+
+            Map(f => f.LookupField)
+                .From(p => p.LookupTarget.Value.Item2.InternalName)
+                .When(p => p.LookupTarget != null);
+
+            Map(f => f.LookupWebId).From(p => p.Web.Id);
         }
+
+        [Parameter(Mandatory = true)]
+        public IResolveSingle<Tuple<List, Field>> LookupTarget { get; set; }
 
         protected override void InitializeResolveContext(ClientObjectResolveContext context)
         {
@@ -32,20 +41,6 @@ namespace HarshPoint.Provisioning
             );
 
             base.InitializeResolveContext(context);
-        }
-
-        protected override async Task OnProvisioningAsync()
-        {
-            foreach (var field in Fields)
-            {
-                field.LookupList = LookupTarget.Value.Item1.Id.ToString("B");
-                field.LookupField = LookupTarget.Value.Item2.InternalName;
-                field.LookupWebId = Web.Id;
-
-                UpdateField(field);
-            }
-
-            await ClientContext.ExecuteQueryAsync();
         }
     }
 }

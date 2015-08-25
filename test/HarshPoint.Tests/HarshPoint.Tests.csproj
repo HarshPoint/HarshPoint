@@ -154,6 +154,7 @@
     <Compile Include="Extensions\TypeInfoExtensionsTests.cs" />
     <Compile Include="GroupingDynamicFactory.cs" />
     <Compile Include="Linq\ExpressionComparing.cs" />
+    <Compile Include="ObjectModel\Object_mapper.cs" />
     <Compile Include="ObjectModel\PropertyValueSourceTracking.cs" />
     <Compile Include="ObjectModel\TestNullDefaultValuePolicy.cs" />
     <Compile Include="Provisioning\ClientObjectContextStateResolving.cs" />
@@ -167,10 +168,11 @@
     <Compile Include="Provisioning\DefaultFromContextTests.cs" />
     <Compile Include="Provisioning\FieldProvisionerTests.cs" />
     <Compile Include="ObjectModel\ChainTests.cs" />
-    <Compile Include="Provisioning\Implementation\ClientObjectUpdating.cs" />
     <Compile Include="Provisioning\Implementation\ManualResolving.cs" />
     <Compile Include="Provisioning\Implementation\NestedResolveResults.cs" />
     <Compile Include="Provisioning\Implementation\NestedResultsProofOfConcept.cs" />
+    <Compile Include="ObjectModel\Object_mapping_with_predicate.cs" />
+    <Compile Include="ObjectModel\Object_mapping.cs" />
     <Compile Include="Provisioning\Implementation\ResolvedPropertyBinding.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultConverting.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultCreating.cs" />

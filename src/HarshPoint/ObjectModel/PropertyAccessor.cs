@@ -15,25 +15,22 @@ namespace HarshPoint.ObjectModel
             }
 
             PropertyInfo = propertyInfo;
-
-            Expression = propertyInfo.MakeGetterExpression(
-                resultType: typeof(Object)
-            );
-
             Getter = propertyInfo.MakeGetter();
             Setter = propertyInfo.MakeSetter();
         }
 
-        public Expression Expression { get; }
         public PropertyInfo PropertyInfo { get; }
 
-        private Func<Object, Object> Getter { get; }
-        private Action<Object, Object> Setter { get; }
+        public Func<Object, Object> Getter { get; }
+        public Action<Object, Object> Setter { get; }
 
         public Type DeclaringType => PropertyInfo.DeclaringType;
         public String Name => PropertyInfo.Name;
         public Type PropertyType => PropertyInfo.PropertyType;
         public TypeInfo PropertyTypeInfo => PropertyType.GetTypeInfo();
+
+        public Expression<Func<TTarget, TResult>> MakeGetterExpression<TTarget, TResult>()
+            => PropertyInfo.MakeGetterExpression<TTarget, TResult>();
 
         public Object GetValue(Object target)
         {

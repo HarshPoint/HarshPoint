@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace HarshPoint.ObjectModel
@@ -21,7 +20,7 @@ namespace HarshPoint.ObjectModel
             ObjectType = type;
             ObjectTypeInfo = type.GetTypeInfo();
 
-            _properties = InitReadableWritableInstanceProperties();
+            _properties = InitModelProperties();
         }
 
         public HarshObjectMetadata(TypeInfo typeInfo)
@@ -34,14 +33,14 @@ namespace HarshPoint.ObjectModel
             ObjectType = typeInfo.AsType();
             ObjectTypeInfo = typeInfo;
 
-            _properties = InitReadableWritableInstanceProperties();
+            _properties = InitModelProperties();
         }
 
         public Type ObjectType { get; }
 
         public TypeInfo ObjectTypeInfo { get; }
 
-        public IEnumerable<PropertyAccessor> ReadableWritableInstanceProperties
+        public IEnumerable<PropertyAccessor> ModelProperties
             => _properties.Values;
 
         public PropertyAccessor GetPropertyAccessor(PropertyInfo propertyInfo)
@@ -54,21 +53,33 @@ namespace HarshPoint.ObjectModel
             return _properties.GetValueOrDefault(propertyInfo);
         }
 
-        public IEnumerable<IGrouping<PropertyAccessor, TAttribute>> ReadableWritableInstancePropertiesWith<TAttribute>(Boolean inherit)
+        public PropertyAccessor GetPropertyAccessor(String name)
+        {
+            if (name == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(name));
+            }
+
+            return ModelProperties.FirstOrDefault(
+                p => p.Name.Equals(name, StringComparison.Ordinal)
+            );
+        }
+
+        public IEnumerable<IGrouping<PropertyAccessor, TAttribute>> ModelPropertiesWith<TAttribute>(Boolean inherit)
             where TAttribute : Attribute
-            => ReadableWritableInstanceProperties
+            => ModelProperties
                 .Select(p => HarshGrouping.Create(p, p.PropertyInfo.GetCustomAttributes<TAttribute>(inherit).ToArray()))
                 .Where(g => g.Any())
                 .ToArray();
 
-        public IEnumerable<Tuple<PropertyAccessor, TAttribute>> ReadableWritableInstancePropertiesWithSingle<TAttribute>(Boolean inherit)
+        public IEnumerable<Tuple<PropertyAccessor, TAttribute>> ModelPropertiesWithSingle<TAttribute>(Boolean inherit)
             where TAttribute : Attribute
-            => ReadableWritableInstanceProperties
+            => ModelProperties
                 .Select(p => Tuple.Create(p, p.PropertyInfo.GetCustomAttribute<TAttribute>(inherit)))
                 .Where(t => t.Item2 != null)
                 .ToArray();
 
-        private ImmutableDictionary<PropertyInfo, PropertyAccessor> InitReadableWritableInstanceProperties()
+        private ImmutableDictionary<PropertyInfo, PropertyAccessor> InitModelProperties()
             => ObjectType
                 .GetRuntimeProperties()
                 .Where(p => p.CanRead && p.CanWrite && !p.GetMethod.IsStatic && !p.SetMethod.IsStatic)

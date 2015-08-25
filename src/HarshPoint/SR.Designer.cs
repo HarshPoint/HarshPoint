@@ -641,6 +641,16 @@ namespace HarshPoint {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following properties could not be found on {0}. You need to call Map(x =&gt; x.Foo).From(y =&gt; y.Bar) to specify the source property.
+        ///Properties: {1}.
+        /// </summary>
+        internal static string ObjectMapper_NoSourceSelectorFound {
+            get {
+                return ResourceManager.GetString("ObjectMapper_NoSourceSelectorFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameter set cannot be resolved using the specified parameters..
         /// </summary>
         internal static string ParameterSetResolver_Ambiguous {

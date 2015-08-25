@@ -31,7 +31,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .First();
 
             DefaultFromContextPropertyBinder = new DefaultFromContextPropertyBinder(
-                ReadableWritableInstancePropertiesWithSingle<DefaultFromContextAttribute>(inherit: true)
+                ModelPropertiesWithSingle<DefaultFromContextAttribute>(inherit: true)
                 .Select(t => new DefaultFromContextProperty(t.Item1, t.Item2))
             );
 
@@ -41,7 +41,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToImmutableHashSet();
 
             ResolvedPropertyBinder = new ResolvedPropertyBinder(
-                ReadableWritableInstanceProperties
+                ModelProperties
                 .Where(ResolvedPropertyTypeInfo.IsResolveType)
             );
 

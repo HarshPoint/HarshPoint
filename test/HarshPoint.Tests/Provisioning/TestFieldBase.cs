@@ -9,7 +9,7 @@ namespace HarshPoint.Tests.Provisioning
     public abstract class TestFieldBase<TField, TProvisioner> :
         SharePointClientTest
         where TField : Field
-        where TProvisioner : HarshModifyField<TField>
+        where TProvisioner : HarshModifyField<TField, TProvisioner>
     {
         protected TestFieldBase(FieldType fieldType, ITestOutputHelper output)
             : base(output)

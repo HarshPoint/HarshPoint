@@ -198,7 +198,7 @@ namespace HarshPoint.ObjectModel
 
         private IEnumerable<Parameter> BuildParameterMetadata()
             => from paramAttrs in
-                   Metadata.ReadableWritableInstancePropertiesWith<ParameterAttribute>(inherit: true)
+                   Metadata.ModelPropertiesWith<ParameterAttribute>(inherit: true)
 
                let property = paramAttrs.Key
                where

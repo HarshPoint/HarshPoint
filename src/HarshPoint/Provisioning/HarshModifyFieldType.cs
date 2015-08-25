@@ -5,14 +5,14 @@ using System.Diagnostics.CodeAnalysis;
 namespace HarshPoint.Provisioning
 {
     [DefaultParameterSet(nameof(Type))]
-    public sealed class HarshModifyField : HarshModifyField<Field>
+    public sealed class HarshModifyFieldType :
+        HarshModifyField<Field, HarshModifyFieldType>
     {
-        [Parameter]
-        public String DisplayName { get; set; }
-
-        [Parameter]
-        [DefaultFromContext(typeof(DefaultFieldGroup))]
-        public String Group { get; set; }
+        public HarshModifyFieldType()
+        {
+            Map(f => f.TypeAsString).From(p => p.TypeName);
+            Map(f => f.FieldTypeKind).From(p => p.Type);
+        }
 
         /// <summary>
         /// Gets or sets the name of the field type.

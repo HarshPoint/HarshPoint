@@ -1,34 +1,30 @@
 ﻿using HarshPoint.Provisioning.Implementation;
-using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Taxonomy;
 using System;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
 #warning NOT_TESTED
-    public sealed class HarshModifyFieldTaxonomy : HarshModifyField<TaxonomyField>
+    public sealed class HarshModifyFieldTaxonomy :
+        HarshModifyField<TaxonomyField, HarshModifyFieldTaxonomy>
     {
-        [Parameter]
-        public Boolean? AllowMultipleValues
+        public HarshModifyFieldTaxonomy()
         {
-            get;
-            set;
+            Map(f => f.AllowMultipleValues);
+            Map(f => f.IsPathRendered);
+
+            Map(f => f.SspId).From(p => p.TermSet.Value.TermStore.Id);
+            Map(f => f.TermSetId).From(p => p.TermSet.Value.Id);
         }
 
         [Parameter]
-        public Boolean? IsPathRendered
-        {
-            get;
-            set;
-        }
+        public Boolean? AllowMultipleValues { get; set; }
 
         [Parameter]
-        public IResolveSingle<TermSet> TermSet
-        {
-            get;
-            set;
-        }
+        public Boolean? IsPathRendered { get; set; }
+
+        [Parameter]
+        public IResolveSingle<TermSet> TermSet { get; set; }
 
         protected override void InitializeResolveContext(ClientObjectResolveContext context)
         {
@@ -42,22 +38,6 @@ namespace HarshPoint.Provisioning
             );
 
             base.InitializeResolveContext(context);
-        }
-
-        protected override async Task OnProvisioningAsync()
-        {
-            foreach (var field in Fields)
-            {
-                field.SspId = TermSet.Value.TermStore.Id;
-                field.TermSetId = TermSet.Value.Id;
-
-                SetPropertyIfHasValue(field, AllowMultipleValues, f => f.AllowMultipleValues);
-                SetPropertyIfHasValue(field, IsPathRendered, f => f.IsPathRendered);
-
-                UpdateField(field);
-            }
-
-            await ClientContext.ExecuteQueryAsync();
         }
     }
 }

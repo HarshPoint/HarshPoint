@@ -1,11 +1,21 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System;
-using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning
 {
-    public sealed class HarshModifyFieldMultilineText : HarshModifyField<FieldMultiLineText>
+    public sealed class HarshModifyFieldMultilineText : 
+        HarshModifyField<FieldMultiLineText, HarshModifyFieldMultilineText>
     {
+        public HarshModifyFieldMultilineText()
+        {
+            Map(f => f.AllowHyperlink);
+            Map(f => f.AppendOnly);
+            Map(f => f.NumberOfLines);
+            Map(f => f.RestrictedMode);
+            Map(f => f.RichText);
+        }
+
         public Boolean? AllowHyperlink { get; set; }
 
         public Boolean? AppendOnly { get; set; }
@@ -15,21 +25,5 @@ namespace HarshPoint.Provisioning
         public Boolean? RestrictedMode { get; set; }
 
         public Boolean? RichText { get; set; }
-
-        protected override async Task OnProvisioningAsync()
-        {
-            foreach (var field in Fields)
-            {
-                SetPropertyIfHasValue(field, AllowHyperlink, f => f.AllowHyperlink);
-                SetPropertyIfHasValue(field, AppendOnly, f => f.AppendOnly);
-                SetPropertyIfHasValue(field, NumberOfLines, f => f.NumberOfLines);
-                SetPropertyIfHasValue(field, RestrictedMode, f => f.RestrictedMode);
-                SetPropertyIfHasValue(field, RichText, f => f.RichText);
-
-                UpdateField(field);
-            }
-
-            await ClientContext.ExecuteQueryAsync();
-        }
     }
 }
