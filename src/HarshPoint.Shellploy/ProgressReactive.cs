@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 namespace HarshPoint.Shellploy
 {
     internal sealed class ProgressReactive :
-        IProgress<ProgressReport>,
+        IProgress<HarshProvisionerRecord>,
         IDisposable
     {
-        private readonly Subject<ProgressReport> _subject
-            = new Subject<ProgressReport>();
+        private readonly Subject<HarshProvisionerRecord> _subject
+            = new Subject<HarshProvisionerRecord>();
 
         public ProgressReactive() { }
 
@@ -37,7 +37,7 @@ namespace HarshPoint.Shellploy
             PollInterval = pollInterval;
         }
 
-        public IEnumerable<ProgressReport> Provision<TProvisioner, TContext>(
+        public IEnumerable<HarshProvisionerRecord> Provision<TProvisioner, TContext>(
             TProvisioner provisioner,
             TContext context
         )
@@ -57,7 +57,7 @@ namespace HarshPoint.Shellploy
             return Invoke(provisioner, context, provisioner.ProvisionAsync);
         }
 
-        public IEnumerable<ProgressReport> Unprovision<TProvisioner, TContext>(
+        public IEnumerable<HarshProvisionerRecord> Unprovision<TProvisioner, TContext>(
             TProvisioner provisioner,
             TContext context
         )
@@ -82,13 +82,13 @@ namespace HarshPoint.Shellploy
             _subject.Dispose();
         }
 
-        public void Report(ProgressReport report)
+        public void Report(HarshProvisionerRecord report)
         {
             CancellationToken.ThrowIfCancellationRequested();
             _subject.OnNext(report);
         }
 
-        private IEnumerable<ProgressReport> AsEnumerable()
+        private IEnumerable<HarshProvisionerRecord> AsEnumerable()
         {
             var observable = _subject.AsObservable();
 
@@ -96,7 +96,7 @@ namespace HarshPoint.Shellploy
             {
                 var interval = Observable
                     .Interval(PollInterval.Value)
-                    .Select(n => (ProgressReport)null);
+                    .Select(n => (HarshProvisionerRecord)null);
 
                 observable = observable.MergeWithCompleteOnEither(interval);
             }
@@ -104,7 +104,7 @@ namespace HarshPoint.Shellploy
             return observable.Next();
         }
 
-        private IEnumerable<ProgressReport> Invoke<TProvisioner, TContext>(
+        private IEnumerable<HarshProvisionerRecord> Invoke<TProvisioner, TContext>(
             TProvisioner provisioner,
             TContext context,
             Func<TContext, CancellationToken, Task> action

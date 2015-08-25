@@ -1,9 +1,9 @@
 ﻿using Serilog;
 using System;
 
-namespace HarshPoint.Provisioning.ProgressReporting
+namespace HarshPoint
 {
-    public sealed class ProgressSerilog : IProgress<ProgressReport>
+    public sealed class ProgressSerilog<T> : IProgress<T>
     {
         private readonly ILogger _logger;
 
@@ -17,12 +17,12 @@ namespace HarshPoint.Provisioning.ProgressReporting
             _logger = logger;
         }
 
-        public void Report(ProgressReport value)
+        public void Report(T value)
         {
             _logger.Information("{Value}", value);
         }
 
         private static readonly HarshLogger SelfLog
-            = HarshLog.ForContext<ProgressSerilog>();
+            = HarshLog.ForContext(typeof(ProgressSerilog<>));
     }
 }

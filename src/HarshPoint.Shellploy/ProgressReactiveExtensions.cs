@@ -8,7 +8,7 @@ namespace HarshPoint.Shellploy
 {
     internal static class ProgressReactiveExtensions
     {
-        public static IEnumerable<ProgressReport> Provision<TProvisioner, TContext>(
+        public static IEnumerable<HarshProvisionerRecord> Provision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context
         )
@@ -23,7 +23,7 @@ namespace HarshPoint.Shellploy
             );
         }
 
-        public static IEnumerable<ProgressReport> Provision<TProvisioner, TContext>(
+        public static IEnumerable<HarshProvisionerRecord> Provision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             CancellationToken token
@@ -39,7 +39,7 @@ namespace HarshPoint.Shellploy
             );
         }
 
-        public static IEnumerable<ProgressReport> Provision<TProvisioner, TContext>(
+        public static IEnumerable<HarshProvisionerRecord> Provision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             CancellationToken token,
@@ -56,7 +56,7 @@ namespace HarshPoint.Shellploy
             );
         }
 
-        public static IEnumerable<ProgressReport> Provision<TProvisioner, TContext>(
+        public static IEnumerable<HarshProvisionerRecord> Provision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             TimeSpan? pollInterval
@@ -72,7 +72,7 @@ namespace HarshPoint.Shellploy
             );
         }
 
-        public static IEnumerable<ProgressReport> Unprovision<TProvisioner, TContext>(
+        public static IEnumerable<HarshProvisionerRecord> Unprovision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context
         )
@@ -87,7 +87,7 @@ namespace HarshPoint.Shellploy
             );
         }
 
-        public static IEnumerable<ProgressReport> Unprovision<TProvisioner, TContext>(
+        public static IEnumerable<HarshProvisionerRecord> Unprovision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             CancellationToken token
@@ -103,7 +103,7 @@ namespace HarshPoint.Shellploy
             );
         }
 
-        public static IEnumerable<ProgressReport> Unprovision<TProvisioner, TContext>(
+        public static IEnumerable<HarshProvisionerRecord> Unprovision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             CancellationToken token,
@@ -120,7 +120,7 @@ namespace HarshPoint.Shellploy
             );
         }
 
-        public static IEnumerable<ProgressReport> Unprovision<TProvisioner, TContext>(
+        public static IEnumerable<HarshProvisionerRecord> Unprovision<TProvisioner, TContext>(
             this TProvisioner provisioner,
             TContext context,
             TimeSpan? pollInterval

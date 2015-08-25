@@ -9,8 +9,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         IEnumerable<Object> GetState(Type type);
 
-        void ReportProgress(ProgressReport value);
-
         Boolean MayDeleteUserData { get; }
     }
 }

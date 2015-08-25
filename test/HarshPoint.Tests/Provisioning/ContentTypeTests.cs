@@ -153,10 +153,11 @@ namespace HarshPoint.Tests.Provisioning
         [Fact]
         public async Task Default_group_is_used()
         {
+            var str = Guid.NewGuid().ToStringInvariant("n");
             var prov = new HarshContentType()
             {
-                Id = HarshContentTypeId.Parse("0x010044fbfdb9defa4244831062437d181c6f"),
-                Name = "44fbfdb9defa4244831062437d181c6f",
+                Id = HarshContentTypeId.Parse($"0x0100{str}"),
+                Name = str,
             };
 
             ContentType ct = null;
@@ -170,6 +171,8 @@ namespace HarshPoint.Tests.Provisioning
                 await prov.ProvisionAsync(ctx);
 
                 var cto = LastObjectOutput<ContentType>();
+                RegisterForDeletion(cto.Object);
+
                 Assert.True(cto.ObjectAdded);
 
                 ct = cto.Object;

@@ -11,8 +11,11 @@ namespace HarshPoint.Provisioning.Implementation
         where TSelf : HarshProvisionerContextBase<TSelf>
     {
         private Boolean _mayDeleteUserData;
-        private IProgress<ProgressReport> _progress;
-        private IImmutableStack<Object> _stateStack = ImmutableStack<Object>.Empty;
+        private IProgress<HarshProvisionerRecord> _progress;
+        private ImmutableStack<Object> _stateStack
+            = ImmutableStack<Object>.Empty;
+
+        internal HarshProvisionerContextBase() { }
 
         public Boolean MayDeleteUserData => _mayDeleteUserData;
 
@@ -68,23 +71,27 @@ namespace HarshPoint.Provisioning.Implementation
             return (TSelf)this.With(c => c._stateStack, _stateStack.Push(state));
         }
 
-        public TSelf WithProgress(IProgress<ProgressReport> progress)
+        public TSelf WithProgress(
+            IProgress<HarshProvisionerRecord> progress
+        )
             => (TSelf)this.With(c => c._progress, progress);
 
-        public void ReportProgress(ProgressReport value)
+        internal void Report(HarshProvisionerRecord value)
         {
             if (value == null)
             {
                 throw Logger.Fatal.ArgumentNull(nameof(value));
             }
 
-            value.Context = ToString();
-            value.Timestamp = DateTimeOffset.Now;
+            if (_progress == null)
+            {
+                return;
+            }
 
-            _progress?.Report(value);
+            _progress.Report(value);
         }
 
-        internal IImmutableStack<Object> StateStack => _stateStack;
+        internal ImmutableStack<Object> StateStack => _stateStack;
 
         Object IHarshCloneable.Clone() => Clone();
 

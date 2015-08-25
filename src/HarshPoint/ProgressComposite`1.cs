@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Immutable;
 
-namespace HarshPoint.Provisioning.ProgressReporting
+namespace HarshPoint
 {
-    public sealed class ProgressComposite : IProgress<ProgressReport>
+    public sealed class ProgressComposite<T> : IProgress<T>
     {
-        private readonly ImmutableArray<IProgress<ProgressReport>> _progresses;
+        private readonly ImmutableArray<IProgress<T>> _progresses;
 
-        public ProgressComposite(params IProgress<ProgressReport>[] progresses)
+        public ProgressComposite(params IProgress<T>[] progresses)
         {
             if (progresses == null)
             {
@@ -17,7 +17,7 @@ namespace HarshPoint.Provisioning.ProgressReporting
             _progresses = ImmutableArray.CreateRange(progresses);
         }
 
-        public void Report(ProgressReport value)
+        public void Report(T value)
         {
             foreach (var reporter in _progresses)
             {
@@ -26,6 +26,6 @@ namespace HarshPoint.Provisioning.ProgressReporting
         }
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext<ProgressComposite>();
+            = HarshLog.ForContext(typeof(ProgressComposite<>));
     }
 }

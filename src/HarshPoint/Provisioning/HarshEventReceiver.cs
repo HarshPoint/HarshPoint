@@ -53,7 +53,8 @@ namespace HarshPoint.Provisioning
                 list => list.EventReceivers.Include(
                     erd => erd.ReceiverId,
                     erd => erd.ReceiverName
-                )
+                ),
+                list => list.RootFolder.ServerRelativeUrl
             );
 
             context.Include(
@@ -78,12 +79,10 @@ namespace HarshPoint.Provisioning
                 }
                 else
                 {
-                    ReportProgress(
-                        ProgressReport.AlreadyExists(
-                           Name,
-                           tuple.Item2,
-                           tuple.Item1
-                        )
+                    WriteRecord.AlreadyExists(
+                        tuple.Item1.RootFolder.ServerRelativeUrl, 
+                        Name, 
+                        tuple.Item2
                     );
                 }
             }
@@ -98,8 +97,9 @@ namespace HarshPoint.Provisioning
             {
                 if (tuple.Item2 == null)
                 {
-                    ReportProgress(
-                        ProgressReport.DidNotExist(Name, tuple.Item1)
+                    WriteRecord.DidNotExist(
+                        tuple.Item1.RootFolder.ServerRelativeUrl,
+                        Name
                     );
                 }
                 else
@@ -142,8 +142,8 @@ namespace HarshPoint.Provisioning
 
             await ClientContext.ExecuteQueryAsync();
 
-            ReportProgress(
-                ProgressReport.Added(Name, receiver, list)
+            WriteRecord.Added(
+                list.RootFolder.ServerRelativeUrl, receiver
             );
         }
 
@@ -165,8 +165,9 @@ namespace HarshPoint.Provisioning
             tuple.Item2.DeleteObject();
             await ClientContext.ExecuteQueryAsync();
 
-            ReportProgress(
-                ProgressReport.Removed(tuple.Item2.ReceiverName, tuple.Item1)
+            WriteRecord.Removed(
+                tuple.Item1.RootFolder.ServerRelativeUrl,
+                tuple.Item2.ReceiverName
             );
         }
 

@@ -66,9 +66,7 @@ namespace HarshPoint.Provisioning
                     Url = Url,
                 });
 
-                ReportProgress(
-                    ProgressReport.Added(Url, List)
-                );
+                WriteRecord.Added(Url, List);
 
                 await ClientContext.ExecuteQueryAsync();
             }
@@ -76,9 +74,7 @@ namespace HarshPoint.Provisioning
             {
                 List = ExistingList.Value;
 
-                ReportProgress(
-                    ProgressReport.AlreadyExists<List>(Url, List)
-                );
+                WriteRecord.AlreadyExists(Url, List);
             }
         }
 

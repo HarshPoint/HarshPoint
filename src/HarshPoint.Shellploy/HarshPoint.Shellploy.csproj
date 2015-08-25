@@ -137,6 +137,7 @@
     <None Include="Generated\*.psm1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="HarshPoint.Shellploy.format.ps1xml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

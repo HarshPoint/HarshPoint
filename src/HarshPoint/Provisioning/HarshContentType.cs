@@ -28,7 +28,8 @@ namespace HarshPoint.Provisioning
         [Parameter(Mandatory = true, ParameterSetName = "Id")]
         public HarshContentTypeId Id { get; set; }
 
-        [Parameter(Mandatory = false /*WhenCreating*/)]
+        [Parameter]
+        [MandatoryWhenCreating]
         public String Name { get; set; }
 
         [Parameter(Mandatory = true, ParameterSetName = "ParentContentType")]
@@ -51,6 +52,8 @@ namespace HarshPoint.Provisioning
         {
             if (ExistingContentType.Value == null)
             {
+                ValidateMandatoryWhenCreatingParameters();
+
                 ContentType = Web.ContentTypes.Add(new ContentTypeCreationInformation()
                 {
                     Description = Description,
@@ -60,11 +63,9 @@ namespace HarshPoint.Provisioning
                     Name = Name,
                 });
 
-                ReportProgress(
-                    ProgressReport.Added(
-                        Id?.ToString() ?? Name,
-                        ContentType
-                    )
+                WriteRecord.Added(
+                    Id?.ToString() ?? Name,
+                    ContentType
                 );
 
                 await ClientContext.ExecuteQueryAsync();
@@ -73,8 +74,9 @@ namespace HarshPoint.Provisioning
             {
                 ContentType = ExistingContentType.Value;
 
-                ReportProgress(
-                    ProgressReport.AlreadyExists(ContentType.StringId, ContentType)
+                WriteRecord.AlreadyExists(
+                    ContentType.StringId, 
+                    ContentType
                 );
             }
         }
