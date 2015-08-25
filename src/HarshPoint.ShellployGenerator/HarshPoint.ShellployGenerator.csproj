@@ -167,7 +167,7 @@
     <Compile Include="Commands\BuildFieldMultilineText.cs" />
     <Compile Include="Commands\BuildFieldDateTime.cs" />
     <Compile Include="Commands\BuildField.cs" />
-    <Compile Include="Commands\BuildModifyField.cs" />
+    <Compile Include="Commands\BuildModifyFieldType.cs" />
     <Compile Include="Commands\DefaultFromContextTagCommandBuilder.cs" />
     <Compile Include="Commands\HarshPointCommandBuilder.cs" />
     <Compile Include="Commands\BuildRemoveContentTypeRef.cs" />

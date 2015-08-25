@@ -99,8 +99,9 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         {
             if (HasMember(name))
             {
-                throw Logger.Fatal.InvalidOperation(
-                    SR.CodeDomExtensions_FieldExists
+                throw Logger.Fatal.InvalidOperationFormat(
+                    SR.CodeDomExtensions_FieldExists,
+                    name
                 );
             }
 

@@ -35,18 +35,18 @@ namespace HarshPoint.ShellployGenerator
                     .ToArray();
 
                 var directory = EnsureDirectoryEmpty(args[0]);
-                var fileGenContext = new FileGeneratorContext(directory);
+                var context = new FileGeneratorContext(directory);
 
                 foreach (var file in generators)
                 {
-                    file.Write(fileGenContext);
+                    RunGenerator(file, context);
                 }
 
                 var aliases = new AliasFileGenerator(
                     generators.Select(g => g.Command)
                 );
 
-                aliases.Write(fileGenContext);
+                RunGenerator(aliases, context);
 
                 return 0;
             }
@@ -54,6 +54,24 @@ namespace HarshPoint.ShellployGenerator
             {
                 Log.Fatal(exc, "Unhandled exception");
                 throw;
+            }
+        }
+
+        private static void RunGenerator(
+            FileGenerator generator, 
+            FileGeneratorContext context
+        )
+        {
+            try
+            {
+                generator.Write(context);
+            }
+            catch (Exception exc)
+            {
+                throw new Exception(
+                    $"Error generating {generator.FileName}",
+                    exc
+                );
             }
         }
 

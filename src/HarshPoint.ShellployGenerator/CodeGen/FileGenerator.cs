@@ -5,7 +5,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 {
     public abstract class FileGenerator
     {
-        protected String FileName { get; set; }
+        public String FileName { get; protected set; }
 
         protected abstract void Write(TextWriter writer);
 
