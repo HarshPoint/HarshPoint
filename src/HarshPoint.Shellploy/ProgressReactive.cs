@@ -98,7 +98,7 @@ namespace HarshPoint.Shellploy
                     .Interval(PollInterval.Value)
                     .Select(n => (ProgressReport)null);
 
-                observable = observable.Merge(interval);
+                observable = observable.MergeWithCompleteOnEither(interval);
             }
 
             return observable.Next();

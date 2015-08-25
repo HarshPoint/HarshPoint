@@ -120,6 +120,7 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="ObservableExtensions.cs" />
     <Compile Include="CredentialFactory.cs" />
     <Compile Include="CredentialType.cs" />
     <Compile Include="InvokeProvisionerCommand.cs" />
