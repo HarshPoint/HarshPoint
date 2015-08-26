@@ -47,6 +47,11 @@ namespace HarshPoint.ShellployGenerator.Builders
         )
             => VisitNext(property);
 
+        protected internal virtual PropertyModel VisitNoNegative(
+            PropertyModelNoNegative property
+        )
+            => VisitNext(property);
+
         protected internal virtual PropertyModel VisitRenamed(
             PropertyModelRenamed property
         )

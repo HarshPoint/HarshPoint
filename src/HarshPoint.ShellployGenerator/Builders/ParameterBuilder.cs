@@ -22,6 +22,12 @@ namespace HarshPoint.ShellployGenerator.Builders
             return this;
         }
 
+        public ParameterBuilder NoNegative()
+        {
+            Update(new PropertyModelNoNegative());
+            return this;
+        }
+
         public ParameterBuilder Rename(String propertyName)
         {
             Container.ValidatePropertyName(propertyName);

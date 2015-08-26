@@ -5,7 +5,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         public PropertyModelIgnored() { }
 
         public PropertyModelIgnored(PropertyModel next)
-            :base(next)
+            : base(next)
         {
         }
 

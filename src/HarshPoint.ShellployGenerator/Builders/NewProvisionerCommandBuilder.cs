@@ -43,7 +43,8 @@ namespace HarshPoint.ShellployGenerator.Builders
             properties = IgnoreUnfixedParameterSets.Visit(properties);
             properties = RemoveIgnoredUnsynthesized.Visit(properties);
             properties = SetValueFromPipelineByPropertyName.Visit(properties);
-            properties = BoolToSwitchVisitor.Visit(properties);
+            properties = BoolToSwitch.Visit(properties);
+            properties = NullableBoolToNegativeSwitch.Visit(properties);
 
             if (HasInputObject)
             {
@@ -122,11 +123,14 @@ namespace HarshPoint.ShellployGenerator.Builders
             }
         }
 
-        private static readonly ChangePropertyTypeVisitor BoolToSwitchVisitor =
-            new ChangePropertyTypeVisitor(
+        private static readonly PropertyModelVisitor BoolToSwitch
+            = new ChangePropertyTypeVisitor(
                 typeof(Boolean),
                 typeof(SMA.SwitchParameter)
             );
+
+        private static readonly PropertyModelVisitor NullableBoolToNegativeSwitch
+            = new SynthesizeNegativeSwitch();
 
         private static readonly PropertyModelVisitor IgnoreUnfixedParameterSets
             = new IgnoreUnfixedParameterSetPropertiesVisitor();

@@ -124,6 +124,7 @@
     <Compile Include="Builders\NewProvisionerCommandModel.cs" />
     <Compile Include="Builders\PropertyModelAssignedTo.cs" />
     <Compile Include="Builders\PropertyModelIdentifiedPlaceholder.cs" />
+    <Compile Include="Builders\PropertyModelNoNegative.cs" />
     <Compile Include="Builders\TypedPropertyModelFactory.cs" />
     <Compile Include="Builders\NewObjectCommandBuilder`1.cs" />
     <Compile Include="Builders\NewProvisionerCommandBuilder.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Builders\ParameterBuilder.cs" />
     <Compile Include="Builders\PropertyModelVisitor.cs" />
     <Compile Include="Builders\Visitors\RemoveIgnoredOrUnsynthesizedVisitor.cs" />
+    <Compile Include="Builders\Visitors\SynthesizeNegativeSwitch.cs" />
     <Compile Include="CodeGen\AttributeModelCodeDom.cs" />
     <Compile Include="CodeGen\FileGeneratorContext.cs" />
     <Compile Include="CodeGen\Visitors\NewObjectAssignmentVisitor.cs" />

@@ -19,6 +19,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             FromType = fromType;
             ToType = toType;
         }
+
         public Type FromType { get; }
         public Type ToType { get; }
 

@@ -21,6 +21,12 @@ namespace HarshPoint.ShellployGenerator.Builders
             return this;
         }
 
+        public new ParameterBuilder<TProvisioner> NoNegative()
+        {
+            base.NoNegative();
+            return this;
+        }
+
         public new ParameterBuilder<TProvisioner> Rename(String propertyName)
         {
             base.Rename(propertyName);
