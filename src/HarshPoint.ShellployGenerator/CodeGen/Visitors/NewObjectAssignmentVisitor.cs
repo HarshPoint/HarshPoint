@@ -7,11 +7,14 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 {
     internal sealed class NewObjectAssignmentVisitor : PropertyModelVisitor
     {
-        private readonly HarshScopedValue<CodeExpression> _lhs
-            = new HarshScopedValue<CodeExpression>();
+        private readonly HarshScopedValue<Object> _fixedValue
+            = new HarshScopedValue<Object>();
 
         private readonly HarshScopedValue<Boolean> _isNegated
             = new HarshScopedValue<Boolean>();
+
+        private readonly HarshScopedValue<CodeExpression> _lhs
+            = new HarshScopedValue<CodeExpression>();
 
         private readonly CodeExpression _targetObject;
 
@@ -57,16 +60,10 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 throw Logger.Fatal.ArgumentNull(nameof(property));
             }
 
-
-
-            AddTargetAssignment(
-                property,
-                Statements,
-                CodeLiteralExpression.Create(property.Value)
-            );
-
-            // do not visit further
-            return property;
+            using (_fixedValue.EnterIfHasNoValue(property.Value))
+            {
+                return base.VisitFixed(property);
+            }
         }
 
         protected internal override PropertyModel VisitNegated(
@@ -75,7 +72,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         {
             using (_isNegated.EnterIfHasNoValue(true))
             {
-                return base.VisitNegated(property); 
+                return base.VisitNegated(property);
             }
         }
 
@@ -88,8 +85,15 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 throw Logger.Fatal.ArgumentNull(nameof(property));
             }
 
-
-            if (property.PropertyType == typeof(SMA.SwitchParameter))
+            if (_fixedValue.HasValue)
+            {
+                AddTargetAssignment(
+                    property,
+                    Statements,
+                    CodeLiteralExpression.Create(_fixedValue.Value)
+                );
+            }
+            else if (property.PropertyType == typeof(SMA.SwitchParameter))
             {
                 var condition = new CodeConditionStatement(
                     new CodePropertyReferenceExpression(
@@ -122,11 +126,10 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
         private void AddTargetAssignment(
             PropertyModel current,
-            CodeStatementCollection statements, 
+            CodeStatementCollection statements,
             CodeExpression rhs
         )
         {
-
             if (_lhs.HasValue)
             {
                 statements.Add(
@@ -149,7 +152,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
         private CodeExpression GetPropertyExpression(
             PropertyModelSynthesized property
-        ) 
+        )
             => new CodePropertyReferenceExpression(
                 This,
                 RenamedPropertyName ?? property.Identifier
