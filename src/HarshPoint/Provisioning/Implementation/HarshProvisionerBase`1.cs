@@ -85,14 +85,14 @@ namespace HarshPoint.Provisioning.Implementation
 
         public Task ProvisionAsync(
             TContext context,
-            IProgress<ProgressReport> progress
+            IProgress<HarshProvisionerRecord> progress
         )
             => ProvisionAsync(context.WithProgress(progress));
 
         public Task ProvisionAsync(
             TContext context,
             CancellationToken token,
-            IProgress<ProgressReport> progress
+            IProgress<HarshProvisionerRecord> progress
         )
             => ProvisionAsync(context
                 .WithToken(token)
@@ -114,14 +114,14 @@ namespace HarshPoint.Provisioning.Implementation
 
         public Task UnprovisionAsync(
             TContext context,
-            IProgress<ProgressReport> progress
+            IProgress<HarshProvisionerRecord> progress
         )
             => UnprovisionAsync(context.WithProgress(progress));
 
         public Task UnprovisionAsync(
             TContext context,
             CancellationToken token,
-            IProgress<ProgressReport> progress
+            IProgress<HarshProvisionerRecord> progress
         )
             => UnprovisionAsync(context
                 .WithToken(token)

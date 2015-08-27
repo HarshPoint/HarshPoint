@@ -19,7 +19,6 @@ namespace HarshPoint.Provisioning.Implementation
         private IImmutableList<IProvisioningSessionInspector> _sessionInspectors
             = ImmutableList<IProvisioningSessionInspector>.Empty;
         private CancellationToken _token = CancellationToken.None;
-        private IImmutableStack<Object> _stateStack = ImmutableStack<Object>.Empty;
 
         internal HarshProvisionerContextBase() { }
 
