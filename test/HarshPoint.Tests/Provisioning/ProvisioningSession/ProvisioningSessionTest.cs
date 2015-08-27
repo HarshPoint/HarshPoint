@@ -1,11 +1,9 @@
 ﻿using HarshPoint.Provisioning;
-using System.Threading.Tasks;
-using Xunit;
-using Xunit.Abstractions;
 using HarshPoint.Provisioning.Implementation;
-using Moq;
-using Moq.Sequences;
 using HarshPoint.Tests;
+using Moq;
+using System.Threading.Tasks;
+using Xunit.Abstractions;
 
 namespace ProvisioningSession
 {
@@ -20,9 +18,7 @@ namespace ProvisioningSession
         {
             // Missing HarshPoint.Provisioning.NeverDeletesUserData
             protected override Task OnUnprovisioningAsync()
-            {
-                return base.OnUnprovisioningAsync();
-            }
+                => base.OnUnprovisioningAsync();
         }
 
         protected class HarshChild1 : HarshProvisioner
@@ -37,40 +33,57 @@ namespace ProvisioningSession
         {
         }
 
-        protected void AddProvisioningSequence<TProvisioner>(Mock<IProvisioningSessionInspector> mockInspector)
-        where TProvisioner : HarshProvisionerBase
-        {
-            mockInspector.Setup(x => x.OnProvisioningStarting(
-                It.IsAny<HarshProvisionerContext>(),
-                It.IsAny<TProvisioner>()
-            )).InSequence();
-            mockInspector.Setup(x => x.OnProvisioningEnded(
-                It.IsAny<HarshProvisionerContext>(),
-                It.IsAny<TProvisioner>()
-            )).InSequence();
-        }
-
-        protected void AddProvisioningSkippedSequence<TProvisioner>(Mock<IProvisioningSessionInspector> mockInspector)
+        protected void AddProvisioningSequence<TProvisioner>(
+            Sequence seq,
+            Mock<IProvisioningSessionInspector> mockInspector
+        )
             where TProvisioner : HarshProvisionerBase
         {
-            mockInspector.Setup(x => x.OnProvisioningSkipped(
-                It.IsAny<HarshProvisionerContext>(),
-                It.IsAny<TProvisioner>()
-            )).InSequence();
+            mockInspector
+                .SetupInSequence(seq, x => x.OnProvisioningStarting(
+                    It.IsAny<HarshProvisionerContext>(),
+                    It.IsAny<TProvisioner>()
+                ));
+            mockInspector
+                .SetupInSequence(seq, x => x.OnProvisioningEnded(
+                    It.IsAny<HarshProvisionerContext>(),
+                    It.IsAny<TProvisioner>()
+                ));
         }
 
-        protected void AddSessionStartingSequence(Mock<IProvisioningSessionInspector> mockInspector)
+        protected void AddProvisioningSkippedSequence<TProvisioner>(
+            Sequence seq,
+            Mock<IProvisioningSessionInspector> mockInspector
+        )
+            where TProvisioner : HarshProvisionerBase
         {
-            mockInspector.Setup(x => x.OnSessionStarting(
-                It.IsAny<HarshProvisionerContext>()
-            )).InSequence();
+            mockInspector
+                .SetupInSequence(seq, x => x.OnProvisioningSkipped(
+                    It.IsAny<HarshProvisionerContext>(),
+                    It.IsAny<TProvisioner>()
+                ));
         }
 
-        protected void AddSessionEndedSequence(Mock<IProvisioningSessionInspector> mockInspector)
+        protected void AddSessionStartingSequence(
+            Sequence seq,
+            Mock<IProvisioningSessionInspector> mockInspector
+        )
         {
-            mockInspector.Setup(x => x.OnSessionEnded(
-                It.IsAny<HarshProvisionerContext>()
-            )).InSequence();
+            mockInspector
+                .SetupInSequence(seq, x => x.OnSessionStarting(
+                    It.IsAny<HarshProvisionerContext>()
+                ));
+        }
+
+        protected void AddSessionEndedSequence(
+            Sequence seq,
+            Mock<IProvisioningSessionInspector> mockInspector
+        )
+        {
+            mockInspector
+                .SetupInSequence(seq, x => x.OnSessionEnded(
+                    It.IsAny<HarshProvisionerContext>()
+                ));
         }
     }
 }

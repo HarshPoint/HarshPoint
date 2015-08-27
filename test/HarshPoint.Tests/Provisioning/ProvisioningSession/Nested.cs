@@ -1,14 +1,10 @@
-﻿using HarshPoint.ObjectModel;
-using HarshPoint.Provisioning;
-using Microsoft.SharePoint.Client;
-using System;
-using System.Linq;
+﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Implementation;
+using HarshPoint.Tests;
+using Moq;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using HarshPoint.Provisioning.Implementation;
-using Moq;
-using Moq.Sequences;
 
 namespace ProvisioningSession
 {
@@ -39,15 +35,15 @@ namespace ProvisioningSession
         {
             var mockInspector = new Mock<IProvisioningSessionInspector>(MockBehavior.Strict);
 
-            using (Sequence.Create())
+            using (var seq = new Sequence())
             {
-                AddSessionStartingSequence(mockInspector);
+                AddSessionStartingSequence(seq, mockInspector);
 
-                AddProvisioningSequence<HarshProvisioner>(mockInspector);
-                AddProvisioningSequence<HarshChild1>(mockInspector);
-                AddProvisioningSequence<HarshSubChild>(mockInspector);
+                AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
+                AddProvisioningSequence<HarshChild1>(seq, mockInspector);
+                AddProvisioningSequence<HarshSubChild>(seq, mockInspector);
 
-                AddSessionEndedSequence(mockInspector);
+                AddSessionEndedSequence(seq, mockInspector);
 
                 var context = Context.AddSessionInspector(mockInspector.Object);
                 await Provisioner.ProvisionAsync(context);
@@ -59,15 +55,15 @@ namespace ProvisioningSession
         {
             var mockInspector = new Mock<IProvisioningSessionInspector>(MockBehavior.Strict);
 
-            using (Sequence.Create())
+            using (var seq = new Sequence())
             {
-                AddSessionStartingSequence(mockInspector);
+                AddSessionStartingSequence(seq, mockInspector);
 
-                AddProvisioningSequence<HarshProvisioner>(mockInspector);
-                AddProvisioningSequence<HarshChild1>(mockInspector);
-                AddProvisioningSequence<HarshSubChild>(mockInspector);
+                AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
+                AddProvisioningSequence<HarshChild1>(seq, mockInspector);
+                AddProvisioningSequence<HarshSubChild>(seq, mockInspector);
 
-                AddSessionEndedSequence(mockInspector);
+                AddSessionEndedSequence(seq, mockInspector);
 
                 var context = Context.AddSessionInspector(mockInspector.Object);
                 await Provisioner.UnprovisionAsync(context);

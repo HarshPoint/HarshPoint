@@ -93,22 +93,6 @@
       <HintPath>..\..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Moq.Sequences, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.Sequences.1.0.1.0\lib\net40\Moq.Sequences.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.5.7.10213, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.2.5.7.10213\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.mocks, Version=2.5.7.10213, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.2.5.7.10213\lib\nunit.mocks.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="pnunit.framework, Version=1.0.3865.21394, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.2.5.7.10213\lib\pnunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Serilog.1.5.9\lib\net45\Serilog.dll</HintPath>
       <Private>True</Private>
@@ -160,6 +144,7 @@
   <ItemGroup>
     <Compile Include="ClientRequestExtension.cs" />
     <Compile Include="CloneableTests.cs" />
+    <Compile Include="Sequence.cs" />
     <Compile Include="DependencyGraphTests.cs" />
     <Compile Include="Entity\ContentTypeIdBuilderTests.cs" />
     <Compile Include="Entity\FieldAttributeTests.cs" />
