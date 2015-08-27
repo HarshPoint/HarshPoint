@@ -117,7 +117,6 @@
     <Compile Include="Provisioning\Implementation\HarshProvisionerAction.cs" />
     <Compile Include="Provisioning\Implementation\ProvisioningSession.cs" />
     <Compile Include="Provisioning\Implementation\IProvisioningSessionInspector.cs" />
-    <Compile Include="Provisioning\ProgressReport.cs" />
     <Compile Include="ObjectModel\Chain`1.cs" />
     <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyValueSource.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerMetadataRepository.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
@@ -43,35 +44,64 @@ namespace HarshPoint.Provisioning.Implementation
                 .AddRange(children);
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public void OnSessionStarting(IHarshProvisionerContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             NotifyInspectors(context, si => si.OnSessionStarting(context));
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public void OnSessionEnded(IHarshProvisionerContext context)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             NotifyInspectors(context, si => si.OnSessionEnded(context));
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public void OnProvisioningStarting(IHarshProvisionerContext context, HarshProvisionerBase provisioner)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             NotifyInspectors(context, si => si.OnProvisioningStarting(context, provisioner));
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public void OnProvisioningEnded(IHarshProvisionerContext context, HarshProvisionerBase provisioner)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             NotifyInspectors(context, si => si.OnProvisioningEnded(context, provisioner));
         }
 
         public void OnProvisioningSkipped(IHarshProvisionerContext context, HarshProvisionerBase provisioner)
         {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
             foreach (var p in GetFlattenedTree(provisioner))
             {
                 NotifyInspectors(context, si => si.OnProvisioningSkipped(context, p));
             }
         }
 
-        public void NotifyInspectors(IHarshProvisionerContext context, Action<IProvisioningSessionInspector> action)
+        private static void NotifyInspectors(IHarshProvisionerContext context, Action<IProvisioningSessionInspector> action)
         {
             foreach (var sessionInspector in context.SessionInspectors)
             {
