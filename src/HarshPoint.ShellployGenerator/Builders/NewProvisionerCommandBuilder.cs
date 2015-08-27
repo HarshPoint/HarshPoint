@@ -130,7 +130,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             );
 
         private static readonly PropertyModelVisitor NullableBoolToNegativeSwitch
-            = new SynthesizeNegativeSwitch();
+            = new NullableBoolToNegativeSwitchVisitor();
 
         private static readonly PropertyModelVisitor IgnoreUnfixedParameterSets
             = new IgnoreUnfixedParameterSetPropertiesVisitor();

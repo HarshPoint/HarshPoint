@@ -162,6 +162,15 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot generate assignment code for the property &quot;{0}&quot; because it is not wrapped with an PropertyModelAssignedTo..
+        /// </summary>
+        internal static string NewObjectAssignmentVisitor_LhsNull {
+            get {
+                return ResourceManager.GetString("NewObjectAssignmentVisitor_LhsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempted to set a default value on a parameter with a fixed value..
         /// </summary>
         internal static string ParameterBuilderDefaultValue_AttemptedToNestFixed {

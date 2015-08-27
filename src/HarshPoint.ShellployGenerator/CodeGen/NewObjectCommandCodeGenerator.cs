@@ -1,6 +1,7 @@
 ﻿using HarshPoint.ShellployGenerator.Builders;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
@@ -23,7 +24,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         {
             var visitor = new NewObjectAssignmentVisitor(targetObject);
             visitor.Visit(Command.Properties);
-            return visitor.Statements;
+            return visitor.Statements.Cast<CodeStatement>();
         }
 
         public IEnumerable<CodeMemberMethod> Methods

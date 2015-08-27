@@ -152,6 +152,9 @@
 
 Properties: {0}</value>
   </data>
+  <data name="NewObjectAssignmentVisitor_LhsNull" xml:space="preserve">
+    <value>Cannot generate assignment code for the property "{0}" because it is not wrapped with an PropertyModelAssignedTo.</value>
+  </data>
   <data name="ParameterBuilderDefaultValue_AttemptedToNestFixed" xml:space="preserve">
     <value>Attempted to set a default value on a parameter with a fixed value.</value>
   </data>

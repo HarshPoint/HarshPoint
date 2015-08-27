@@ -140,6 +140,42 @@ namespace CommandBuilding
         }
 
         [Fact]
+        public void Negative_is_assigned_to_target_property()
+        {
+            var builder = new NewProvisionerCommandBuilder<NullableTest>();
+            builder.Parameter(x => x.Something);
+            var command = builder.ToCommand();
+
+            var noSomething = Assert.Single(
+                command.Properties,
+                p => p.Identifier == "NoSomething"
+            );
+
+            var assignedTo = Assert.Single(
+                noSomething.ElementsOfType<PropertyModelAssignedTo>()
+            );
+
+            Assert.Equal("Something", assignedTo.TargetPropertyName);
+        }
+
+        [Fact]
+        public void Negative_is_negated()
+        {
+            var builder = new NewProvisionerCommandBuilder<NullableTest>();
+            builder.Parameter(x => x.Something);
+            var command = builder.ToCommand();
+
+            var noSomething = Assert.Single(
+                command.Properties,
+                p => p.Identifier == "NoSomething"
+            );
+
+            Assert.Single(
+                noSomething.ElementsOfType<PropertyModelNegated>()
+            );
+        }
+
+        [Fact]
         public void Ignored_param_doesnt_get_negative()
         {
             var builder = new NewProvisionerCommandBuilder<NullableTest>();
@@ -147,32 +183,6 @@ namespace CommandBuilding
             var command = builder.ToCommand();
 
             Assert.Empty(command.Properties);
-        }
-
-        [Fact]
-        public void Noob_negative_is_NoNoob()
-        {
-            var builder = new NewProvisionerCommandBuilder<NullableTest>();
-            builder.Parameter(x => x.Something).Rename("Noob");
-            var command = builder.ToCommand();
-
-            Assert.Single(
-                command.Properties,
-                p => p.Identifier == "NoNoob"
-            );
-        }
-
-        [Fact]
-        public void NoFoo_negative_is_Foo()
-        {
-            var builder = new NewProvisionerCommandBuilder<NullableTest>();
-            builder.Parameter(x => x.Something).Rename("NoFoo");
-            var command = builder.ToCommand();
-
-            var noSomething = Assert.Single(
-                command.Properties,
-                p => p.Identifier == "Foo"
-            );
         }
 
         private class NullableTest : HarshProvisioner

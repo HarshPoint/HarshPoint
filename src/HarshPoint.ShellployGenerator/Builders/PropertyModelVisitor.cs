@@ -7,6 +7,9 @@ namespace HarshPoint.ShellployGenerator.Builders
 {
     public abstract class PropertyModelVisitor
     {
+        private readonly HarshScopedValue<String> _renamed
+            = new HarshScopedValue<String>();
+
         public virtual IEnumerable<PropertyModel> Visit(
             IEnumerable<PropertyModel> properties
         )
@@ -47,6 +50,11 @@ namespace HarshPoint.ShellployGenerator.Builders
         )
             => VisitNext(property);
 
+        protected internal virtual PropertyModel VisitNegated(
+            PropertyModelNegated property
+        )
+            => VisitNext(property);
+
         protected internal virtual PropertyModel VisitNoNegative(
             PropertyModelNoNegative property
         )
@@ -55,8 +63,17 @@ namespace HarshPoint.ShellployGenerator.Builders
         protected internal virtual PropertyModel VisitRenamed(
             PropertyModelRenamed property
         )
-            => VisitNext(property);
+        {
+            if (property == null)
+            {
+                return null;
+            }
 
+            using (_renamed.EnterIfHasNoValue(property.PropertyName))
+            {
+                return VisitNext(property); 
+            }
+        }
 
         protected internal virtual PropertyModel VisitPositional(
             PropertyModelPositional property
@@ -83,6 +100,8 @@ namespace HarshPoint.ShellployGenerator.Builders
         )
             => VisitNext(property);
 
+        protected String RenamedPropertyName => _renamed.Value;
+
         private PropertyModel VisitNext(PropertyModel property)
         {
             if (property?.NextElement != null)
@@ -94,7 +113,6 @@ namespace HarshPoint.ShellployGenerator.Builders
 
             return property;
         }
-
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(PropertyModelVisitor));

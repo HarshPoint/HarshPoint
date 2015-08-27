@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
 using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    internal sealed class SynthesizeNegativeSwitch : PropertyModelVisitor
+    internal sealed class NullableBoolToNegativeSwitchVisitor :
+        PropertyModelVisitor
     {
-        private readonly HarshScopedValue<String> _renamed
+        private readonly HarshScopedValue<String> _assignedTo
             = new HarshScopedValue<String>();
 
         private readonly List<PropertyModel> _synthesized
@@ -26,6 +26,16 @@ namespace HarshPoint.ShellployGenerator.Builders
                 .Concat(_synthesized.ToImmutableArray());
         }
 
+        protected internal override PropertyModel VisitAssignedTo(
+            PropertyModelAssignedTo property
+        )
+        {
+            using (_assignedTo.EnterIfHasNoValue(property.TargetPropertyName))
+            {
+                return base.VisitAssignedTo(property); 
+            }
+        }
+
         protected internal override PropertyModel VisitNoNegative(
             PropertyModelNoNegative property
         )
@@ -35,23 +45,10 @@ namespace HarshPoint.ShellployGenerator.Builders
                 throw Logger.Fatal.ArgumentNull(nameof(property));
             }
 
-            // do not visi but keep the rest of the chain
+            // remove the current PropertyModelNoNegative but 
+            // keep the rest of the chain
+
             return property.NextElement; 
-        }
-
-        protected internal override PropertyModel VisitRenamed(
-            PropertyModelRenamed property
-        )
-        {
-            if (property == null)
-            {
-                throw Logger.Fatal.ArgumentNull(nameof(property));
-            }
-
-            using (_renamed.EnterIfHasNoValue(property.PropertyName))
-            {
-                return base.VisitRenamed(property);
-            }
         }
 
         protected internal override PropertyModel VisitSynthesized(
@@ -65,11 +62,19 @@ namespace HarshPoint.ShellployGenerator.Builders
 
             if (property.PropertyType == typeof(Boolean?))
             {
+                var propertyName =
+                    "No" + (RenamedPropertyName ?? property.Identifier);
+
                 _synthesized.Add(
-                    new PropertyModelSynthesized(
-                        GetNegativeName(_renamed.Value ?? property.Identifier),
-                        typeof(SMA.SwitchParameter),
-                        property.Attributes
+                    new PropertyModelAssignedTo(
+                        _assignedTo.Value,
+                        new PropertyModelNegated(
+                            new PropertyModelSynthesized(
+                                propertyName,
+                                typeof(SMA.SwitchParameter),
+                                property.Attributes
+                            )
+                        )
                     )
                 );
 
@@ -79,16 +84,6 @@ namespace HarshPoint.ShellployGenerator.Builders
             return base.VisitSynthesized(property);
         }
 
-        private static String GetNegativeName(String name)
-        {
-            if (Regex.IsMatch(name, "^No[A-Z]"))
-            {
-                return name.Substring(2);
-            }
-
-            return $"No{name}";
-        }
-
         private static readonly ChangePropertyTypeVisitor NullableBoolToSwitch
             = new ChangePropertyTypeVisitor(
                 typeof(Boolean?), 
@@ -96,6 +91,6 @@ namespace HarshPoint.ShellployGenerator.Builders
             );
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(SynthesizeNegativeSwitch));
+            = HarshLog.ForContext(typeof(NullableBoolToNegativeSwitchVisitor));
     }
 }

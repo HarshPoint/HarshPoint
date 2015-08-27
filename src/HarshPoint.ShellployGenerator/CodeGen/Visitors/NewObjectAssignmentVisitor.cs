@@ -1,17 +1,17 @@
 ﻿using HarshPoint.ShellployGenerator.Builders;
 using System;
 using System.CodeDom;
-using System.Collections.ObjectModel;
+using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
     internal sealed class NewObjectAssignmentVisitor : PropertyModelVisitor
     {
-        private readonly HarshScopedValue<String> _renamed
-            = new HarshScopedValue<String>();
+        private readonly HarshScopedValue<CodeExpression> _lhs
+            = new HarshScopedValue<CodeExpression>();
 
-        private readonly HarshScopedValue<Object> _fixedValue
-            = new HarshScopedValue<Object>();
+        private readonly HarshScopedValue<Boolean> _isNegated
+            = new HarshScopedValue<Boolean>();
 
         private readonly CodeExpression _targetObject;
 
@@ -25,25 +25,27 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             _targetObject = targetObject;
         }
 
-        public Collection<CodeStatement> Statements { get; }
-            = new Collection<CodeStatement>();
+        public CodeStatementCollection Statements { get; }
+            = new CodeStatementCollection();
 
         protected internal override PropertyModel VisitAssignedTo(
             PropertyModelAssignedTo property
         )
         {
+            if (property == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(property));
+            }
+
             var lhs = new CodePropertyReferenceExpression(
                 _targetObject,
                 property.TargetPropertyName
             );
 
-            var rhs = GetAssignedExpression(property);
-
-            Statements.Add(
-                new CodeAssignStatement(lhs, rhs)
-            );
-
-            return property;
+            using (_lhs.EnterIfHasNoValue(lhs))
+            {
+                return base.VisitAssignedTo(property);
+            }
         }
 
         protected internal override PropertyModel VisitFixed(
@@ -55,14 +57,30 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 throw Logger.Fatal.ArgumentNull(nameof(property));
             }
 
-            using (_fixedValue.EnterIfHasNoValue(property.Value))
+
+
+            AddTargetAssignment(
+                property,
+                Statements,
+                CodeLiteralExpression.Create(property.Value)
+            );
+
+            // do not visit further
+            return property;
+        }
+
+        protected internal override PropertyModel VisitNegated(
+            PropertyModelNegated property
+        )
+        {
+            using (_isNegated.EnterIfHasNoValue(true))
             {
-                return base.VisitFixed(property);
+                return base.VisitNegated(property); 
             }
         }
 
-        protected internal override PropertyModel VisitRenamed(
-            PropertyModelRenamed property
+        protected internal override PropertyModel VisitSynthesized(
+            PropertyModelSynthesized property
         )
         {
             if (property == null)
@@ -70,24 +88,72 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 throw Logger.Fatal.ArgumentNull(nameof(property));
             }
 
-            using (_renamed.EnterIfHasNoValue(property.PropertyName))
+
+            if (property.PropertyType == typeof(SMA.SwitchParameter))
             {
-                return base.VisitRenamed(property);
+                var condition = new CodeConditionStatement(
+                    new CodePropertyReferenceExpression(
+                        GetPropertyExpression(property),
+                        "IsPresent"
+                    )
+                );
+
+                AddTargetAssignment(
+                    property,
+                    condition.TrueStatements,
+                    new CodePrimitiveExpression(
+                        _isNegated.HasValue ? false : true
+                    )
+                );
+
+                Statements.Add(condition);
             }
+            else
+            {
+                AddTargetAssignment(
+                    property,
+                    Statements,
+                    GetPropertyExpression(property)
+                );
+            }
+
+            return base.VisitSynthesized(property);
         }
 
-        private CodeExpression GetAssignedExpression(PropertyModel property)
+        private void AddTargetAssignment(
+            PropertyModel current,
+            CodeStatementCollection statements, 
+            CodeExpression rhs
+        )
         {
-            if (_fixedValue.HasValue)
-            {
-                return CodeLiteralExpression.Create(_fixedValue.Value);
-            }
 
-            return new CodePropertyReferenceExpression(
-                This,
-                _renamed.HasValue ? _renamed.Value : property.Identifier
-            );
+            if (_lhs.HasValue)
+            {
+                statements.Add(
+                    new CodeAssignStatement(
+                        _lhs.Value,
+                        rhs
+                    )
+                );
+            }
+            else
+            {
+                Logger.Information(
+                    "Property {Property} is not wrapped with a " +
+                    "PropertyModelAssignedTo, no assignment will be " +
+                    "generated.",
+                    current.Identifier
+                );
+            }
         }
+
+        private CodeExpression GetPropertyExpression(
+            PropertyModelSynthesized property
+        ) 
+            => new CodePropertyReferenceExpression(
+                This,
+                RenamedPropertyName ?? property.Identifier
+            );
 
         private static readonly CodeExpression This
             = new CodeThisReferenceExpression();
