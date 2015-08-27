@@ -227,10 +227,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\HarshPoint.Server\HarshPoint.Server.csproj">
-      <Project>{db0928b3-b2c2-4887-9afd-b7e693ea41e9}</Project>
-      <Name>HarshPoint.Server</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\HarshPoint\HarshPoint.csproj">
       <Project>{5d981a8f-a98e-43f2-a112-2cfd50455447}</Project>
       <Name>HarshPoint</Name>
