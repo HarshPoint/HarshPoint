@@ -62,13 +62,16 @@ namespace HarshPoint.ShellployGenerator.Builders
 
             if (property.PropertyType == typeof(Boolean?))
             {
-                var propertyName =
-                    "No" + (RenamedPropertyName ?? property.Identifier);
+                var positivePropertyName = 
+                    (RenamedPropertyName ?? property.Identifier);
+
+                var propertyName = "No" + positivePropertyName;
 
                 _synthesized.Add(
                     new PropertyModelAssignedTo(
                         _assignedTo.Value,
                         new PropertyModelNegated(
+                            positivePropertyName,
                             new PropertyModelSynthesized(
                                 propertyName,
                                 typeof(SMA.SwitchParameter),

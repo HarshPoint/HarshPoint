@@ -1,11 +1,23 @@
-﻿namespace HarshPoint.ShellployGenerator.Builders
+﻿using System;
+namespace HarshPoint.ShellployGenerator.Builders
 {
     public sealed class PropertyModelNegated : PropertyModel
     {
-        public PropertyModelNegated(PropertyModel next)
+        public PropertyModelNegated(
+            String positivePropertyName, 
+            PropertyModel next
+        )
             : base(next)
         {
+            if (positivePropertyName == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(positivePropertyName));
+            }
+
+            PositivePropertyName = positivePropertyName;
         }
+
+        public String PositivePropertyName { get; }
 
         protected internal override PropertyModel Accept(PropertyModelVisitor visitor)
         {
@@ -16,7 +28,6 @@
 
             return visitor.VisitNegated(this);
         }
-
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(PropertyModelNegated));

@@ -29,10 +29,60 @@ namespace CodeGen
         }
 
         [Fact]
-        public void Then_is_false_assignment()
+        public void Then_has_positive_validation()
+        {
+            var cond = Assert.IsType<CodeConditionStatement>(
+                _if.TrueStatements.Cast<CodeStatement>().First()
+            );
+
+            var propRef =
+                Assert.IsType<CodePropertyReferenceExpression>(cond.Condition);
+
+            Assert.Equal("IsPresent", propRef.PropertyName);
+
+            var switchPropRef = Assert.IsType<CodePropertyReferenceExpression>(
+                propRef.TargetObject
+            );
+
+            Assert.Equal("Param", switchPropRef.PropertyName);
+
+            Assert.IsType<CodeThisReferenceExpression>(
+                switchPropRef.TargetObject
+            );
+
+            Assert.IsType<CodeMethodReturnStatement>(cond.TrueStatements[1]);
+
+            var stmt =
+                Assert.IsType<CodeExpressionStatement>(cond.TrueStatements[0]);
+
+            var call =
+                Assert.IsType<CodeMethodInvokeExpression>(stmt.Expression);
+
+            Assert.IsType<CodeThisReferenceExpression>(
+                call.Method.TargetObject
+            );
+
+            Assert.Equal(
+                "WriteExclusiveSwitchValidationError",
+                call.Method.MethodName
+            );
+
+            Assert.Equal(
+                "Param",
+                Assert.IsType<CodePrimitiveExpression>(call.Parameters[0]).Value
+            );
+
+            Assert.Equal(
+                "NoParam",
+                Assert.IsType<CodePrimitiveExpression>(call.Parameters[1]).Value
+            );
+        }
+
+        [Fact]
+        public void Then_has_false_assignment()
         {
             var assign = Assert.IsType<CodeAssignStatement>(
-                Assert.Single(_if.TrueStatements)
+                _if.TrueStatements.Cast<CodeStatement>().Last()
             );
 
             var lhs = Assert.IsType<CodePropertyReferenceExpression>(

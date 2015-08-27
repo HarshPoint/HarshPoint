@@ -10,8 +10,8 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         private readonly HarshScopedValue<Object> _fixedValue
             = new HarshScopedValue<Object>();
 
-        private readonly HarshScopedValue<Boolean> _isNegated
-            = new HarshScopedValue<Boolean>();
+        private readonly HarshScopedValue<PropertyModelNegated> _negated
+            = new HarshScopedValue<PropertyModelNegated>();
 
         private readonly HarshScopedValue<CodeExpression> _lhs
             = new HarshScopedValue<CodeExpression>();
@@ -70,7 +70,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             PropertyModelNegated property
         )
         {
-            using (_isNegated.EnterIfHasNoValue(true))
+            using (_negated.EnterIfHasNoValue(property))
             {
                 return base.VisitNegated(property);
             }
@@ -96,17 +96,32 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             else if (property.PropertyType == typeof(SMA.SwitchParameter))
             {
                 var condition = new CodeConditionStatement(
-                    new CodePropertyReferenceExpression(
-                        GetPropertyExpression(property),
-                        "IsPresent"
-                    )
+                    IsSwitchPresent(property)
                 );
+
+                if (_negated.HasValue)
+                {
+                    var validate = new CodeConditionStatement(
+                        IsSwitchPresent(
+                            _negated.Value.PositivePropertyName
+                        ),
+
+                        WriteExclusiveSwitchValidationError(
+                            property.Identifier, 
+                            _negated.Value.PositivePropertyName
+                        ),
+
+                        new CodeMethodReturnStatement()
+                    );
+
+                    condition.TrueStatements.Add(validate);
+                }
 
                 AddTargetAssignment(
                     property,
                     condition.TrueStatements,
                     new CodePrimitiveExpression(
-                        _isNegated.HasValue ? false : true
+                        _negated.HasValue ? false : true
                     )
                 );
 
@@ -123,6 +138,19 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
             return base.VisitSynthesized(property);
         }
+
+        private static CodeStatement WriteExclusiveSwitchValidationError(
+            String negativePropertyName,
+            String positivePropertyName
+        ) 
+            => new CodeExpressionStatement(
+                new CodeMethodInvokeExpression(
+                    This,
+                    "WriteExclusiveSwitchValidationError",
+                    new CodePrimitiveExpression(positivePropertyName),
+                    new CodePrimitiveExpression(negativePropertyName)
+                )
+            );
 
         private void AddTargetAssignment(
             PropertyModel current,
@@ -153,10 +181,30 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         private CodeExpression GetPropertyExpression(
             PropertyModelSynthesized property
         )
-            => new CodePropertyReferenceExpression(
-                This,
+            => GetPropertyExpression(
                 RenamedPropertyName ?? property.Identifier
             );
+
+        private CodePropertyReferenceExpression IsSwitchPresent(
+            PropertyModelSynthesized property
+        )
+            => new CodePropertyReferenceExpression(
+                GetPropertyExpression(property),
+                "IsPresent"
+            );
+
+        private CodePropertyReferenceExpression IsSwitchPresent(
+            String propertyName
+        )
+            => new CodePropertyReferenceExpression(
+                GetPropertyExpression(propertyName),
+                "IsPresent"
+            );
+
+        private CodeExpression GetPropertyExpression(
+            String propertyName
+        )
+            => new CodePropertyReferenceExpression(This, propertyName);
 
         private static readonly CodeExpression This
             = new CodeThisReferenceExpression();

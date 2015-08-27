@@ -111,6 +111,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             return method;
         }
 
+        
         internal static CodeStatement CreateWriteObjectCall(
             CodeExpression objectExpression
         )
@@ -124,11 +125,20 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         private const MemberAttributes FamilyOverride
             = MemberAttributes.Family | MemberAttributes.Override;
 
+        private const MemberAttributes PrivateStatic
+            = MemberAttributes.Private | MemberAttributes.Static;
+
         private static readonly CodeThisReferenceExpression This
             = new CodeThisReferenceExpression();
 
         private static readonly CodeTypeReference Void
             = new CodeTypeReference(typeof(void));
+
+        private static readonly CodeMethodReferenceExpression WriteError
+            = new CodeMethodReferenceExpression(
+                This,
+                "WriteError"
+            );
 
         private static readonly CodeMethodReferenceExpression WriteObject
             = new CodeMethodReferenceExpression(

@@ -3,6 +3,7 @@ using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
 
@@ -101,6 +102,42 @@ namespace HarshPoint.Shellploy
                     typeof(IDefaultFromContextTag)
                 );
             }
+        }
+
+        protected void WriteExclusiveSwitchValidationError(
+            String positive, 
+            String negative
+        )
+        {
+            if (positive == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(positive));
+            }
+
+            if (negative == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(negative));
+            }
+
+            var exc = Logger.Error.Write(
+                new ValidationMetadataException(
+                    String.Format(
+                        CultureInfo.CurrentCulture,
+                        SR.HarshProvisionerCmdlet_ExclusiveSwitchError,
+                        positive,
+                        negative
+                    )
+                )
+            );
+
+            var er = new ErrorRecord(
+                exc,
+                "ExclusiveSwitchValidationError",
+                ErrorCategory.InvalidArgument,
+                null
+            );
+
+            WriteError(er);
         }
 
         private static readonly HarshLogger Logger
