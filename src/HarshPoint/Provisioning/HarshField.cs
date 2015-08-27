@@ -141,7 +141,8 @@ namespace HarshPoint.Provisioning
 
             return new XElement("Field",
                 new XAttribute("ID", Id.ToString()),
-                new XAttribute("Name", InternalName),
+                new XAttribute("Name", InternalName),   
+                new XAttribute("DisplayName", InternalName),   
                 new XAttribute("Type", type),
                 new XAttribute("StaticName", StaticName ?? InternalName)
             );
