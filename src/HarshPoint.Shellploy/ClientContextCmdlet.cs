@@ -2,6 +2,7 @@
 using System.Management.Automation;
 using Microsoft.SharePoint.Client;
 using SMA = System.Management.Automation;
+using HarshPoint.Diagnostics;
 
 namespace HarshPoint.Shellploy
 {
@@ -22,9 +23,14 @@ namespace HarshPoint.Shellploy
         [SMA.Parameter(ParameterSetName = "ExplicitCredential", ValueFromPipelineByPropertyName = true)]
         public PSCredential Credential { get; set; }
 
+        [SMA.Parameter]
+        public SwitchParameter TraceRequest { get; set; }
+
         protected ClientContext CreateClientContext()
         {
-            var clientContext = new ClientContext(Url);
+            var clientContext = TraceRequest ? 
+                new SeriloggedClientContext(Url) :
+                new ClientContext(Url);
 
             if (Credential != null)
             {

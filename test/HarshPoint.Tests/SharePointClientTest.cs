@@ -1,4 +1,5 @@
-﻿using HarshPoint.Provisioning;
+﻿using HarshPoint.Diagnostics;
+using HarshPoint.Provisioning;
 using HarshPoint.Provisioning.Implementation;
 using HarshPoint.Provisioning.Records;
 using Microsoft.SharePoint.Client;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
@@ -20,12 +22,12 @@ namespace HarshPoint.Tests
         public SharePointClientTest(ITestOutputHelper output)
             : base(output)
         {
-            Fixture = new SharePointClientFixture();
             ManualResolver = new ClientObjectManualResolver(CreateResolveContext);
 
             var progressBuffer = new ProgressBuffer<HarshProvisionerRecord>();
             Output = progressBuffer.Reports;
 
+            ClientContext = CreateClientContext();
             Context = new HarshProvisionerContext(ClientContext)
                 .WithProgress(
                     new ProgressComposite<HarshProvisionerRecord>(
@@ -43,13 +45,12 @@ namespace HarshPoint.Tests
         public void AddDisposable(Action action)
             => _disposables.Add(action);
 
-        public HarshProvisionerContext Context { get; set; }
-        public ClientContext ClientContext => Fixture.ClientContext;
-        public IReadOnlyCollection<HarshProvisionerRecord> Output { get; set; }
+        public HarshProvisionerContext Context { get; }
+        public ClientContext ClientContext { get; }
+        public IReadOnlyCollection<HarshProvisionerRecord> Output { get; }
         public Site Site => ClientContext.Site;
         public TaxonomySession TaxonomySession => Context.TaxonomySession;
         public Web Web => ClientContext.Web;
-        public SharePointClientFixture Fixture { get; }
         public ClientObjectManualResolver ManualResolver { get; }
 
 
@@ -71,7 +72,7 @@ namespace HarshPoint.Tests
                 }
             }
 
-            Fixture.Dispose();
+            ClientContext.Dispose();
             base.Dispose();
         }
 
@@ -153,6 +154,39 @@ namespace HarshPoint.Tests
 
         protected IdentifiedObjectRecord<T> LastObjectOutput<T>()
             => Output.OfType<IdentifiedObjectRecord<T>>().Last();
+
+        private static ClientContext CreateClientContext()
+        {
+            var url = Environment.GetEnvironmentVariable("HarshPointTestUrl");
+
+            if (String.IsNullOrWhiteSpace(url))
+            {
+                return new SeriloggedClientContext($"http://{Environment.MachineName}");
+            }
+
+            var clientContext = new SeriloggedClientContext(url);
+
+            var username = Environment.GetEnvironmentVariable("HarshPointTestUser");
+            var password = Environment.GetEnvironmentVariable("HarshPointTestPassword");
+            var authType = Environment.GetEnvironmentVariable("HarshPointTestAuth");
+
+            if (StringComparer.OrdinalIgnoreCase.Equals(authType, "Windows"))
+            {
+                clientContext.Credentials = new NetworkCredential(
+                    username,
+                    password
+                );
+            }
+            else if (StringComparer.OrdinalIgnoreCase.Equals(authType, "SharePointOnline"))
+            {
+                clientContext.Credentials = new SharePointOnlineCredentials(
+                    username,
+                    password
+                );
+            }
+
+            return clientContext;
+        }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<SharePointClientTest>();
     }

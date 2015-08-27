@@ -1,10 +1,11 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 
-namespace HarshPoint.Tests
+namespace HarshPoint.Diagnostics
 {
     internal static class ClientRequestExtension
     {
@@ -29,12 +30,16 @@ namespace HarshPoint.Tests
 
         private static readonly MethodInfo BuildQueryMethod = typeof(ClientRequest)
             .GetTypeInfo()
-            .GetMethod("BuildQuery", BindingFlags.NonPublic | BindingFlags.Instance);
+            .GetDeclaredMethod("BuildQuery");
 
         private static readonly MethodInfo WriteContentToMethod = BuildQueryMethod
             .ReturnType
             .GetTypeInfo()
-            .GetMethod("WriteContentTo", new[] { typeof(TextWriter) });
+            .GetDeclaredMethods("WriteContentTo")
+            .Select(m => new { m, p = m.GetParameters() })
+            .FirstOrDefault(
+                x => x.p.Length == 1 && x.p[0].ParameterType == typeof(TextWriter)
+            )?.m;
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientRequestExtension));
     }

@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Management.Automation;
-using System.Collections;
+﻿using System.Management.Automation;
 using HarshPoint.Provisioning;
-using HarshPoint.Provisioning.Implementation;
-using Microsoft.SharePoint.Client;
 using SMA = System.Management.Automation;
-using System.Net;
+using Serilog;
+using System;
 
 namespace HarshPoint.Shellploy
 {
-    [CmdletAttribute(VerbsLifecycle.Invoke, "WithProvisionerContext", DefaultParameterSetName = "NoAuth")]
+    [Cmdlet(VerbsLifecycle.Invoke, "WithProvisionerContext", DefaultParameterSetName = "NoAuth")]
     public sealed class InvokeWithProvisionerContextCommand : ClientContextCmdlet
     {
         [SMA.Parameter(Mandatory = true, Position = 1, ValueFromPipelineByPropertyName = true)]
@@ -26,5 +19,7 @@ namespace HarshPoint.Shellploy
                 ScriptBlock.Invoke(new HarshProvisionerContext(clientContext));
             }
         }
+
+        private static Boolean _loggerConfigured;
     }
 }
