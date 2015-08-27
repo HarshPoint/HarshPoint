@@ -42,49 +42,46 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         {
             var objects = NewProvisionerCommand.NewObjects.ToImmutableArray();
 
-            var seed = Tuple.Create(
-                0, 
-                (CodeExpression)null,
-                ImmutableList<CodeStatement>.Empty
-            );
+            var seed = new
+            {
+                Index = 0,
+                Parent = (CodeExpression)null,
+                Statements = ImmutableList<CodeStatement>.Empty,
+                Root = (CodeExpression)null,
+            };
 
             var result = objects.Aggregate(seed, (acc, obj) =>
             {
-                var index = acc.Item1;
-                var parent = acc.Item2;
-                var statements = acc.Item3;
-
-                var variable = DeclareParentVariable(acc.Item1, obj);
+                var variable = DeclareParentVariable(acc.Index, obj);
                 var variableRef = variable.ToReference();
 
-                statements = statements
+                var stmts = acc.Statements
                     .Add(variable)
                     .AddRange(
                         CreateAssignments(obj, variableRef)
                     );
                 
-                if (parent != null)
+                if (acc.Parent != null)
                 {
-                    statements = statements.Add(
-                        CreateAddChildCall(parent, variableRef)
+                    stmts = stmts.Add(
+                        CreateAddChildCall(acc.Parent, variableRef)
                     );
                 }
 
-                if (obj == objects.Last())
+                return new
                 {
-                    statements = statements.Add(
-                        CommandCodeGenerator.CreateWriteObjectCall(variableRef)
-                    );
-                }
-
-                return Tuple.Create(
-                    index + 1, 
-                    variableRef,
-                    statements
-                );
+                    Index = acc.Index + 1,
+                    Parent = variableRef,
+                    Statements = stmts,
+                    Root = acc.Root ?? variableRef
+                };
             });
 
-            return CommandCodeGenerator.CreateProcessRecord(result.Item3);
+            var statements = result.Statements.Add(
+                CommandCodeGenerator.CreateWriteObjectCall(result.Root)
+            );
+
+            return CommandCodeGenerator.CreateProcessRecord(statements);
         }
 
         private static IEnumerable<CodeStatement> CreateAssignments(
