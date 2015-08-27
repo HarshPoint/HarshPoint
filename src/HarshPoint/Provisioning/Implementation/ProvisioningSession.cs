@@ -31,7 +31,7 @@ namespace HarshPoint.Provisioning.Implementation
             _action = action;
         }
 
-        private IImmutableList<HarshProvisionerBase> GetFlattenedTree(
+        internal IImmutableList<HarshProvisionerBase> GetFlattenedTree(
             HarshProvisionerBase provisioner
         )
         {
@@ -88,6 +88,7 @@ namespace HarshPoint.Provisioning.Implementation
             NotifyInspectors(context, si => si.OnProvisioningEnded(context, provisioner));
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public void OnProvisioningSkipped(IHarshProvisionerContext context, HarshProvisionerBase provisioner)
         {
             if (context == null)
@@ -95,10 +96,7 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            foreach (var p in GetFlattenedTree(provisioner))
-            {
-                NotifyInspectors(context, si => si.OnProvisioningSkipped(context, p));
-            }
+            NotifyInspectors(context, si => si.OnProvisioningSkipped(context, provisioner));
         }
 
         private static void NotifyInspectors(IHarshProvisionerContext context, Action<IProvisioningSessionInspector> action)

@@ -102,11 +102,7 @@ namespace HarshPoint.Provisioning.Implementation
         public Task ProvisionAsync(TContext context)
             => Run(
                 context,
-                HarshProvisionerAction.Provision,
-                (ctx) => RunSelfAndChildren(
-                    ctx,
-                    HarshProvisionerAction.Provision
-                )
+                HarshProvisionerAction.Provision
             );
 
         public Task UnprovisionAsync(TContext context, CancellationToken token)
@@ -131,28 +127,12 @@ namespace HarshPoint.Provisioning.Implementation
         public Task UnprovisionAsync(TContext context)
             => Run(
                 context,
-                HarshProvisionerAction.Unprovision,
-                (ctx) =>
-                {
-                    if (MayDeleteUserData || ctx.MayDeleteUserData || !Metadata.UnprovisionDeletesUserData)
-                    {
-                        return RunSelfAndChildren(
-                            ctx,
-                            HarshProvisionerAction.Unprovision
-                        );
-                    }
-                    else
-                    {
-                        ctx.Session?.OnProvisioningSkipped(context, this);
-                        return HarshTask.Completed;
-                    }
-                }
+                HarshProvisionerAction.Unprovision
             );
 
         private async Task Run(
             TContext context,
-            HarshProvisionerAction action,
-            Func<TContext, Task> runAction
+            HarshProvisionerAction action
         )
         {
             if (context == null)
@@ -167,7 +147,12 @@ namespace HarshPoint.Provisioning.Implementation
                 context.Session.OnSessionStarting(context);
             }
 
-            await runAction(context);
+            await RunWithContext(context, () =>
+                     RunSelfAndChildren(
+                        context,
+                        action
+                    )
+                );
 
             if (isSessionRoot)
             {
@@ -318,60 +303,74 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        private Task RunSelfAndChildren(
+        private async Task RunSelfAndChildren(
             TContext context,
             HarshProvisionerAction action
         )
-            => RunWithContext(context, async delegate
+        {
+            if (action == HarshProvisionerAction.Provision
+                || MayDeleteUserData
+                || context.MayDeleteUserData
+                || !Metadata.UnprovisionDeletesUserData)
             {
-                context.Token.ThrowIfCancellationRequested();
+                await RunSelf(context, action);
+            }
+            else
+            {
+                context.Session?.OnProvisioningSkipped(context, this);
+            }
 
-                Metadata.DefaultFromContextPropertyBinder.Bind(
-                    this,
-                    Context
-                );
+            await RunChildren(action);
+        }
 
-                Metadata.ResolvedPropertyBinder.Bind(
-                    this,
-                    CreateResolveContext
-                );
+        private async Task RunSelf(TContext context, HarshProvisionerAction action)
+        {
+            context.Token.ThrowIfCancellationRequested();
 
-                await OnResolvedPropertiesBound();
-                context.Token.ThrowIfCancellationRequested();
+            Metadata.DefaultFromContextPropertyBinder.Bind(
+                this,
+                Context
+            );
 
-                // parameter set resolving depends on values
-                // from context being already set
+            Metadata.ResolvedPropertyBinder.Bind(
+                this,
+                CreateResolveContext
+            );
 
-                using (_parameterSet.Enter(ResolveParameterSet()))
+            await OnResolvedPropertiesBound();
+            context.Token.ThrowIfCancellationRequested();
+
+            // parameter set resolving depends on values
+            // from context being already set
+
+            using (_parameterSet.Enter(ResolveParameterSet()))
+            {
+                try
                 {
-                    try
-                    {
-                        ValidateParameters();
-                        OnValidating();
+                    ValidateParameters();
+                    OnValidating();
 
-                        context.Session?.OnProvisioningStarting(context, this);
-                        await InitializeAsync();
-                        context.Token.ThrowIfCancellationRequested();
+                    context.Session?.OnProvisioningStarting(context, this);
+                    await InitializeAsync();
+                    context.Token.ThrowIfCancellationRequested();
 
-                        if (action == HarshProvisionerAction.Provision)
-                        {
-                            await OnProvisioningAsync();
-                        }
-                        else
-                        {
-                            await OnUnprovisioningAsync();
-                        }
-                        context.Token.ThrowIfCancellationRequested();
-                    }
-                    finally
+                    if (action == HarshProvisionerAction.Provision)
                     {
-                        Complete();
+                        await OnProvisioningAsync();
                     }
+                    else
+                    {
+                        await OnUnprovisioningAsync();
+                    }
+                    context.Token.ThrowIfCancellationRequested();
                 }
-                context.Session?.OnProvisioningEnded(context, this);
-
-                await RunChildren(action);
-            });
+                finally
+                {
+                    Complete();
+                }
+            }
+            context.Session?.OnProvisioningEnded(context, this);
+        }
 
         PropertyValueSource ITrackValueSource.GetValueSource(PropertyInfo property)
             => _valueSourceTracker?.GetValueSource(property);

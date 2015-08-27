@@ -173,7 +173,11 @@
     <Compile Include="ObjectModel\PropertyValueSourceTracking.cs" />
     <Compile Include="ObjectModel\TestNullDefaultValuePolicy.cs" />
     <Compile Include="Provisioning\ClientObjectContextStateResolving.cs" />
-    <Compile Include="Provisioning\SessionInspectorTests.cs" />
+    <Compile Include="Provisioning\ProvisioningSession\Nested.cs" />
+    <Compile Include="Provisioning\ProvisioningSession\With_children.cs" />
+    <Compile Include="Provisioning\ProvisioningSession\Single.cs" />
+    <Compile Include="Provisioning\ProvisioningSession\With_skipped.cs" />
+    <Compile Include="Provisioning\ProvisioningSession\ProvisioningSessionTest.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectQueryProcessing.cs" />
     <Compile Include="Provisioning\CompositeProvisionerTests.cs" />
     <Compile Include="Provisioning\ContentTypeRef.cs" />
@@ -233,6 +237,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
