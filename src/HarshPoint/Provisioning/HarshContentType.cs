@@ -16,6 +16,21 @@ namespace HarshPoint.Provisioning
             ExistingContentType = DeferredResolveBuilder.Create(
                 () => Resolve.ContentType().ById(Id)
             );
+
+            WriteRecord = CreateRecordWriter<ContentType>(() =>
+            {
+                if (ParentContentType != null)
+                {
+                    return $"{Name} ({ParentContentType.Value.Name})";
+                }
+
+                if (!String.IsNullOrWhiteSpace(Name))
+                {
+                    return $"{Name} ({Id})";
+                }
+
+                return Id.ToString();
+            });
         }
 
         [Parameter]
@@ -28,14 +43,17 @@ namespace HarshPoint.Provisioning
         [Parameter(Mandatory = true, ParameterSetName = "Id")]
         public HarshContentTypeId Id { get; set; }
 
-        [Parameter]
         [MandatoryWhenCreating]
+        [Parameter(ParameterSetName = "Id")]
+        [Parameter(ParameterSetName = "ParentContentType", Mandatory = true)]
         public String Name { get; set; }
 
         [Parameter(Mandatory = true, ParameterSetName = "ParentContentType")]
         public IResolveSingle<ContentType> ParentContentType { get; set; }
 
-        protected override void InitializeResolveContext(ClientObjectResolveContext context)
+        protected override void InitializeResolveContext(
+            ClientObjectResolveContext context
+        )
         {
             if (context == null)
             {
@@ -43,11 +61,13 @@ namespace HarshPoint.Provisioning
             }
 
             context.Include<ContentType>(
+                ct => ct.Name,
                 ct => ct.StringId
             );
 
             base.InitializeResolveContext(context);
         }
+
         protected override async Task OnProvisioningAsync()
         {
             if (ExistingContentType.Value == null)
@@ -63,26 +83,29 @@ namespace HarshPoint.Provisioning
                     Name = Name,
                 });
 
-                WriteRecord.Added(
-                    Id?.ToString() ?? Name,
-                    ContentType
-                );
-
                 await ClientContext.ExecuteQueryAsync();
+
+                WriteRecord.Added(ContentType);
             }
             else
             {
                 ContentType = ExistingContentType.Value;
 
-                WriteRecord.AlreadyExists(
-                    ContentType.StringId, 
-                    ContentType
-                );
+                WriteRecord.AlreadyExists(ContentType);
             }
         }
 
-
         private ContentType ContentType { get; set; }
-        internal IResolveSingleOrDefault<ContentType> ExistingContentType { get; set; }
+
+        private RecordWriter<HarshProvisionerContext, ContentType> WriteRecord
+        {
+            get;
+        }
+
+        internal IResolveSingleOrDefault<ContentType> ExistingContentType
+        {
+            get;
+            set;
+        }
     }
 }

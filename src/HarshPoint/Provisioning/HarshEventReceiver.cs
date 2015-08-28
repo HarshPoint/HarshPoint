@@ -17,6 +17,10 @@ namespace HarshPoint.Provisioning
             _map.Map(x => x.EventType);
             _map.Map(x => x.ReceiverUrl);
             _map.Map(x => x.SequenceNumber);
+
+            WriteRecord = CreateRecordWriter<EventReceiverDefinition>(
+                () => $"{Name} {EventType} {ReceiverUrl}"
+            );
         }
 
         [Parameter]
@@ -80,8 +84,7 @@ namespace HarshPoint.Provisioning
                 else
                 {
                     WriteRecord.AlreadyExists(
-                        tuple.Item1.RootFolder.ServerRelativeUrl, 
-                        Name, 
+                        tuple.Item1.RootFolder.ServerRelativeUrl,
                         tuple.Item2
                     );
                 }
@@ -98,8 +101,7 @@ namespace HarshPoint.Provisioning
                 if (tuple.Item2 == null)
                 {
                     WriteRecord.DidNotExist(
-                        tuple.Item1.RootFolder.ServerRelativeUrl,
-                        Name
+                        tuple.Item1.RootFolder.ServerRelativeUrl
                     );
                 }
                 else
@@ -143,7 +145,8 @@ namespace HarshPoint.Provisioning
             await ClientContext.ExecuteQueryAsync();
 
             WriteRecord.Added(
-                list.RootFolder.ServerRelativeUrl, receiver
+                list.RootFolder.ServerRelativeUrl, 
+                receiver
             );
         }
 
@@ -181,5 +184,7 @@ namespace HarshPoint.Provisioning
                 from receiver in receivers.DefaultIfEmpty()
                 select Tuple.Create(list, receiver))
             .ToImmutableArray();
+
+        private RecordWriter<HarshProvisionerContext, EventReceiverDefinition> WriteRecord { get; }
     }
 }

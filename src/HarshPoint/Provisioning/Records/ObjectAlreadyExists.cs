@@ -1,13 +1,13 @@
-﻿using System;
-
-namespace HarshPoint.Provisioning.Records
+﻿namespace HarshPoint.Provisioning.Records
 {
-    public sealed class ObjectAlreadyExists<T> : IdentifiedObjectRecord<T>
+    public sealed class ObjectAlreadyExists<T> : ObjectRecord<T>
     {
-        public ObjectAlreadyExists(String identifier, T @object)
-            : base(identifier, @object)
+        public ObjectAlreadyExists(T @object)
+            : base(@object)
         {
-            RecordType = HarshProvisionerRecordType.AlreadyExists;
         }
+
+        public override HarshProvisionerRecordType RecordType
+            => HarshProvisionerRecordType.AlreadyExists;
     }
 }

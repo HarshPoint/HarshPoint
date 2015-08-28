@@ -1,13 +1,13 @@
-﻿using System;
-
-namespace HarshPoint.Provisioning.Records
+﻿namespace HarshPoint.Provisioning.Records
 {
-    public sealed class ObjectAdded<T> : IdentifiedObjectRecord<T>
+    public sealed class ObjectAdded<T> : ObjectRecord<T>
     {
-        public ObjectAdded(String identifier, T @object)
-            : base(identifier, @object)
+        public ObjectAdded(T @object)
+            : base(@object)
         {
-            RecordType = HarshProvisionerRecordType.Added;
         }
+
+        public override HarshProvisionerRecordType RecordType
+            => HarshProvisionerRecordType.Added;
     }
 }

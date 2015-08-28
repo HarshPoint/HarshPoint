@@ -68,5 +68,14 @@ namespace HarshPoint.Shellploy {
                 return ResourceManager.GetString("HarshProvisionerCmdlet_ExclusiveSwitchError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Context: .
+        /// </summary>
+        internal static string RecordDisplayGrouping {
+            get {
+                return ResourceManager.GetString("RecordDisplayGrouping", resourceCulture);
+            }
+        }
     }
 }

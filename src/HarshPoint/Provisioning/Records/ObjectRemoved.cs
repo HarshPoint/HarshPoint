@@ -1,13 +1,17 @@
-﻿using System;
-
-namespace HarshPoint.Provisioning.Records
+﻿namespace HarshPoint.Provisioning.Records
 {
-    public sealed class ObjectRemoved : IdentifiedRecord
+    public sealed class ObjectRemoved<T> : ObjectRecord<T>
     {
-        public ObjectRemoved(String identifier)
-            : base(identifier)
+        public ObjectRemoved()
         {
-            RecordType = HarshProvisionerRecordType.Removed;
         }
+
+        public ObjectRemoved(T @object)
+            : base(@object)
+        {
+        }
+
+        public override HarshProvisionerRecordType RecordType
+            => HarshProvisionerRecordType.Removed;
     }
 }

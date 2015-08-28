@@ -153,11 +153,8 @@ namespace HarshPoint.Tests
             AddDisposable(list.DeleteObject);
         }
 
-        protected IdentifiedRecord LastIdentifiedOutput()
-            => Output.OfType<IdentifiedRecord>().Last();
-
-        protected IdentifiedObjectRecord<T> LastObjectOutput<T>()
-            => Output.OfType<IdentifiedObjectRecord<T>>().Last();
+        protected ObjectRecord<T> LastObjectOutput<T>()
+            => Output.OfType<ObjectRecord<T>>().Last();
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<SharePointClientTest>();
     }

@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using HarshPoint.Provisioning.Implementation;
 
 namespace HarshPoint.Provisioning
 {
@@ -19,43 +20,34 @@ namespace HarshPoint.Provisioning
             );
 
             TemplateType = ListTemplateType.GenericList;
+
+            WriteRecord = CreateRecordWriter<List>(() => Url);
         }
 
         [MandatoryWhenCreating]
         [Parameter(ParameterSetName = "TemplateId")]
-        public Int32? TemplateId
-        {
-            get;
-            set;
-        }
+        public Int32? TemplateId { get; set; }
 
         [MandatoryWhenCreating]
         [Parameter(ParameterSetName = "TemplateType")]
-        public ListTemplateType TemplateType
-        {
-            get;
-            set;
-        }
+        public ListTemplateType TemplateType { get; set; }
 
         [Parameter]
         [MandatoryWhenCreating]
-        public String Title
-        {
-            get;
-            set;
-        }
+        public String Title { get; set; }
 
         [Parameter(Mandatory = true)]
         [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings")]
-        public String Url
-        {
-            get;
-            set;
-        }
+        public String Url { get; set; }
 
         protected override async Task OnProvisioningAsync()
         {
-            if (ExistingList.Value.IsNull())
+            if (ExistingList.HasValue)
+            {
+                List = ExistingList.Value;
+                WriteRecord.AlreadyExists(List);
+            }
+            else
             {
                 ValidateMandatoryWhenCreatingParameters();
 
@@ -66,20 +58,15 @@ namespace HarshPoint.Provisioning
                     Url = Url,
                 });
 
-                WriteRecord.Added(Url, List);
-
                 await ClientContext.ExecuteQueryAsync();
-            }
-            else
-            {
-                List = ExistingList.Value;
 
-                WriteRecord.AlreadyExists(Url, List);
+                WriteRecord.Added(List);
             }
         }
 
         internal IResolveSingleOrDefault<List> ExistingList { get; set; }
         private List List { get; set; }
+        private RecordWriter<HarshProvisionerContext, List> WriteRecord { get; }
     }
 
 }

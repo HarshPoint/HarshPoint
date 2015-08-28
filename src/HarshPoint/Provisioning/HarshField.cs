@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using HarshPoint.Provisioning.Implementation;
 
 namespace HarshPoint.Provisioning
 {
@@ -22,6 +23,16 @@ namespace HarshPoint.Provisioning
             ExistingField = DeferredResolveBuilder.Create(
                 () => Resolve.Field().ById(Id)
             );
+
+            WriteRecord = CreateRecordWriter<Field>(() =>
+            {
+                if (!String.IsNullOrWhiteSpace(InternalName))
+                {
+                    return InternalName;
+                }
+
+                return Id.ToStringInvariant();
+            });
         }
 
         /// <summary>
@@ -88,7 +99,7 @@ namespace HarshPoint.Provisioning
             if (ExistingField.HasValue)
             {
                 Field = ExistingField.Value;
-                WriteRecord.AlreadyExists(FieldIdentifier, Field);
+                WriteRecord.AlreadyExists(Field);
             }
             else
             {
@@ -115,7 +126,7 @@ namespace HarshPoint.Provisioning
 
                 Field = reResolvedField.Value;
 
-                WriteRecord.Added(FieldIdentifier, Field);
+                WriteRecord.Added(Field);
             }
         }
 
@@ -127,11 +138,11 @@ namespace HarshPoint.Provisioning
 
                 await ClientContext.ExecuteQueryAsync();
 
-                WriteRecord.Removed(FieldIdentifier);
+                WriteRecord.Removed();
             }
             else
             {
-                WriteRecord.DidNotExist(FieldIdentifier);
+                WriteRecord.DidNotExist();
             }
         }
 
@@ -152,8 +163,7 @@ namespace HarshPoint.Provisioning
 
         private Field Field { get; set; }
 
-        private String FieldIdentifier => InternalName ?? Id.ToStringInvariant();
-
         private FieldCollection TargetFieldCollection { get; set; }
+        private RecordWriter<HarshProvisionerContext, Field> WriteRecord { get; }
     }
 }

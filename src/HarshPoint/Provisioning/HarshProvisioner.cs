@@ -2,7 +2,6 @@
 using Microsoft.SharePoint.Client;
 using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Provisioning

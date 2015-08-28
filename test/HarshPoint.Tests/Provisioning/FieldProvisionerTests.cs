@@ -213,7 +213,7 @@ namespace HarshPoint.Tests.Provisioning
 
             await prov.UnprovisionAsync(Context);
 
-            var output = LastIdentifiedOutput();
+            var output = LastObjectOutput<Field>();
             Assert.Equal(prov.Id.ToStringInvariant(), output.Identifier);
             Assert.False(output.ObjectAdded);
             Assert.False(output.ObjectRemoved);
@@ -232,7 +232,7 @@ namespace HarshPoint.Tests.Provisioning
 
             await prov.UnprovisionAsync(Context);
 
-            var output = LastIdentifiedOutput();
+            var output = LastObjectOutput<Field>();
             Assert.Equal(prov.Id.ToStringInvariant(), output.Identifier);
             Assert.False(output.ObjectAdded);
             Assert.True(output.ObjectRemoved);

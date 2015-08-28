@@ -1,5 +1,4 @@
 ﻿using HarshPoint.ObjectModel;
-using HarshPoint.Provisioning.Records;
 using Serilog.Core.Enrichers;
 using System;
 using System.Linq;
@@ -20,7 +19,6 @@ namespace HarshPoint.Provisioning.Implementation
         private readonly HarshScopedValue<TContext> _context;
         private readonly HarshScopedValue<HarshLogger> _logger;
         private readonly HarshScopedValue<ParameterSet> _parameterSet;
-        private readonly HarshScopedValue<RecordWriter<TContext>> _recordWriter;
 
         private ManualResolver _manualResolver;
         private HarshProvisionerMetadata _metadata;
@@ -30,7 +28,6 @@ namespace HarshPoint.Provisioning.Implementation
         {
             _context = new HarshScopedValue<TContext>();
             _parameterSet = new HarshScopedValue<ParameterSet>();
-            _recordWriter = new HarshScopedValue<RecordWriter<TContext>>();
 
             _logger = new HarshScopedValue<HarshLogger>(
                 HarshLog.ForContext(GetType())
@@ -50,21 +47,6 @@ namespace HarshPoint.Provisioning.Implementation
             );
 
         protected String ParameterSetName => ParameterSet?.Name;
-
-        protected RecordWriter<TContext> WriteRecord
-        {
-            get
-            {
-                if (_recordWriter == null)
-                {
-                    throw Logger.Fatal.InvalidOperation(
-                        SR.HarshProvisionerBase_NoContext
-                    );
-                }
-
-                return _recordWriter.Value;
-            }
-        }
 
         internal HarshProvisionerBase<TContext> ForwardTarget { get; private set; }
 
@@ -192,6 +174,14 @@ namespace HarshPoint.Provisioning.Implementation
         [NeverDeletesUserData]
         protected virtual Task OnUnprovisioningAsync() => HarshTask.Completed;
 
+        protected RecordWriter<TContext, T> CreateRecordWriter<T>()
+            => CreateRecordWriter<T>(null);
+
+        protected RecordWriter<TContext, T> CreateRecordWriter<T>(
+            Func<String> identifierSelector
+        )
+            => new RecordWriter<TContext, T>(this, identifierSelector);
+
         protected virtual ResolveContext<TContext> CreateResolveContext()
             => new ResolveContext<TContext>(Context);
 
@@ -293,11 +283,8 @@ namespace HarshPoint.Provisioning.Implementation
                 new PropertyEnricher("MayDeleteUserData", MayDeleteUserData)
             );
 
-            var recordWriter = new RecordWriter<TContext>(context);
-
             using (_context.Enter(context))
             using (_logger.Enter(contextLogger))
-            using (_recordWriter.Enter(recordWriter))
             {
                 await action();
             }

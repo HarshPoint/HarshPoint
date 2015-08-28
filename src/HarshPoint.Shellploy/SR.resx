@@ -120,4 +120,8 @@
   <data name="HarshProvisionerCmdlet_ExclusiveSwitchError" xml:space="preserve">
     <value>The parameters {0} and {1} are mutually exclusive and cannot be both set at the same time.</value>
   </data>
+  <data name="RecordDisplayGrouping" xml:space="preserve">
+    <value>Context: </value>
+    <comment>format.ps1xml</comment>
+  </data>
 </root>
