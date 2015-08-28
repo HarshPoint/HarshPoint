@@ -13,7 +13,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Documents_Title_field_gets_resolved_by_id()
         {
             var list = await CreateList();

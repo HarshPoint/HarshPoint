@@ -17,7 +17,7 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Field_is_not_created()
         {
             var prov = new HarshField()
@@ -40,7 +40,7 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public Task If_Id_empty()
         {
             var prov = new HarshField()
@@ -53,7 +53,7 @@ namespace HarshPoint.Tests.Provisioning
             );
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public Task If_InternalName_null()
         {
             var prov = new HarshField()
@@ -74,7 +74,7 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Field_is_created()
         {
             var fieldId = Guid.NewGuid();
@@ -96,7 +96,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.NotNull(field);
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Id_is_set()
         {
             var fieldId = Guid.NewGuid();
@@ -120,7 +120,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Equal(fieldId, field.Id);
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task InternalName_is_set()
         {
             var fieldId = Guid.NewGuid();
@@ -144,7 +144,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Equal(fieldName, field.InternalName);
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Field_implicit_StaticName_is_set()
         {
             var fieldId = Guid.NewGuid();
@@ -168,7 +168,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Equal(fieldName, field.StaticName);
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Field_explicit_StaticName_is_set()
         {
 
@@ -202,7 +202,7 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Nonexistent_field_is_not_removed()
         {
             var prov = new HarshField()
@@ -219,7 +219,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.False(output.ObjectRemoved);
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Field_is_removed_by_id()
         {
             var field = await CreateField(f => f.Id);

@@ -19,7 +19,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Default_SiteCollection_TermStore_gets_resolved()
         {
             var resolver = ManualResolver.ResolveSingle(Resolve.TermStoreSiteCollectionDefault());
@@ -37,7 +37,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             Assert.Equal(expected.Id, termStore.Id);
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Default_Keywords_TermStore_gets_resolved()
         {
             var resolver = ManualResolver.ResolveSingle(Resolve.TermStoreKeywordsDefault());
@@ -55,7 +55,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             Assert.Equal(expected.Id, termStore.Id);
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task TermSet_resolved_by_id()
         {
             var expected = await EnsureTestTermSet();

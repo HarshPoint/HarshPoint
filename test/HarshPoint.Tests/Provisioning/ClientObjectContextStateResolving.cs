@@ -13,7 +13,7 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Resolves_object_ensures_retrievals()
         {
             Assert.False(Web.IsPropertyAvailable(w => w.SiteLogoUrl));
@@ -34,7 +34,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.True(resolvedWeb.IsPropertyAvailable(w => w.SiteLogoUrl));
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Resolves_object_ensures_collection_retrieval()
         {
             Assert.False(Web.Lists.ServerObjectIsNull.HasValue);

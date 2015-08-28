@@ -21,7 +21,7 @@ namespace HarshPoint.Tests.Provisioning
             _id = HarshContentTypeId.Parse("0x01").Append(HarshContentTypeId.Parse(_guid));
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Existing_content_type_is_not_provisioned()
         {
             var prov = new HarshContentType()
@@ -36,7 +36,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.False(output.ObjectAdded);
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task ContentType_without_parent_gets_provisioned()
         {
             var prov = new HarshContentType()
@@ -83,7 +83,7 @@ namespace HarshPoint.Tests.Provisioning
             }
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Child_fieldref_get_added()
         {
             var fieldId = Guid.NewGuid();
@@ -150,7 +150,7 @@ namespace HarshPoint.Tests.Provisioning
             }
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Default_group_is_used()
         {
             var str = Guid.NewGuid().ToStringInvariant("n");

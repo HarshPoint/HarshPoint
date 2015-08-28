@@ -16,7 +16,7 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Lookup_has_correct_list_id()
         {
             var targetList = await EnsureTargetList();

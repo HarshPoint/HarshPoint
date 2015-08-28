@@ -13,7 +13,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
         }
 
-        [Theory]
+        [TheoryNeedsSharePoint]
         [InlineData("0x01")]
         [InlineData("0x0101")]
         [InlineData("0x0120")]

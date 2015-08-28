@@ -15,7 +15,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task View_get_resolved_by_Title()
         {
             var listAndView = await EnsureTestListAndView();
@@ -32,7 +32,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             Assert.Equal(listAndView.Item2.Id, view.Id);
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task View_get_resolved_by_Url()
         {
             var listAndView = await EnsureTestListAndView();

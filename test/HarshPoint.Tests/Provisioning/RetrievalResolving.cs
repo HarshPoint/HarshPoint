@@ -15,14 +15,14 @@ namespace HarshPoint.Tests.Provisioning
             Binder = new ResolvedPropertyBinder(GetType());
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Multiple_equal_includes_dont_fail()
         {
             ClientContext.Load(Web, w => w.Id, w => w.Id);
             await ClientContext.ExecuteQueryAsync();
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Title_gets_resolved_with_InternalName()
         {
             var ctx = new ClientObjectResolveContext(Context);

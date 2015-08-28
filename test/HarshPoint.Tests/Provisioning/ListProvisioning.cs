@@ -15,7 +15,7 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Existing_list_is_not_added()
         {
             ClientContext.Load(Web, w => w.ServerRelativeUrl);
@@ -48,7 +48,7 @@ namespace HarshPoint.Tests.Provisioning
             Assert.Equal(list.Title, outputList.Title);
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Random_list_is_added()
         {
             var name = Guid.NewGuid().ToString("n");

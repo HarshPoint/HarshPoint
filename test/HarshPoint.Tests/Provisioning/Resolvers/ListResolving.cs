@@ -14,7 +14,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task List_gets_resolved_by_url()
         {
             ClientContext.Load(Web, w => w.ServerRelativeUrl);
@@ -38,7 +38,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             );
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Documents_RootFolder_gets_resolved_by_url()
         {
             var list = await CreateList(l => l.RootFolder.ServerRelativeUrl);

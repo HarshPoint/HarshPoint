@@ -11,7 +11,6 @@ namespace HarshPoint.Server.Tests
 
         static FarmDependentTestCase()
         {
-
             try
             {
                 FarmJoined = SPFarm.Joined;
@@ -41,6 +40,5 @@ namespace HarshPoint.Server.Tests
 
             return base.GetSkipReason(factAttribute);
         }
-
     }
 }

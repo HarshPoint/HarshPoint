@@ -13,7 +13,7 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task DisplayFormat_is_set()
         {
             var prov = new HarshModifyFieldDateTime()
@@ -26,7 +26,7 @@ namespace HarshPoint.Tests.Provisioning
                 Assert.Equal(DateTimeFieldFormatType.DateOnly, f.DisplayFormat);
             });
         }
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task FriendlyDisplayFormat_is_set()
         {
             var prov = new HarshModifyFieldDateTime()

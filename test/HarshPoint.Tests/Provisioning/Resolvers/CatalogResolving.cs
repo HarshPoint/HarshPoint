@@ -14,7 +14,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task MasterPage_catalog_gets_resolved()
         {
             var catalogs = await ResolveAsync(Resolve.Catalog(ListTemplateType.MasterPageCatalog));
@@ -27,7 +27,7 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             );
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task MasterPage_RootFolder_gets_resolved()
         {
             var resolver = Resolve

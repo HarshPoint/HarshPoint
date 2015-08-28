@@ -15,7 +15,7 @@ namespace HarshPoint.Tests.Provisioning
         {
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Content_type_gets_added()
         {
             var name = Guid.NewGuid().ToString("n");
@@ -70,7 +70,7 @@ namespace HarshPoint.Tests.Provisioning
 
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Content_type_gets_removed()
         {
             var guid = Guid.NewGuid().ToString("n");
@@ -116,7 +116,7 @@ namespace HarshPoint.Tests.Provisioning
             );
         }
 
-        [Fact]
+        [FactNeedsSharePoint]
         public async Task Content_type_gets_removed_using_RemoveContentTypeRef()
         {
             var guid = Guid.NewGuid().ToString("n");

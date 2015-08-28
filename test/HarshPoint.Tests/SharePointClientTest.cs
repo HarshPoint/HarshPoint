@@ -27,7 +27,7 @@ namespace HarshPoint.Tests
             var progressBuffer = new ProgressBuffer<HarshProvisionerRecord>();
             Output = progressBuffer.Reports;
 
-            ClientContext = CreateClientContext();
+            ClientContext = SharePointTestContext.Create();
             Context = new HarshProvisionerContext(ClientContext)
                 .WithProgress(
                     new ProgressComposite<HarshProvisionerRecord>(
@@ -53,7 +53,6 @@ namespace HarshPoint.Tests
         public Web Web => ClientContext.Web;
         public ClientObjectManualResolver ManualResolver { get; }
 
-
         protected virtual ClientObjectResolveContext CreateResolveContext()
             => new ClientObjectResolveContext(Context);
 
@@ -76,7 +75,9 @@ namespace HarshPoint.Tests
             base.Dispose();
         }
 
-        protected async Task<Field> CreateField(params Expression<Func<Field, Object>>[] retrievals)
+        protected async Task<Field> CreateField(
+            params Expression<Func<Field, Object>>[] retrievals
+        )
         {
             var guid = Guid.NewGuid();
 
@@ -95,7 +96,9 @@ namespace HarshPoint.Tests
             return field;
         }
 
-        protected async Task<List> CreateList(params Expression<Func<List, Object>>[] retrievals)
+        protected async Task<List> CreateList(
+            params Expression<Func<List, Object>>[] retrievals
+        )
         {
             var guid = Guid.NewGuid();
             var name = guid.ToStringInvariant("n");
@@ -120,7 +123,6 @@ namespace HarshPoint.Tests
             return list;
         }
 
-
         protected void RegisterForDeletion(ContentType ct)
         {
             if (ct == null)
@@ -130,6 +132,7 @@ namespace HarshPoint.Tests
 
             AddDisposable(ct.DeleteObject);
         }
+
         protected void RegisterForDeletion(Field f)
         {
             if (f == null)
@@ -139,6 +142,7 @@ namespace HarshPoint.Tests
 
             AddDisposable(f.DeleteObject);
         }
+
         protected void RegisterForDeletion(List list)
         {
             if (list == null)
@@ -154,39 +158,6 @@ namespace HarshPoint.Tests
 
         protected IdentifiedObjectRecord<T> LastObjectOutput<T>()
             => Output.OfType<IdentifiedObjectRecord<T>>().Last();
-
-        private static ClientContext CreateClientContext()
-        {
-            var url = Environment.GetEnvironmentVariable("HarshPointTestUrl");
-
-            if (String.IsNullOrWhiteSpace(url))
-            {
-                return new SeriloggedClientContext($"http://{Environment.MachineName}");
-            }
-
-            var clientContext = new SeriloggedClientContext(url);
-
-            var username = Environment.GetEnvironmentVariable("HarshPointTestUser");
-            var password = Environment.GetEnvironmentVariable("HarshPointTestPassword");
-            var authType = Environment.GetEnvironmentVariable("HarshPointTestAuth");
-
-            if (StringComparer.OrdinalIgnoreCase.Equals(authType, "Windows"))
-            {
-                clientContext.Credentials = new NetworkCredential(
-                    username,
-                    password
-                );
-            }
-            else if (StringComparer.OrdinalIgnoreCase.Equals(authType, "SharePointOnline"))
-            {
-                clientContext.Credentials = new SharePointOnlineCredentials(
-                    username,
-                    password
-                );
-            }
-
-            return clientContext;
-        }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext<SharePointClientTest>();
     }
