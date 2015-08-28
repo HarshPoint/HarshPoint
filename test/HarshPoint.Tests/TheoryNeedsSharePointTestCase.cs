@@ -14,7 +14,11 @@ namespace HarshPoint.Tests
             TestMethodDisplay defaultMethodDisplay,
             ITestMethod testMethod
         )
-            : base(diagnosticSink, defaultMethodDisplay, testMethod)
+            : base(
+                diagnosticSink, 
+                defaultMethodDisplay, 
+                testMethod
+            )
         {
         }
 
