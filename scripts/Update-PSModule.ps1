@@ -38,10 +38,24 @@ try {
 
 	$AssemblyFileName = (Split-Path -Leaf $ProjectOutputPath)
 
-	New-Item -ItemType Directory $ModuleRoot -Force -ErrorAction Stop
+	if (Test-Path -LiteralPath $ModuleRoot) {
+		Remove-Item -LiteralPath $ModuleRoot `
+					-ErrorAction Stop `
+					-Recurse `
+					-Force
+	}
 
-	Get-ChildItem -Path $ProjectOutputDir -Recurse -Include '*.dll', '*.psm1' `
-	| Copy-Item -Destination $ModuleRoot -PassThru -ErrorAction Stop
+	New-Item -Path        $ModuleRoot `
+	         -ItemType    Directory `
+			 -ErrorAction Stop `
+			 -Force 
+
+	Get-ChildItem -LiteralPath $ProjectOutputDir `
+				  -Include     '*.dll', '*.ps1xml', '*.ps[dm]1' `
+			      -Recurse `
+	| Copy-Item -Destination $ModuleRoot `
+	            -ErrorAction Stop `
+	            -PassThru 
 
 	$ModuleRoot   = (Resolve-Path $ModuleRoot).Path
 	$AssemblyPath = (Join-Path $ModuleRoot $AssemblyFileName)
@@ -54,33 +68,32 @@ try {
 		CompanyName   = Get-AttributeValue Reflection.AssemblyCompany
 		Copyright     = Get-AttributeValue Reflection.AssemblyCopyright
 		Description   = Get-AttributeValue Reflection.AssemblyDescription
+		Version       = Get-AttributeValue Reflection.AssemblyInformationalVersion
 		Guid          = Get-AttributeValue Runtime.InteropServices.Guid Value
 	}
-
 
 	$NuSpecTemplate = (Join-Path $PSScriptRoot $NuSpecTemplate)
 	$NuspecTemplate = (Resolve-Path $NuSpecTemplate).Path
 	$NuSpec         = [xml](Get-Content $NuSpecTemplate)
+	$NuSpecPath     = (Join-Path $ModuleRoot "$($AssemblyName.Name).nuspec")
 
-	$ModulePath = (Join-Path $ModuleRoot "$($AssemblyName.Name).psd1")
-	$ScriptPath = (Join-Path $ModuleRoot "$($AssemblyName.Name).psm1")
-	$NuSpecPath = (Join-Path $ModuleRoot "$($AssemblyName.Name).nuspec")
+	$AssemblyInfo['LicenseUri']    = $NuSpec.package.metadata.licenseUrl
+	$AssemblyInfo['ProjectUri']    = $NuSpec.package.metadata.projectUrl
+	$AssemblyInfo['Tags']          = $NuSpec.package.metadata.tags
 
-	if ($PSVersionTable.PSVersion.Major -ge 5) {
-		$AssemblyInfo['LicenseUri']    = $NuSpec.package.metadata.licenseUrl
-		$AssemblyInfo['ProjectUri']    = $NuSpec.package.metadata.projectUrl
-		$AssemblyInfo['Tags']          = $NuSpec.package.metadata.tags
+	$ModulePath = (Join-Path   $ModuleRoot "$($AssemblyName.Name).psd1")
+	$ModuleText = (Get-Content $ModulePath -Raw)
+
+	$AssemblyInfo.Keys |% {
+		$ModuleText = $ModuleText -replace "%${_}%", $AssemblyInfo[$_]
 	}
 
-	New-ModuleManifest -NestedModules $AssemblyFileName `
-					   -RootModule    $ScriptPath `
-					   -Path          $ModulePath `
-					   -ModuleVersion $AssemblyName.Version `
-					   @AssemblyInfo
+	Set-Content -LiteralPath $ModulePath -Value $ModuleText -Encoding UTF8
+	Write-Information "Updated $ModulePath"
 
 	$NuSpec.package.metadata.id          = $AssemblyName.Name
 	$NuSpec.package.metadata.title       = $AssemblyName.Name
-	$NuSpec.package.metadata.version     = (Get-AttributeValue Reflection.AssemblyInformationalVersion)
+	$NuSpec.package.metadata.version     = $AssemblyInfo['Version']
 	$NuSpec.package.metadata.authors     = $AssemblyInfo['Author']
 	$NuSpec.package.metadata.owners      = $AssemblyInfo['Author']
 	$NuSpec.package.metadata.description = $AssemblyInfo['Description']

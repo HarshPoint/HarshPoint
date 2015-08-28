@@ -140,9 +140,14 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Generated\*.psm1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="HarshPoint.Shellploy.format.ps1xml" />
+    <None Include="HarshPoint.Shellploy.format.ps1xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="HarshPoint.Shellploy.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
