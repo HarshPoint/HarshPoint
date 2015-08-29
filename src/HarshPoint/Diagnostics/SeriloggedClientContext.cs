@@ -1,5 +1,6 @@
 using Microsoft.SharePoint.Client;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace HarshPoint.Diagnostics
@@ -12,10 +13,12 @@ namespace HarshPoint.Diagnostics
         {
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#")]
         public SeriloggedClientContext(String webFullUrl) : base(webFullUrl)
         {
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public override Task ExecuteQueryAsync()
         {
             try
@@ -32,6 +35,11 @@ namespace HarshPoint.Diagnostics
 
         protected override void OnExecutingWebRequest(WebRequestEventArgs args)
         {
+            if (args == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(args));
+            }
+
             Logger.Information(
                 "{Method:l} {Uri:l}\n{Body:l}",
                 args.WebRequest.Method,

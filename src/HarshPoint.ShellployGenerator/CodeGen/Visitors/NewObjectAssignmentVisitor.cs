@@ -193,7 +193,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 "IsPresent"
             );
 
-        private CodePropertyReferenceExpression IsSwitchPresent(
+        private static CodePropertyReferenceExpression IsSwitchPresent(
             String propertyName
         )
             => new CodePropertyReferenceExpression(
@@ -201,7 +201,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 "IsPresent"
             );
 
-        private CodeExpression GetPropertyExpression(
+        private static CodeExpression GetPropertyExpression(
             String propertyName
         )
             => new CodePropertyReferenceExpression(This, propertyName);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using static System.FormattableString;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
@@ -31,7 +32,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
             Command = command;
             Methods = methods.ToImmutableArray();
-            FileName = $"{command.ClassName}.cs";
+            FileName = Invariant($"{command.ClassName}.cs");
         }
 
         public CommandModel Command { get; }
@@ -134,12 +135,6 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         private static readonly CodeTypeReference Void
             = new CodeTypeReference(typeof(void));
 
-        private static readonly CodeMethodReferenceExpression WriteError
-            = new CodeMethodReferenceExpression(
-                This,
-                "WriteError"
-            );
-
         private static readonly CodeMethodReferenceExpression WriteObject
             = new CodeMethodReferenceExpression(
                 This,
@@ -148,6 +143,5 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext<CommandCodeGenerator>();
-
     }
 }

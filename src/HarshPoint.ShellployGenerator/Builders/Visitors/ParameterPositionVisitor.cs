@@ -12,30 +12,35 @@ namespace HarshPoint.ShellployGenerator.Builders
         private Int32 _currentPosition;
 
         protected internal override PropertyModel VisitPositional(
-            PropertyModelPositional property
+            PropertyModelPositional propertyModel
         )
         {
-            if (property == null)
+            if (propertyModel == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(property));
+                throw Logger.Fatal.ArgumentNull(nameof(propertyModel));
             }
 
             using (_isPositional.Enter(true))
             {
-                return base.VisitPositional(property);
+                return base.VisitPositional(propertyModel);
             }
         }
 
         protected internal override PropertyModel VisitSynthesized(
-            PropertyModelSynthesized property
+            PropertyModelSynthesized propertyModel
         )
         {
+            if (propertyModel == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(propertyModel));
+            }
+
             if (_isPositional.Value)
             {
                 var result =  new PropertyModelSynthesized(
-                    property.Identifier,
-                    property.PropertyType,
-                    property.Attributes.Select(UpdatePosition)
+                    propertyModel.Identifier,
+                    propertyModel.PropertyType,
+                    propertyModel.Attributes.Select(UpdatePosition)
                 );
 
                 _currentPosition++;
@@ -43,7 +48,7 @@ namespace HarshPoint.ShellployGenerator.Builders
                 return result;
             }
 
-            return property;
+            return propertyModel;
         }
 
         private AttributeModel UpdatePosition(AttributeModel attribute)

@@ -1,14 +1,17 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.ShellployGenerator.Builders;
 using System;
 using System.CodeDom;
 
 namespace HarshPoint.ShellployGenerator.Commands
 {
     internal sealed class BuildFieldRef :
-        HarshPointCommandBuilder<HarshFieldRef>
+        NewProvisionerCommandBuilder<HarshFieldRef>
     {
         public BuildFieldRef()
         {
+            ProvisionerDefaults.Include(this);
+
             Parameter("InternalName").Synthesize(typeof(String));
 
             Parameter(x => x.Fields).SetFixedValue(

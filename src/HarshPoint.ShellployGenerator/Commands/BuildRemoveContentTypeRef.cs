@@ -1,13 +1,16 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.ShellployGenerator.Builders;
 using System.CodeDom;
 
 namespace HarshPoint.ShellployGenerator.Commands
 {
     internal sealed class BuildRemoveContentTypeRef :
-        HarshPointCommandBuilder<HarshRemoveContentTypeRef>
+        NewProvisionerCommandBuilder<HarshRemoveContentTypeRef>
     {
         public BuildRemoveContentTypeRef()
         {
+            ProvisionerDefaults.Include(this);
+
             PositionalParameter("ContentTypeId").SynthesizeMandatory(
                 typeof(HarshContentTypeId[])
             );

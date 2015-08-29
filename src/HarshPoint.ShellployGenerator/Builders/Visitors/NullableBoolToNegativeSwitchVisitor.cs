@@ -27,43 +27,48 @@ namespace HarshPoint.ShellployGenerator.Builders
         }
 
         protected internal override PropertyModel VisitAssignedTo(
-            PropertyModelAssignedTo property
+            PropertyModelAssignedTo propertyModel
         )
         {
-            using (_assignedTo.EnterIfHasNoValue(property.TargetPropertyName))
+            if (propertyModel == null)
             {
-                return base.VisitAssignedTo(property); 
+                throw Logger.Fatal.ArgumentNull(nameof(propertyModel));
+            }
+
+            using (_assignedTo.EnterIfHasNoValue(propertyModel.TargetPropertyName))
+            {
+                return base.VisitAssignedTo(propertyModel); 
             }
         }
 
         protected internal override PropertyModel VisitNoNegative(
-            PropertyModelNoNegative property
+            PropertyModelNoNegative propertyModel
         )
         {
-            if (property == null)
+            if (propertyModel == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(property));
+                throw Logger.Fatal.ArgumentNull(nameof(propertyModel));
             }
 
             // remove the current PropertyModelNoNegative but 
             // keep the rest of the chain
 
-            return property.NextElement; 
+            return propertyModel.NextElement; 
         }
 
         protected internal override PropertyModel VisitSynthesized(
-            PropertyModelSynthesized property
+            PropertyModelSynthesized propertyModel
         )
         {
-            if (property == null)
+            if (propertyModel == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(property));
+                throw Logger.Fatal.ArgumentNull(nameof(propertyModel));
             }
 
-            if (property.PropertyType == typeof(Boolean?))
+            if (propertyModel.PropertyType == typeof(Boolean?))
             {
                 var positivePropertyName = 
-                    (RenamedPropertyName ?? property.Identifier);
+                    (RenamedPropertyName ?? propertyModel.Identifier);
 
                 var propertyName = "No" + positivePropertyName;
 
@@ -75,16 +80,16 @@ namespace HarshPoint.ShellployGenerator.Builders
                             new PropertyModelSynthesized(
                                 propertyName,
                                 typeof(SMA.SwitchParameter),
-                                property.Attributes
+                                propertyModel.Attributes
                             )
                         )
                     )
                 );
 
-                return NullableBoolToSwitch.Visit(property);
+                return NullableBoolToSwitch.Visit(propertyModel);
             }
 
-            return base.VisitSynthesized(property);
+            return base.VisitSynthesized(propertyModel);
         }
 
         private static readonly ChangePropertyTypeVisitor NullableBoolToSwitch

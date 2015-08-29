@@ -31,13 +31,20 @@ namespace HarshPoint.ShellployGenerator.Builders
         public Object Value { get; }
 
         protected internal override PropertyModel VisitSynthesized(
-            PropertyModelSynthesized property
+            PropertyModelSynthesized propertyModel
         )
-            => new PropertyModelSynthesized(
-                property.Identifier,
-                property.PropertyType,
-                property.Attributes.Select(UpdateAttributeData)
+        {
+            if (propertyModel == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(propertyModel));
+            }
+
+            return new PropertyModelSynthesized(
+                propertyModel.Identifier,
+                propertyModel.PropertyType,
+                propertyModel.Attributes.Select(UpdateAttributeData)
             );
+        }
 
         private AttributeModel UpdateAttributeData(AttributeModel data)
         {

@@ -19,7 +19,5 @@ namespace HarshPoint.Shellploy
                 ScriptBlock.Invoke(new HarshProvisionerContext(clientContext));
             }
         }
-
-        private static Boolean _loggerConfigured;
     }
 }

@@ -1,6 +1,7 @@
 using HarshPoint.ObjectModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace HarshPoint.ShellployGenerator.Builders
@@ -17,15 +18,15 @@ namespace HarshPoint.ShellployGenerator.Builders
         {
         }
 
-        protected PropertyModel(
-            PropertyModel next = null,
-            String identifier = null,
-            Int32? sortOrder = null
-        )
+        protected PropertyModel(Int32? sortOrder, PropertyModel next)
             : base(next)
         {
-            _identifier = identifier;
             _sortOrder = sortOrder;
+        }
+
+        protected PropertyModel(String identifier)
+        {
+            _identifier = identifier;
         }
 
         public String Identifier => _identifier ?? NextElement?.Identifier;
@@ -38,6 +39,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         public T FirstElementOfType<T>() where T : PropertyModel
             => ElementsOfType<T>().FirstOrDefault();
 
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public Boolean HasElementsOfType<T>() where T : PropertyModel
             => ElementsOfType<T>().Any();
 
@@ -58,8 +60,5 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         protected internal new PropertyModel NextElement
             => base.NextElement;
-
-        private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(PropertyModel));
     }
 }

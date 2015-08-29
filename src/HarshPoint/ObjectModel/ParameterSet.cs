@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint.ObjectModel
 {
     public sealed class ParameterSet
     {
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly StringComparer NameComparer
             = StringComparer.Ordinal;
 
@@ -57,7 +59,7 @@ namespace HarshPoint.ObjectModel
                 isImplicit: true
             );
 
-        private static readonly String ImplicitParameterSetName
+        private const String ImplicitParameterSetName
             = "__ImplicitParameterSet";
 
         private static readonly HarshLogger Logger

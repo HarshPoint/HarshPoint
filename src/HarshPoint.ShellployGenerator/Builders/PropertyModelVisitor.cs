@@ -25,93 +25,93 @@ namespace HarshPoint.ShellployGenerator.Builders
                 .ToImmutableArray();
         }
 
-        public virtual PropertyModel Visit(PropertyModel property)
+        public virtual PropertyModel Visit(PropertyModel propertyModel)
         {
-            if (property != null)
+            if (propertyModel != null)
             {
-                return property.Accept(this);
+                return propertyModel.Accept(this);
             }
 
             return null;
         }
 
         protected internal virtual PropertyModel VisitDefaultValue(
-            PropertyModelDefaultValue property
+            PropertyModelDefaultValue propertyModel
         )
-            => VisitNext(property);
+            => VisitNext(propertyModel);
 
         internal virtual PropertyModel VisitIdentifiedPlaceholder(
-            PropertyModelIdentifiedPlaceholder property
+            PropertyModelIdentifiedPlaceholder propertyModel
         )
-            => VisitNext(property);
+            => VisitNext(propertyModel);
 
         protected internal virtual PropertyModel VisitIgnored(
-            PropertyModelIgnored property
+            PropertyModelIgnored propertyModel
         )
-            => VisitNext(property);
+            => VisitNext(propertyModel);
 
         protected internal virtual PropertyModel VisitNegated(
-            PropertyModelNegated property
+            PropertyModelNegated propertyModel
         )
-            => VisitNext(property);
+            => VisitNext(propertyModel);
 
         protected internal virtual PropertyModel VisitNoNegative(
-            PropertyModelNoNegative property
+            PropertyModelNoNegative propertyModel
         )
-            => VisitNext(property);
+            => VisitNext(propertyModel);
 
         protected internal virtual PropertyModel VisitRenamed(
-            PropertyModelRenamed property
+            PropertyModelRenamed propertyModel
         )
         {
-            if (property == null)
+            if (propertyModel == null)
             {
                 return null;
             }
 
-            using (_renamed.EnterIfHasNoValue(property.PropertyName))
+            using (_renamed.EnterIfHasNoValue(propertyModel.PropertyName))
             {
-                return VisitNext(property); 
+                return VisitNext(propertyModel); 
             }
         }
 
         protected internal virtual PropertyModel VisitPositional(
-            PropertyModelPositional property
+            PropertyModelPositional propertyModel
         )
-            => VisitNext(property);
+            => VisitNext(propertyModel);
 
         protected internal virtual PropertyModel VisitInputObject(
-            PropertyModelInputObject property
+            PropertyModelInputObject propertyModel
         )
-            => VisitNext(property);
+            => VisitNext(propertyModel);
 
         protected internal virtual PropertyModel VisitAssignedTo(
-            PropertyModelAssignedTo property
+            PropertyModelAssignedTo propertyModel
         )
-            => VisitNext(property);
+            => VisitNext(propertyModel);
 
         protected internal virtual PropertyModel VisitFixed(
-            PropertyModelFixed property
+            PropertyModelFixed propertyModel
         )
-            => VisitNext(property);
+            => VisitNext(propertyModel);
 
         protected internal virtual PropertyModel VisitSynthesized(
-            PropertyModelSynthesized property
+            PropertyModelSynthesized propertyModel
         )
-            => VisitNext(property);
+            => VisitNext(propertyModel);
 
         protected String RenamedPropertyName => _renamed.Value;
 
-        private PropertyModel VisitNext(PropertyModel property)
+        private PropertyModel VisitNext(PropertyModel propertyModel)
         {
-            if (property?.NextElement != null)
+            if (propertyModel?.NextElement != null)
             {
-                return property.WithNext(
-                    Visit(property.NextElement)
+                return propertyModel.WithNext(
+                    Visit(propertyModel.NextElement)
                 );
             }
 
-            return property;
+            return propertyModel;
         }
 
         private static readonly HarshLogger Logger

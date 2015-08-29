@@ -15,8 +15,8 @@ namespace HarshPoint.Reflection
 
         public static LambdaExpression MakeGetterExpression(
             this PropertyInfo property,
-            Type targetType = null,
-            Type resultType = null
+            Type targetType,
+            Type resultType
         )
         {
             if (property == null)

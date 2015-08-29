@@ -1,5 +1,6 @@
 ﻿using HarshPoint.Provisioning.Implementation;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace HarshPoint.ShellployGenerator.Builders
@@ -12,6 +13,7 @@ namespace HarshPoint.ShellployGenerator.Builders
     {
         public NewProvisionerCommandBuilder() : base(Metadata) { }
 
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void AsChildOf<TParent>()
         {
             AsChildOf<TParent>(null);

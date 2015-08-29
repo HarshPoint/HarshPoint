@@ -1,4 +1,5 @@
 ﻿using System;
+using static System.FormattableString;
 
 namespace HarshPoint.Provisioning
 {
@@ -16,6 +17,6 @@ namespace HarshPoint.Provisioning
         public DateTimeOffset Timestamp { get; internal set; }
 
         public override String ToString()
-            => $"{RecordType} {Identifier}";
+            => Invariant($"{RecordType} {Identifier}");
     }
 }

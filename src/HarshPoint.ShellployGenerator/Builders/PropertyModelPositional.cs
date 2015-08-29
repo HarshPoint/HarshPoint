@@ -5,12 +5,12 @@ namespace HarshPoint.ShellployGenerator.Builders
     public sealed class PropertyModelPositional : PropertyModel
     {
         public PropertyModelPositional(Int32 sortOrder)
-            : base(sortOrder: sortOrder)
+            : base(sortOrder, null)
         {
         }
 
         public PropertyModelPositional(Int32 sortOrder, PropertyModel next)
-            : base(next, sortOrder: sortOrder)
+            : base(sortOrder, next)
         {
         }
 

@@ -11,6 +11,11 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         internal ChildCommandBuilder(NewProvisionerCommandBuilder owner)
         {
+            if (owner == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(owner));
+            }
+
             _owner = owner;
             _parameterBuilders = new PropertyModelContainer(owner);
 
@@ -31,7 +36,8 @@ namespace HarshPoint.ShellployGenerator.Builders
             => _parameterBuilders.GetParameterBuilder(name);
 
         NewProvisionerCommandBuilder IChildProvisionerCommandBuilder.ParentBuilder
-            => (NewProvisionerCommandBuilder)_owner.Context.GetNewProvisionerCommandBuilder(typeof(TParent));
+            => (NewProvisionerCommandBuilder)_owner.Context
+                .GetNewProvisionerCommandBuilder(typeof(TParent));
 
         PropertyModelContainer IChildProvisionerCommandBuilder.PropertyContainer
             => _parameterBuilders;

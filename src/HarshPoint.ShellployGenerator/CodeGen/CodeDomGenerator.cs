@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
+using static System.FormattableString;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
@@ -31,7 +32,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                     );
                 }
 
-                FileName = $"{type.Name}.cs";
+                FileName = Invariant($"{type.Name}.cs");
             }
 
             using (var provider = new CSharpCodeProvider())

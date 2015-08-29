@@ -33,11 +33,17 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
         protected override void Write(TextWriter writer)
         {
+            if (writer == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(writer));
+            }
+
             foreach (var a in Aliases.Where(a => a.Item1 != null))
             {
-                writer.WriteLine(
-                    $"Set-Alias -Name {a.Item1} -Value {a.Item2}"
-                );
+                writer.Write("Set-Alias -Name ");
+                writer.Write(a.Item1);
+                writer.Write(" -Value ");
+                writer.WriteLine(a.Item2);
             }
 
             writer.WriteLine();
@@ -63,7 +69,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             );
         }
 
-        private void WriteStringArrayLiteral(
+        private static void WriteStringArrayLiteral(
             TextWriter writer,
             IEnumerable<String> values
         )
@@ -75,5 +81,9 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             }
             writer.Write(") ");
         }
+
+
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(AliasFileGenerator));
     }
 }

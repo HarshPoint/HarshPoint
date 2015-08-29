@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.FormattableString;
 
 namespace HarshPoint.Provisioning
 {
@@ -19,7 +20,7 @@ namespace HarshPoint.Provisioning
             _map.Map(x => x.SequenceNumber);
 
             WriteRecord = CreateRecordWriter<EventReceiverDefinition>(
-                () => $"{Name} {EventType} {ReceiverUrl}"
+                () => Invariant($"{Name} {EventType} {ReceiverUrl}")
             );
         }
 

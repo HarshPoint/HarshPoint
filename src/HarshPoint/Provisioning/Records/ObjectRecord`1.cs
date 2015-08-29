@@ -1,4 +1,5 @@
 ﻿using System;
+using static System.FormattableString;
 
 namespace HarshPoint.Provisioning.Records
 {
@@ -22,9 +23,6 @@ namespace HarshPoint.Provisioning.Records
         public override Type ObjectType => typeof(T);
 
         public override String ToString() 
-            => $"{RecordType} {typeof(T).Name} {Identifier}";
-
-        private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(ObjectRecord<>));
+            => Invariant($"{RecordType} {typeof(T).Name} {Identifier}");
     }
 }

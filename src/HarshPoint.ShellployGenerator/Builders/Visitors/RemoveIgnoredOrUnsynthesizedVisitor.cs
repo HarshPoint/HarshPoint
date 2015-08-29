@@ -3,21 +3,21 @@
     public sealed class RemoveIgnoredOrUnsynthesizedVisitor : 
         PropertyModelVisitor
     {
-        public override PropertyModel Visit(PropertyModel property)
+        public override PropertyModel Visit(PropertyModel propertyModel)
         {
-            if (property == null)
+            if (propertyModel == null)
             {
                 return null;
             }
 
-            if (property.HasElementsOfType<PropertyModelIgnored>())
+            if (propertyModel.HasElementsOfType<PropertyModelIgnored>())
             {
                 return null;
             }
 
-            if (property.HasElementsOfType<PropertyModelSynthesized>())
+            if (propertyModel.HasElementsOfType<PropertyModelSynthesized>())
             {
-                return base.Visit(property);
+                return base.Visit(propertyModel);
             }
 
             return null;

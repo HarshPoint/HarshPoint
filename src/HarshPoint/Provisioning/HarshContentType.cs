@@ -2,6 +2,7 @@
 using Microsoft.SharePoint.Client;
 using System;
 using System.Threading.Tasks;
+using static System.FormattableString;
 
 namespace HarshPoint.Provisioning
 {
@@ -21,12 +22,14 @@ namespace HarshPoint.Provisioning
             {
                 if (ParentContentType != null)
                 {
-                    return $"{Name} ({ParentContentType.Value.Name})";
+                    return Invariant(
+                        $"{Name} ({ParentContentType.Value.Name})"
+                    );
                 }
 
                 if (!String.IsNullOrWhiteSpace(Name))
                 {
-                    return $"{Name} ({Id})";
+                    return Invariant($"{Name} ({Id})");
                 }
 
                 return Id.ToString();

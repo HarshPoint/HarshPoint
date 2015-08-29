@@ -1,4 +1,5 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.ShellployGenerator.Builders;
 using Microsoft.SharePoint.Client;
 using System;
 using System.CodeDom;
@@ -6,10 +7,12 @@ using System.CodeDom;
 namespace HarshPoint.ShellployGenerator.Commands
 {
     internal sealed class BuildFieldLookup :
-        HarshPointCommandBuilder<HarshModifyFieldLookup>
+        NewProvisionerCommandBuilder<HarshModifyFieldLookup>
     {
         public BuildFieldLookup()
         {
+            ProvisionerDefaults.Include(this);
+            
             AsChildOf<HarshField>(parent =>
             {
                 parent.Parameter(x => x.Type)

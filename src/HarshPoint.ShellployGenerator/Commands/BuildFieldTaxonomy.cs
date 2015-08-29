@@ -1,14 +1,17 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.ShellployGenerator.Builders;
 using System;
 using System.CodeDom;
 
 namespace HarshPoint.ShellployGenerator.Commands
 {
     internal sealed class BuildFieldTaxonomy :
-        HarshPointCommandBuilder<HarshModifyFieldTaxonomy>
+        NewProvisionerCommandBuilder<HarshModifyFieldTaxonomy>
     {
         public BuildFieldTaxonomy()
         {
+            ProvisionerDefaults.Include(this);
+
             AsChildOf<HarshField>(p =>
             {
                 p.Parameter(x => x.TypeName).SetFixedValue("TaxonomyFieldType");

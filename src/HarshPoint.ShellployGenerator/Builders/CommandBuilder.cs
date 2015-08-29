@@ -1,10 +1,11 @@
 ﻿using HarshPoint.ShellployGenerator.CodeGen;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SMA = System.Management.Automation;
+using static System.FormattableString;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
@@ -48,7 +49,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
                 if (Verb != null && Noun != null)
                 {
-                    return $"{Verb}{Noun}Command";
+                    return Invariant($"{Verb}{Noun}Command");
                 }
 
                 return null;
@@ -86,7 +87,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
                 if (Verb != null && Noun != null)
                 {
-                    return $"{Verb}-{Noun}";
+                    return Invariant( $"{Verb}-{Noun}");
                 }
 
                 return null;
@@ -133,7 +134,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             => PropertyContainer.GetParameterBuilder(name, isPositional: true);
 
         public CommandModel ToCommand() => ToCommand(null);
-        
+
         public virtual CommandModel ToCommand(
             IEnumerable<PropertyModel> properties
         )
@@ -143,17 +144,16 @@ namespace HarshPoint.ShellployGenerator.Builders
             properties = RemoveIgnoredUnsynthesized.Visit(properties);
             properties = new ParameterPositionVisitor().Visit(properties);
 
-            return new CommandModel()
-            {
-                Aliases = Aliases.ToImmutableArray(),
-                Attributes = Attributes.Select(a => a.ToModel()).ToImmutableArray(),
-                BaseTypes = BaseTypes.ToImmutableArray(),
-                ClassName = ClassName,
-                ImportedNamespaces = ImportedNamespaces.ToImmutableArray(),
-                Name = Name,
-                Namespace = Namespace,
-                Properties = properties.ToImmutableArray()
-            };
+            return new CommandModel(
+                Aliases,
+                Attributes.Select(a => a.ToModel()),
+                BaseTypes,
+                ClassName,
+                ImportedNamespaces,
+                Name,
+                Namespace,
+                properties
+            );
         }
 
         public virtual CommandCodeGenerator ToCodeGenerator()
@@ -178,6 +178,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(CommandBuilder));
 
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         protected static readonly PropertyModelVisitor RemoveIgnoredUnsynthesized
             = new RemoveIgnoredOrUnsynthesizedVisitor();
     }

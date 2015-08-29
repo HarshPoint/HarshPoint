@@ -17,6 +17,11 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public void AddBuildersFrom(Assembly assembly)
         {
+            if (assembly == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(assembly));
+            }
+
             var builderTypes =
                 from type in assembly.DefinedTypes
                 where
@@ -104,8 +109,5 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         private static readonly TypeInfo CommandBuilderTypeInfo
             = typeof(CommandBuilder).GetTypeInfo();
-
-        private static readonly TypeInfo NewObjectCommandBuilderTypeInfo
-            = typeof(NewObjectCommandBuilder).GetTypeInfo();
     }
 }

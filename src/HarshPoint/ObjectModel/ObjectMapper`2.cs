@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -93,13 +94,16 @@ namespace HarshPoint.ObjectModel
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ObjectMapper<,>));
 
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
         public interface IEntryBuilder
         {
             IEntrySourceBuilder From(Func<TSource, Object> sourceSelector);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
         public interface IEntrySourceBuilder
         {
+            [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "When")]
             void When(Func<TSource, Boolean> predicate);
         }
 

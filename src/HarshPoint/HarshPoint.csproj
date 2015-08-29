@@ -65,7 +65,6 @@
     <Compile Include="HarshDependencyGraphCycleException.cs" />
     <Compile Include="HarshDisposableAction.cs" />
     <Compile Include="HarshDisposableBag.cs" />
-    <Compile Include="HarshEqualityComparer.cs" />
     <Compile Include="HarshFormattable.cs" />
     <Compile Include="HarshGrouping.cs" />
     <Compile Include="HarshGroupingDynamicFactory.cs" />

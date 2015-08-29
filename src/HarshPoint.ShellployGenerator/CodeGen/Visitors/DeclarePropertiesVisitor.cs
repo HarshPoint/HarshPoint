@@ -4,6 +4,8 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 
+using static System.FormattableString;
+
 namespace HarshPoint.ShellployGenerator.CodeGen
 {
     internal sealed class DeclarePropertiesVisitor : PropertyModelVisitor
@@ -27,22 +29,27 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         public CodeTypeDeclaration TypeDeclaration { get; }
 
         protected internal override PropertyModel VisitDefaultValue(
-            PropertyModelDefaultValue property
+            PropertyModelDefaultValue propertyModel
         )
         {
-            using (_defaultValue.EnterIfHasNoValue(property.DefaultValue))
+            if (propertyModel == null)
             {
-                return base.VisitDefaultValue(property);
+                throw Logger.Fatal.ArgumentNull(nameof(propertyModel));
+            }
+
+            using (_defaultValue.EnterIfHasNoValue(propertyModel.DefaultValue))
+            {
+                return base.VisitDefaultValue(propertyModel);
             }
         }
 
         protected internal override PropertyModel VisitFixed(
-            PropertyModelFixed property
+            PropertyModelFixed propertyModel
         )
             => null; // do not generate properties for fixed parameters
 
         protected internal override PropertyModel VisitIgnored(
-            PropertyModelIgnored property
+            PropertyModelIgnored propertyModel
         )
             // do not generate properties for ignored parameters
             // they should've been removed by RemoveIgnoredOrUnsythesized
@@ -50,21 +57,31 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             => null;
 
         protected internal override PropertyModel VisitRenamed(
-            PropertyModelRenamed property
+            PropertyModelRenamed propertyModel
         )
         {
-            using (_renaming.EnterIfHasNoValue(property.PropertyName))
+            if (propertyModel == null)
             {
-                return base.VisitRenamed(property);
+                throw Logger.Fatal.ArgumentNull(nameof(propertyModel));
+            }
+
+            using (_renaming.EnterIfHasNoValue(propertyModel.PropertyName))
+            {
+                return base.VisitRenamed(propertyModel);
             }
         }
 
         protected internal override PropertyModel VisitSynthesized(
-            PropertyModelSynthesized property
+            PropertyModelSynthesized propertyModel
         )
         {
-            var name = _renaming.Value ?? property.Identifier;
-            var type = new CodeTypeReference(property.PropertyType);
+            if (propertyModel == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(propertyModel));
+            }
+
+            var name = _renaming.Value ?? propertyModel.Identifier;
+            var type = new CodeTypeReference(propertyModel.PropertyType);
 
             var fieldName = GetFieldName(name);
 
@@ -78,13 +95,13 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 name,
                 type,
                 codeField,
-                property.Attributes
+                propertyModel.Attributes
             );
 
             TypeDeclaration.Members.Add(codeField);
             TypeDeclaration.Members.Add(codeProperty);
 
-            return base.VisitSynthesized(property);
+            return base.VisitSynthesized(propertyModel);
         }
 
         private Boolean HasMember(String name)
@@ -122,7 +139,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             return codeField;
         }
 
-        private CodeMemberProperty CreateProperty(
+        private static CodeMemberProperty CreateProperty(
             String name,
             CodeTypeReference type,
             CodeMemberField backingField,
@@ -165,7 +182,9 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 throw Logger.Fatal.ArgumentNullOrWhiteSpace(value);
             }
 
-            return $"_{Char.ToLowerInvariant(value[0])}{value.Substring(1)}";
+            return Invariant(
+                $"_{Char.ToLowerInvariant(value[0])}{value.Substring(1)}"
+            );
         }
 
         private const MemberAttributes PublicFinal =

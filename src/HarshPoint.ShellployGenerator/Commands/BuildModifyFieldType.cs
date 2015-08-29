@@ -1,12 +1,15 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.ShellployGenerator.Builders;
 
 namespace HarshPoint.ShellployGenerator.Commands
 {
     internal sealed class BuildModifyFieldType : 
-        HarshPointCommandBuilder<HarshModifyFieldType>
+        NewProvisionerCommandBuilder<HarshModifyFieldType>
     {
         public BuildModifyFieldType()
         {
+            ProvisionerDefaults.Include(this);
+
             AsChildOf<HarshField>(f=>
             {
                 f.Parameter(x => x.Type).Ignore();

@@ -4,6 +4,7 @@ using System.Linq;
 using SMA = System.Management.Automation;
 using HarshPoint.ShellployGenerator.CodeGen;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
@@ -27,11 +28,17 @@ namespace HarshPoint.ShellployGenerator.Builders
             TargetType = targetType;
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         protected NewObjectCommandBuilder(
             HarshParameterizedObjectMetadata metadata
         )
             : this(ValidateNotNull(metadata, nameof(metadata)).ObjectType)
         {
+            if (metadata == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(metadata));
+            }
+
             if ((metadata.DefaultParameterSet != null) &&
                 (!metadata.DefaultParameterSet.IsImplicit))
             {

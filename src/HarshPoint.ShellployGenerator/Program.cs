@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static System.FormattableString;
 
 namespace HarshPoint.ShellployGenerator
 {
@@ -17,7 +18,9 @@ namespace HarshPoint.ShellployGenerator
         {
             if (args.Length != 1)
             {
-                Console.Error.WriteLine($"Usage: {ProgramName} OutputDirectory");
+                Console.Error.WriteLine(
+                    Invariant($"Usage: {ProgramName} OutputDirectory")
+                );
                 return 2;
             }
 
@@ -39,14 +42,14 @@ namespace HarshPoint.ShellployGenerator
 
                 foreach (var file in generators)
                 {
-                    RunGenerator(file, context);
+                    file.Write(context);
                 }
 
                 var aliases = new AliasFileGenerator(
                     generators.Select(g => g.Command)
                 );
 
-                RunGenerator(aliases, context);
+                aliases.Write(context);
 
                 return 0;
             }
@@ -54,24 +57,6 @@ namespace HarshPoint.ShellployGenerator
             {
                 Log.Fatal(exc, "Unhandled exception");
                 throw;
-            }
-        }
-
-        private static void RunGenerator(
-            FileGenerator generator, 
-            FileGeneratorContext context
-        )
-        {
-            try
-            {
-                generator.Write(context);
-            }
-            catch (Exception exc)
-            {
-                throw new Exception(
-                    $"Error generating {generator.FileName}",
-                    exc
-                );
             }
         }
 
