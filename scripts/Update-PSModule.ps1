@@ -89,7 +89,7 @@ try {
 	}
 
 	Set-Content -LiteralPath $ModulePath -Value $ModuleText -Encoding UTF8
-	Write-Information "Updated $ModulePath"
+	Write-Host "Updated $ModulePath"
 
 	$NuSpec.package.metadata.id          = $AssemblyName.Name
 	$NuSpec.package.metadata.title       = $AssemblyName.Name
