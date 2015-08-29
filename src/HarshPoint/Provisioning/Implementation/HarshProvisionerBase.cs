@@ -69,8 +69,8 @@ namespace HarshPoint.Provisioning.Implementation
             => new Collection<HarshProvisionerBase>();
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        protected static readonly ICollection<HarshProvisionerBase> NoChildren =
-            ImmutableArray<HarshProvisionerBase>.Empty;
+        protected static readonly ICollection<HarshProvisionerBase> NoChildren
+            = ImmutableArray<HarshProvisionerBase>.Empty;
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(HarshProvisionerBase));

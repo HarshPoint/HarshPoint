@@ -63,58 +63,18 @@ namespace HarshPoint.Provisioning.Implementation
             => HarshLazy.Initialize(ref _valueSourceTracker);
 
         public Task ProvisionAsync(TContext context, CancellationToken token)
-            => ProvisionAsync(context.WithToken(token));
+        {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
+            return ProvisionAsync(context.WithToken(token));
+        }
 
         public Task ProvisionAsync(
             TContext context,
             IProgress<HarshProvisionerRecord> progress
-        )
-            => ProvisionAsync(context.WithProgress(progress));
-
-        public Task ProvisionAsync(
-            TContext context,
-            CancellationToken token,
-            IProgress<HarshProvisionerRecord> progress
-        )
-            => ProvisionAsync(context
-                .WithToken(token)
-                .WithProgress(progress)
-            );
-
-        public Task ProvisionAsync(TContext context)
-            => Run(
-                context,
-                HarshProvisionerAction.Provision
-            );
-
-        public Task UnprovisionAsync(TContext context, CancellationToken token)
-            => UnprovisionAsync(context.WithToken(token));
-
-        public Task UnprovisionAsync(
-            TContext context,
-            IProgress<HarshProvisionerRecord> progress
-        )
-            => UnprovisionAsync(context.WithProgress(progress));
-
-        public Task UnprovisionAsync(
-            TContext context,
-            CancellationToken token,
-            IProgress<HarshProvisionerRecord> progress
-        )
-            => UnprovisionAsync(context
-                .WithToken(token)
-                .WithProgress(progress)
-            );
-
-        public Task UnprovisionAsync(TContext context)
-            => Run(
-                context,
-                HarshProvisionerAction.Unprovision
-            );
-
-        private async Task Run(
-            TContext context,
-            HarshProvisionerAction action
         )
         {
             if (context == null)
@@ -122,46 +82,75 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            var isSessionRoot = (context.Session == null);
-            if (isSessionRoot)
-            {
-                context = context.WithSession(new ProvisioningSession(this, action));
-                context.Session.OnSessionStarting(context);
-            }
-
-            await RunWithContext(context, () =>
-                     RunSelfAndChildren(
-                        context,
-                        action
-                    )
-                );
-
-            if (isSessionRoot)
-            {
-                context.Session.OnSessionEnded(context);
-            }
+            return ProvisionAsync(
+                context.WithProgress(progress)
+            );
         }
 
-        protected internal Boolean IsValueDefaultFromContext(Expression<Func<Object>> expression)
-            => _valueSourceTracker?.GetValueSource(expression)
-                == DefaultFromContextPropertyValueSource.Instance;
-
-        protected void ForwardsTo(HarshProvisionerBase<TContext> target)
+        public Task ProvisionAsync(
+            TContext context,
+            CancellationToken token,
+            IProgress<HarshProvisionerRecord> progress
+        )
         {
-            ForwardTarget = target;
-        }
-
-        protected void ValidateMandatoryWhenCreatingParameters()
-        {
-            var mandatory = ParameterSet
-                .Parameters
-                .Where(Metadata.IsMandatoryWhenCreating);
-
-            foreach (var param in mandatory)
+            if (context == null)
             {
-                ValidateHasNonDefaultValue(param);
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
+
+            return ProvisionAsync(
+                context.WithToken(token).WithProgress(progress)
+            );
         }
+
+        public Task ProvisionAsync(TContext context)
+            => Run(context, HarshProvisionerAction.Provision);
+
+        public Task UnprovisionAsync(TContext context, CancellationToken token)
+        {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
+            return UnprovisionAsync(
+                context.WithToken(token)
+            );
+        }
+
+        public Task UnprovisionAsync(
+            TContext context,
+            IProgress<HarshProvisionerRecord> progress
+        )
+        {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
+            return UnprovisionAsync(
+                context.WithProgress(progress)
+            );
+        }
+
+        public Task UnprovisionAsync(
+            TContext context,
+            CancellationToken token,
+            IProgress<HarshProvisionerRecord> progress
+        )
+        {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
+            return UnprovisionAsync(
+                context.WithToken(token).WithProgress(progress)
+            );
+        }
+
+        public Task UnprovisionAsync(TContext context)
+            => Run(context,HarshProvisionerAction.Unprovision);
 
         protected virtual Task InitializeAsync() => HarshTask.Completed;
 
@@ -185,10 +174,26 @@ namespace HarshPoint.Provisioning.Implementation
         protected virtual ResolveContext<TContext> CreateResolveContext()
             => new ResolveContext<TContext>(Context);
 
-        internal virtual ManualResolver CreateManualResolver(Func<IResolveContext> resolveContextFactory)
-            => new ManualResolver(resolveContextFactory);
+        protected void ForwardsTo(HarshProvisionerBase<TContext> target)
+        {
+            ForwardTarget = target;
+        }
 
-        internal virtual Task OnResolvedPropertiesBound() => HarshTask.Completed;
+        protected internal Boolean IsValueDefaultFromContext(Expression<Func<Object>> expression)
+            => _valueSourceTracker?.GetValueSource(expression)
+                == DefaultFromContextPropertyValueSource.Instance;
+
+        protected void ValidateMandatoryWhenCreatingParameters()
+        {
+            var mandatory = ParameterSet
+                .Parameters
+                .Where(Metadata.IsMandatoryWhenCreating);
+
+            foreach (var param in mandatory)
+            {
+                ValidateHasNonDefaultValue(param);
+            }
+        }
 
         protected abstract Task ProvisionChild(
             HarshProvisionerBase provisioner,
@@ -199,6 +204,13 @@ namespace HarshPoint.Provisioning.Implementation
             HarshProvisionerBase provisioner,
             TContext context
         );
+
+        internal virtual ManualResolver CreateManualResolver(
+            Func<IResolveContext> resolveContextFactory
+        )
+            => new ManualResolver(resolveContextFactory);
+
+        internal virtual Task OnResolvedPropertiesBound() => HarshTask.Completed;
 
         private ParameterSet ResolveParameterSet()
         {
@@ -249,8 +261,39 @@ namespace HarshPoint.Provisioning.Implementation
                 );
         }
 
+        private async Task Run(
+            TContext context,
+            HarshProvisionerAction action
+        )
+        {
+            if (context == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(context));
+            }
+
+            var isSessionRoot = (context.Session == null);
+            if (isSessionRoot)
+            {
+                context = context.WithSession(new ProvisioningSession(this, action));
+                context.Session.OnSessionStarting(context);
+            }
+
+            await RunWithContext(context, () =>
+                     RunSelfAndChildren(
+                        context,
+                        action
+                    )
+                );
+
+            if (isSessionRoot)
+            {
+                context.Session.OnSessionEnded(context);
+            }
+        }
+
         private async Task RunChildren(
-            HarshProvisionerAction action)
+            HarshProvisionerAction action
+        )
         {
             if (!HasChildren)
             {
@@ -262,6 +305,7 @@ namespace HarshPoint.Provisioning.Implementation
             foreach (var child in GetChildrenSorted(action))
             {
                 context.Token.ThrowIfCancellationRequested();
+
                 if (action == HarshProvisionerAction.Provision)
                 {
                     await ProvisionChild(child, context);
@@ -295,16 +339,17 @@ namespace HarshPoint.Provisioning.Implementation
             HarshProvisionerAction action
         )
         {
-            if (action == HarshProvisionerAction.Provision
-                || MayDeleteUserData
-                || context.MayDeleteUserData
-                || !Metadata.UnprovisionDeletesUserData)
+            var mayDelete = MayDeleteUserData ||
+                context.MayDeleteUserData ||
+                !Metadata.UnprovisionDeletesUserData;
+
+            if (action == HarshProvisionerAction.Provision || mayDelete)
             {
                 await RunSelf(context, action);
             }
             else
             {
-                context.Session?.OnProvisioningSkipped(context, this);
+                context.Session.OnProvisioningSkipped(context, this);
             }
 
             await RunChildren(action);
@@ -324,8 +369,9 @@ namespace HarshPoint.Provisioning.Implementation
                 CreateResolveContext
             );
 
-            await OnResolvedPropertiesBound();
             context.Token.ThrowIfCancellationRequested();
+
+            await OnResolvedPropertiesBound();
 
             // parameter set resolving depends on values
             // from context being already set
@@ -337,8 +383,10 @@ namespace HarshPoint.Provisioning.Implementation
                     ValidateParameters();
                     OnValidating();
 
-                    context.Session?.OnProvisioningStarting(context, this);
+                    context.Session.OnProvisioningStarting(context, this);
+
                     await InitializeAsync();
+
                     context.Token.ThrowIfCancellationRequested();
 
                     if (action == HarshProvisionerAction.Provision)
@@ -349,6 +397,7 @@ namespace HarshPoint.Provisioning.Implementation
                     {
                         await OnUnprovisioningAsync();
                     }
+
                     context.Token.ThrowIfCancellationRequested();
                 }
                 finally
@@ -356,7 +405,8 @@ namespace HarshPoint.Provisioning.Implementation
                     Complete();
                 }
             }
-            context.Session?.OnProvisioningEnded(context, this);
+
+            context.Session.OnProvisioningEnded(context, this);
         }
 
         PropertyValueSource ITrackValueSource.GetValueSource(PropertyInfo property)
