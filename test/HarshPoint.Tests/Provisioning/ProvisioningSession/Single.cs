@@ -24,17 +24,17 @@ namespace ProvisioningSession
         public async Task Provisioning_inspector_notifications_are_in_correct_order()
         {
             var mockInspector = new Mock<IProvisioningSessionInspector>(MockBehavior.Strict);
-            using (var seq = new Sequence())
-            {
-                AddSessionStartingSequence(seq, mockInspector);
+            var seq = new Sequence();
+            AddSessionStartingSequence(seq, mockInspector);
 
-                AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
+            AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
 
-                AddSessionEndedSequence(seq, mockInspector);
+            AddSessionEndedSequence(seq, mockInspector);
 
-                var context = Context.AddSessionInspector(mockInspector.Object);
-                await Provisioner.ProvisionAsync(context);
-            }
+            var context = Context.AddSessionInspector(mockInspector.Object);
+            await Provisioner.ProvisionAsync(context);
+
+            seq.VerifyFinished();
         }
 
         [Fact]
@@ -42,17 +42,17 @@ namespace ProvisioningSession
         {
             var mockInspector = new Mock<IProvisioningSessionInspector>(MockBehavior.Strict);
 
-            using (var seq = new Sequence())
-            {
-                AddSessionStartingSequence(seq, mockInspector);
+            var seq = new Sequence();
+            AddSessionStartingSequence(seq, mockInspector);
 
-                AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
+            AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
 
-                AddSessionEndedSequence(seq, mockInspector);
+            AddSessionEndedSequence(seq, mockInspector);
 
-                var context = Context.AddSessionInspector(mockInspector.Object);
-                await Provisioner.UnprovisionAsync(context);
-            }
+            var context = Context.AddSessionInspector(mockInspector.Object);
+            await Provisioner.UnprovisionAsync(context);
+
+            seq.VerifyFinished();
         }
     }
 }

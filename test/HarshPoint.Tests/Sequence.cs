@@ -8,7 +8,7 @@ using Xunit;
 
 namespace HarshPoint.Tests
 {
-    public class Sequence : IDisposable
+    public class Sequence
     {
         private Int32 sequenceStep;
         private Int32 sequenceLength;
@@ -59,18 +59,6 @@ namespace HarshPoint.Tests
                 sequenceLength == sequenceStep,
                 "Sequence not completed."
             );
-        }
-
-        private static Boolean IsInException()
-            => Marshal.GetExceptionPointers() != IntPtr.Zero
-                || Marshal.GetExceptionCode() != 0;
-
-        void IDisposable.Dispose()
-        {
-            if (!IsInException())
-            {
-                VerifyFinished();
-            }
         }
     }
 
