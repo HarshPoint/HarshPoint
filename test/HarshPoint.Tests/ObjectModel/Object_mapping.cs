@@ -37,9 +37,9 @@ namespace HarshPoint.ObjectModel
             var source = new Source() { SourceProp = "42" };
             var target = new Target() { TargetProp = null };
 
-            Assert.Equal("42", target.TargetProp);
             var a = Assert.Single(_map.Apply(source, target));
             Assert.False(a.ValuesEqual);
+            Assert.Equal("42", target.TargetProp);
             Assert.Equal("42", a.SourceValue);
             Assert.Null(a.TargetValue);
         }
@@ -50,10 +50,7 @@ namespace HarshPoint.ObjectModel
             var source = new Source() { SourceProp = null };
             var target = new Target() { TargetProp = null };
 
-            var a = Assert.Single(_map.Apply(source, target));
-            Assert.True(a.ValuesEqual);
-            Assert.Null(a.SourceValue);
-            Assert.Null(a.TargetValue);
+            Assert.Empty(_map.Apply(source, target));
         }
 
         [Fact]

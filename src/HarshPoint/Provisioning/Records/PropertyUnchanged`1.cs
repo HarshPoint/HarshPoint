@@ -10,7 +10,7 @@ namespace HarshPoint.Provisioning.Records
             Object oldValue
         )
             : base(@object)
-        {
+        {   
             OldValue = oldValue;
         }
 
