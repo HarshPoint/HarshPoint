@@ -50,9 +50,16 @@ namespace HarshPoint.Provisioning.Implementation
                 )
                 .ToImmutableArray();
 
-        public override Object ConvertNestedComponents(IEnumerator<Object> componentEnumerator)
+        public override Object ConvertNestedComponents(
+            NestedResolveResult nested,
+            IEnumerator<Object> componentEnumerator
+        )
         {
-            var key = _keyStrategy.ConvertNestedComponents(componentEnumerator);
+            var key = _keyStrategy.ConvertNestedComponents(
+                nested,
+                componentEnumerator
+            );
+
             var value = componentEnumerator.TakeRemainder().ToImmutableArray();
 
             return Tuple.Create(key, value);

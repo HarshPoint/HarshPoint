@@ -9,7 +9,7 @@ namespace HarshPoint.Provisioning.Implementation
     {
         private readonly Type _resultType;
         private readonly Lazy<IReadOnlyCollection<Type>> _componentsFlat;
-            
+
         protected ResolveResultConverterStrategy()
         {
         }
@@ -57,16 +57,19 @@ namespace HarshPoint.Provisioning.Implementation
 
             using (var enumerator = components.AsEnumerable().GetEnumerator())
             {
-                return ConvertNestedComponents(enumerator);
+                return ConvertNestedComponents(nested, enumerator);
             }
         }
 
-        public virtual Object ConvertNestedComponents(IEnumerator<Object> componentEnumerator)
+        public virtual Object ConvertNestedComponents(
+            NestedResolveResult nested,
+            IEnumerator<Object> componentEnumerator
+        )
         {
             throw Logger.Fatal.NotImplemented();
         }
 
-        protected IReadOnlyCollection<Type> ComponentTypesFlattened 
+        protected IReadOnlyCollection<Type> ComponentTypesFlattened
             => _componentsFlat?.Value ?? ImmutableArray<Type>.Empty;
 
         protected Type ResultType => _resultType;
@@ -75,7 +78,7 @@ namespace HarshPoint.Provisioning.Implementation
         {
             var result = ImmutableArray.CreateBuilder<Type>();
             AddComponentsFlat(result, ResultType);
-            return result;
+            return result.ToImmutable();
         }
 
         internal static ResolveResultConverterStrategy GetStrategyForType(Type type)

@@ -17,11 +17,14 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToImmutableArray();
         }
 
-        public override Object ConvertNestedComponents(IEnumerator<Object> componentEnumerator)
+        public override Object ConvertNestedComponents(
+            NestedResolveResult nested,
+            IEnumerator<Object> componentEnumerator
+        )
             => HarshTuple.Create(
                 ResultType,
                 _componentStrategies.Select(
-                    s => s.ConvertNestedComponents(componentEnumerator)
+                    s => s.ConvertNestedComponents(nested, componentEnumerator)
                 )
             );
 

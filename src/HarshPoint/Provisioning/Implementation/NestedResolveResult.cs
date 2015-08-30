@@ -91,6 +91,12 @@ namespace HarshPoint.Provisioning.Implementation
             return array.ToImmutableArray();
         }
 
+        public T ExtractComponent<T>()
+        {
+            var components = ExtractComponents(typeof(T));
+            return (T)components[0];
+        }
+
         public Tuple<T1, T2> ExtractComponents<T1, T2>()
         {
             var components = ExtractComponents(typeof(T1), typeof(T2));
