@@ -17,6 +17,8 @@ namespace HarshPoint.Provisioning
         {
             Map(f => f.Title);
             Map(f => f.Group);
+
+            WriteRecord = CreateRecordWriter<TField>();
         }
 
         [Parameter]
@@ -32,6 +34,8 @@ namespace HarshPoint.Provisioning
 
         [Parameter]
         public Boolean NoPushChangesToLists { get; set; }
+
+        private RecordWriter<HarshProvisionerContext, TField> WriteRecord { get; }
 
         protected ObjectMapper<TSelf, TField>.IEntryBuilder Map(
             Expression<Func<TField, Object>> targetProperty
@@ -57,6 +61,8 @@ namespace HarshPoint.Provisioning
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
+            context.Include<TField>(f => f.InternalName);
+
             context.Include(
                 _map.GetTargetExpressions()
             );
@@ -68,7 +74,7 @@ namespace HarshPoint.Provisioning
         {
             foreach (var field in Fields)
             {
-                if (_map.Apply(this, field))
+                if(_map.Apply(WriteRecord, this, field))
                 {
                     UpdateField(field);
                 }

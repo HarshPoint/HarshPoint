@@ -8,6 +8,6 @@
         }
 
         public override HarshProvisionerRecordType RecordType
-            => HarshProvisionerRecordType.AlreadyExists;
+            => HarshProvisionerRecordType.Exists;
     }
 }

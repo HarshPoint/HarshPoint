@@ -56,6 +56,46 @@ namespace HarshPoint.Provisioning.Implementation
         public void DidNotExist(String context, String identifier)
             => Write(context, identifier, new ObjectDidNotExist<T>());
 
+        public void PropertyChanged(
+            String propertyName,
+            T @object,
+            Object oldValue,
+            Object newValue
+        )
+            => PropertyChanged(null, propertyName, @object, oldValue, newValue);
+
+        public void PropertyChanged(
+            String context,
+            String propertyName,
+            T @object,
+            Object oldValue,
+            Object newValue
+        )
+            => Write(
+                context, 
+                propertyName, 
+                new PropertyChanged<T>(@object, oldValue, newValue)
+            );
+
+        public void PropertyUnchanged(
+            String propertyName,
+            T @object,
+            Object oldValue
+        )
+            => PropertyUnchanged(null, propertyName, @object, oldValue);
+
+        public void PropertyUnchanged(
+            String context,
+            String propertyName,
+            T @object,
+            Object oldValue
+        )
+            => Write(
+                context,
+                propertyName,
+                new PropertyUnchanged<T>(@object, oldValue)
+            );
+
         public void Removed()
             => Removed(null, null);
 

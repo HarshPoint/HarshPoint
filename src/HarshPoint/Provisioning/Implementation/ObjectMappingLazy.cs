@@ -19,14 +19,68 @@ namespace HarshPoint.Provisioning.Implementation
             _sourceMetadata = sourceMetadata;
         }
 
-        public Boolean Apply(Object source, Object target)
+        public IEnumerable<ObjectMappingAction> Apply(
+            Object source, 
+            Object target
+        )
         {
             if (HasEntries)
             {
                 return Mapping.Apply(source, target);
             }
 
-            return false;
+            return Enumerable.Empty<ObjectMappingAction>();
+        }
+
+        public Boolean Apply<TContext>(
+            RecordWriter<TContext, TTarget> writeRecord,
+            Object source,
+            TTarget target
+        )
+            where TContext : HarshProvisionerContextBase<TContext>
+            => Apply(writeRecord, null, source, target);
+
+        public Boolean Apply<TContext>(
+            RecordWriter<TContext, TTarget> writeRecord,
+            String context,
+            Object source,
+            TTarget target
+        )
+            where TContext : HarshProvisionerContextBase<TContext>
+        {
+            if (writeRecord == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(writeRecord));
+            }
+
+            var result = false;
+
+            foreach (var a in Apply(source,target))
+            {
+                if (a.ValuesEqual)
+                {
+                    writeRecord.PropertyUnchanged(
+                        context,
+                        a.TargetAccessor.Name,
+                        target,
+                        a.TargetValue
+                    );
+                }
+                else
+                {
+                    result = true;
+                    writeRecord.PropertyChanged(
+                        context,
+                        a.TargetAccessor.Name,
+                        target,
+                        a.TargetValue,
+                        a.SourceValue
+                    );
+                }
+
+            }
+
+            return result;
         }
 
         public IEnumerable<ObjectMappingAction> GetActions(

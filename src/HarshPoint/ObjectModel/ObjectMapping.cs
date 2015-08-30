@@ -29,27 +29,19 @@ namespace HarshPoint.ObjectModel
             Entries = entries.ToImmutableArray();
         }
 
-        public Boolean Apply(Object source, Object target)
+        public IEnumerable<ObjectMappingAction> Apply(Object source, Object target)
         {
-            var actions = GetActions(source, target);
-            var result = false;
+            var actions = GetActions(source, target).ToImmutableArray();
 
-            foreach (var a in actions)
+            foreach (var a in actions.Where(a => !a.ValuesEqual))
             {
-                if (a.ValuesEqual)
-                {
-                }
-                else
-                {
-                    a.TargetAccessor.SetValue(
-                        target,
-                        a.SourceValue
-                    );
-                    result = true;
-                }
+                a.TargetAccessor.SetValue(
+                    target,
+                    a.SourceValue
+                );
             }
 
-            return result;
+            return actions;
         }
 
         public IEnumerable<ObjectMappingAction> GetActions(

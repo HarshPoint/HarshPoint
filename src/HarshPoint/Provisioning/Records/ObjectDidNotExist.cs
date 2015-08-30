@@ -3,6 +3,6 @@
     public sealed class ObjectDidNotExist<T> : ObjectRecord<T>
     {
         public override HarshProvisionerRecordType RecordType 
-            => HarshProvisionerRecordType.DidNotExist;
+            => HarshProvisionerRecordType.DoesNotExist;
     }
 }

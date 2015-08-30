@@ -5,8 +5,9 @@
         Other,
         Added,
         Removed,
-        AlreadyExists,
-        DidNotExist,
-        SetProperty
+        Exists,
+        DoesNotExist,
+        Changed,
+        Unchanged
     }
 }

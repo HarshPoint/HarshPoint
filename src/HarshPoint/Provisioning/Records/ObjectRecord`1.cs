@@ -1,5 +1,4 @@
 ﻿using System;
-using static System.FormattableString;
 
 namespace HarshPoint.Provisioning.Records
 {
@@ -20,9 +19,9 @@ namespace HarshPoint.Provisioning.Records
         public Boolean ObjectRemoved
             => RecordType == HarshProvisionerRecordType.Removed;
 
-        public override Type ObjectType => typeof(T);
+        public override Type ObjectType => Object?.GetType() ?? typeof(T);
 
-        public override String ToString() 
-            => Invariant($"{RecordType} {typeof(T).Name} {Identifier}");
+        public override String ToString()
+            => Identifier;
     }
 }

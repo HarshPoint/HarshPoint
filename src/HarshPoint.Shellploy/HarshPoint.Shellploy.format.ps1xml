@@ -40,37 +40,42 @@
       <TableControl>
         <TableHeaders>
           <TableColumnHeader>
-            <Label>Timestamp</Label>
+            <Alignment>right</Alignment>
+            <Label>Time</Label>
+            <Width>22</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>ObjectType</Label>
             <Width>19</Width>
           </TableColumnHeader>
           <TableColumnHeader>
             <Label>RecordType</Label>
-            <Width>14</Width>
+            <Width>13</Width>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>ObjectType</Label>
-            <Width>15</Width>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>Identifier</Label>
+            <Label>Message</Label>
           </TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
               <TableColumnItem>
-                <PropertyName>Timestamp</PropertyName>
-                <FormatString>yyyy-MM-dd HH:mm:ss</FormatString>
+                <ScriptBlock>
+                  [String]::Format(
+                    "{0,10}  {1,8}",
+                    $_.Timestamp.ToString("d"),
+                    $_.Timestamp.ToString("t")
+                  )
+                </ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>$_.ObjectType.Name</ScriptBlock>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>RecordType</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <Alignment>right</Alignment>
-                <ScriptBlock>$_.ObjectType.Name</ScriptBlock>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>Identifier</PropertyName>
+                <ScriptBlock>$_.ToString()</ScriptBlock>
               </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>

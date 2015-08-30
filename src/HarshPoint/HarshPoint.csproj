@@ -150,6 +150,9 @@
     <Compile Include="ProgressSerilog.cs" />
     <Compile Include="Provisioning\Records\ObjectDidNotExist.cs" />
     <Compile Include="Provisioning\Records\ObjectRemoved.cs" />
+    <Compile Include="Provisioning\Records\PropertyUnchanged`1.cs" />
+    <Compile Include="Provisioning\Records\PropertyRecord`1.cs" />
+    <Compile Include="Provisioning\Records\PropertyChanged`1.cs" />
     <Compile Include="Provisioning\ResolveExtensions.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2.cs" />
     <Compile Include="Provisioning\Implementation\ResolveBuilder`2_Element.cs" />

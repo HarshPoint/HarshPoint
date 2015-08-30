@@ -26,7 +26,9 @@ namespace HarshPoint.Provisioning
         [Parameter]
         public IResolveSingle<TermSet> TermSet { get; set; }
 
-        protected override void InitializeResolveContext(ClientObjectResolveContext context)
+        protected override void InitializeResolveContext(
+            ClientObjectResolveContext context
+        )
         {
             if (context == null)
             {
