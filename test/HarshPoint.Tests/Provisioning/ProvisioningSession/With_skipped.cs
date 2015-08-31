@@ -42,21 +42,21 @@ namespace ProvisioningSession
         {
             var mockInspector = new Mock<IProvisioningSessionInspector>(MockBehavior.Strict);
 
-            using (var seq = new Sequence())
-            {
-                AddSessionStartingSequence(seq, mockInspector);
+            var seq = new Sequence();
+            AddSessionStartingSequence(seq, mockInspector);
 
-                AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
-                AddProvisioningSequence<HarshProvisionerSkipped>(seq, mockInspector);
-                AddProvisioningSequence<HarshChild1>(seq, mockInspector);
-                AddProvisioningSequence<HarshSubChild>(seq, mockInspector);
-                AddProvisioningSequence<HarshChild2>(seq, mockInspector);
+            AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
+            AddProvisioningSequence<HarshProvisionerSkipped>(seq, mockInspector);
+            AddProvisioningSequence<HarshChild1>(seq, mockInspector);
+            AddProvisioningSequence<HarshSubChild>(seq, mockInspector);
+            AddProvisioningSequence<HarshChild2>(seq, mockInspector);
 
-                AddSessionEndedSequence(seq, mockInspector);
+            AddSessionEndedSequence(seq, mockInspector);
 
-                var context = Context.AddSessionInspector(mockInspector.Object);
-                await Provisioner.ProvisionAsync(context);
-            }
+            var context = Context.AddSessionInspector(mockInspector.Object);
+            await Provisioner.ProvisionAsync(context);
+
+            seq.VerifyFinished();
         }
 
         [Fact]
@@ -64,21 +64,21 @@ namespace ProvisioningSession
         {
             var mockInspector = new Mock<IProvisioningSessionInspector>(MockBehavior.Strict);
 
-            using (var seq = new Sequence())
-            {
-                AddSessionStartingSequence(seq, mockInspector);
+            var seq = new Sequence();
+            AddSessionStartingSequence(seq, mockInspector);
 
-                AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
-                AddProvisioningSkippedSequence<HarshProvisionerSkipped>(seq, mockInspector);
-                AddProvisioningSequence<HarshChild2>(seq, mockInspector);
-                AddProvisioningSequence<HarshChild1>(seq, mockInspector);
-                AddProvisioningSequence<HarshSubChild>(seq, mockInspector);
+            AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
+            AddProvisioningSkippedSequence<HarshProvisionerSkipped>(seq, mockInspector);
+            AddProvisioningSequence<HarshChild2>(seq, mockInspector);
+            AddProvisioningSequence<HarshChild1>(seq, mockInspector);
+            AddProvisioningSequence<HarshSubChild>(seq, mockInspector);
 
-                AddSessionEndedSequence(seq, mockInspector);
+            AddSessionEndedSequence(seq, mockInspector);
 
-                var context = Context.AddSessionInspector(mockInspector.Object);
-                await Provisioner.UnprovisionAsync(context);
-            }
+            var context = Context.AddSessionInspector(mockInspector.Object);
+            await Provisioner.UnprovisionAsync(context);
+
+            seq.VerifyFinished();
         }
     }
 }
