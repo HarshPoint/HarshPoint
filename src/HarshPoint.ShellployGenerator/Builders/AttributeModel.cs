@@ -48,12 +48,24 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Type AttributeType { get; }
 
-        public IImmutableList<Object> Arguments => _arguments;
+        public IReadOnlyList<Object> Arguments => _arguments;
 
-        public IImmutableDictionary<String, Object> Properties => _properties;
+        public IReadOnlyDictionary<String, Object> Properties => _properties;
 
         public AttributeModel AddArgument(Object value)
             => this.With(am => am._arguments = am._arguments.Add(value));
+
+        public AttributeModel RemoveProperty(String name)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw Logger.Fatal.ArgumentNullOrWhiteSpace(nameof(name));
+            }
+
+            return this.With(
+                am => am._properties = am._properties.Remove(name)
+            );
+        }
 
         public AttributeModel SetArgument(Int32 index, Object value)
             => this.With(

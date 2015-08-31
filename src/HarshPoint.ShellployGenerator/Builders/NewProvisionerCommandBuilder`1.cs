@@ -11,7 +11,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         INewObjectCommandBuilder<TProvisioner>
         where TProvisioner : HarshProvisionerBase
     {
-        public NewProvisionerCommandBuilder() : base(Metadata) { }
+        public NewProvisionerCommandBuilder() : base(MetadataInstance) { }
 
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void AsChildOf<TParent>()
@@ -62,7 +62,7 @@ namespace HarshPoint.ShellployGenerator.Builders
         PropertyModelContainer INewObjectCommandBuilder<TProvisioner>.PropertyContainer
             => PropertyContainer;
 
-        private static readonly HarshProvisionerMetadata Metadata
+        private static readonly HarshProvisionerMetadata MetadataInstance
            = HarshProvisionerMetadataRepository.Get(typeof(TProvisioner));
 
         private static readonly HarshLogger Logger

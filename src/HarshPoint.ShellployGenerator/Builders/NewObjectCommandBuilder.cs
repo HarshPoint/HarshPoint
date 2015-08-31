@@ -39,6 +39,8 @@ namespace HarshPoint.ShellployGenerator.Builders
                 throw Logger.Fatal.ArgumentNull(nameof(metadata));
             }
 
+            Metadata = metadata;
+
             if ((metadata.DefaultParameterSet != null) &&
                 (!metadata.DefaultParameterSet.IsImplicit))
             {
@@ -74,6 +76,33 @@ namespace HarshPoint.ShellployGenerator.Builders
             }
         }
 
+        protected virtual AttributeModel CreateParameterAttribute(
+            Parameter parameter
+        )
+        {
+            if (parameter == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(parameter));
+            }
+
+            var attr = new AttributeModel(typeof(SMA.ParameterAttribute));
+
+            if (parameter.IsMandatory)
+            {
+                attr = attr.SetProperty("Mandatory", true);
+            }
+
+            if (!parameter.IsCommonParameter)
+            {
+                attr = attr.SetProperty(
+                    "ParameterSetName",
+                    parameter.ParameterSetName
+                );
+            }
+
+            return attr;
+        }
+
         public NewObjectCommandModel ToNewObjectCommand()
             => ToNewObjectCommand(null);
 
@@ -94,27 +123,9 @@ namespace HarshPoint.ShellployGenerator.Builders
             return newObjectCodeGen.ToCommandCodeGenerator();
         }
 
+        internal HarshObjectMetadata Metadata { get; }
+
         internal Type TargetType { get; }
-
-        private static AttributeModel CreateParameterAttribute(Parameter param)
-        {
-            var attr = new AttributeModel(typeof(SMA.ParameterAttribute));
-
-            if (param.IsMandatory)
-            {
-                attr = attr.SetProperty("Mandatory", true);
-            }
-
-            if (!param.IsCommonParameter)
-            {
-                attr = attr.SetProperty(
-                    "ParameterSetName",
-                    param.ParameterSetName
-                );
-            }
-
-            return attr;
-        }
 
         private static T ValidateNotNull<T>(T value, String paramName)
             where T : class
