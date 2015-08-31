@@ -121,6 +121,7 @@
     <Compile Include="Provisioning\Implementation\DefaultFromContextPropertyValueSource.cs" />
     <Compile Include="Provisioning\Implementation\HarshProvisionerMetadataRepository.cs" />
     <Compile Include="Provisioning\Implementation\ProvisioningDefaultValuePolicy.cs" />
+    <Compile Include="Provisioning\Implementation\RecordWriterIdentifier.cs" />
     <Compile Include="Provisioning\Implementation\RecordWriter`2.cs" />
     <Compile Include="Provisioning\MandatoryWhenCreatingAttribute.cs" />
     <Compile Include="ProgressComposite`1.cs" />

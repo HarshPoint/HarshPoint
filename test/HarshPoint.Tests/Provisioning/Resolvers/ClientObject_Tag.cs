@@ -35,6 +35,5 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
             Assert.NotNull(tagList);
             Assert.Equal(list.Id, tagList.Id);
         }
-
     }
 }

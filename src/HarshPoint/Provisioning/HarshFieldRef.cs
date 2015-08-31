@@ -17,7 +17,7 @@ namespace HarshPoint.Provisioning
         }
 
         [DefaultFromContext]
-        [Parameter(Mandatory = true)]
+        [Parameter]
         public IResolveSingle<ContentType> ContentType
         {
             get;

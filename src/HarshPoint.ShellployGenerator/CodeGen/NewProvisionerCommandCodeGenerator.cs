@@ -21,9 +21,14 @@ namespace HarshPoint.ShellployGenerator.CodeGen
 
             NewProvisionerCommand = newProvisioner;
             Command = newProvisioner.Command;
+            InputObject = Command.Properties.FirstOrDefault(
+                p => p.HasElementsOfType<PropertyModelInputObject>()
+            );
         }
 
         public CommandModel Command { get; }
+
+        public PropertyModel InputObject { get; }
 
         public NewProvisionerCommandModel NewProvisionerCommand { get; }
 
@@ -77,7 +82,22 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 };
             });
 
-            var statements = result.Statements.Add(
+            var statements = result.Statements;
+
+            if (InputObject != null)
+            {
+                statements = statements.Add(
+                    CreateAddChildrenCall(
+                        result.Root, 
+                        new CodePropertyReferenceExpression(
+                            new CodeThisReferenceExpression(),
+                            InputObject.Identifier
+                        )
+                    )
+                );
+            }
+            
+            statements = statements.Add(
                 CommandCodeGenerator.CreateWriteObjectCall(result.Root)
             );
 
@@ -104,6 +124,19 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                 )
             );
 
+        private static CodeStatement CreateAddChildrenCall(
+            CodeExpression parent,
+            CodeExpression children
+        )
+            => new CodeExpressionStatement(
+                new CodeMethodInvokeExpression(
+                    null,
+                    AddChildrenMethod,
+                    parent,
+                    children
+                )
+            );
+
         private static CodeVariableDeclarationStatement DeclareParentVariable(
             Int32 index,
             NewObjectCommandModel parent
@@ -115,6 +148,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             );
 
         private const String AddChildMethod = "AddChild";
+        private const String AddChildrenMethod = "AddChildren";
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(NewProvisionerCommandCodeGenerator));

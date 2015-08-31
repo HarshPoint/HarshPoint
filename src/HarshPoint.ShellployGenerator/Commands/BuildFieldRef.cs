@@ -12,7 +12,7 @@ namespace HarshPoint.ShellployGenerator.Commands
         {
             ProvisionerDefaults.Include(this);
 
-            Parameter("InternalName").Synthesize(typeof(String));
+            PositionalParameter("InternalName").Synthesize(typeof(String));
 
             Parameter(x => x.Fields).SetFixedValue(
                 new CodeTypeReferenceExpression(typeof(Resolve))

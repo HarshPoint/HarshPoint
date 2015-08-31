@@ -20,7 +20,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         public IEnumerable<ObjectMappingAction> Apply(
-            Object source, 
+            Object source,
             Object target
         )
         {
@@ -55,7 +55,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             var result = false;
 
-            foreach (var a in Apply(source,target))
+            foreach (var a in Apply(source, target))
             {
                 if (a.ValuesEqual)
                 {
@@ -84,7 +84,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         public IEnumerable<ObjectMappingAction> GetActions(
-            Object source, 
+            Object source,
             Object target
         )
         {
@@ -106,7 +106,7 @@ namespace HarshPoint.Provisioning.Implementation
             return Enumerable.Empty<ObjectMappingAction>();
         }
 
-        public Expression<Func<TTarget,Object>>[] GetTargetExpressions()
+        public Expression<Func<TTarget, Object>>[] GetTargetExpressions()
         {
             if (HasEntries)
             {
