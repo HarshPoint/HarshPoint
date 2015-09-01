@@ -18,13 +18,13 @@ namespace HarshPoint.Provisioning.Implementation
             _inner = builder;
         }
 
-        void IResolveBuilder.InitializeContext(IResolveContext context)
+        void IResolveBuilder.InitializeContext(ResolveContext context)
             => _inner.InitializeContext(context);
 
-        Object IResolveBuilder.Initialize(IResolveContext context)
+        Object IResolveBuilder.Initialize(ResolveContext context)
             => _inner.Initialize(context);
 
-        IEnumerable<Object> IResolveBuilder.ToEnumerable(IResolveContext context, Object state)
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(ResolveContext context, Object state)
             => _inner.ToEnumerable(context, state);
 
         TResult IResolveSingle<TResult>.Value { get { throw CannotCall(); } }

@@ -87,7 +87,7 @@ namespace HarshPoint.Provisioning
         }
 
         internal sealed override ManualResolver CreateManualResolver(
-            Func<IResolveContext> resolveContextFactory
+            Func<ResolveContext> resolveContextFactory
         )
             => new ClientObjectManualResolver(
                 () => (ClientObjectResolveContext)resolveContextFactory()

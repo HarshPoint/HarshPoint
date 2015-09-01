@@ -23,18 +23,18 @@ namespace HarshPoint.Provisioning.Implementation
             _factory = factory;
         }
 
-        Object IResolveBuilder.Initialize(IResolveContext context)
+        Object IResolveBuilder.Initialize(ResolveContext context)
             => Inner.Initialize(context);
 
-        void IResolveBuilder.InitializeContext(IResolveContext context)
+        void IResolveBuilder.InitializeContext(ResolveContext context)
         {
             InitializeInner(context);
         }
 
-        IEnumerable<Object> IResolveBuilder.ToEnumerable(IResolveContext context, Object state)
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(ResolveContext context, Object state)
             => Inner.ToEnumerable(context, state);
 
-        private void InitializeInner(IResolveContext context)
+        private void InitializeInner(ResolveContext context)
         {
             _inner = _factory();
             _inner.InitializeContext(context);

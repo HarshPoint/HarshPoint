@@ -206,7 +206,7 @@ namespace HarshPoint.Provisioning.Implementation
         );
 
         internal virtual ManualResolver CreateManualResolver(
-            Func<IResolveContext> resolveContextFactory
+            Func<ResolveContext> resolveContextFactory
         )
             => new ManualResolver(resolveContextFactory);
 

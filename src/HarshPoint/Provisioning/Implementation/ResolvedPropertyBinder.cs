@@ -35,7 +35,7 @@ namespace HarshPoint.Provisioning.Implementation
                 .ToImmutableArray();
         }
 
-        public void Bind(Object target, Func<IResolveContext> resolveContextFactory)
+        public void Bind(Object target, Func<ResolveContext> resolveContextFactory)
         {
             if (target == null)
             {
@@ -46,6 +46,8 @@ namespace HarshPoint.Provisioning.Implementation
             {
                 throw Logger.Fatal.ArgumentNull(nameof(resolveContextFactory));
             }
+
+            var resolveCache = new ResolveCache();
 
             var resolveBuilders = from property in Properties
 
@@ -79,6 +81,7 @@ namespace HarshPoint.Provisioning.Implementation
                     x.ResolveBuilder
                 );
 
+                x.ResolveContext.Cache = resolveCache;
                 x.ResolveBuilder.InitializeContext(x.ResolveContext);
             }
 
@@ -97,9 +100,9 @@ namespace HarshPoint.Provisioning.Implementation
                                 };
 
             // save into array to force enumeration, so that all result sources 
-            // are created before any properties are overwritten, because some of the 
-            // resolve builders may depend on others, and they'd fail if they
-            // found the ResolveResult instead.
+            // are created before any properties are overwritten, because some 
+            // of the resolve builders may depend on others, and they'd fail 
+            // if they found the ResolveResult instead.
 
             resultSources = resultSources.ToArray();
 
@@ -146,7 +149,7 @@ namespace HarshPoint.Provisioning.Implementation
             return value;
         }
 
-        private static Boolean ValidateResolveContext(IResolveContext resolveContext)
+        private static Boolean ValidateResolveContext(ResolveContext resolveContext)
         {
             if (resolveContext == null)
             {
@@ -158,7 +161,11 @@ namespace HarshPoint.Provisioning.Implementation
             return true;
         }
 
-        private static IEnumerable CreateResultSource(String propertyName, IResolveBuilder resolveBuilder, IResolveContext resolveContext)
+        private static IEnumerable CreateResultSource(
+            String propertyName, 
+            IResolveBuilder resolveBuilder, 
+            ResolveContext resolveContext
+        )
         {
             Logger.Debug(
                 "Property {PropertyName} resolver {$Resolver} initializing.",
@@ -167,9 +174,9 @@ namespace HarshPoint.Provisioning.Implementation
             );
 
             var resultSource = resolveBuilder.ToEnumerable(
-                resolveContext
-,
-                resolveBuilder.Initialize(resolveContext));
+                resolveContext,
+                resolveBuilder.Initialize(resolveContext)
+            );
 
             Logger.Debug(
                 "Property {PropertyName} resolver {$Resolver} resolved into {$Value}.",

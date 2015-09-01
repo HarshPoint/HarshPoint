@@ -5,10 +5,10 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public interface IResolveBuilder
     {
-        void InitializeContext(IResolveContext context);
+        void InitializeContext(ResolveContext context);
 
-        Object Initialize(IResolveContext context);
+        Object Initialize(ResolveContext context);
 
-        IEnumerable<Object> ToEnumerable(IResolveContext context, Object state);
+        IEnumerable<Object> ToEnumerable(ResolveContext context, Object state);
     }
 }

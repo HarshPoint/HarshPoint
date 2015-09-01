@@ -3,9 +3,9 @@ using System.Collections;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ContextStateResolveBuilder<TResult> : ResolveBuilder<TResult, IResolveContext>
+    internal sealed class ContextStateResolveBuilder<TResult> : ResolveBuilder<TResult, ResolveContext>
     {
-        protected override IEnumerable ToEnumerable(Object state, IResolveContext context)
+        protected override IEnumerable ToEnumerable(Object state, ResolveContext context)
         {
             if (context == null)
             {

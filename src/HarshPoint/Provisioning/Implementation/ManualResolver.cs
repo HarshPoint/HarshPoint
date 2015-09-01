@@ -4,7 +4,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public class ManualResolver
     {
-        public ManualResolver(Func<IResolveContext> resolveContextFactory)
+        public ManualResolver(Func<ResolveContext> resolveContextFactory)
         {
             if (resolveContextFactory == null)
             {
@@ -26,7 +26,7 @@ namespace HarshPoint.Provisioning.Implementation
         protected T Bind<T>(T value)
             => Bind(value, null);
 
-        protected T Bind<T>(T value , Func<IResolveContext> contextFactory)
+        protected T Bind<T>(T value , Func<ResolveContext> contextFactory)
         {
             if (value == null)
             {
@@ -44,7 +44,7 @@ namespace HarshPoint.Provisioning.Implementation
             return holder.Value;
         }
 
-        private Func<IResolveContext> ResolveContextFactory { get; }
+        private Func<ResolveContext> ResolveContextFactory { get; }
 
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ManualResolver));
 

@@ -7,7 +7,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public abstract partial class NestedResolveBuilder<TResult, TParent, TContext> :
         ResolveBuilder<TResult, TContext>
-        where TContext : class, IResolveContext
+        where TContext : ResolveContext
     {
         protected NestedResolveBuilder(IResolveBuilder<TParent> parent)
         {

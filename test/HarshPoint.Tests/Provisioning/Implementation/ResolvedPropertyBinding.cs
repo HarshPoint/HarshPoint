@@ -49,7 +49,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         private void BindResolves()
         {
             Binder.Bind(this, () => {
-                var mock = new Mock<IResolveContext>();
+                var mock = new Mock<ResolveContext>();
                 mock.Setup<IReadOnlyCollection<ResolveFailure>>(x => x.Failures)
                     .Returns(new ResolveFailure[0]);
                 return mock.Object;
@@ -71,7 +71,7 @@ namespace HarshPoint.Tests.Provisioning.Implementation
         {
             var mock = new Mock<IResolveBuilder>();
 
-            mock.Setup(x => x.ToEnumerable(It.IsAny<IResolveContext>(), It.IsAny<Object>()))
+            mock.Setup(x => x.ToEnumerable(It.IsAny<ResolveContext>(), It.IsAny<Object>()))
                 .Returns((result ?? ExpectedArray));
 
             return mock;

@@ -7,7 +7,7 @@ namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class IdentifierResolveBuilder<TResult, TContext, TIdentifier> :
         ResolveBuilder<TResult, TContext>
-        where TContext : class, IResolveContext
+        where TContext : ResolveContext
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(IdentifierResolveBuilder<,,>));
 

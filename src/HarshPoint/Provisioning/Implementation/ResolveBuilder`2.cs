@@ -9,22 +9,35 @@ namespace HarshPoint.Provisioning.Implementation
         Chain<IResolveBuilderElement<TContext>>,
         IResolveBuilderElement<TContext>,
         IResolveBuilder<TResult, TContext>
-        where TContext : class, IResolveContext
+        where TContext : ResolveContext
     {
         private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveBuilder<,>));
 
-        Object IResolveBuilder.Initialize(IResolveContext context)
+        Object IResolveBuilder.Initialize(ResolveContext context)
         {
             var typedContext = ValidateContext(context);
+
+            var result = TryGetFromCache(context);
+
+            if (result != null)
+            {
+                return result;
+            }
 
             return Elements
                 .Select(e => e.ElementInitialize(typedContext))
                 .ToArray();
         }
 
-        void IResolveBuilder.InitializeContext(IResolveContext context)
+        void IResolveBuilder.InitializeContext(ResolveContext context)
         {
             var typedContext = ValidateContext(context);
+
+            if (TryGetFromCache(context) != null)
+            {
+                // do not initialize context when loading from cache
+                return;
+            }
 
             foreach (var element in Elements)
             {
@@ -32,7 +45,10 @@ namespace HarshPoint.Provisioning.Implementation
             }
         }
 
-        IEnumerable<Object> IResolveBuilder.ToEnumerable(IResolveContext context, Object state)
+        IEnumerable<Object> IResolveBuilder.ToEnumerable(
+            ResolveContext context, 
+            Object state
+        )
         {
             if (state == null)
             {
@@ -72,7 +88,10 @@ namespace HarshPoint.Provisioning.Implementation
         public ResolveBuilder<TResult, TContext> And(Chain<IResolveBuilderElement<TContext>> other)
             => (ResolveBuilder<TResult, TContext>)Append(other);
 
-        private static TContext ValidateContext(IResolveContext context)
+        private Object TryGetFromCache(ResolveContext context) 
+            => context.Cache?.TryGetValue(this);
+
+        private static TContext ValidateContext(ResolveContext context)
         {
             if (context == null)
             {

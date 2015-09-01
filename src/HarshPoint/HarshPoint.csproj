@@ -123,6 +123,7 @@
     <Compile Include="Provisioning\Implementation\ProvisioningDefaultValuePolicy.cs" />
     <Compile Include="Provisioning\Implementation\RecordWriterIdentifier.cs" />
     <Compile Include="Provisioning\Implementation\RecordWriter`2.cs" />
+    <Compile Include="Provisioning\Implementation\ResolveCache.cs" />
     <Compile Include="Provisioning\MandatoryWhenCreatingAttribute.cs" />
     <Compile Include="ProgressComposite`1.cs" />
     <Compile Include="ProgressBuffer`1.cs" />
@@ -203,7 +204,7 @@
     <Compile Include="Provisioning\Implementation\ResolveContext`1.cs" />
     <Compile Include="Provisioning\Implementation\ResolveFailedException.cs" />
     <Compile Include="Provisioning\Implementation\ResolveFailure.cs" />
-    <Compile Include="Provisioning\IResolveContext.cs" />
+    <Compile Include="Provisioning\ResolveContext.cs" />
     <Compile Include="ParameterAttribute.cs" />
     <Compile Include="ObjectModel\ParameterValidationAttribute.cs" />
     <Compile Include="ObjectModel\ParameterValidationException.cs" />

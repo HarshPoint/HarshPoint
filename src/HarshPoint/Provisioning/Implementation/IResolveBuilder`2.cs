@@ -5,7 +5,7 @@
         IResolve<TResult>,
         IResolveSingle<TResult>,
         IResolveSingleOrDefault<TResult>
-        where TContext : IResolveContext
+        where TContext : ResolveContext
     {
     }
 }
