@@ -1,4 +1,5 @@
 ﻿using HarshPoint.ObjectModel;
+using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         IEnumerable<Object> IResolveBuilder.ToEnumerable(
-            ResolveContext context, 
+            ResolveContext context,
             Object state
         )
         {
@@ -74,9 +75,6 @@ namespace HarshPoint.Provisioning.Implementation
 
         public ResolveBuilder<TResult, TContext> And(Chain<IResolveBuilderElement<TContext>> other)
             => (ResolveBuilder<TResult, TContext>)Append(other);
-
-        private Object TryGetFromCache(ResolveContext context) 
-            => context.Cache?.TryGetValue(this);
 
         private static TContext ValidateContext(ResolveContext context)
         {

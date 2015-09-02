@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -28,6 +29,14 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             return objects.ToImmutableArray();
+        }
+
+        protected override void InitializeCached(ClientObjectResolveContext context, IEnumerable enumerable)
+        {
+            ClientObjectCachedResolveResultProcessor.InitializeCached(
+                context,
+                enumerable.Cast<TResult>()
+            );
         }
 
         protected sealed override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)

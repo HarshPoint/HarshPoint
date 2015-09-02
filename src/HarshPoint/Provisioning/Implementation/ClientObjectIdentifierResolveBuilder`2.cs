@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Collections;
+using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
@@ -44,6 +46,17 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected sealed override TIdentifier GetIdentifier(TResult result)
             => IdentifierSelector(result);
+
+        protected override void InitializeCached(
+            ClientObjectResolveContext context, 
+            IEnumerable enumerable
+        )
+        {
+            ClientObjectCachedResolveResultProcessor.InitializeCached(
+                context,
+                enumerable.Cast<TResult>()
+            );
+        }
 
         protected sealed override void InitializeContextBeforeParent(ClientObjectResolveContext context)
         {

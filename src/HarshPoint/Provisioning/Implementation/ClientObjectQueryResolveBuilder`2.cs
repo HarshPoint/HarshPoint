@@ -11,7 +11,9 @@ namespace HarshPoint.Provisioning.Implementation
         where TResult : ClientObject
         where TQueryResult : ClientObject
     {
-        protected sealed override Object Initialize(ClientObjectResolveContext context)
+        protected sealed override Object Initialize(
+            ClientObjectResolveContext context
+        )
         {
             var queries = CreateQueries(context);
 
@@ -37,6 +39,17 @@ namespace HarshPoint.Provisioning.Implementation
             return queries
                 .Select(context.LoadQuery)
                 .ToArray();
+        }
+
+        protected sealed override void InitializeCached(
+            ClientObjectResolveContext context, 
+            IEnumerable enumerable
+        )
+        {
+            ClientObjectCachedResolveResultProcessor.InitializeCached(
+                context,
+                enumerable.Cast<TResult>()
+            );
         }
 
         protected sealed override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)

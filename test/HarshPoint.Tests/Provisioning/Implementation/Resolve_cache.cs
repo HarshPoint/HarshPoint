@@ -52,7 +52,30 @@ namespace HarshPoint.Tests.Provisioning.Implementation
 
             var result2 = _mr.ResolveSingle(rb);
 
+            Assert.False(ClientContext.HasPendingRequest);
+
             Assert.Same(result.Value, result2.Value);
+        }
+
+        [FactNeedsSharePoint]
+        public async Task ClientObjectQuery_resolved_from_cache_with_additional_retrievals()
+        {
+            var rb = new TestQueryResolveBuilder().ByInternalName("Title");
+            var result = _mr.ResolveSingle(rb);
+
+            await ClientContext.ExecuteQueryAsync();
+
+            Assert.NotNull(result.Value);
+            Assert.False(result.Value.IsPropertyAvailable(f => f.FieldTypeKind));
+
+            var result2 = _mr.ResolveSingle(rb, f => f.FieldTypeKind);
+
+            Assert.True(ClientContext.HasPendingRequest);
+
+            await ClientContext.ExecuteQueryAsync();
+
+            Assert.Same(result.Value, result2.Value);
+            Assert.True(result.Value.IsPropertyAvailable(f => f.FieldTypeKind));
         }
 
         private class TestObjectResolveBuilder :
