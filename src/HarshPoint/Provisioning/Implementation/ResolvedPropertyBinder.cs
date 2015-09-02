@@ -81,7 +81,11 @@ namespace HarshPoint.Provisioning.Implementation
                     x.ResolveBuilder
                 );
 
-                x.ResolveContext.Cache = resolveCache;
+                if (x.ResolveContext.Cache == null)
+                {
+                    x.ResolveContext.Cache = resolveCache;
+                }
+
                 x.ResolveBuilder.InitializeContext(x.ResolveContext);
             }
 
