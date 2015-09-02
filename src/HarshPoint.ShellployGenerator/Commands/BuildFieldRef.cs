@@ -16,8 +16,7 @@ namespace HarshPoint.ShellployGenerator.Commands
 
             Parameter(x => x.Fields).SetFixedValue(
                 new CodeTypeReferenceExpression(typeof(Resolve))
-                    .Call(nameof(Resolve.Field))
-                    .Call(nameof(Resolve.ByInternalName), new CodeVariableReferenceExpression("InternalName"))
+                    .Call(nameof(Resolve.FieldByInternalName), new CodeVariableReferenceExpression("InternalName"))
             );
         }
     }

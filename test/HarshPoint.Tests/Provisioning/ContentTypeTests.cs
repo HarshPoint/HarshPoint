@@ -105,7 +105,7 @@ namespace HarshPoint.Tests.Provisioning
                 {
                     new HarshFieldRef()
                     {
-                        Fields = Resolve.Field().ById(fieldId),
+                        Fields = Resolve.FieldById(fieldId),
                     },
                 }
             };

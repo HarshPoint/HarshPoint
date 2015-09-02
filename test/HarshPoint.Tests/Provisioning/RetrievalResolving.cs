@@ -32,7 +32,7 @@ namespace HarshPoint.Tests.Provisioning
                 f => f.Description
             );
 
-            Field = Resolve.Field().ById(HarshBuiltInFieldId.Title);
+            Field = Resolve.FieldById(HarshBuiltInFieldId.Title);
 
             Binder.Bind(this, () => ctx);
 

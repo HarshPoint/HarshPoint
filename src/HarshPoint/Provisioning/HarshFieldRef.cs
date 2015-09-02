@@ -12,7 +12,9 @@ namespace HarshPoint.Provisioning
         public HarshFieldRef()
         {
             ExistingFieldLinks = DeferredResolveBuilder.Create(
-                () => new ResolveContentTypeFieldLink(ContentType.ValidateIsClientObjectResolveBuilder())
+                () => new ResolveContentTypeFieldLink(
+                    ContentType.ValidateIsClientObjectResolveBuilder()
+                )
             );
         }
 

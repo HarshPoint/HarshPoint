@@ -1,74 +1,55 @@
-﻿using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Collections.Immutable;
 
 namespace HarshPoint.Provisioning.Implementation
 {
     public abstract class ClientObjectIdentifierResolveBuilder<TResult, TIdentifier> :
-        IdentifierResolveBuilder<TResult, ClientObjectResolveContext, TIdentifier>
+        ClientObjectResolveBuilder<TResult>
         where TResult : ClientObject
     {
-        protected ClientObjectIdentifierResolveBuilder(
-            IResolveBuilder<TResult> parent,
-            IEnumerable<TIdentifier> identifiers,
-            Expression<Func<TResult, TIdentifier>> identifierExpression
-        )
-            : this(parent, identifiers, null, identifierExpression)
-        {
-        }
+        private readonly ImmutableArray<TIdentifier> _identifiers;
 
         protected ClientObjectIdentifierResolveBuilder(
-            IResolveBuilder<TResult> parent,
-            IEnumerable<TIdentifier> identifiers,
-            IEqualityComparer<TIdentifier> identifierComparer,
-            Expression<Func<TResult, TIdentifier>> identifierExpression
+            IEnumerable<TIdentifier> identifiers
         )
-        :
-            base(parent, identifiers, identifierComparer)
         {
-            if (identifierExpression == null)
+            if (identifiers == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(identifierExpression));
+                throw Logger.Fatal.ArgumentNull(nameof(identifiers));
             }
 
-            IdentifierExpression = identifierExpression.ConvertToObject();
-            IdentifierSelector = identifierExpression.Compile();
+            _identifiers = identifiers.ToImmutableArray();
         }
 
-        protected sealed override TIdentifier GetIdentifierFromItem(Object item)
-            => base.GetIdentifierFromItem(item);
+        protected abstract IEnumerable<Func<TIdentifier, TResult>> GetSelectors(
+            HarshProvisionerContext context
+        );
 
-        protected sealed override TIdentifier GetIdentifierFromNested(NestedResolveResult nested)
-            => base.GetIdentifierFromNested(nested);
-
-        protected sealed override TIdentifier GetIdentifier(TResult result)
-            => IdentifierSelector(result);
-
-        protected sealed override void InitializeContextBeforeParent(ClientObjectResolveContext context)
+        protected override IEnumerable<TResult> CreateObjects(
+            ClientObjectResolveContext context
+        )
         {
-            if (context == null)
+            var selectors = GetSelectors(context.ProvisionerContext);
+            var results = new List<TResult>();
+
+            foreach (var id in _identifiers)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(context));
+                results.AddRange(
+                    ClientObjectIdentifierResolveBuilder.ProcessSelectors(
+                        this,
+                        id, 
+                        selectors,
+                        context
+                    )
+                );
             }
 
-            context.Include(
-                IdentifierExpression
-            );
-
-            base.InitializeContextBeforeParent(context);
+            return results;
         }
 
-        private Expression<Func<TResult, Object>> IdentifierExpression
-        {
-            get;
-        }
-
-        private Func<TResult, TIdentifier> IdentifierSelector
-        {
-            get;
-        }
-
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ClientObjectIdentifierResolveBuilder<,>));
+        private static readonly HarshLogger Logger
+            = HarshLog.ForContext(typeof(ClientObjectIdentifierResolveBuilder<,>));
     }
 }

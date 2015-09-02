@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace HarshPoint.Provisioning.Resolvers
 {
     public sealed class ResolveTermSetById :
-        ClientObjectIdentifierResolveBuilder<TermSet, Guid>
+        ClientObjectIdentifierResolveBuilder_OLD<TermSet, Guid>
     {
         public ResolveTermSetById(
             IResolveBuilder<TermSet> parent,

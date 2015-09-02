@@ -24,9 +24,13 @@ namespace HarshPoint.Provisioning.Implementation
                 return result;
             }
 
-            return Elements
+            result = Elements
                 .Select(e => e.ElementInitialize(typedContext))
                 .ToArray();
+
+            context.Cache?.SetValue(this, result);
+
+            return result;
         }
 
         void IResolveBuilder.InitializeContext(ResolveContext context)

@@ -30,7 +30,10 @@ namespace HarshPoint.Provisioning.Implementation
             return objects.ToImmutableArray();
         }
 
-        protected sealed override IEnumerable ToEnumerable(Object state, ClientObjectResolveContext context)
+        protected sealed override IEnumerable ToEnumerable(
+            Object state, 
+            ClientObjectResolveContext context
+        )
             => (IEnumerable)(state);
 
         protected abstract IEnumerable<TResult> CreateObjects(ClientObjectResolveContext context);

@@ -21,7 +21,7 @@ namespace HarshPoint.Provisioning
             ModifyChildrenContextState(() => Field);
 
             ExistingField = DeferredResolveBuilder.Create(
-                () => Resolve.Field().ById(Id)
+                () => Resolve.FieldById(Id)
             );
 
             WriteRecord = CreateRecordWriter<Field>(() =>
@@ -119,7 +119,7 @@ namespace HarshPoint.Provisioning
                 // as that is always of type Field, not the actual subtype.
 
                 var reResolvedField = ManualResolver.ResolveSingle(
-                    Resolve.Field().ById(Id)
+                    Resolve.FieldById(Id)
                 );
 
                 await ClientContext.ExecuteQueryAsync();

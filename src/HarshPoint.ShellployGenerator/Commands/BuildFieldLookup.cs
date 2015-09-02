@@ -31,8 +31,7 @@ namespace HarshPoint.ShellployGenerator.Commands
                 new CodeTypeReferenceExpression(typeof(Resolve))
                     .Call(nameof(Resolve.List))
                     .Call(nameof(Resolve.ByUrl), new CodeVariableReferenceExpression("TargetListUrl"))
-                    .Call(nameof(Resolve.Field))
-                    .Call(nameof(Resolve.ByInternalName), new CodeVariableReferenceExpression("TargetField"))
+                    .Call(nameof(Resolve.FieldByInternalName), new CodeVariableReferenceExpression("TargetField"))
                     .Call(nameof(ResolveBuilderExtensions.As), typeof(Tuple<List, Field>))
             );
         }

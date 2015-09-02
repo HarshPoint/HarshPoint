@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveListViewByTitle : ClientObjectIdentifierResolveBuilder<View, String>
+    public sealed class ResolveListViewByTitle : ClientObjectIdentifierResolveBuilder_OLD<View, String>
     {
         public ResolveListViewByTitle(
             IResolveBuilder<View> parent, 
