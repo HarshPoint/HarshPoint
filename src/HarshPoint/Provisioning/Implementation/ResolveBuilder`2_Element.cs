@@ -22,6 +22,18 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
+            var cached = context.Cache?.TryGetValue(this);
+
+            if (cached != null)
+            {
+                InitializeCached(context, cached);
+
+                return new CachedResult()
+                {
+                    Values = cached
+                };
+            }
+
             return Initialize(context);
         }
 
@@ -32,7 +44,16 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
-            return ToEnumerable(state, context);
+            var cached = (state as CachedResult);
+
+            if (cached != null)
+            {
+                return cached.Values;
+            }
+
+            var result = ToEnumerable(state, context);
+            context.Cache?.SetValue(this, result);
+            return result;
         }
 
         protected virtual void InitializeContext(TContext context)
@@ -41,6 +62,18 @@ namespace HarshPoint.Provisioning.Implementation
 
         protected virtual Object Initialize(TContext context) => null;
 
+        protected virtual void InitializeCached(
+            TContext context,
+            IEnumerable enumerable
+        )
+        {
+        }
+
         protected abstract IEnumerable ToEnumerable(Object state, TContext context);
+
+        private sealed class CachedResult
+        {
+            public IEnumerable Values { get; set; }
+        }
     }
 }

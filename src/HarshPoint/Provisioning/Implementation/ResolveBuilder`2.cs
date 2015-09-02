@@ -17,13 +17,6 @@ namespace HarshPoint.Provisioning.Implementation
         {
             var typedContext = ValidateContext(context);
 
-            var result = TryGetFromCache(context);
-
-            if (result != null)
-            {
-                return result;
-            }
-
             return Elements
                 .Select(e => e.ElementInitialize(typedContext))
                 .ToArray();
@@ -32,12 +25,6 @@ namespace HarshPoint.Provisioning.Implementation
         void IResolveBuilder.InitializeContext(ResolveContext context)
         {
             var typedContext = ValidateContext(context);
-
-            if (TryGetFromCache(context) != null)
-            {
-                // do not initialize context when loading from cache
-                return;
-            }
 
             foreach (var element in Elements)
             {
