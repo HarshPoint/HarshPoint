@@ -1,4 +1,5 @@
 ﻿using HarshPoint.Linq;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -77,6 +78,19 @@ namespace HarshPoint.Provisioning.Implementation
             );
         }
 
+        public Expression<Func<T, Object>>[] GetRetrievals<T>(T clientObject)
+            where T : ClientObject
+        {
+            if (clientObject == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(clientObject));
+            }
+
+            return GetRetrievals<T>()
+                .Where(expr => NeedsRetrieval(clientObject, expr))
+                .ToArray();
+        }
+
         public Expression<Func<T, Object>>[] GetRetrievals<T>()
             => GetRetrievalsRecursive(typeof(T))
                 .Cast<Expression<Func<T, Object>>>()
@@ -124,6 +138,22 @@ namespace HarshPoint.Provisioning.Implementation
                 type,
                 CreateExpressionHashSet()
             );
+
+        private static Boolean NeedsRetrieval<T>(
+            T clientObject,
+            Expression retrieval
+        )
+            where T : ClientObject
+        {
+            var property = retrieval.ExtractLastPropertyAccess();
+
+            if (HarshQueryable.IsQueryable(property.PropertyType))
+            {
+                return true;
+            }
+
+            return !clientObject.IsPropertyAvailable(property.Name);
+        }
 
         private static ImmutableHashSet<Expression> CreateExpressionHashSet()
             => ImmutableHashSet.Create<Expression>(
