@@ -16,7 +16,7 @@ namespace HarshPoint.Provisioning.Implementation
             TypeInfo propertyTypeInfo,
             IEnumerable enumerable,
             IResolveBuilder builder,
-            IEnumerable<ResolveFailure> failures
+            ResolveContext context
         )
         {
             if (propertyTypeInfo == null)
@@ -34,9 +34,9 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(builder));
             }
 
-            if (failures == null)
+            if (context == null)
             {
-                throw Logger.Fatal.ArgumentNull(nameof(failures));
+                throw Logger.Fatal.ArgumentNull(nameof(context));
             }
 
             var property = ResolvedPropertyTypeInfo.Parse(propertyTypeInfo);
@@ -52,7 +52,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             var result = CreateResult(property);
             result.ResolveBuilder = builder;
-            result.ResolveFailures = failures;
+            result.ResolveContext = context;
             result.Results = enumerable;
             return result;
         }

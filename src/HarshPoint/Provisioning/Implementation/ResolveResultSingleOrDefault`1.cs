@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    internal sealed class ResolveResultSingleOrDefault<T> : ResolveResultBase, IResolveSingleOrDefault<T>
+    internal sealed class ResolveResultSingleOrDefault<T> : 
+        ResolveResultBase, IResolveSingleOrDefault<T>
     {
         private Status _status;
         private T _value;
@@ -30,9 +30,9 @@ namespace HarshPoint.Provisioning.Implementation
         {
             if (_status == Status.Uninitialized)
             {
-                var array = Results.Cast<T>().ToArray();
+                var array = EnumerateResults<T>(allowFailures: true);
 
-                switch (array.Length)
+                switch (array.Count)
                 {
                     case 0:
                         _status = Status.ResultNone;
@@ -51,11 +51,15 @@ namespace HarshPoint.Provisioning.Implementation
 
             if (_status == Status.ResultsMany)
             {
-                throw Logger.Fatal.InvalidOperationFormat(SR.Resolvable_ManyResults, ResolveBuilder);
+                throw Logger.Fatal.InvalidOperationFormat(
+                    SR.Resolvable_ManyResults, 
+                    ResolveBuilder
+                );
             }
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext(typeof(ResolveResultSingle<>));
+        private static readonly HarshLogger Logger 
+            = HarshLog.ForContext(typeof(ResolveResultSingle<>));
 
         private enum Status
         {

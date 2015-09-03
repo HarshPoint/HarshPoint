@@ -97,9 +97,9 @@ namespace HarshPoint.Provisioning.Implementation
                                 )
                                 select new
                                 {
-                                    Failures = x.ResolveContext.Failures,
                                     x.Property,
                                     x.ResolveBuilder,
+                                    x.ResolveContext,
                                     ResultSource = resultSource,
                                 };
 
@@ -115,8 +115,8 @@ namespace HarshPoint.Provisioning.Implementation
                 var result = CreateResult(
                     x.Property,
                     x.ResolveBuilder,
-                    x.ResultSource,
-                    x.Failures
+                    x.ResolveContext,
+                    x.ResultSource
                 );
 
                 x.Property.SetValue(target, result);
@@ -195,8 +195,8 @@ namespace HarshPoint.Provisioning.Implementation
         private static Object CreateResult(
             PropertyAccessor property,
             IResolveBuilder resolveBuilder,
-            IEnumerable resultSource,
-            IEnumerable<ResolveFailure> failureSource
+            ResolveContext resolveContext,
+            IEnumerable resultSource
         )
         {
             if (resultSource == null)
@@ -214,7 +214,7 @@ namespace HarshPoint.Provisioning.Implementation
                 property.PropertyTypeInfo,
                 resultSource,
                 resolveBuilder,
-                failureSource
+                resolveContext
             );
 
             Logger.Debug(

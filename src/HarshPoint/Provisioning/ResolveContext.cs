@@ -6,7 +6,7 @@ namespace HarshPoint.Provisioning
 {
     public abstract class ResolveContext
     {
-        private List<ResolveFailure> _failures;
+        private readonly List<ResolveFailure> _failures = new List<ResolveFailure>();
 
         protected ResolveContext(IHarshProvisionerContext provisionerContext)
         {
@@ -25,17 +25,11 @@ namespace HarshPoint.Provisioning
                 throw Logger.Fatal.ArgumentNull(nameof(resolveBuilder));
             }
 
-
-            if (_failures == null)
-            {
-                _failures = new List<ResolveFailure>();
-            }
-
             _failures.Add(new ResolveFailure(resolveBuilder, identifier));
         }
 
         public IReadOnlyCollection<ResolveFailure> Failures
-            => _failures ?? NoFailures;
+            => _failures;
 
         internal ResolveCache Cache { get; set; }
 
@@ -43,8 +37,5 @@ namespace HarshPoint.Provisioning
 
         private static readonly HarshLogger Logger
             = HarshLog.ForContext(typeof(ResolveContext));
-
-        private static readonly IReadOnlyCollection<ResolveFailure> NoFailures
-            = new ResolveFailure[0];
     }
 }

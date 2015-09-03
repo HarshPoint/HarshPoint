@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -7,13 +8,15 @@ namespace HarshPoint.Provisioning.Implementation
 {
     internal abstract class ResolveResultBase
     {
+        private ImmutableArray<Object> _cached;
+
         public IResolveBuilder ResolveBuilder
         {
             get;
             internal set;
         }
 
-        public IEnumerable<ResolveFailure> ResolveFailures
+        public ResolveContext ResolveContext
         {
             get;
             internal set;
@@ -26,15 +29,32 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         protected IImmutableList<T> EnumerateResults<T>()
-            => (Results ?? new T[0]).Cast<T>().ToImmutableArray();
+            => EnumerateResults<T>(allowFailures: false);
+
+        protected IImmutableList<T> EnumerateResults<T>(Boolean  allowFailures)
+        {
+            if (_cached.IsDefault)
+            {
+                _cached = (Results ?? new Object[0])
+                    .Cast<Object>()
+                    .ToImmutableArray();
+            }
+
+            if (!allowFailures)
+            {
+                ValidateNoFailures();
+            }
+
+            return _cached.Cast<T>().ToImmutableArray();
+        }
 
 
         protected void ValidateNoFailures()
         {
-            if (ResolveFailures?.Any() ?? false)
+            if (ResolveContext.Failures.Any())
             {
                 throw Logger.Fatal.Write(
-                    new ResolveFailedException(ResolveFailures)
+                    new ResolveFailedException(ResolveContext.Failures)
                 );
             }
         }

@@ -158,7 +158,12 @@ namespace HarshPoint.Tests.Provisioning.Implementation
                 typeof(IResolve<T>).GetTypeInfo(),
                 source,
                 Mock.Of<IResolveBuilder>(),
-                Enumerable.Empty<ResolveFailure>()
+                MockResolveContext()
             );
+
+        private static ResolveContext MockResolveContext()
+            => new Mock<ResolveContext>(
+                Mock.Of<IHarshProvisionerContext>()
+            ).Object;
     }
 }
