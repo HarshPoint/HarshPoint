@@ -56,7 +56,8 @@ namespace HarshPoint.Provisioning
                     .ToArray();
 
                 var toAdd = ContentTypes
-                    .Where(ct => !ContainsContentType(existingCtIds, ct));
+                    .Where(ct => !ContainsDirectParentOf(existingCtIds, ct))
+                    .ToArray();
 
                 foreach (var ct in toAdd)
                 {
@@ -79,7 +80,8 @@ namespace HarshPoint.Provisioning
                 list.Update();
 
                 var toRemove = list.ContentTypes
-                    .Where(ct => ContainsContentType(idsToRemove, ct));
+                    .Where(ct => ContainsDirectChildOf(idsToRemove, ct))
+                    .ToArray();
 
                 foreach (var ct in toRemove)
                 {
@@ -90,10 +92,16 @@ namespace HarshPoint.Provisioning
             return ClientContext.ExecuteQueryAsync();
         }
 
-        private static Boolean ContainsContentType(IEnumerable<HarshContentTypeId> ids, ContentType ct)
+        private static Boolean ContainsDirectChildOf(IEnumerable<HarshContentTypeId> ids, ContentType ct)
         {
             var ctid = HarshContentTypeId.Get(ct);
             return ids.Any(id => ctid.IsDirectChildOf(id));
+        }
+
+        private static Boolean ContainsDirectParentOf(IEnumerable<HarshContentTypeId> ids, ContentType ct)
+        {
+            var ctid = HarshContentTypeId.Get(ct);
+            return ids.Any(id => id.IsDirectChildOf(ctid));
         }
     }
 }
