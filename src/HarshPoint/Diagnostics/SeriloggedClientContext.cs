@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HarshPoint.Diagnostics
 {
-    public sealed class SeriloggedClientContext : ClientContext
+    public class SeriloggedClientContext : ClientContext
     {
         private String _pendingRequestBody;
 

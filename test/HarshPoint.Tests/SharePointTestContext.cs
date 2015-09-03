@@ -13,10 +13,10 @@ namespace HarshPoint.Tests
 
             if (String.IsNullOrWhiteSpace(url))
             {
-                return new SeriloggedClientContext($"http://{Environment.MachineName}");
+                return new GzippedClientContext($"http://{Environment.MachineName}");
             }
 
-            var clientContext = new SeriloggedClientContext(url);
+            var clientContext = new GzippedClientContext(url);
 
             var username = Environment.GetEnvironmentVariable("HarshPointTestUser");
             var password = Environment.GetEnvironmentVariable("HarshPointTestPassword");
@@ -56,5 +56,23 @@ namespace HarshPoint.Tests
         }
 
         public static readonly Boolean IsAvailable;
+
+        private sealed class GzippedClientContext : SeriloggedClientContext
+        {
+            public GzippedClientContext(String webFullUrl) : base(webFullUrl)
+            {
+            }
+
+            public GzippedClientContext(Uri webFullUrl) : base(webFullUrl)
+            {
+            }
+
+            public override HttpWebRequest GetWebRequest(Uri url)
+            {
+                var request = base.GetWebRequest(url);
+                request.AutomaticDecompression = DecompressionMethods.GZip;
+                return request;
+            }
+        }
     }
 }
