@@ -73,7 +73,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             ProvisionerContext.ClientContext.Load(
                 clientObject,
-                _queryProcessor.GetRetrievals<T>()
+                _queryProcessor.GetRetrievals(clientObject)
             );
         }
 
