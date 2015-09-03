@@ -71,10 +71,15 @@ namespace HarshPoint.Provisioning.Implementation
                 throw Logger.Fatal.ArgumentNull(nameof(clientObject));
             }
 
-            ProvisionerContext.ClientContext.Load(
-                clientObject,
-                _queryProcessor.GetRetrievals(clientObject)
-            );
+            var retrievals = _queryProcessor.GetRetrievals(clientObject);
+
+            if (retrievals.Any())
+            {
+                ProvisionerContext.ClientContext.Load(
+                    clientObject,
+                    retrievals
+                );
+            }
         }
 
         internal ClientObjectQueryProcessor QueryProcessor => _queryProcessor;
