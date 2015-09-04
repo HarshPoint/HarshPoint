@@ -6,8 +6,7 @@ namespace HarshPoint.ObjectModel
     {
         public ObjectMappingAction(
             PropertyAccessor targetAccessor,
-            Object sourceValue,
-            Object targetValue
+            Object sourceValue
         )
         {
             if (targetAccessor == null)
@@ -17,6 +16,15 @@ namespace HarshPoint.ObjectModel
 
             SourceValue = sourceValue;
             TargetAccessor = targetAccessor;
+        }
+
+        public ObjectMappingAction(
+            PropertyAccessor targetAccessor,
+            Object sourceValue,
+            Object targetValue
+        )
+            : this(targetAccessor, sourceValue)
+        {
             TargetValue = targetValue;
             ValuesEqual = Equals(SourceValue, TargetValue);
         }

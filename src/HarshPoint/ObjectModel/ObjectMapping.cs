@@ -29,9 +29,19 @@ namespace HarshPoint.ObjectModel
             Entries = entries.ToImmutableArray();
         }
 
-        public IEnumerable<ObjectMappingAction> Apply(Object source, Object target)
+        public IEnumerable<ObjectMappingAction> Apply(
+            Object source,
+            Object target
+        )
+            => Apply(source, target, false);
+
+        public IEnumerable<ObjectMappingAction> Apply(
+            Object source,
+            Object target,
+            Boolean force
+        )
         {
-            var actions = GetActions(source, target).ToImmutableArray();
+            var actions = GetActions(source, target, force).ToImmutableArray();
 
             foreach (var a in actions.Where(a => !a.ValuesEqual))
             {
@@ -48,6 +58,12 @@ namespace HarshPoint.ObjectModel
             Object source,
             Object target
         )
+            => GetActions(source, target, false);
+        public IEnumerable<ObjectMappingAction> GetActions(
+            Object source,
+            Object target,
+            Boolean force
+        )
         {
             if (source == null)
             {
@@ -59,19 +75,32 @@ namespace HarshPoint.ObjectModel
                 throw Logger.Fatal.ArgumentNull(nameof(target));
             }
 
-            return from e in Entries
-                   where HasSourceValue(e, source)
+            var sourceValues =
+                from e in Entries
+                where HasSourceValue(e, source)
 
-                   let sourceValue = e.SourceSelector(source)
-                   where !IsSourceValueDefault(e, sourceValue)
+                let sourceValue = e.SourceSelector(source)
+                where !IsSourceValueDefault(e, sourceValue)
+                select new
+                {
+                    TargetAccessor = e.TargetAccessor,
+                    SourceValue = sourceValue,
+                };
 
-                   let targetValue = e.TargetAccessor.GetValue(
-                       target
-                   )
+            if (force)
+            {
+                return from x in sourceValues
+                       select new ObjectMappingAction(
+                           x.TargetAccessor,
+                           x.SourceValue
+                        );
+            }
 
+            return from x in sourceValues
+                   let targetValue = x.TargetAccessor.GetValue(target)
                    select new ObjectMappingAction(
-                       e.TargetAccessor,
-                       sourceValue,
+                       x.TargetAccessor,
+                       x.SourceValue,
                        targetValue
                    );
         }
@@ -82,7 +111,8 @@ namespace HarshPoint.ObjectModel
             );
 
         public Boolean WouldChange(Object source, Object target)
-            => GetActions(source, target).Any(a => !a.ValuesEqual);
+            => GetActions(source, target, force: false)
+                .Any(a => !a.ValuesEqual);
 
         public IDefaultValuePolicy DefaultValuePolicy { get; }
 

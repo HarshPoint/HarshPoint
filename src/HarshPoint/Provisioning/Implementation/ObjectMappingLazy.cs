@@ -23,10 +23,16 @@ namespace HarshPoint.Provisioning.Implementation
             Object source,
             Object target
         )
+            => Apply(source, target, force: false);
+        public IEnumerable<ObjectMappingAction> Apply(
+            Object source,
+            Object target,
+            Boolean force
+        )
         {
             if (HasEntries)
             {
-                return Mapping.Apply(source, target);
+                return Mapping.Apply(source, target, force);
             }
 
             return Enumerable.Empty<ObjectMappingAction>();
@@ -47,6 +53,16 @@ namespace HarshPoint.Provisioning.Implementation
             TTarget target
         )
             where TContext : HarshProvisionerContextBase<TContext>
+            => Apply(writeRecord, context, source, target, force: false);
+
+        public Boolean Apply<TContext>(
+            RecordWriter<TContext, TTarget> writeRecord,
+            String context,
+            Object source,
+            TTarget target,
+            Boolean force
+        )
+            where TContext : HarshProvisionerContextBase<TContext>
         {
             if (writeRecord == null)
             {
@@ -55,7 +71,7 @@ namespace HarshPoint.Provisioning.Implementation
 
             var result = false;
 
-            foreach (var a in Apply(source, target))
+            foreach (var a in Apply(source, target, force))
             {
                 if (a.ValuesEqual)
                 {

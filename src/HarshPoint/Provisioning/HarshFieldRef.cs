@@ -64,19 +64,39 @@ namespace HarshPoint.Provisioning
 
         protected override async Task OnProvisioningAsync()
         {
-            var links = from field in Fields
-                        select
-                            ExistingFieldLinks.FirstOrDefault(fl => fl.Id == field.Id)
-                            ??
-                            ContentType.Value.FieldLinks.Add(
-                                new FieldLinkCreationInformation() { Field = field }
-                            );
+            var links =
+                from field in Fields
+
+                let existing = ExistingFieldLinks.FirstOrDefault(
+                    fl => fl.Id == field.Id
+                )
+
+                let fieldLink =
+                    existing ?? ContentType.Value.FieldLinks.Add(
+                        new FieldLinkCreationInformation()
+                        {
+                            Field = field
+                        }
+                    )
+
+                select new
+                {
+                    Created = (existing == null),
+                    FieldLink = fieldLink
+                };
 
             var changed = false;
 
             foreach (var link in links)
             {
-                changed |= _map.Apply(_recordWriter, this, link);
+                changed |= link.Created;
+                changed |= _map.Apply(
+                    _recordWriter, 
+                    null,
+                    this, 
+                    link.FieldLink,
+                    force: link.Created
+                );
             }
 
             if (changed)
