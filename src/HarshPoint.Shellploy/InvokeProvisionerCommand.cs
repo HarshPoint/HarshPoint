@@ -1,10 +1,13 @@
 ﻿using HarshPoint.Provisioning;
+using HarshPoint.Provisioning.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Threading;
 using SMAParameter = System.Management.Automation.ParameterAttribute;
+using static HarshPoint.HarshFormattable;
+using System.Globalization;
 
 namespace HarshPoint.Shellploy
 {
@@ -31,7 +34,9 @@ namespace HarshPoint.Shellploy
         {
             using (var clientContext = CreateClientContext())
             {
-                var context = new HarshProvisionerContext(clientContext);
+                var progressInspector = new SessionProgressInspector();
+                var context = new HarshProvisionerContext(clientContext)
+                    .AddSessionInspector(progressInspector);
                 var cts = new CancellationTokenSource();
 
                 try
@@ -50,6 +55,8 @@ namespace HarshPoint.Shellploy
                         {
                             WriteObject(item);
                         }
+
+                        WriteProgress(progressInspector.Current);
                     }
                 }
                 catch (PipelineStoppedException)
@@ -60,6 +67,10 @@ namespace HarshPoint.Shellploy
                 catch (Exception ex)
                 {
                     WriteMaybeAggregateException(ex);
+                }
+                finally
+                {
+                    WriteProgress(progressInspector.Current, completed: true);
                 }
             }
         }
@@ -90,6 +101,68 @@ namespace HarshPoint.Shellploy
             }
         }
 
+        private void WriteProgress(
+            SessionProgress progress,
+            Boolean completed = false
+        )
+        {
+            if (progress == null)
+            {
+                return;
+            }
+
+            String activity;
+            if (progress.Action == HarshProvisionerAction.Provision)
+            {
+                activity = SR.ProvisioningProgressAction;
+            }
+            else
+            {
+                activity = SR.UnprovisioningProgressAction;
+            }
+
+            var progressRecord = new ProgressRecord(
+                ProgressActivityId,
+                activity,
+                String.Format(
+                    CultureInfo.CurrentCulture,
+                    SR.ProgressStatusMessage,
+                    progress.CompletedProvisionersCount,
+                    progress.ProvisionersCount
+                 )
+            )
+            {
+                PercentComplete = progress.PercentComplete,
+            };
+
+            if (progress.RemainingTime.HasValue)
+            {
+                progressRecord.SecondsRemaining
+                    = (Int32)progress.RemainingTime.Value.TotalSeconds;
+            }
+
+            if (progress.CurrentProvisioner != null)
+            {
+                var currentOperation = progress.CurrentProvisioner.ToString();
+                if (progress.CurrentProvisionerIsSkipped)
+                {
+                    currentOperation = String.Format(
+                        CultureInfo.CurrentCulture,
+                        SR.ProgressOperationSkipped,
+                        currentOperation
+                    );
+                }
+                progressRecord.CurrentOperation = currentOperation;
+            }
+
+            if (completed)
+            {
+                progressRecord.RecordType = ProgressRecordType.Completed;
+            }
+
+            WriteProgress(progressRecord);
+        }
+
         private static ErrorRecord CreateErrorRecord(Exception exc)
             => new ErrorRecord(
                 exception: exc,
@@ -100,5 +173,7 @@ namespace HarshPoint.Shellploy
 
         private static readonly TimeSpan PollIsStoppingInterval
             = TimeSpan.FromMilliseconds(250);
+
+        private const Int32 ProgressActivityId = 0;
     }
 }

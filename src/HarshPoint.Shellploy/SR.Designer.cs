@@ -70,11 +70,47 @@ namespace HarshPoint.Shellploy {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} (skipped).
+        /// </summary>
+        internal static string ProgressOperationSkipped {
+            get {
+                return ResourceManager.GetString("ProgressOperationSkipped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} of {1} completed.
+        /// </summary>
+        internal static string ProgressStatusMessage {
+            get {
+                return ResourceManager.GetString("ProgressStatusMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provisioning.
+        /// </summary>
+        internal static string ProvisioningProgressAction {
+            get {
+                return ResourceManager.GetString("ProvisioningProgressAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Context: .
         /// </summary>
         internal static string RecordDisplayGrouping {
             get {
                 return ResourceManager.GetString("RecordDisplayGrouping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unprovisioning.
+        /// </summary>
+        internal static string UnprovisioningProgressAction {
+            get {
+                return ResourceManager.GetString("UnprovisioningProgressAction", resourceCulture);
             }
         }
     }

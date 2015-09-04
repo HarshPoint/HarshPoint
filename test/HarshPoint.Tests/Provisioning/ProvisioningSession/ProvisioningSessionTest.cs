@@ -5,7 +5,7 @@ using Moq;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
-namespace ProvisioningSession
+namespace Session
 {
     public abstract class ProvisioningSessionTest : SharePointClientTest
     {

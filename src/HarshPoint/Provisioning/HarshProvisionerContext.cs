@@ -22,7 +22,6 @@ namespace HarshPoint.Provisioning
         public ClientContext ClientContext
         {
             get;
-
         }
 
         public Site Site => ClientContext.Site;

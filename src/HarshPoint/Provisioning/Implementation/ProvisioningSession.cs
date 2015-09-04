@@ -5,15 +5,16 @@ using System.Linq;
 
 namespace HarshPoint.Provisioning.Implementation
 {
-    public sealed class ProvisioningSession
+    public sealed class ProvisioningSession : IProvisioningSession
     {
         private readonly HarshProvisionerBase _rootProvisioner;
-        private readonly HarshProvisionerAction _action;
 
         private IImmutableList<HarshProvisionerBase> _provisioners;
 
         public IImmutableList<HarshProvisionerBase> Provisioners
             => HarshLazy.Initialize(ref _provisioners, CreateProvisionersCollection);
+
+        public HarshProvisionerAction Action { get; }
 
         private IImmutableList<HarshProvisionerBase> CreateProvisionersCollection()
             => GetFlattenedTree(_rootProvisioner);
@@ -28,14 +29,14 @@ namespace HarshPoint.Provisioning.Implementation
             }
 
             _rootProvisioner = rootProvisioner;
-            _action = action;
+            Action = action;
         }
 
         internal IImmutableList<HarshProvisionerBase> GetFlattenedTree(
             HarshProvisionerBase provisioner
         )
         {
-            var children = from child in provisioner.GetChildrenSorted(_action)
+            var children = from child in provisioner.GetChildrenSorted(Action)
                            from childRec in GetFlattenedTree(child)
                            select childRec;
 
@@ -67,7 +68,10 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public void OnProvisioningStarting(IHarshProvisionerContext context, HarshProvisionerBase provisioner)
+        public void OnProvisioningStarting(
+            IHarshProvisionerContext context,
+            HarshProvisionerBase provisioner
+        )
         {
             if (context == null)
             {
@@ -78,7 +82,10 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public void OnProvisioningEnded(IHarshProvisionerContext context, HarshProvisionerBase provisioner)
+        public void OnProvisioningEnded(
+            IHarshProvisionerContext context,
+            HarshProvisionerBase provisioner
+        )
         {
             if (context == null)
             {
@@ -89,7 +96,10 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public void OnProvisioningSkipped(IHarshProvisionerContext context, HarshProvisionerBase provisioner)
+        public void OnProvisioningSkipped(
+            IHarshProvisionerContext context,
+            HarshProvisionerBase provisioner
+        )
         {
             if (context == null)
             {

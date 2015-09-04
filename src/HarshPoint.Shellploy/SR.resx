@@ -120,8 +120,20 @@
   <data name="HarshProvisionerCmdlet_ExclusiveSwitchError" xml:space="preserve">
     <value>The parameters {0} and {1} are mutually exclusive and cannot be both set at the same time.</value>
   </data>
+  <data name="ProgressOperationSkipped" xml:space="preserve">
+    <value>{0} (skipped)</value>
+  </data>
+  <data name="ProgressStatusMessage" xml:space="preserve">
+    <value>{0} of {1} completed</value>
+  </data>
+  <data name="ProvisioningProgressAction" xml:space="preserve">
+    <value>Provisioning</value>
+  </data>
   <data name="RecordDisplayGrouping" xml:space="preserve">
     <value>Context: </value>
     <comment>format.ps1xml</comment>
+  </data>
+  <data name="UnprovisioningProgressAction" xml:space="preserve">
+    <value>Unprovisioning</value>
   </data>
 </root>
