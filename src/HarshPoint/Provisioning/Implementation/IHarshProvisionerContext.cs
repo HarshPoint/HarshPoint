@@ -10,7 +10,7 @@ namespace HarshPoint.Provisioning.Implementation
 
         IEnumerable<Object> GetState(Type type);
 
-        ProvisioningSession Session { get; }
+        IProvisioningSession Session { get; }
 
         IImmutableList<IProvisioningSessionInspector> SessionInspectors { get; }
 

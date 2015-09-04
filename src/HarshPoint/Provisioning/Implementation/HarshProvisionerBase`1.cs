@@ -150,7 +150,7 @@ namespace HarshPoint.Provisioning.Implementation
         }
 
         public Task UnprovisionAsync(TContext context)
-            => Run(context,HarshProvisionerAction.Unprovision);
+            => Run(context, HarshProvisionerAction.Unprovision);
 
         protected virtual Task InitializeAsync() => HarshTask.Completed;
 
@@ -359,6 +359,8 @@ namespace HarshPoint.Provisioning.Implementation
         {
             context.Token.ThrowIfCancellationRequested();
 
+            context.Session.OnProvisioningStarting(context, this);
+
             Metadata.DefaultFromContextPropertyBinder.Bind(
                 this,
                 Context
@@ -382,8 +384,6 @@ namespace HarshPoint.Provisioning.Implementation
                 {
                     ValidateParameters();
                     OnValidating();
-
-                    context.Session.OnProvisioningStarting(context, this);
 
                     await InitializeAsync();
 

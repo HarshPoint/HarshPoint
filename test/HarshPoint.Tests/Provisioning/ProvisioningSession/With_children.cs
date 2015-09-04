@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace ProvisioningSession
+namespace Session
 {
     public class With_children : ProvisioningSessionTest
     {
