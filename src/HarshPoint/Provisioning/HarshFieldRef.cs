@@ -9,41 +9,35 @@ namespace HarshPoint.Provisioning
 {
     public class HarshFieldRef : HarshProvisioner
     {
+        private readonly LazyObjectMapping<HarshFieldRef, FieldLink> _map;
+        private readonly RecordWriter<HarshProvisionerContext, FieldLink> _recordWriter;
+
         public HarshFieldRef()
         {
             ExistingFieldLinks = DeferredResolveBuilder.Create(
                 () => new ResolveContentTypeFieldLink(ContentType.ValidateIsClientObjectResolveBuilder())
             );
+
+            _map = new LazyObjectMapping<HarshFieldRef, FieldLink>(Metadata);
+
+            _map.Map(fl => fl.Hidden);
+            _map.Map(fl => fl.Required);
+
+            _recordWriter = CreateRecordWriter<FieldLink>();
         }
 
-        [DefaultFromContext]
         [Parameter]
-        public IResolveSingle<ContentType> ContentType
-        {
-            get;
-            set;
-        }
+        [DefaultFromContext]
+        public IResolveSingle<ContentType> ContentType { get; set; }
 
         [Parameter(Mandatory = true)]
-        public IResolve<Field> Fields
-        {
-            get;
-            set;
-        }
+        public IResolve<Field> Fields { get; set; }
 
         [Parameter]
-        public Boolean Hidden
-        {
-            get;
-            set;
-        }
+        public Boolean? Hidden { get; set; }
 
         [Parameter]
-        public Boolean Required
-        {
-            get;
-            set;
-        }
+        public Boolean? Required { get; set; }
 
         protected override void InitializeResolveContext(ClientObjectResolveContext context)
         {
@@ -62,6 +56,10 @@ namespace HarshPoint.Provisioning
                 fl => fl.Id,
                 fl => fl.Name
             );
+
+            context.Include(
+                _map.GetTargetExpressions()
+            );
         }
 
         protected override async Task OnProvisioningAsync()
@@ -74,14 +72,18 @@ namespace HarshPoint.Provisioning
                                 new FieldLinkCreationInformation() { Field = field }
                             );
 
+            var changed = false;
+
             foreach (var link in links)
             {
-                link.Hidden = Hidden;
-                link.Required = Required;
+                changed |= _map.Apply(_recordWriter, this, link);
             }
 
-            ContentType.Value.Update(updateChildren: true);
-            await ClientContext.ExecuteQueryAsync();
+            if (changed)
+            {
+                ContentType.Value.Update(updateChildren: true);
+                await ClientContext.ExecuteQueryAsync();
+            }
         }
 
         internal IResolve<FieldLink> ExistingFieldLinks { get; set; }
