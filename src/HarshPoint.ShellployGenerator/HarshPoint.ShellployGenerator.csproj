@@ -172,6 +172,8 @@
     <Compile Include="Commands\BuildFieldDateTime.cs" />
     <Compile Include="Commands\BuildField.cs" />
     <Compile Include="Commands\BuildModifyFieldType.cs" />
+    <Compile Include="Commands\BuildTermGroup.cs" />
+    <Compile Include="Commands\BuildTermSet.cs" />
     <Compile Include="Commands\DefaultFromContextTagCommandBuilder.cs" />
     <Compile Include="Commands\ProvisionerDefaults.cs" />
     <Compile Include="Commands\BuildRemoveContentTypeRef.cs" />

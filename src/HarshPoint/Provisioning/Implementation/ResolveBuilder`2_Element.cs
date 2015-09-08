@@ -29,7 +29,7 @@ namespace HarshPoint.Provisioning.Implementation
                 InitializeCached(context, cached);
 
                 return new CachedResult()
-                {
+                {   
                     Values = cached
                 };
             }

@@ -17,6 +17,8 @@ namespace HarshPoint.Provisioning
         public static ResolveListById ById(this IResolveBuilder<List> parent, params Guid[] ids)
             => new ResolveListById(parent, ids);
 
+        public static ResolveTermGroupById ById(this IResolveBuilder<TermGroup> parent, params Guid[] ids)
+            => new ResolveTermGroupById(parent, ids);
 
         public static ResolveTermSetById ById(this IResolveBuilder<TermSet> parent, params Guid[] ids)
             => new ResolveTermSetById(parent, ids);
@@ -56,6 +58,9 @@ namespace HarshPoint.Provisioning
 
         public static ResolveListView View(this IResolveBuilder<List, ClientObjectResolveContext> list)
             => new ResolveListView(list);
+
+        public static ResolveTermStoreTermGroup TermGroup(this IResolveBuilder<TermStore, ClientObjectResolveContext> termStore)
+            => new ResolveTermStoreTermGroup(termStore);
 
         public static ResolveTermStoreTermSet TermSet(this IResolveBuilder<TermStore, ClientObjectResolveContext> termStore)
             => new ResolveTermStoreTermSet(termStore);

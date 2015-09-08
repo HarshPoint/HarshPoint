@@ -92,6 +92,8 @@
     <Compile Include="Provisioning\HarshEventReceiver.cs" />
     <Compile Include="Provisioning\HarshModifyField.cs" />
     <Compile Include="Provisioning\HarshProvisionerRecordType.cs" />
+    <Compile Include="Provisioning\HarshTermGroup.cs" />
+    <Compile Include="Provisioning\HarshTermSet.cs" />
     <Compile Include="Provisioning\Implementation\ClientObjectCachedResolveResultProcessor.cs" />
     <Compile Include="Provisioning\Implementation\IProvisioningSession.cs" />
     <Compile Include="Provisioning\Implementation\ObjectMappingLazy.cs" />
@@ -218,7 +220,10 @@
     <Compile Include="Provisioning\Resolvers\ResolveListView.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByTitle.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListViewByUrl.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveTermGroupById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveTermGroupTermSet.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermSetById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveTermStoreTermGroup.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreTermSet.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreKeywordsDefault.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveTermStoreSiteCollectionDefault.cs" />
