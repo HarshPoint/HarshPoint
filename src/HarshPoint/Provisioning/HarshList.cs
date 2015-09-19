@@ -1,8 +1,8 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using HarshPoint.Provisioning.Implementation;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using HarshPoint.Provisioning.Implementation;
 
 namespace HarshPoint.Provisioning
 {
@@ -61,6 +61,22 @@ namespace HarshPoint.Provisioning
                 await ClientContext.ExecuteQueryAsync();
 
                 WriteRecord.Added(List);
+            }
+        }
+
+        protected override async Task OnUnprovisioningAsync()
+        {
+            if (ExistingList.HasValue)
+            {
+                ExistingList.Value.DeleteObject();
+
+                await ClientContext.ExecuteQueryAsync();
+
+                WriteRecord.Removed();
+            }
+            else
+            {
+                WriteRecord.DidNotExist();
             }
         }
 

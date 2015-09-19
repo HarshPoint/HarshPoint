@@ -164,6 +164,7 @@
     <Compile Include="Commands\BuildDefaultContentTypeGroup.cs" />
     <Compile Include="Commands\BuildEnableWebFeature.cs" />
     <Compile Include="Commands\BuildEventReceiver.cs" />
+    <Compile Include="Commands\BuildFieldUser.cs" />
     <Compile Include="Commands\BuildList.cs" />
     <Compile Include="Commands\BuildFieldRef.cs" />
     <Compile Include="Commands\BuildFieldLookup.cs" />

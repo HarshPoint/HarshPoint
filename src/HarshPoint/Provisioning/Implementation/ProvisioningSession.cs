@@ -40,9 +40,18 @@ namespace HarshPoint.Provisioning.Implementation
                            from childRec in GetFlattenedTree(child)
                            select childRec;
 
-            return ImmutableList
-                .Create(provisioner)
-                .AddRange(children);
+            if (Action == HarshProvisionerAction.Provision)
+            {
+                return ImmutableList
+                    .Create(provisioner)
+                    .AddRange(children);
+            }
+            else
+            {
+                return ImmutableList
+                    .CreateRange(children)
+                    .Add(provisioner);
+            }
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]

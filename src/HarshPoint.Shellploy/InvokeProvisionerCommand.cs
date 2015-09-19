@@ -20,6 +20,9 @@ namespace HarshPoint.Shellploy
         [SMAParameter]
         public SwitchParameter Unprovision { get; set; }
 
+        [SMAParameter]
+        public SwitchParameter Force { get; set; }
+
         protected override void BeginProcessing()
         {
             Provisioner = new HarshProvisioner();
@@ -37,6 +40,12 @@ namespace HarshPoint.Shellploy
                 var progressInspector = new SessionProgressInspector();
                 var context = new HarshProvisionerContext(clientContext)
                     .AddSessionInspector(progressInspector);
+
+                if (Force)
+                {
+                    context = context.AllowDeleteUserData();
+                }
+
                 var cts = new CancellationTokenSource();
 
                 try

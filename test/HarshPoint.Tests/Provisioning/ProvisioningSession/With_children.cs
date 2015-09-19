@@ -86,10 +86,10 @@ namespace Session
                 .ToArray();
 
             Assert.Equal(4, flattened.Length);
-            Assert.IsType<HarshProvisioner>(flattened[0]);
-            Assert.IsType<HarshChild2>(flattened[1]);
+            Assert.IsType<HarshChild2>(flattened[0]);
+            Assert.IsType<HarshSubChild>(flattened[1]);
             Assert.IsType<HarshChild1>(flattened[2]);
-            Assert.IsType<HarshSubChild>(flattened[3]);
+            Assert.IsType<HarshProvisioner>(flattened[3]);
         }
 
         [Fact]
@@ -121,10 +121,10 @@ namespace Session
             var seq = new Sequence();
             AddSessionStartingSequence(seq, mockInspector);
 
-            AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
             AddProvisioningSequence<HarshChild2>(seq, mockInspector);
-            AddProvisioningSequence<HarshChild1>(seq, mockInspector);
             AddProvisioningSequence<HarshSubChild>(seq, mockInspector);
+            AddProvisioningSequence<HarshChild1>(seq, mockInspector);
+            AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
 
             AddSessionEndedSequence(seq, mockInspector);
 
