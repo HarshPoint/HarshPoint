@@ -1,6 +1,8 @@
-﻿using HarshPoint.Provisioning.Implementation;
+﻿using HarshPoint.ObjectModel;
+using HarshPoint.Provisioning.Implementation;
 using Microsoft.SharePoint.Client;
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using static System.FormattableString;
 
@@ -8,8 +10,14 @@ namespace HarshPoint.Provisioning
 {
     public class HarshContentType : HarshProvisioner
     {
+        private LazyObjectMapping<HarshContentType, ContentType> _map;
+
         public HarshContentType()
         {
+            Map(ct => ct.Name);
+            Map(ct => ct.Description);
+            Map(ct => ct.Group);
+
             ModifyChildrenContextState(
                 () => ContentType
             );
@@ -54,6 +62,14 @@ namespace HarshPoint.Provisioning
         [Parameter(Mandatory = true, ParameterSetName = "ParentContentType")]
         public IResolveSingle<ContentType> ParentContentType { get; set; }
 
+        [Parameter]
+        public Boolean NoUpdateChildren { get; set; }
+
+        protected ObjectMapper<HarshContentType, ContentType>.IEntryBuilder Map(
+            Expression<Func<ContentType, Object>> targetProperty
+        )
+            => _map.Map(targetProperty);
+
         protected override void InitializeResolveContext(
             ClientObjectResolveContext context
         )
@@ -64,8 +80,11 @@ namespace HarshPoint.Provisioning
             }
 
             context.Include<ContentType>(
-                ct => ct.Name,
                 ct => ct.StringId
+            );
+
+            context.Include(
+                _map.GetTargetExpressions()
             );
 
             base.InitializeResolveContext(context);
@@ -93,8 +112,30 @@ namespace HarshPoint.Provisioning
             else
             {
                 ContentType = ExistingContentType.Value;
+                if (_map.Apply(WriteRecord, this, ContentType))
+                {
+                    ContentType.Update(!NoUpdateChildren);
+                }
+                else
+                {
+                    WriteRecord.AlreadyExists(ContentType);
+                }
+            }
+        }
 
-                WriteRecord.AlreadyExists(ContentType);
+        protected override async Task OnUnprovisioningAsync()
+        {
+            if (ExistingContentType.HasValue)
+            {
+                ExistingContentType.Value.DeleteObject();
+
+                await ClientContext.ExecuteQueryAsync();
+
+                WriteRecord.Removed();
+            }
+            else
+            {
+                WriteRecord.DidNotExist();
             }
         }
 
