@@ -91,6 +91,7 @@
     <Compile Include="ObjectModel\ObjectMappingAction.cs" />
     <Compile Include="Provisioning\HarshEventReceiver.cs" />
     <Compile Include="Provisioning\HarshModifyField.cs" />
+    <Compile Include="Provisioning\HarshModifyFieldDateTime.cs" />
     <Compile Include="Provisioning\HarshProvisionerRecordType.cs" />
     <Compile Include="Provisioning\HarshTermGroup.cs" />
     <Compile Include="Provisioning\HarshTermSet.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="Provisioning\HarshFieldRef.cs" />
     <Compile Include="Provisioning\HarshList.cs" />
     <Compile Include="Provisioning\HarshListView.cs" />
-    <Compile Include="Provisioning\HarshModifyFieldDateTime.cs" />
+    <Compile Include="Provisioning\HarshModifyFieldUser.cs" />
     <Compile Include="Provisioning\HarshModifyFieldLookup.cs" />
     <Compile Include="Provisioning\HarshModifyFieldMultilineText.cs" />
     <Compile Include="ObjectModel\ObjectMappingEntry.cs" />
