@@ -343,16 +343,24 @@ namespace HarshPoint.Provisioning.Implementation
                 context.MayDeleteUserData ||
                 !Metadata.UnprovisionDeletesUserData;
 
-            if (action == HarshProvisionerAction.Provision || mayDelete)
+            if (action == HarshProvisionerAction.Provision)
             {
                 await RunSelf(context, action);
+                await RunChildren(action);
             }
             else
             {
-                context.Session.OnProvisioningSkipped(context, this);
-            }
+                await RunChildren(action);
 
-            await RunChildren(action);
+                if (mayDelete)
+                {
+                    await RunSelf(context, action);
+                }
+                else
+                {
+                    context.Session.OnProvisioningSkipped(context, this);
+                }
+            }
         }
 
         private async Task RunSelf(TContext context, HarshProvisionerAction action)
