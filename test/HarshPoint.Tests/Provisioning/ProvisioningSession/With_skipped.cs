@@ -67,11 +67,11 @@ namespace Session
             var seq = new Sequence();
             AddSessionStartingSequence(seq, mockInspector);
 
-            AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
-            AddProvisioningSkippedSequence<HarshProvisionerSkipped>(seq, mockInspector);
             AddProvisioningSequence<HarshChild2>(seq, mockInspector);
-            AddProvisioningSequence<HarshChild1>(seq, mockInspector);
             AddProvisioningSequence<HarshSubChild>(seq, mockInspector);
+            AddProvisioningSequence<HarshChild1>(seq, mockInspector);
+            AddProvisioningSkippedSequence<HarshProvisionerSkipped>(seq, mockInspector);
+            AddProvisioningSequence<HarshProvisioner>(seq, mockInspector);
 
             AddSessionEndedSequence(seq, mockInspector);
 
