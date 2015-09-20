@@ -123,6 +123,32 @@ namespace HarshPoint.Tests
             return list;
         }
 
+        protected async Task<Group> CreateGroup(
+            params Expression<Func<Group, Object>>[] retrievals
+        )
+        {
+            var guid = Guid.NewGuid();
+            var name = guid.ToStringInvariant("n");
+
+            var group = Web.SiteGroups.Add(new GroupCreationInformation()
+            {
+                Title = name,
+                Description = $"HarshPoint test group {name}",
+            });
+
+            if (retrievals.Any())
+            {
+                ClientContext.Load(group, retrievals);
+            }
+
+            ClientContext.Load(group, l => l.Id);
+
+            await ClientContext.ExecuteQueryAsync();
+
+            RegisterForDeletion(group);
+            return group;
+        }
+
         protected void RegisterForDeletion(ContentType ct)
         {
             if (ct == null)
@@ -151,6 +177,19 @@ namespace HarshPoint.Tests
             }
 
             AddDisposable(list.DeleteObject);
+        }
+
+        protected void RegisterForDeletion(Group group)
+        {
+            if (group == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(group));
+            }
+
+            AddDisposable(() =>
+            {
+                ClientContext.Web.SiteGroups.Remove(group);
+            });
         }
 
         protected ObjectRecord<T> LastObjectOutput<T>()
