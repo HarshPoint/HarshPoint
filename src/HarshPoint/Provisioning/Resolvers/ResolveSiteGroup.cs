@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveGroup : ClientObjectQueryResolveBuilder<Group>
+    public sealed class ResolveSiteGroup : ClientObjectQueryResolveBuilder<Group>
     {
         protected override IQueryable<Group> CreateQuery(ClientObjectResolveContext context)
         {
@@ -19,6 +19,6 @@ namespace HarshPoint.Provisioning.Resolvers
             return context.ProvisionerContext.Web.SiteGroups.Include(g => g.Id);
         }
 
-        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveGroup>();
+        private static readonly HarshLogger Logger = HarshLog.ForContext<ResolveSiteGroup>();
     }
 }

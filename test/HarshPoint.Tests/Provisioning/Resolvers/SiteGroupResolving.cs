@@ -7,20 +7,20 @@ using Xunit.Abstractions;
 
 namespace HarshPoint.Tests.Provisioning.Resolvers
 {
-    public class GroupResolving : ResolverTestBase
+    public class SiteGroupResolving : ResolverTestBase
     {
-        public GroupResolving(ITestOutputHelper output)
+        public SiteGroupResolving(ITestOutputHelper output)
             : base(output)
         {
         }
 
         [FactNeedsSharePoint]
-        public async Task Group_gets_resolved_by_id()
+        public async Task SiteGroup_gets_resolved_by_id()
         {
-            var group = await CreateGroup(g => g.Title);
+            var group = await CreateSiteGroup(g => g.Title);
 
             var results = ManualResolver.Resolve(
-                Resolve.Group().ById(group.Id),
+                Resolve.SiteGroup().ById(group.Id),
                 g => g.Title
             );
 
@@ -37,12 +37,12 @@ namespace HarshPoint.Tests.Provisioning.Resolvers
         }
 
         [FactNeedsSharePoint]
-        public async Task Group_gets_resolved_by_login_name()
+        public async Task SiteGroup_gets_resolved_by_name()
         {
-            var group = await CreateGroup(g => g.Title);
+            var group = await CreateSiteGroup(g => g.Title);
 
             var results = ManualResolver.Resolve(
-                Resolve.Group().ByLoginName(group.LoginName),
+                Resolve.SiteGroup().ByName(group.Title),
                 g => g.Title
             );
 

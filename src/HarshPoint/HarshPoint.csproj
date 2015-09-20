@@ -185,9 +185,9 @@
     <Compile Include="Provisioning\Resolvers\ResolveField.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldByInternalName.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveFieldById.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveGroupByLoginName.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveGroupById.cs" />
-    <Compile Include="Provisioning\Resolvers\ResolveGroup.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveSiteGroupByName.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveSiteGroupById.cs" />
+    <Compile Include="Provisioning\Resolvers\ResolveSiteGroup.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListById.cs" />
     <Compile Include="Provisioning\Resolvers\ResolveListByUrl.cs" />
     <Compile Include="Provisioning\Implementation\ResolveResultSingleOrDefault`1.cs" />

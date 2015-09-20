@@ -123,7 +123,7 @@ namespace HarshPoint.Tests
             return list;
         }
 
-        protected async Task<Group> CreateGroup(
+        protected async Task<Group> CreateSiteGroup(
             params Expression<Func<Group, Object>>[] retrievals
         )
         {

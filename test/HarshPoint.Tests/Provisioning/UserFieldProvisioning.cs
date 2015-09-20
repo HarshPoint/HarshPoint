@@ -30,11 +30,11 @@ namespace HarshPoint.Tests.Provisioning
         [FactNeedsSharePoint]
         public async Task SelectionGroup_is_set()
         {
-            var group = await CreateGroup();
+            var group = await CreateSiteGroup();
 
             var prov = new HarshModifyFieldUser()
             {
-                SelectionGroup = Resolve.Group().ById(group.Id),
+                SelectionGroup = Resolve.SiteGroup().ById(group.Id),
             };
 
             await RunWithField(prov, f =>
@@ -46,7 +46,7 @@ namespace HarshPoint.Tests.Provisioning
         [FactNeedsSharePoint]
         public async Task SelectionGroup_is_set_empty()
         {
-            var group = await CreateGroup();
+            var group = await CreateSiteGroup();
 
             var prov = new HarshModifyFieldUser();
 

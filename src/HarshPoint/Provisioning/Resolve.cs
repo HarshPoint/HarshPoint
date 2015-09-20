@@ -71,14 +71,13 @@ namespace HarshPoint.Provisioning
         public static ResolveTermStoreSiteCollectionDefault TermStoreSiteCollectionDefault()
             => new ResolveTermStoreSiteCollectionDefault();
 
-        public static ResolveGroup Group()
-            => new ResolveGroup();
+        public static ResolveSiteGroup SiteGroup()
+            => new ResolveSiteGroup();
 
-        public static ResolveGroupById ById(this IResolveBuilder<Group> parent, params Int32[] ids)
-            => new ResolveGroupById(parent, ids);
+        public static ResolveSiteGroupById ById(this IResolveBuilder<Group> parent, params Int32[] ids)
+            => new ResolveSiteGroupById(parent, ids);
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Login")]
-        public static ResolveGroupByLoginName ByLoginName(this IResolveBuilder<Group> parent, params String[] names)
-            => new ResolveGroupByLoginName(parent, names);
+        public static ResolveSiteGroupByName ByName(this IResolveBuilder<Group> parent, params String[] names)
+            => new ResolveSiteGroupByName(parent, names);
     }
 }

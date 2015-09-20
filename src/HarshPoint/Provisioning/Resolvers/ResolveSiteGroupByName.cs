@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace HarshPoint.Provisioning.Resolvers
 {
-    public sealed class ResolveGroupById : ClientObjectIdentifierResolveBuilder<Group, Int32>
+    public sealed class ResolveSiteGroupByName : ClientObjectIdentifierResolveBuilder<Group, String>
     {
-        public ResolveGroupById(
+        public ResolveSiteGroupByName(
             IResolveBuilder<Group> parent,
-            IEnumerable<Int32> identifiers
+            IEnumerable<String> names
         )
-            : base(parent, identifiers, l => l.Id)
+            : base(parent, names, g => g.Title)
         {
         }
     }
