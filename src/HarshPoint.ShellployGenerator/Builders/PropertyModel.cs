@@ -33,14 +33,14 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         public Int32? SortOrder => _sortOrder ?? NextElement?.SortOrder;
 
-        public IEnumerable<T> ElementsOfType<T>() where T : PropertyModel
+        public IEnumerable<T> ElementsOfType<T>()
             => Elements.OfType<T>();
 
-        public T FirstElementOfType<T>() where T : PropertyModel
+        public T FirstElementOfType<T>()
             => ElementsOfType<T>().FirstOrDefault();
 
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-        public Boolean HasElementsOfType<T>() where T : PropertyModel
+        public Boolean HasElementsOfType<T>()
             => ElementsOfType<T>().Any();
 
         public virtual PropertyModel InsertIntoContainer(

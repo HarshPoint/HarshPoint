@@ -71,7 +71,7 @@ namespace HarshPoint.ShellployGenerator.Builders
 
             using (_renamed.EnterIfHasNoValue(propertyModel.PropertyName))
             {
-                return VisitNext(propertyModel); 
+                return VisitNext(propertyModel);
             }
         }
 
@@ -92,6 +92,11 @@ namespace HarshPoint.ShellployGenerator.Builders
 
         protected internal virtual PropertyModel VisitFixed(
             PropertyModelFixed propertyModel
+        )
+            => VisitNext(propertyModel);
+
+        protected internal virtual PropertyModel VisitConditionalFixed(
+            PropertyModelConditionalFixed propertyModel
         )
             => VisitNext(propertyModel);
 

@@ -77,11 +77,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeGen\Fixed_property_assignment.cs" />
+    <Compile Include="CodeGen\Conditional_fixed_property_assignment.cs" />
     <Compile Include="CodeGen\Negative_switch_assignment.cs" />
     <Compile Include="CodeGen\Renamed_property_assignment.cs" />
     <Compile Include="CodeGen\Switch_assignment.cs" />
     <Compile Include="CodeGen\Simple_assignment.cs" />
     <Compile Include="CommandBuilding\Changed_PropertyType.cs" />
+    <Compile Include="CommandBuilding\Fixed_value_parameter.cs" />
     <Compile Include="CommandBuilding\Fixing_in_child.cs" />
     <Compile Include="CommandBuilding\Fixed_paramsets.cs" />
     <Compile Include="CommandBuilding\Mandatory_DefaultFromContext.cs" />
@@ -95,7 +97,7 @@
     <Compile Include="CommandBuilding\Without_configuration.cs" />
     <Compile Include="ProvisionerCommandBuilding\InputObject_parameter.cs" />
     <Compile Include="CommandBuilding\With_multiple_parameter_sets.cs" />
-    <Compile Include="CommandBuilding\Fixed_value_parameter.cs" />
+    <Compile Include="CommandBuilding\Conditional_fixed_value_parameter.cs" />
     <Compile Include="CommandBuilding\Default_value_parameter.cs" />
     <Compile Include="CommandBuilding\Ignored_Parameter.cs" />
     <Compile Include="CommandBuilding\Mandatory_parameter.cs" />

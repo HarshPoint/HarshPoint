@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CodeDomElseIfBuilder_ElseCalled" xml:space="preserve">
+    <value>Cannot use ElseIf after Else was called.</value>
+  </data>
+  <data name="CodeDomElseIfBuilder_OnlyElse" xml:space="preserve">
+    <value>Cannot use Else as a first item.</value>
+  </data>
   <data name="CodeDomExtensions_FieldExists" xml:space="preserve">
     <value>Field '{0}' already exists.</value>
   </data>
@@ -155,11 +161,8 @@ Properties: {0}</value>
   <data name="NewObjectAssignmentVisitor_LhsNull" xml:space="preserve">
     <value>Cannot generate assignment code for the property "{0}" because it is not wrapped with an PropertyModelAssignedTo.</value>
   </data>
-  <data name="ParameterBuilderDefaultValue_AttemptedToNestFixed" xml:space="preserve">
-    <value>Attempted to set a default value on a parameter with a fixed value.</value>
-  </data>
-  <data name="ParameterBuilderFixed_AttemptedToNestDefaultValue" xml:space="preserve">
-    <value>Attempted to set a fixed value on a parameter with a default value.</value>
+  <data name="ParameterBuilder_AttemptedToNest" xml:space="preserve">
+    <value>Attempted to set {0} on a parameter with {1}.</value>
   </data>
   <data name="ShellployCommandBuilder_Overlaps" xml:space="preserve">
     <value>Duplicate properties defined.</value>

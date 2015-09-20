@@ -61,6 +61,24 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot use ElseIf after Else was called..
+        /// </summary>
+        internal static string CodeDomElseIfBuilder_ElseCalled {
+            get {
+                return ResourceManager.GetString("CodeDomElseIfBuilder_ElseCalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot use Else as a first item..
+        /// </summary>
+        internal static string CodeDomElseIfBuilder_OnlyElse {
+            get {
+                return ResourceManager.GetString("CodeDomElseIfBuilder_OnlyElse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field &apos;{0}&apos; already exists..
         /// </summary>
         internal static string CodeDomExtensions_FieldExists {
@@ -171,20 +189,11 @@ namespace HarshPoint.ShellployGenerator {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attempted to set a default value on a parameter with a fixed value..
+        ///   Looks up a localized string similar to Attempted to set {0} on a parameter with {1}..
         /// </summary>
-        internal static string ParameterBuilderDefaultValue_AttemptedToNestFixed {
+        internal static string ParameterBuilder_AttemptedToNest {
             get {
-                return ResourceManager.GetString("ParameterBuilderDefaultValue_AttemptedToNestFixed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Attempted to set a fixed value on a parameter with a default value..
-        /// </summary>
-        internal static string ParameterBuilderFixed_AttemptedToNestDefaultValue {
-            get {
-                return ResourceManager.GetString("ParameterBuilderFixed_AttemptedToNestDefaultValue", resourceCulture);
+                return ResourceManager.GetString("ParameterBuilder_AttemptedToNest", resourceCulture);
             }
         }
         
