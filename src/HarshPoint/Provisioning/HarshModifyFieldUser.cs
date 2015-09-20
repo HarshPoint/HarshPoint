@@ -9,9 +9,9 @@ namespace HarshPoint.Provisioning
         public HarshModifyFieldUser()
         {
             Map(f => f.SelectionMode);
-            Map(f => f.SelectionGroup).From(
-                p => p.SelectionGroup?.Value?.Id ?? -1
-            );
+            Map(f => f.SelectionGroup)
+                .From(p => p.SelectionGroup.Value.Id)
+                .When(p => p.SelectionGroup != null);
         }
 
         [Parameter]

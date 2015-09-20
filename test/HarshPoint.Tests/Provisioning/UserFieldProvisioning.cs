@@ -52,7 +52,7 @@ namespace HarshPoint.Tests.Provisioning
 
             await RunWithField(prov, f =>
             {
-                Assert.Equal(-1, f.SelectionGroup);
+                Assert.Equal(0, f.SelectionGroup);
             });
         }
     }
