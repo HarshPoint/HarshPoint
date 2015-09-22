@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace HarshPoint.ShellployGenerator.Builders
 {
     public sealed class ParameterBuilder<TProvisioner> :
-        ParameterBuilder, 
+        ParameterBuilder,
         IChildParameterBuilder<TProvisioner>
     {
         internal ParameterBuilder(
@@ -42,6 +42,14 @@ namespace HarshPoint.ShellployGenerator.Builders
         public new ParameterBuilder<TProvisioner> SetFixedValue(Object value)
         {
             base.SetFixedValue(value);
+            return this;
+        }
+
+        public new ParameterBuilder<TProvisioner> SetConditionalFixedValue(
+           Action<ConditionalFixedValueBuilder> setupAction
+        )
+        {
+            base.SetConditionalFixedValue(setupAction);
             return this;
         }
 

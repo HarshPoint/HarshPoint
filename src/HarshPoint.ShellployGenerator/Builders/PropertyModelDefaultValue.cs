@@ -2,7 +2,7 @@ using System;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public sealed class PropertyModelDefaultValue : PropertyModel
+    public sealed class PropertyModelDefaultValue : PropertyModel, IValuePropertyModel
     {
         internal PropertyModelDefaultValue(Object defaultValue)
         {
@@ -15,14 +15,7 @@ namespace HarshPoint.ShellployGenerator.Builders
             PropertyModel existing
         )
         {
-            if ((existing != null) &&
-                (existing.HasElementsOfType<PropertyModelFixed>()))
-            {
-                throw Logger.Fatal.InvalidOperation(
-                    SR.ParameterBuilderDefaultValue_AttemptedToNestFixed
-                );
-            }
-
+            PropertyModelValidator.ValidateDoesNotContain<IValuePropertyModel>(existing, this);
             return base.InsertIntoContainer(existing);
         }
 

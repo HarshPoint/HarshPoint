@@ -1,6 +1,7 @@
 ﻿using HarshPoint.ShellployGenerator.Builders;
 using System;
 using System.CodeDom;
+using System.Linq;
 using SMA = System.Management.Automation;
 
 namespace HarshPoint.ShellployGenerator.CodeGen
@@ -9,6 +10,9 @@ namespace HarshPoint.ShellployGenerator.CodeGen
     {
         private readonly HarshScopedValue<Object> _fixedValue
             = new HarshScopedValue<Object>();
+
+        private readonly HarshScopedValue<PropertyModelConditionalFixed> _conditionalFixedProperty
+            = new HarshScopedValue<PropertyModelConditionalFixed>();
 
         private readonly HarshScopedValue<PropertyModelNegated> _negated
             = new HarshScopedValue<PropertyModelNegated>();
@@ -66,6 +70,21 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             }
         }
 
+        protected internal override PropertyModel VisitConditionalFixed(
+            PropertyModelConditionalFixed property
+        )
+        {
+            if (property == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(property));
+            }
+
+            using (_conditionalFixedProperty.EnterIfHasNoValue(property))
+            {
+                return base.VisitConditionalFixed(property);
+            }
+        }
+
         protected internal override PropertyModel VisitNegated(
             PropertyModelNegated property
         )
@@ -93,6 +112,38 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                     CodeLiteralExpression.Create(_fixedValue.Value)
                 );
             }
+            else if (_conditionalFixedProperty.HasValue)
+            {
+                var value = _conditionalFixedProperty.Value;
+                var builder = new CodeDomElseIfBuilder();
+
+                foreach (var conditionalValue in value.ConditionalValues)
+                {
+                    builder.ElseIf(
+                        conditionalValue.Item1,
+                        GetTargetAssignment(
+                            property,
+                            CodeLiteralExpression.Create(conditionalValue.Item2)
+                        )
+                    );
+                }
+
+                if (value.ElseValue != null)
+                {
+                    builder.Else(
+                        GetTargetAssignment(
+                            property,
+                            CodeLiteralExpression.Create(value.ElseValue)
+                        )
+                    );
+                }
+
+                var statement = builder.ToStatement();
+                if (statement != null)
+                {
+                    Statements.Add(statement);
+                }
+            }
             else if (property.PropertyType == typeof(SMA.SwitchParameter))
             {
                 var condition = new CodeConditionStatement(
@@ -107,7 +158,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                         ),
 
                         WriteExclusiveSwitchValidationError(
-                            property.Identifier, 
+                            property.Identifier,
                             _negated.Value.PositivePropertyName
                         ),
 
@@ -142,7 +193,7 @@ namespace HarshPoint.ShellployGenerator.CodeGen
         private static CodeStatement WriteExclusiveSwitchValidationError(
             String negativePropertyName,
             String positivePropertyName
-        ) 
+        )
             => new CodeExpressionStatement(
                 new CodeMethodInvokeExpression(
                     This,
@@ -158,13 +209,23 @@ namespace HarshPoint.ShellployGenerator.CodeGen
             CodeExpression rhs
         )
         {
+            var statement = GetTargetAssignment(current, rhs);
+            if (statement != null)
+            {
+                statements.Add(statement);
+            }
+        }
+
+        private CodeStatement GetTargetAssignment(
+            PropertyModel current,
+            CodeExpression rhs
+        )
+        {
             if (_lhs.HasValue)
             {
-                statements.Add(
-                    new CodeAssignStatement(
-                        _lhs.Value,
-                        rhs
-                    )
+                return new CodeAssignStatement(
+                    _lhs.Value,
+                    rhs
                 );
             }
             else
@@ -175,6 +236,8 @@ namespace HarshPoint.ShellployGenerator.CodeGen
                     "generated.",
                     current.Identifier
                 );
+
+                return null;
             }
         }
 

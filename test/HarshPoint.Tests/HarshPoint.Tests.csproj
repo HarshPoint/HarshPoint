@@ -147,9 +147,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CloneableTests.cs" />
+    <Compile Include="Provisioning\SiteGroupTests.cs" />
+    <Compile Include="Provisioning\UserFieldProvisioning.cs" />
     <Compile Include="Provisioning\Implementation\Resolve_cache.cs" />
     <Compile Include="Provisioning\Implementation\SessionProgressInspector\Inspector.cs" />
     <Compile Include="Provisioning\Resolvers\ClientObject_Tag.cs" />
+    <Compile Include="Provisioning\Resolvers\SiteGroupResolving.cs" />
     <Compile Include="Provisioning\Resolvers\String_identifiers.cs" />
     <Compile Include="TheoryNeedsSharePointTestCase.cs" />
     <Compile Include="TheoryNeedsSharePointDiscoverer.cs" />

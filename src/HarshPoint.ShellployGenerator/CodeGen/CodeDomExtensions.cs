@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.CodeDom;
+using System.Linq;
 
 namespace HarshPoint.ShellployGenerator
 {
@@ -60,7 +60,7 @@ namespace HarshPoint.ShellployGenerator
                     new CodeTypeReference(attributeType),
                     parameters.Select(
                         tuple => new CodeAttributeArgument(
-                            tuple.Item1, 
+                            tuple.Item1,
                             CodeLiteralExpression.Create(tuple.Item2)
                         )
                     ).ToArray()
@@ -124,6 +124,37 @@ namespace HarshPoint.ShellployGenerator
             );
 
             return new CodeMethodInvokeExpression(method, parameters);
+        }
+
+        public static CodeExpression IsNotNull(
+            this CodeExpression targetObject
+        )
+        {
+            if (targetObject == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(targetObject));
+            }
+
+            return new CodeBinaryOperatorExpression(
+                targetObject,
+                CodeBinaryOperatorType.IdentityInequality,
+                new CodePrimitiveExpression(null)
+            );
+        }
+
+        public static CodeExpression IsNotNullOrEmpty(
+            this CodeExpression targetObject
+        )
+        {
+            if (targetObject == null)
+            {
+                throw Logger.Fatal.ArgumentNull(nameof(targetObject));
+            }
+
+            return new CodeTypeReferenceExpression(typeof(String))
+                .Call(
+                    nameof(String.IsNullOrEmpty), targetObject
+                );
         }
 
         private static readonly HarshLogger Logger

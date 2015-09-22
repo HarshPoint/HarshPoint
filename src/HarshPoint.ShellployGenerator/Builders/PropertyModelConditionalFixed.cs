@@ -1,15 +1,24 @@
 using System;
+using System.CodeDom;
+using System.Collections.Immutable;
 
 namespace HarshPoint.ShellployGenerator.Builders
 {
-    public sealed class PropertyModelFixed : PropertyModel, IValuePropertyModel
+    public sealed class PropertyModelConditionalFixed
+        : PropertyModel, IValuePropertyModel
     {
-        internal PropertyModelFixed(Object value)
+        internal PropertyModelConditionalFixed(
+            IImmutableList<Tuple<CodeExpression, Object>> conditionalValues,
+            Object elseValue
+        )
         {
-            Value = value;
+            ConditionalValues = conditionalValues;
+            ElseValue = elseValue;
         }
 
-        public Object Value { get; }
+        public IImmutableList<Tuple<CodeExpression, Object>> ConditionalValues { get; }
+
+        public Object ElseValue { get; }
 
         public override PropertyModel InsertIntoContainer(
             PropertyModel existing
@@ -28,10 +37,10 @@ namespace HarshPoint.ShellployGenerator.Builders
                 throw Logger.Fatal.ArgumentNull(nameof(visitor));
             }
 
-            return visitor.VisitFixed(this);
+            return visitor.VisitConditionalFixed(this);
         }
 
         private static readonly HarshLogger Logger
-            = HarshLog.ForContext(typeof(PropertyModelFixed));
+            = HarshLog.ForContext(typeof(PropertyModelConditionalFixed));
     }
 }

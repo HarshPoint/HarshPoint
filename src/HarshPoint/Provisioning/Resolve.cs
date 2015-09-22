@@ -70,5 +70,14 @@ namespace HarshPoint.Provisioning
 
         public static ResolveTermStoreSiteCollectionDefault TermStoreSiteCollectionDefault()
             => new ResolveTermStoreSiteCollectionDefault();
+
+        public static ResolveSiteGroup SiteGroup()
+            => new ResolveSiteGroup();
+
+        public static ResolveSiteGroupById ById(this IResolveBuilder<Group> parent, params Int32[] ids)
+            => new ResolveSiteGroupById(parent, ids);
+
+        public static ResolveSiteGroupByName ByName(this IResolveBuilder<Group> parent, params String[] names)
+            => new ResolveSiteGroupByName(parent, names);
     }
 }

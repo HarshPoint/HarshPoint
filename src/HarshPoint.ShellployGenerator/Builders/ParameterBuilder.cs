@@ -47,6 +47,17 @@ namespace HarshPoint.ShellployGenerator.Builders
             return this;
         }
 
+        public ParameterBuilder SetConditionalFixedValue(
+           Action<ConditionalFixedValueBuilder> setupAction
+        )
+        {
+            var builder = new ConditionalFixedValueBuilder();
+            setupAction(builder);
+
+            Update(builder.ToModel());
+            return this;
+        }
+
         public ParameterBuilder SynthesizeMandatory(Type parameterType)
         {
             if (parameterType == null)
