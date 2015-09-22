@@ -10,14 +10,14 @@ namespace HarshPoint.ShellployGenerator.Commands
     internal sealed class BuildFieldUser :
         NewProvisionerCommandBuilder<HarshModifyFieldUser>
     {
-        private static String GroupByIdParameterSet = "GroupById";
-        private static String GroupByNameParameterSet = "GroupByName";
+        private static String SelectionGroupByIdParameterSet = "SelectionGroupById";
+        private static String SelectionGroupByNameParameterSet = "SelectionGroupByName";
 
         public BuildFieldUser()
         {
             ProvisionerDefaults.Include(this);
 
-            DefaultParameterSetName = GroupByIdParameterSet;
+            DefaultParameterSetName = SelectionGroupByIdParameterSet;
 
             AsChildOf<HarshField>(
                 p => p.Parameter(x => x.Type).SetFixedValue(FieldType.User)
@@ -29,7 +29,7 @@ namespace HarshPoint.ShellployGenerator.Commands
                 {
                     Properties =
                     {
-                        ["ParameterSetName"] = GroupByIdParameterSet,
+                        ["ParameterSetName"] = SelectionGroupByIdParameterSet,
                     }
                 }
             );
@@ -40,7 +40,7 @@ namespace HarshPoint.ShellployGenerator.Commands
                 {
                     Properties =
                     {
-                        ["ParameterSetName"] = GroupByNameParameterSet,
+                        ["ParameterSetName"] = SelectionGroupByNameParameterSet,
                     }
                 }
             );
