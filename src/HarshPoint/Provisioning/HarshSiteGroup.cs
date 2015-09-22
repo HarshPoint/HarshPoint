@@ -22,12 +22,14 @@ namespace HarshPoint.Provisioning
             WriteRecord = CreateRecordWriter<Group>(() => Name);
         }
 
+        [Parameter]
         public String Description
         {
             get;
             set;
         }
 
+        [Parameter(Mandatory = true)]
         public String Name
         {
             get;
