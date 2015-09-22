@@ -151,10 +151,14 @@ namespace HarshPoint.ShellployGenerator
                 throw Logger.Fatal.ArgumentNull(nameof(targetObject));
             }
 
-            return new CodeTypeReferenceExpression(typeof(String))
-                .Call(
-                    nameof(String.IsNullOrEmpty), targetObject
-                );
+            return new CodeBinaryOperatorExpression(
+                new CodeTypeReferenceExpression(typeof(String))
+                    .Call(
+                        nameof(String.IsNullOrEmpty), targetObject
+                    ),
+                CodeBinaryOperatorType.IdentityInequality,
+                new CodePrimitiveExpression(true)
+            );
         }
 
         private static readonly HarshLogger Logger
